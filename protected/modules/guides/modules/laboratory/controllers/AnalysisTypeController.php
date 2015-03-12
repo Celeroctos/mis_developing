@@ -4,10 +4,12 @@ class AnalysisTypeController extends Controller
 {
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
-	{
-        $this->actionIndex();
-	}
+    public function actionView($id)
+    {
+        $this->render('view',array(
+            'model'=>$this->loadModel($id),
+        ));
+    }
 
     public function actionCreate() {
 
@@ -16,18 +18,14 @@ class AnalysisTypeController extends Controller
         if (isset($_POST['AnalysisType'])) {
             $model->attributes = $_POST['AnalysisType'];
             if ($model->save()) {
-                if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
-                } else {
-                    $this->redirect(array('view', 'id' => $model->id));
-                }
             }
         }
-        if (Yii::app()->request->isAjaxRequest)
-            $this->renderPartial('create', array('model' => $model), false, true);
-        else
-            $this->render('create', array('model' => $model));
+            $this->renderPartial('form', array(
+            'model' => $model,
+            'analysistypetemplate'=>null,
+), false, true);
     }
 
     public function actionUpdate($id) {
@@ -38,18 +36,15 @@ class AnalysisTypeController extends Controller
             $model->scenario = 'analysistypes.update';
             $model->attributes = $_POST['AnalysisType'];
             if ($model->save()) {
-                if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
-                } else {
-                    $this->redirect(array('view', 'id' => $model->id));
-                }
             }
         }
-        if (Yii::app()->request->isAjaxRequest)
-            $this->renderPartial('update', array('model' => $model), false, true);
-        else
-            $this->render('update', array('model' => $model));
+            $analysistypetemplate = AnalysisTypeTemplate::model()->search($id);
+            $this->renderPartial('form', array(
+            'model' => $model,
+            'analysistypetemplate'=>$analysistypetemplate,
+            ), false, true);
     }
 
     public function actionDelete($id) {

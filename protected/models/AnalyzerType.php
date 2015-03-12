@@ -41,7 +41,7 @@ class AnalyzerType extends MisActiveRecord
         $criteria->select='id, type';
         $analyzertypeList=$model->findAll($criteria);
 
-        return CHtml::listData(
+        $qq =  CHtml::listData(
             CMap::mergeArray([
                 [
                     'id'=>$typeQuery=='insert' ? null : null,
@@ -51,6 +51,7 @@ class AnalyzerType extends MisActiveRecord
             'id',
             'type'
         );
+        return $qq;
     }	
 /*
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
@@ -140,4 +141,5 @@ class AnalyzerType extends MisActiveRecord
             ],
         ]);
     }
+        
 }

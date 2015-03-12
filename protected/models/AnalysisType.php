@@ -10,8 +10,6 @@ class AnalysisType extends MisActiveRecord
 //    public $automatic;
 //    public $manual;
     public $metodics_n;
-    public $param_count;
-    public $analysis_type_id;
 
     const UNDEF_ID=0;
     const AUTOMATIC_ID=1;
@@ -58,17 +56,17 @@ class AnalysisType extends MisActiveRecord
         $criteria=new CDbCriteria;
         $criteria->select='id, name';
         $analysistypeList=$model->findAll($criteria);
-
-        return CHtml::listData(
-            CMap::mergeArray([
+        $ret = CHtml::listData( $typeQuery=='insert' ? 
+        CMap::mergeArray([
                 [
-                    'id'=>$typeQuery=='insert' ? null : null,
+                    'id'=>null,
                     'name'=>'',
                 ]
-                ], $analysistypeList),
+                ], $analysistypeList) : $analysistypeList,
             'id',
             'name'
-        );
+                );
+        return $ret;
     }	
 
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
@@ -119,7 +117,7 @@ class AnalysisType extends MisActiveRecord
             'name'=>'Наименование типа анализа',
             'short_name'=>'Краткое наименование типа анализа',
             'metodics'=>'Методика:',
-            'param_count'=>'Количество параметров',
+#            'param_count'=>'Количество параметров',
         ];
     }
 
@@ -181,18 +179,4 @@ class AnalysisType extends MisActiveRecord
                 break;
         }
     }
-   public function templates()
-    {
-        $criteria=new CDbCriteria;
-            $criteria->select = 't.id, t.name, count(att.*) as param_count';
-            $criteria->group = 't.id, t.name';
-            $criteria->order = 't.name';
-             $criteria->join = 'LEFT JOIN lis.analysis_type_templates att ON att.analysis_type_id = t.id';
-        $qq = new CActiveDataProvider($this, [
-            'pagination'=>['pageSize'=>10],
-            'criteria'=>$criteria,
-        ]);
-        return  $qq;
-    }
-
-}
+ }

@@ -17,44 +17,40 @@ $this->pageTitle = 'Шаблоны типов анализов';
     </div>
 <?php endif; ?>
 
-<?php
-$updateDialog = <<<'EOT'
-function() {
-	var url = $(this).attr('href');
-    $.get(url, function(r){
-        $("#update").html(r).dialog("open");
-		$("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование шаблона типа анализа").dialog("open");
-    });
-    return false;
-}
-EOT;
-?>
 
-<?php 
-$template = '';
-if (Yii::app()->user->checkAccess('guideEditAnalysisTypeTemplate')) { 
-    $template = '{update}';
-    $buttons = array(
-                'headerHtmlOptions' => array(
-                    'class' => 'col-md-1',
-                ),
-                'update' => array(
-                    'click' => $updateDialog,
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-primary btn-block btn-xs',
-                    ],
-                ),
-/*                'delete' => array(
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-default btn-block btn-xs',
-                    ],
-                )*/
+    <div class="row">
+        <div class="col-xs-6">
+        <h6>Выберите тип анализа:</h6>
+        
+            <?php echo CHtml::DropDownList('SelectType','id',AnalysisType::getAnalysisTypeListData('insert'),
+            array(
+                'onchange'=>'alert(document.getElementById("SelectType").value);
+                if(document.getElementById("SelectType").value > 0) 
+                    document.getElementById("AddButton").disabled=""; 
+                else 
+                    document.getElementById("AddButton").disabled="disabled";',
+    )
+); ?>
+        </div>
+        </div>
+
+    <div class="row">
+        </div>
+    <div class="row">
+        <div class="col-xs-3">
+    <?php 
+echo CHtml::ajaxButton('Выбор', $this->createUrl('condupdate'), 
+    array(
+    'type' => 'POST',
+    'update'=>'#analysis-param-grid',
+    'data' => array(
+        'SelectType'=>'js:document.getElementById("SelectType").value',
+        )
+        )
         );
-
-    ?>
-<?php } ?>
+    ?>    
+        </div>
+</div>
 
 <?php
 $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
@@ -71,44 +67,42 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 ?>
 
 <?php
-$this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'analysis-param-grid',
-    'ajaxUpdate' => false,
-//    'dataProvider'=>$model->search(),
-    'dataProvider' => $model->templates(),
-//	'filter'=>$model,
-    'itemsCssClass' => 'table table-bordered',
-    'pager' => [
-        'class' => 'CLinkPager',
-        'selectedPageCssClass' => 'active',
-        'header' => '',
-        'htmlOptions' => [
-            'class' => 'pagination',
-        ]
-    ],
-    'columns' => array(
-#		'id',
-        [
-            'name' => 'name',
-            'headerHtmlOptions' => [
-                'class' => 'col-md-4',
-            ],
-        ],
-        [
-            'name' => 'param_count',
-            'headerHtmlOptions' => [
-                'class' => 'col-md-4',
-            ],
-        ],
-#        'analysis_type_id',
-#        'analysis_param_id',
-#	'is_default',
-        array(
-            'class' => 'CButtonColumn',
-            'template' => $template,
-            'buttons' => $buttons,
-        ),
-    ),
-));
+    if (Yii::app()->user->checkAccess('guideEditAnalysisType')) { 
 ?>
-      
+    <div class="row">
+        </div>
+
+    <div class="row">
+        <div class="col-xs-3">
+<?php
+#    if ($model->analysis_type_id > 0) { 
+?>
+<?=
+CHtml::ajaxLink('Добавить', $this->createUrl('analysistypetemplate/create/analysis_type_id/'.$model->analysis_type_id), 
+array(
+        'url' => $this->createUrl('analysistypetemplate/create/analysis_type_id/'.$analysis_type_id),
+        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление параметра к шаблону типа анализа").dialog("open"); return false;}',
+    ),
+[ 
+'id' => 'AddButton',
+'disabled'=>"disabled",
+'class' => 'btn btn-primary', 
+]);
+?>
+<?php
+#    } 
+?>
+        </div>
+</div>
+<?php
+    } 
+?>
+
+<?php
+$this->renderPartial('grid', 
+array(
+'model' => $model,
+'dataProvider'=>$dataProvider,
+'analysistypesList' => $analysistypesList)
+);      
+?>

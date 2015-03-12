@@ -8,7 +8,7 @@ $this->widget('application.modules.guides.components.widgets.LaboratoryTabMenu',
 <?php
 $this->pageTitle = 'Типы анализаторов';
 ?>
-<h4>Параметры анализов</h4>
+<h4>Типы анализаторов</h4>
 
 <?php if (Yii::app()->user->hasFlash('error') || Yii::app()->user->hasFlash('success')): ?>
     <div class="alert alert-danger">

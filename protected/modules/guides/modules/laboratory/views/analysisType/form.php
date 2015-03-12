@@ -1,4 +1,5 @@
 <!--<div class="modal-dialog">-->
+    
 <div class="form">
 
     <?php
@@ -7,6 +8,19 @@
         'enableAjaxValidation' => false,
     ));
     ?>
+<?php
+$updateDialog = <<<'EOT'
+function() {
+    var url = $(this).attr('href');
+    $.get(url, function(r){
+        $("#update").html(r).dialog("open");
+        $("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование типа анализа").dialog("open");
+    });
+    return false;
+}
+EOT;
+
+?>
 
     <div class="modal-body">
         <div class="col-xs-12">
@@ -55,13 +69,80 @@
                     echo $form->radioButtonList($model, 'metodics', array('Не определена', 'Автоматическая', 'Ручная'), array(
                         'id' => 'metodics',
 #                            'class' => 'form-control',
-                        'separator' => '',
+                        'separator' => '&nbsp',
                     ));
                     ?>
                     <?php echo $form->error($model, 'metodics'); ?>
                 </div>
             </div>
         </div> 
+<?php
+            if ($analysistypetemplate) {
+        ?>        
+<?=
+CHtml::link('Добавить', $this->createUrl('analysistypetemplate/create/id/'.$model->id), 
+[
+ 'class' => 'btn btn-primary', 
+ 'id' => 'analysis_type_template_add',
+
+'ajax' => array(
+        'url' => $this->createUrl('analysistypetemplate/create/id/'.$model->id),
+        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление параметра к списку параметров типа анализа").dialog("open"); return false;}',
+    ),
+]);
+?> 
+<?php
+            }          
+                    ?>        
+<?php 
+    $template = '';
+    if (Yii::app()->user->checkAccess('guideEditAnalysisType')) { 
+    $template = '{update} {delete}';
+    $buttons = array(
+                'headerHtmlOptions' => array(
+                    'class' => 'col-md-1',
+                ),
+                'update' => array(
+                    'click' => $updateDialog,
+                    'imageUrl' => false,
+                    'options' => [
+                        'class' => 'btn btn-primary btn-block btn-xs',
+                    ],
+                ),
+                'delete' => array(
+                    'imageUrl' => false,
+                    'options' => [
+                        'class' => 'btn btn-default btn-block btn-xs',
+                    ],
+                )
+        );
+    };
+
+    ?>
+        
+<?php 
+if ($analysistypetemplate) {
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'analysis-type-template-grid',
+    'ajaxUpdate'=>false,
+    'dataProvider'=>$analysistypetemplate,
+//    'filter'=>$model,
+    'columns'=>array(
+        'id',
+        'analysis_type_id',
+        'analysis_param_id',
+        'is_default',
+        array(
+            'class'=>'CButtonColumn',
+            'template' => $template,
+            'buttons' => $buttons,
+            ), 
+        ),
+    )
+); 
+}
+?>
+        
     </div> 
 
     <div class="modal-footer">
@@ -103,7 +184,7 @@
         ));
         ?>
 
-        <?php $this->endWidget(); ?>
     </div>
+        <?php $this->endWidget(); ?>
 
 </div><!-- form -->

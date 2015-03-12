@@ -1,7 +1,7 @@
 <?php
 
-class AnalysisParamController extends Controller {
-
+class MachineController extends Controller
+{
     public $layout = 'application.modules.guides.views.layouts.index';
 
     public function actionView($id) {
@@ -10,31 +10,43 @@ class AnalysisParamController extends Controller {
 
     public function actionCreate() {
 
-        $model = new AnalysisParam('analysisparams.create');
+        $model = new Machine('machines.create');
 
-        if (isset($_POST['AnalysisParam'])) {
-            $model->attributes = $_POST['AnalysisParam'];
+        if (isset($_POST['Machine'])) {
+            $model->attributes = $_POST['Machine'];
             if ($model->save()) {
+                if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
+                } else {
+                    $this->redirect(array('view', 'id' => $model->id));
+                }
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $analyzertypeList = AnalyzerType::getAnalyzerTypeListData('insert');
+            $this->renderPartial('form', array(
+            'model' => $model,
+            'analyzertypeList'=> $analyzertypeList,
+            ), 
+            false, true);
     }
 
     public function actionUpdate($id) {
 
         $model = $this->loadModel($id);
 
-        if (isset($_POST['AnalysisParam'])) {
-            $model->scenario = 'analysisparams.update';
-            $model->attributes = $_POST['AnalysisParam'];
+        if (isset($_POST['Machine'])) {
+            $model->scenario = 'machines.update';
+            $model->attributes = $_POST['Machine'];
             if ($model->save()) {
                     echo 'success';
                     Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+            $this->renderPartial('form', array(
+                'model' => $model,
+                'analyzertypeList'=>AnalyzerType::getAnalyzerTypeListData('insert'),
+            ), false, true);
     }
 
     public function actionDelete($id) {
@@ -53,10 +65,10 @@ class AnalysisParamController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
-        $model = new AnalysisParam('search');
+        $model = new Machine('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AnalysisParam']))
-            $model->attributes = $_GET['AnalysisParam'];
+        if (isset($_GET['Machine']))
+            $model->attributes = $_GET['Machine'];
 
         $this->render('index', array(
             'model' => $model,
@@ -65,7 +77,7 @@ class AnalysisParamController extends Controller {
 
 
     public function loadModel($id) {
-        $model = AnalysisParam::model()->findByPk($id);
+        $model = Machine::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
