@@ -28,6 +28,7 @@ function() {
     return false;
 }
 EOT;
+
 ?>
 
 <?php 
@@ -55,7 +56,9 @@ if (Yii::app()->user->checkAccess('guideEditAnalysisType')) {
 
     ?>
 <?=
-CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
+CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 
+    'id' => 'analysis_type_add',
+    'ajax' => array(
         'url' => $this->createUrl('create'),
         'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление типа анализа").dialog("open"); return false;}',
     ),

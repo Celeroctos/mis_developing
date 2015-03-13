@@ -1,45 +1,43 @@
 <?php
 /**
-* AR-модель для работы с analysistype_params
-*/
+ * Класс для работы с отделениями
+ */
 class AnalysisTypeTemplate extends MisActiveRecord 
 {
-/*    public $analysis_type_id;
-    public $analysis_param_id;
-    public $is_default;
-*/
-    public $param_count;
-    public $analysis_type;
-    public $analysis_param;
-
+/*	public $id;
+	public $name;
+	public $enterprise_id;
+	public $rule_id;*/
     const TRUE_ID=1;
     const FALSE_ID=0;
     const TRUE_NAME='Да';
     const FALSE_NAME='Нет';
-
+	
     public static function model($className=__CLASS__)
     {
         return parent::model($className);
     }
-
+	
 	public function relations()
 	{
 		return [
-			'analysis_param_id'=>[self::HAS_MANY, 'AnalysisParam', 'id'],
-			'analysis_type'=>[self::BELONGS_TO, 'AnalysisType', 'analysis_type_id'],
+			'analysis_types'=>[self::BELONGS_TO, 'AnalysisType', 'analysis_type_id'],
+			'analysis_params'=>[self::BELONGS_TO, 'AnalysisParam', 'analysis_param_id'],
 		];
 	}
-    
+	
     public function rules()
     {
         return [
             ['analysis_type_id, analysis_param_id', 'required', 'on'=>'analysistypetemplate.update'],
-            ['analysis_type_id, analysis_param_id, is_default', 'type', 'type'=>'integer', 'on'=>'analysistypetemplate.update'], //[controller].[action]
-            ['is_default', 'safe', 'on'=>'analysistypetemplate.update'],
+            ['analysis_type_id, analysis_param_id, is_default, seq_number', 'type', 'type'=>'integer', 'on'=>'analysistypetemplate.update'], //[controller].[action]
+            ['id, is_default', 'safe', 'on'=>'analysistypetemplate.update'],
 
             ['analysis_type_id, analysis_param_id', 'required', 'on'=>'analysistypetemplate.create'],
-            ['analysis_type_id, analysis_param_id, is_default', 'type', 'type'=>'integer', 'on'=>'analysistypetemplate.create'], //[controller].[action]
-            ['is_default, analysis_type', 'safe', 'on'=>'analysistypetemplate.create'],
+            ['analysis_type_id, analysis_param_id, is_default, seq_number', 'type', 'type'=>'integer', 'on'=>'analysistypetemplate.create'], //[controller].[action]
+            ['id, is_default, analysis_type', 'safe', 'on'=>'analysistypetemplate.create'],
+
+            ['id, analysis_type_id, analysis_param_id, is_default, analysis_type', 'safe', 'on'=>'analysistypetemplate.search'],
         ];
     }
 
@@ -47,87 +45,7 @@ class AnalysisTypeTemplate extends MisActiveRecord
     {
         return 'lis.analysis_type_templates';
     }
-
-    /**
-    * Список для выпадающего списка (см. dropDownList Yii)
-    * @param string $typeQuery Добавить/обновить
-    * @return array
-    */
-/*    public static function getAnalysisTypeListData($typeQuery)
-    {
-        $model=new AnalysisType;
-        $criteria=new CDbCriteria;
-        $criteria->select='id, short_name';
-        $analysistypeList=$model->findAll($criteria);
-
-        return CHtml::listData(
-            CMap::mergeArray([
-                [
-                    'id'=>$typeQuery=='insert' ? null : null,
-                    'short_name'=>'',
-                ]
-                ], $analysistypeList),
-            'id',
-            'short_name'
-        );
-    }	
-*/
-/*    public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
-        $connection = Yii::app()->db;
-        $analysistypetemplates = $connection->createCommand()
-        ->select('att.*, at.name as analysis_type, ap.name as analysis_param')
-        ->from('lis.analysis_type_templates att')
-        ->join('lis.analysis_types at', 'att.analysis_type_id = at.id')
-        ->join('lis.analysis_params ap', 'att.analysis_param_id = ap.id');
-
-        if($filters !== false) {
-            $this->getSearchConditions($analysistypetemplates, $filters, array(
-                ), array(
-                    'att' => array('id', 'analysis_type_id', 'analysis_param_id', 'is_default'),
-                    'at' => array('name'),
-                    'ap' => array('long_name')
-                ), array(
-                    'analysis_type' => 'name',
-                    'analysis_param' => 'name'
-            ));
-        }
-
-        if($sidx !== false && $sord !== false) {
-            $analysistypetemplates->order($sidx.' '.$sord);
-        }
-        if($start !== false && $limit !== false) {
-            $analysistypetemplates->limit($limit, $start);
-        }
-
-        return $analysistypetemplates->queryAll();
-    }
-*/
-
-    public function getOne($id) {
-        try {
-            $connection = Yii::app()->db;
- /*           $analysistypetemplate = $connection->createCommand()
-        ->select('att.*, at.name as analysis_type, ap.name as analysis_param')
-        ->from('lis.analysis_type_templates att')
-        ->join('lis.analysis_types at', 'att.analysis_type_id = at.id')
-        ->join('lis.analysis_params ap', 'att.analysis_param_id = ap.id')
-            ->where('att.id = :id', array(':id' => $id))
-            ->queryRow();
-*/
-                       $analysistypetemplate = $connection->createCommand()
-        ->select('att.*, at.name as analysis_type')
-        ->from('lis.analysis_type_templates att')
-        ->join('lis.analysis_types at', 'att.analysis_type_id = at.id')
-            ->where('att.id = :id', array(':id' => $id))
-            ->queryRow();
-
-            return $analysistypetemplate;
-
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
+	
     public function attributeLabels() {
         return [
             'id'=>'#ID',
@@ -135,60 +53,12 @@ class AnalysisTypeTemplate extends MisActiveRecord
             'analysis_param'=>'Наименование параметра анализа',
             'analysis_type_id'=>'Наименование типа анализа',
             'analysis_param_id'=>'Наименование параметра анализа',
-            'is_default'=>'Включен по умолчанию?'
+            'is_default'=>'Включен по умолчанию?',
+            'seq_number'=>'Порядковый номер параметра'
+            
         ];
     }
 
-    /**
-    * Метод для поиска в CGridView
-    */
-    public function search()
-    {
-        $criteria=new CDbCriteria;
-
-	$criteria->with=['analysis_param_id'=>['together'=>true, 'joinType'=>'LEFT JOIN']];
-        //        if($this->validate())
-        {
-/*            $criteria->compare('id', $this->id, false);
-            $criteria->compare('analysis_type', $this->analysis_type, true);
-            $criteria->compare('analysis_param', $this->analysis_param, true);
-            $criteria->compare('is_default', $this->is_default, true);*/
-        }
-        /*        else
-        {
-        $criteria->addCondition('id=-1');
-        }
-        */		
-        return  new CActiveDataProvider($this, [
-            'pagination'=>['pageSize'=>10],
-            'criteria'=>$criteria,
-            'sort'=>[
-                'attributes'=>[
-                    'lis.analysis_params.name' => [
-			'asc'=>'analysis_params.name',
-			'desc'=>'analysis_params.name DESC',
-                    ]
-                ],
-                'defaultOrder'=>[
-                    'analysis_params.name'=>CSort::SORT_ASC,
-                ],
-            ],
-        ]);
-    }
-
- /*   public function types()
-    {
-        $criteria=new CDbCriteria;
-            $criteria->select = 'at.id, at.name as name, count(t.*) as param_count';
-            $criteria->group = 'analysis_type_id, at.name';
-             $criteria->join = 'LEFT JOIN lis.analysis_types at ON at.id = t.analysis_type_id';
-        $qq = new CActiveDataProvider($this, [
-            'pagination'=>['pageSize'=>10],
-            'criteria'=>$criteria,
-        ]);
-        return  $qq;
-    }*/
-    
     /**
     * Используется в CGridView
     * @return array
@@ -208,18 +78,106 @@ class AnalysisTypeTemplate extends MisActiveRecord
                 break;
         }
     }
-    public function templates($id)
-    {
-        $criteria=new CDbCriteria   ;
-            $criteria->select = 't.id, ap.name, t.is_default';
-            $criteria->condition = 't.analysis_type_id=' . $id;
-             $criteria->join = 'JOIN lis.analysis_params ap ON t.analysis_param_id = ap.id';
-             $criteria->order = 'ap.name';
-        $qq = new CActiveDataProvider($this, [
-            'pagination'=>['pageSize'=>10],
-            'criteria'=>$criteria,
-        ]);
-        return  $qq;
-    }
+    
+	/**
+	 * Метод для поиска в CGridView
+	 */
+	public function search()
+	{
+        if (!$this->analysis_type_id)  $this->analysis_type_id = -1;
+		$criteria=new CDbCriteria;
+		$criteria->with=[['analysis_types'=>['together'=>true, 'joinType'=>'LEFT JOIN']],
+        ['analysis_params'=>['together'=>true, 'joinType'=>'LEFT JOIN']]];
 
+        if ($this->analysis_type_id)  
+            $criteria->compare('analysis_type_id', $this->analysis_type_id);
+        if ($this->analysis_param_id)  
+            $criteria->compare('analysis_param_id', $this->analysis_param_id);
+		
+		
+		return new CActiveDataProvider($this, [
+			'pagination'=>['pageSize'=>15],
+			'criteria'=>$criteria,
+            'sort'=>[
+                    'attributes'=>[
+                        'seq_number',
+                    ],
+                    'defaultOrder'=>[
+                            'seq_number'=>CSort::SORT_ASC,
+                        ],
+            ]
+		]);
+	}
+	/*
+    public function getOne($id) {
+        try {
+            $connection = Yii::app()->db;
+            $analysistypetemplate = $connection->createCommand()
+                ->select('att.*, at.name as analysis_type, ap.name as analysis_param')
+                ->from('lis.analysis_type_templates att')
+				->leftJoin(AnalysisType::model()->tableName().' at', 'at.id = att.analysis_type_id')
+                ->leftJoin(AnalysisParam::model()->tableName().' ap', 'ap.id = att.analysis_param_id')
+                ->where('att.id = :id', array(':id' => $id))
+                ->queryRow();
+
+            return $analysistypetemplate;
+                                            
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+	*/
+    /*
+    public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
+        $connection = Yii::app()->db;
+        $analysistypetemplate = $connection->createCommand()
+                ->select('att.*, at.name as analysis_type, ap.name as analysis_param')
+                ->from('lis.analysis_type_templates att')
+                ->leftJoin(AnalysisType::model()->tableName().' at', 'at.id = att.analysis_type_id')
+                ->leftJoin(AnalysisParam::model()->tableName().' ap', 'ap.id = att.analysis_param_id');
+
+        if($filters !== false) {
+            $this->getSearchConditions($analysistypetemplate, $filters, array(
+
+            ), array(
+                'att' => array('id'),
+                'at' => array('analysis_type'),
+				'ap' => array('analysis_param')
+            ), array(
+                'analysis_type' => 'name',
+				'analysis_param' => 'name',
+            ));
+        }
+
+        if($sidx !== false && $sord !== false ) {
+            $analysistypetemplate->order($sidx.' '.$sord);
+        }
+        if($start !== false && $limit !== false) {
+            $analysistypetemplate->limit($limit, $start);
+        }
+
+        return $analysistypetemplate->queryAll();
+    }
+	*/
+	/*
+    public function getAll() {
+        try {
+            $connection = Yii::app()->db;
+            $analysistypetemplate = $connection->createCommand()
+                ->select('att.*, at.name as analysis_type, ap.name as analysis_param')
+                ->from('lis.analysis_type_templates att')
+                ->leftJoin(AnalysisType::model()->tableName().' at', 'at.id = att.analysis_type_id')
+                ->leftJoin(AnalysisParam::model()->tableName().' ap', 'ap.id = att.analysis_param_id')
+                ->order('at.name asc')
+                ->queryAll();
+
+            return $analysistypetemplate;
+
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    */
 }
+
+?>

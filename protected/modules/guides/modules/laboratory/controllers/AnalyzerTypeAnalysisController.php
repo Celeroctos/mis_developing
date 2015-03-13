@@ -16,18 +16,11 @@ class AnalyzerTypeAnalysisController extends Controller
         if (isset($_POST['AnalyzerTypeAnalysis'])) {
             $model->attributes = $_POST['AnalyzerTypeAnalysis'];
             if ($model->save()) {
-                if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
-                } else {
-                    $this->redirect(array('view', 'id' => $model->id));
-                }
             }
         }
-        if (Yii::app()->request->isAjaxRequest)
-            $this->renderPartial('create', array('model' => $model), false, true);
-        else
-            $this->render('create', array('model' => $model));
+            $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -38,18 +31,11 @@ class AnalyzerTypeAnalysisController extends Controller
             $model->scenario = 'analyzertypeanalysiss.update';
             $model->attributes = $_POST['AnalyzerTypeAnalysis'];
             if ($model->save()) {
-                if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
-                } else {
-                    $this->redirect(array('view', 'id' => $model->id));
-                }
             }
         }
-        if (Yii::app()->request->isAjaxRequest)
-            $this->renderPartial('update', array('model' => $model), false, true);
-        else
-            $this->render('update', array('model' => $model));
+            $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {

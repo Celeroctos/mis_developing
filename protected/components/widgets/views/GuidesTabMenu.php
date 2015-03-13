@@ -104,18 +104,25 @@ if (Yii::app()->user->checkAccess('guideAddMedcardRule') ||
         </li>
 <?php } ?>
 <?php
-if (Yii::app()->user->checkAccess('guideEditAnalysisParam') ||
+if ( Yii::app()->user->checkAccess('guideEditAnalysisSampleType')||
+        Yii::app()->user->checkAccess('guideEditAnalysisParam') ||
         Yii::app()->user->checkAccess('guideEditAnalysisType') ||
         Yii::app()->user->checkAccess('guideEditAnalysisTypeTemplate') ||
         Yii::app()->user->checkAccess('guideEditAnalyzerType') ||
-        Yii::app()->user->checkAccess('guideEditAnalyzerTypeAnalysis') ||
-        Yii::app()->user->checkAccess('guideEditAnalysisSampleType')
+        Yii::app()->user->checkAccess('guideEditAnalyzerTypeAnalysis')
 ) {
     ?>
         <li <?php echo
-    ($controller == 'analysisparam') ? 'class="active"' : '';
+    (
+    ($controller == 'analysissampletype')||
+    ($controller == 'analysisparam')||
+    ($controller == 'analysistype')||
+    ($controller == 'analysistypetemplate')||
+    ($controller == 'analyseretype')||
+    ($controller == 'analyzertypeanalysis')
+    ) ? 'class="active"' : '';
     ?>>
-    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysisparam')) ?>
+    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysissampletype')) ?>
         </li>
 <?php } ?>
 </ul>

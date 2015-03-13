@@ -1,5 +1,5 @@
-<div class="modal-dialog">
-    <!--<div class="form">-->
+<!--<<div class="modal-dialog"><!--<
+    div class="form">-->
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -22,7 +22,7 @@
                         echo $form->textField($model, 'type', array(
                             'id' => 'type',
                             'class' => 'form-control',
-                            'placeholder' => 'Краткое наименование параметра анализа'
+                            'placeholder' => 'Тип анализатора'
                         ));
                         ?>
                         <?php echo $form->error($model, 'type'); ?>
@@ -32,17 +32,18 @@
             <div class="row"> 
                 <div class="form-group">
                     <?php
-                    echo $form->textField($model, 'name', array(
-                        'id' => 'name',
-                        'class' => 'form-control',
-                        'placeholder' => 'Краткое наименование параметра анализа'
-                    ));
-                    ?>
-                    'class' => 'col-xs-3 control-label'
+                    echo $form->labelEx($model, 'name', array(
+                        'class' => 'col-xs-3 control-label'
                     ));
                     ?>
                     <div class="col-xs-9">
-                        <?php echo $form->textField($model, 'name', array('size' => 60, 'maxlength' => 100)); ?>
+                        <?php
+                        echo $form->textField($model, 'name', array(
+                            'id' => 'name',
+                            'class' => 'form-control',
+                            'placeholder' => 'Название анализатора'
+                        ));
+                        ?>
                         <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
@@ -55,7 +56,12 @@
                     ));
                     ?>
                     <div class="col-xs-9">
-                        <?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
+                        <?php echo $form->textArea($model, 'notes', array(
+                        'rows' => 6, 'cols' => 50,
+                            'id' => 'notes',
+                            'class' => 'form-control',
+                            'placeholder' => 'Пометки'
+                        )); ?>
                         <?php echo $form->error($model, 'notes'); ?>
                     </div>
                 </div> 
@@ -103,5 +109,6 @@
         ?>
 
         <?php $this->endWidget(); ?>
+    </div> 
 
     </div><!-- form -->
