@@ -9,6 +9,18 @@ class LPatientForm extends LFormModel {
 	 */
 	public function backward() {
 		return [
+			$this->createFilter("treatment.patient", [
+				"surname",
+				"name",
+				"patronymic",
+				"birthday",
+				"sex",
+				"document_type",
+				"policy_number",
+				"policy_issue_date",
+				"address_id",
+				"register_address_id"
+			])
 		];
 	}
 
@@ -52,6 +64,16 @@ class LPatientForm extends LFormModel {
 				"type" => "date",
 				"rules" => "required"
 			],
+			"document_type" => [
+				"label" => "Тип документа",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"name" => "mis.doctypes",
+					"key" => "id",
+					"value" => "name"
+				]
+			],
 			"policy_number" => [
 				"label" => "Номер полиса",
 				"type" => "text",
@@ -74,20 +96,23 @@ class LPatientForm extends LFormModel {
 			],
 			"register_address_id" => [
 				"label" => "Адрес регистрации",
-				"type" => "number",
+				"type" => "address",
 				"rules" => "safe",
-				"form" => "LAddressForm"
+				"table" => [
+					"name" => "lis.address",
+					"format" => "г. %{city}, ул. %{street_name}, д. %{house_number}, кв. %{flat_number}",
+					"key" => "id",
+					"value" => "street_name, house_number, flat_number, city"
+				],
+				"options" => [
+					"disabled" => "disabled"
+				]
 			],
 			"address_id" => [
 				"label" => "Адрес фактического проживания",
 				"type" => "number",
 				"rules" => "safe",
 				"form" => "LAddressForm"
-			],
-			"is_policy_voluntary" => [
-				"label" => "Является ДМС?",
-				"type" => "YesNo",
-				"rules" => "required"
 			]
 		];
 	}

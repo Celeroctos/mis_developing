@@ -99,8 +99,7 @@ var Laboratory = Laboratory || {};
     Laboratory.postFormErrors = function(where, json) {
         var html = $("<ul>");
         for (var i in json["errors"] || []) {
-            $(where.find("input#" + i + "[value=''], select#" + i + "[value='-1'], #" + i + "textarea[value='']")
-                .parents(".form-group")[0]).addClass("has-error");
+            where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
             for (var j in json["errors"][i]) {
                 $("<li>", {
                     text: json["errors"][i][j]
@@ -165,6 +164,10 @@ var Laboratory = Laboratory || {};
     Laboratory.createForm = function(selector, properties) {
         return Laboratory.create(new Form(properties, $(selector)), selector, false);
     };
+
+	$.fn.form = Laboratory.createPlugin(
+		"createForm"
+	);
 
     $(document).ready(function() {
         $("[id$='-panel'], [id$='-modal']").each(function(i, item) {

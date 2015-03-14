@@ -170,9 +170,9 @@ var DropDown = {
 var Message = {
     display: function(json) {
         if (!json["status"]) {
-            Laboratory.createMessage({
-                message: json["message"]
-            });
+			Laboratory.createMessage({
+				message: json["message"]
+			});
             return false
         } else if (json["message"]) {
             Laboratory.createMessage({
@@ -473,7 +473,7 @@ var GuideValueEditor = {
 
 var MedcardSearch = {
 	construct: function() {
-		$("#medcard-search-button").click(function() {
+		$("[id='medcard-search-button']").click(function() {
 			MedcardSearch.search();
 		});
 		$("#medcard-edit-button").click(function() {
@@ -488,7 +488,7 @@ var MedcardSearch = {
 			return void 0;
 		}
 		$.get(url("/reception/patient/getMedcardData"), {
-			cardid: number
+			cardId: number
 		}, function(data) {
 			if(data.success == true) {
 				data = data.data["formModel"];
@@ -543,89 +543,22 @@ var MedcardSearch = {
 	id: null
 };
 
-var TreatmentView = {
+var TreatmentViewHeader = {
 	construct: function() {
-		var checkInsert = function() {
-			if (TreatmentView.copied !== false) {
-				$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
-			} else {
-				$("#medcard-editable-viewer-modal #insert-button").prop("disabled", true);
-			}
-		};
 		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
-			TreatmentView.active && TreatmentView.active.removeClass("active");
-			TreatmentView.active = $(this).addClass("active");
-		});
-		$("#direction-register-modal").on("show.bs.modal", function() {
-			Common.cleanup(this);
+			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("active");
+			TreatmentViewHeader.active = $(this).addClass("active");
 		});
 		this.active = $(".treatment-header").find("button.active");
 		if (!this.active.length) {
 			this.active = null;
 		}
-		var modal = $("#medcard-editable-viewer-modal");
-		modal.on("show.bs.modal", function() {
-			checkInsert();
+		$("button.treatment-header-rounded[data-tab]").click(function() {
+			console.log($(this).data("tab"));
 		});
-		modal.find("#copy-button").click(function() {
-			var json = {};
-			modal.find("input, select, textarea").each(function(i, it) {
-				json[$(it).attr("id")] = $(it).val();
-			});
-			TreatmentView.copied = json;
-			checkInsert();
-			Laboratory.createMessage({
-				message: "Данные скопированы",
-				sign: "ok",
-				type: "success"
-			});
+		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
+			Common.cleanup(this);
 		});
-		modal.find("#insert-button").click(function() {
-			if (TreatmentView.copied === false) {
-				return void 0;
-			}
-			var json = TreatmentView.copied;
-			for (var i in json) {
-				modal.find("[id='" + i + "']").val(json[i]);
-			}
-			Laboratory.createMessage({
-				message: "Данные вставлены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#clear-button").click(function() {
-			Common.cleanup(modal);
-			checkInsert();
-			Laboratory.createMessage({
-				message: "Данные очищены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-	},
-	load: function(model) {
-		var modal = $("#medcard-editable-viewer-modal");
-		for (var i in model) {
-			var offset = 0;
-			var chances = [
-				model[i], -1, 0, 1
-			];
-			var field = modal.find("[id='" + i + "']");
-			if (!field.length) {
-				field = modal.find("#" + i);
-			}
-			do {
-				field.each(function(i, item) {
-					$(item).val(chances[offset]);
-				});
-				if (++offset > chances.length) {
-					break;
-				}
-			} while (field.val() === null);
-		}
-		modal.find("#card_number").text(model["card_number"]);
-		modal.modal();
 	},
 	active: null,
 	copied: false
@@ -666,7 +599,7 @@ var MedcardSearchModal = {
 				if (!Message.display(json)) {
 					return void 0;
 				}
-				TreatmentView.load(json["model"]);
+				MedcardEditableViewerModal.load(json["model"]);
 				modal.modal("hide");
 			}, "json")
 				.always(function() {
@@ -681,6 +614,98 @@ var MedcardSearchModal = {
 	id: null
 };
 
+var MedcardEditableViewerModal = {
+	check: function() {
+		if (TreatmentViewHeader.copied !== false) {
+			$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
+		} else {
+			$("#medcard-editable-viewer-modal #insert-button").prop("disabled", true);
+		}
+	},
+	construct: function() {
+		var me = this;
+		var modal = $("#medcard-editable-viewer-modal");
+		modal.on("show.bs.modal", function() {
+			me.check();
+		});
+		modal.find("#copy-button").click(function() {
+			var json = {};
+			modal.find("input, select, textarea").each(function(i, it) {
+				json[$(it).attr("id")] = $(it).val();
+			});
+			TreatmentViewHeader.copied = json;
+			me.check();
+			Laboratory.createMessage({
+				message: "Данные скопированы",
+				sign: "ok",
+				type: "success"
+			});
+		});
+		modal.find("#insert-button").click(function() {
+			if (TreatmentViewHeader.copied === false) {
+				return void 0;
+			}
+			var json = TreatmentViewHeader.copied;
+			for (var i in json) {
+				modal.find("[id='" + i + "']").val(json[i]);
+			}
+			Laboratory.createMessage({
+				message: "Данные вставлены",
+				sign: "ok",
+				type: "success"
+			});
+		});
+		modal.find("#clear-button").click(function() {
+			Common.cleanup(modal);
+			me.check();
+			Laboratory.createMessage({
+				message: "Данные очищены",
+				sign: "ok",
+				type: "success"
+			});
+		});
+		modal.find("#save-button").click(function() {
+			var forms = [];
+			modal.find("form").each(function(i, f) {
+				forms.push($(f).serialize());
+			});
+			$.post(url("laboratory/medcard/register"), {
+				model: forms
+			}, function(json) {
+				if (json["errors"]) {
+					Laboratory.postFormErrors(modal, json);
+				} else if (!Message.display(json)) {
+					return void 0;
+				}
+				console.log(json);
+			}, "json");
+		});
+	},
+	load: function(model) {
+		var modal = $("#medcard-editable-viewer-modal")
+			.modal();
+		for (var i in model) {
+			var offset = 0;
+			var chances = [
+				model[i], -1, 0, 1
+			];
+			var field = modal.find("[id='" + i + "']");
+			if (!field.length) {
+				field = modal.find("#" + i);
+			}
+			do {
+				field.each(function(i, item) {
+					$(item).val(chances[offset]);
+				});
+				if (++offset > chances.length) {
+					break;
+				}
+			} while (field.val() === null);
+		}
+		modal.find("#card_number").text(model["card_number"]);
+	}
+};
+
 $(document).ready(function() {
 	GuideColumnEditor.construct();
 	ConfirmDelete.construct();
@@ -688,7 +713,8 @@ $(document).ready(function() {
 	GuideTableViewer.construct();
 	GuideValueEditor.construct();
 	MedcardSearch.construct();
-	TreatmentView.construct();
+	MedcardEditableViewerModal.construct();
+	TreatmentViewHeader.construct();
 	LogoutButton.construct();
 	MedcardSearchModal.construct("#mis-medcard-search-modal");
 	MedcardSearchModal.construct("#lis-medcard-search-modal");

@@ -117,12 +117,12 @@ $this->widget("LModal", [
 			</div>
 		</div>
 		<div class="col-xs-4">
-			<button class="btn btn-default btn-block treatment-header-rounded active" type="button">
+			<button class="btn btn-default btn-block treatment-header-rounded active" data-tab="#treatment-direction-grid-wrapper" type="button">
 				<span>Направления</span>
 			</button>
 		</div>
 		<div class="col-xs-4">
-			<button class="btn btn-default btn-block treatment-header-rounded" type="button">
+			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeat-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
 				<span class="badge">3</span>
 			</button>
@@ -140,9 +140,17 @@ $this->widget("LModal", [
 		</div>
 	</div>
 	<div class="col-xs-12 treatment-table-wrapper">
-		<?= $this->getWidget("LGridView", [
-			"model" => new LDirection(),
-			"id" => "direction-grid"
-		]) ?>
+		<div id="treatment-direction-grid-wrapper">
+			<?= $this->getWidget("LGridView", [
+				"model" => new LDirection(),
+				"id" => "direction-grid"
+			]) ?>
+		</div>
+		<div id="treatment-repeat-grid-wrapper">
+			<?= $this->getWidget("LGridView", [
+				"model" => new LDirection(),
+				"id" => "direction-grid"
+			]) ?>
+		</div>
 	</div>
 </div>

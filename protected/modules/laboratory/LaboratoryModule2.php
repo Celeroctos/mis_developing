@@ -1,6 +1,6 @@
 <?php
 
-class LLaboratoryModule extends WebModule {
+class LaboratoryModule2 extends WebModule {
 
 	/**
 	 * Override that method to return paths to javascript,
@@ -12,7 +12,9 @@ class LLaboratoryModule extends WebModule {
 			"laboratory.js",
 			"form.js",
             "multiple.js",
-			"laboratory.css"
+			"laboratory.css",
+			"message.js",
+			"address.js"
 		];
 	}
 }

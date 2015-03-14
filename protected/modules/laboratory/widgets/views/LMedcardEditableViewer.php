@@ -38,7 +38,7 @@ $this->beginWidget("CActiveForm", [
 			<b>Личные данные</b>
 			<br><br>
 			<? $this->widget("LForm", [
-				"model" => new LPolicyForm("treatment.patient")
+				"model" => new LPatientForm("treatment.patient")
 			]) ?>
 		</div>
 	</div>

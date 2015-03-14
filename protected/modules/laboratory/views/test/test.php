@@ -31,6 +31,13 @@ $this->widget("LPagination", [
 	"action" => "reloadPage.call"
 ]);
 
+$this->widget("LModal", [
+	"title" => "Test",
+	"body" => $this->getWidget("LForm", [
+		"model" => new LPatientForm()
+	]),
+	"id" => "test-modal-address-modal"
+]);
 
 $this->widget("LModal", [
 	"body" => $this->getWidget("LForm", [
@@ -53,8 +60,12 @@ $this->widget("LModal", [
 
 <br><br><br><br>
 <button class="btn btn-primary" data-toggle="modal" data-target="#test-modal">Test</button>
+<br><br><br><br>
 <script>
 	var reloadPage = function(page) {
 		window.location.href = "/moniiag/laboratory/test/view?page=" + page;
 	};
+	$(document).ready(function() {
+		$("#test-modal-address-modal").modal();
+	});
 </script>

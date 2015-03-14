@@ -9,26 +9,6 @@ class MedcardController extends LController {
         $this->render("view");
     }
 
-    /**
-     * Display page with medcard registration
-     */
-    public function actionViewAdd() {
-        $this->render("register");
-    }
-
-	/**
-	 * Display page with card information
-	 */
-	public function actionCard() {
-		if (isset($_GET["number"])) {
-			$this->render("card", [
-				"number" => $_GET["number"]
-			]);
-		} else {
-			header("Location: ".Yii::app()->getBaseUrl()."/laboratory/medcard/view");
-		}
-	}
-
 	/**
 	 * That action will load full information about medcard with
 	 * patient's addresses
@@ -133,7 +113,17 @@ class MedcardController extends LController {
 	 * @see LPanel
 	 */
 	public function actionRegister() {
-		parent::actionRegister();
+		try {
+			$model = $this->getFormModel("model", "post");
+			
+			$attributes = [];
+			LMedcard::model()->insert();
+			$this->leave([
+				"message" => "Данные медкарты были успешно сохранены"
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
 	}
 
 	/**

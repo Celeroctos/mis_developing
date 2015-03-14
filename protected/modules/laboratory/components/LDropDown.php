@@ -7,7 +7,7 @@ abstract class LDropDown extends LField {
 	 * @param string $class - Name of field's class
 	 * @return LDropDown - Field object
 	 */
-	public static function field($class = __CLASS__) {
+	public static function field($class = null) {
 		return parent::field($class);
 	}
 

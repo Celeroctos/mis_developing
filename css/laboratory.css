@@ -282,3 +282,22 @@
 .medcard-editable-viewer-number #card_number:empty:after {
     content: '0000/00';
 }
+
+/* Address Component */
+.laboratory-address .address-edit-button {
+    cursor: pointer;
+}
+.laboratory-address .panel {
+    margin-bottom: 0;
+}
+.laboratory-address .address-body {
+    margin-top: 5px;
+}
+.laboratory-address .panel-body {
+    padding: 0;
+}
+.laboratory-address .panel-body input {
+    margin: 0;
+    border: 1px solid #d3d3d3;
+    border-radius: 0;
+}
