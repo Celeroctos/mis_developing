@@ -393,8 +393,7 @@ $(document).ready(function() {
 						"ж":";" , "э":"'"  , "я":"z", "ч":"x", "с":"c", "м":"v", "и":"b", 
 						"т":"n" , "ь":"m"  , "б":"," , "ю":"."
 					};   
-				}				
-				
+				}
 				for(var i = 0; i < fieldValue.length; i++){                        
 					if(replacer[fieldValue[i].toLowerCase()] != undefined){
 						if(fieldValue[i] == fieldValue[i].toLowerCase()){

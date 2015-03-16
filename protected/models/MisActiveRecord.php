@@ -104,6 +104,13 @@ class MisActiveRecord extends CActiveRecord {
         }
     }
 
+    public function getAll() {
+        return $this->getDbConnection()->createCommand()
+            ->select("*")
+            ->from($this->tableName())
+            ->queryAll();
+    }
+
     // Поиск алиаса для поля
     protected function searchAlias($field, $aliasesArr) {
         foreach($aliasesArr as $alias => $fields) {

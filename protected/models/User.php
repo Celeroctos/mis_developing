@@ -1,15 +1,43 @@
 <?php
+
 class User extends MisActiveRecord  {
-    public static function model($className=__CLASS__)
-    {
+
+    /**
+     * @param string $className
+     * @return User
+     */
+    public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function tableName()
-    {
+    public function tableName() {
         return 'mis.users';
     }
 
+    /**
+     * Fetch user from database with it's login and password, it will
+     * crypt password with md5's md5 :D
+     * @param $login string - User's login
+     * @param $password - User's password (original)
+     * @return mixed - Row with user's fields
+     * @throws CDbException
+     * @throws Exception
+     */
+    public function fetchByLoginAndPassword($login, $password) {
+        $user = $this->getDbConnection()->createCommand()
+            ->select("*")
+            ->from("mis.users u")
+            ->where("lower(u.login) = lower(:login) and u.password = :password", [
+                ":login" => $login,
+                ":password" => md5(md5($password))
+            ])
+            ->limit("1")
+            ->queryRow();
+        if ($user != null) {
+            return $user;
+        }
+        throw new Exception("Can't resolve user's login or password ({$login})");
+    }
 
     public function getAll() {
         try {
@@ -104,5 +132,3 @@ class User extends MisActiveRecord  {
         }
     }
 }
-
-?>

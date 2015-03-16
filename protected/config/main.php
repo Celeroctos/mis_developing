@@ -1,18 +1,14 @@
-﻿<?php
+<?php
 
 $siteName = '';
 define('_STATIC', 'static_src'); //папка с ресурсами (для дальнейших публикаций). См. CAssetManager
 
-
 // Вот за такое надо расстреливать на месте. Но автор сего шедевра не знает как сделать что-то более правильное
 //          относительно быстро (( а времени нет((
 // Если в строке есть "moniiag" - значит мы на тестовом
-if (  strpos( $_SERVER['HTTP_HOST'], 'moniiag')!==false && strpos( $_SERVER['HTTP_HOST'], 'moniiag')>=0 )
-{
+if (  strpos( $_SERVER['HTTP_HOST'], 'moniiag')!==false && strpos( $_SERVER['HTTP_HOST'], 'moniiag')>=0 ) {
     $siteName = 'МИС Notum Тестовый сервер';
-}
-else
-{
+} else {
     $siteName = 'МИС Notum';
 }
 
@@ -38,14 +34,14 @@ return array(
 
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
-		/*
+		
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
+			'password'=>'Cvbhyjd1',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),
-		*/
+		 
         'reception' => array(
             'class' => 'application.modules.reception.ReceptionModule',
             'import'=>array(
@@ -102,6 +98,18 @@ return array(
                 'application.modules.hospital.components.*',
                 'application.modules.hospital.controllers.*'
             ),
+        ),
+        'laboratory' => array(
+            'class' => 'application.modules.laboratory.LaboratoryModule',
+            'import' => array(
+                'application.modules.laboratory.components.*',
+                'application.modules.laboratory.controllers.*',
+                'application.modules.laboratory.models.*',
+                'application.modules.laboratory.forms.*',
+                'application.modules.laboratory.widgets.*',
+                'application.modules.laboratory.fields.*',
+                'application.modules.laboratory.validators.*'
+            )
         )
 	),
 
@@ -167,15 +175,22 @@ return array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'index/error',
 		),
-		/*'log'=>array(
+		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
+//					'levels'=>'error, warning, trace, profile, info',
+					'levels'=>'error, warning, info',
 				),
+//                array(
+//                    'class' => 'CWebLogRoute',
+//                    'categories' => 'application',
+//                    'levels'=>'error, warning, trace, profile, info',
+//                    'showInFireBug' => true
+//                ),
 			),
-		),*/
+		),
 		'ePdf' => array(
 			'class'         => 'ext.yii-pdf-0_3_2.EYiiPdf',
 			'params'        => array(
@@ -197,15 +212,13 @@ return array(
 				    'mgh'               => 9, // margin_header
 				    'mgf'               => 9, // margin_footer
 				 //   'orientation'       => 'P', // landscape or portrait orientation
-
+		),
 				)*/
-
 	    /*
 				'defaultParams'     => array( // More info: http://mpdf1.com/manual?tid=184
 				 'autoPageBreak' => true
 				)
 	    */
-
 			    ),
 			    'HTML2PDF' => array(
 				'librarySourcePath' => 'application.vendor.html2pdf_v4_03.*',

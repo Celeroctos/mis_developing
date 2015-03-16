@@ -131,7 +131,7 @@
             PaginationData = '&'+PaginationData;
         }
         $.ajax({
-            'url' : '/reception/patient/search/?withonly=0&filters=' + $.toJSON(filters)+PaginationData,
+            'url' : globalVariables.baseUrl + '/reception/patient/search/?withonly=0&filters=' + $.toJSON(filters)+PaginationData,
             'cache' : false,
             'dataType' : 'json',
             'type' : 'GET',
@@ -370,7 +370,7 @@
             PaginationData = '&'+PaginationData;
         }
         $.ajax({
-            'url' : '/reception/patient/search/?withoutonly=0&filters=' + $.toJSON(filters)+PaginationData,
+            'url' : globalVariables.baseUrl + '/reception/patient/search/?withoutonly=0&filters=' + $.toJSON(filters)+PaginationData,
             'cache' : false,
             'dataType' : 'json',
             'type' : 'GET',
@@ -418,7 +418,7 @@
             PaginationData = '&'+PaginationData;
         }
         $.ajax({
-            'url' : '/reception/patient/search/?mediateonly=0&filters=' + $.toJSON(filters) + PaginationData,
+            'url' : globalVariables.baseUrl + '/reception/patient/search/?mediateonly=0&filters=' + $.toJSON(filters) + PaginationData,
             'cache' : false,
             'dataType' : 'json',
             'type' : 'GET',
@@ -923,7 +923,7 @@
 
 
         $.ajax({
-            'url' : '/reception/patient/getomsdata',
+            'url' : globalVariables.baseUrl + '/reception/patient/getomsdata',
             'data' : {
                 'omsid' : $(this).prop('href').substr($(this).prop('href').lastIndexOf('#') + 1)
             },
@@ -1052,7 +1052,7 @@
         var hiddenData = $(clickedRow).find('input[type="hidden"]').val();
         if($.trim(hiddenData) != '') {
             $.ajax({
-                'url' : '/guides/cladr/getcladrdata',
+                'url' : globalVariables.baseUrl + '/guides/cladr/getcladrdata',
                 'data' : {
                     'data' : hiddenData
                 },
@@ -1102,7 +1102,6 @@
         } else {
             $('#editAddressPopup').modal('show');
         }
-
         return false;
     });
 

@@ -655,16 +655,17 @@ $('.buttonUpContainer').click(function () {
         }
     });
 
-    $('.modal').on('show.bs.modal', function(e) {
-        $(this).css('overflow-y', 'scroll');
-        $('html').css('overflow-y', 'hidden');
-    });
-
-    $('.modal').on('hide.bs.modal', function(e) {
-        $(this).css('overflow-y', 'hidden');
-        $('html').css('overflow-y', 'scroll');
-        $('.navbar-fixed-top').css('margin-right', 0);
-    });
+    //$('.modal').on('show.bs.modal', function(e) {
+    //    $(this).css('overflow-y', 'scroll');
+    //    $("body").css('right', "calc(100% - 15px)");
+    //    $('html').css('overflow-y', 'hidden');
+    //});
+	//
+    //$('.modal').on('hide.bs.modal', function(e) {
+    //    $(this).css('overflow-y', 'hidden');
+    //    $('html').css('overflow-y', 'scroll');
+    //    $('.navbar-fixed-top').css('margin-right', 0);
+    //});
 
     $.fn.reduceCladrCode = function (codeToReduce){
         result = '';
@@ -881,7 +882,7 @@ $('.buttonUpContainer').click(function () {
 		},
 		setSessionInterval: function(value, _this) {
 			/*clearTimeout(_this.sessionTimer);
-			console.log('Timer reseted.');
+			clearTimeout(_this.sessionTimer);
 			_this.sessionTimer = setTimeout(function() {
 				$.ajax({
 					'url' : '/users/logout',
@@ -890,7 +891,7 @@ $('.buttonUpContainer').click(function () {
 					'type' : 'GET',
 					'success' : function(data, textStatus, jqXHR) {
 						if(data.success == 'true') {
-							location.href = '/';
+							location.href = globalVariables.baseUrl;
 						}
 					},
 				});
@@ -918,7 +919,7 @@ $('.buttonUpContainer').click(function () {
 	
 	/* Забор всех настроек для клиентской стороны */
 	$.ajax({
-		'url' : '/system/getsettings',
+		'url' : globalVariables.baseUrl + '/system/getsettings',
 		'cache' : false,
 		'dataType' : 'json',
 		'type' : 'GET',

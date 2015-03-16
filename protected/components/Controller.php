@@ -33,7 +33,7 @@ class Controller extends CController {
             $filterChain->run();
             return;
         }
-		
+
         // Skip all that shit if we're using api action
 		if (mb_strtolower($this->route) == 'users/api') {
 			$filterChain->run();
