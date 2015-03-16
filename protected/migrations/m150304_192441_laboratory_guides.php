@@ -4,6 +4,11 @@ class m150304_192441_laboratory_guides extends CDbMigration {
 
 	public function safeUp() {
 
+			$connection=Yii::app()->db;
+	$sql="CREATE SCHEMA IF NOT EXISTS lis";
+		$command=$connection->createCommand($sql);
+		$command->execute();
+
         $this->createTable("lis.analysis_params", [
             "id" => "serial primary key",
             "name" => "varchar(30) not null",
