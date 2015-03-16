@@ -620,4 +620,4 @@ foreach($categorie['childrenElementsOrder'] as $item) {
 </div>
 </div>
 </div>
-<? } ?>
+<?php } ?>

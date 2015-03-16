@@ -2272,7 +2272,7 @@ class PatientController extends Controller {
         }
 
 
-        $this->render('writepatientwithoutdata', $answer);
+        $this->render('writePatientWithoutData', $answer);
     }
 
     public function actionMediateToMedcard() {
