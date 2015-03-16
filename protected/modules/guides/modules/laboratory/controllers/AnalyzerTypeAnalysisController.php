@@ -1,20 +1,20 @@
 <?php
 
-class AnalyzerTypeAnalysisController extends Controller
-{
+class AnalyzerTypeAnalysisController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView()
-	{
+    public function actionView() {
         $this->actionIndex();
-	}
+    }
 
     public function actionAdd($id) {
 
         $model = new AnalyzerTypeAnalysis('analyzertypeanalysiss.create');
-        $model->analyser_type_id = ['analyser_type_id'=>$id];
+        $model->analyser_type_id = ['analyser_type_id' => $id];
         $this->renderPartial('form', array('model' => $model), false, true);
     }
+
     public function actionCreate() {
 
         $model = new AnalyzerTypeAnalysis('analyzertypeanalysiss.create');
@@ -22,11 +22,11 @@ class AnalyzerTypeAnalysisController extends Controller
         if (isset($_POST['AnalyzerTypeAnalysis'])) {
             $model->attributes = $_POST['AnalyzerTypeAnalysis'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -37,11 +37,11 @@ class AnalyzerTypeAnalysisController extends Controller
             $model->scenario = 'analyzertypeanalysiss.update';
             $model->attributes = $_POST['AnalyzerTypeAnalysis'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -67,13 +67,12 @@ class AnalyzerTypeAnalysisController extends Controller
             Yii::app()->session['analyser_type_id'] = $model->attributes['analyser_type_id'];
         }
         $analysertype = Yii::app()->session['analyser_type_id'];
-        $model->attributes = ['analyser_type_id'=>$analysertype];
+        $model->attributes = ['analyser_type_id' => $analysertype];
 
         $this->render('index', array(
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = AnalyzerTypeAnalysis::model()->findByPk($id);

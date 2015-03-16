@@ -1,62 +1,74 @@
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'analysis-type-template-form',
-	'enableAjaxValidation'=>false,
-)); ?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'analysis-type-template-form',
+        'enableAjaxValidation' => false,
+    ));
+    ?>
 
-	<?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'analysis_type_id', array(
+                    <?php
+                    echo $form->labelEx($model, 'analysis_type_id', array(
                         'class' => 'col-xs-8 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-4">
-        <?php echo $form->dropDownList($model,'analysis_type_id', 
-        AnalysisType::getAnalysisTypeListData('insert'),
-        ['class'=>'form-control',/*'disabled'=> true*/]
-        );?>       
-		<?php echo $form->error($model,'analysis_type_id'); ?>
+                        <?php
+                        echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control', /* 'disabled'=> true */]
+                        );
+                        ?>       
+                        <?php echo $form->error($model, 'analysis_type_id'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'analysis_param_id', array(
+                    <?php
+                    echo $form->labelEx($model, 'analysis_param_id', array(
                         'class' => 'col-xs-8 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-4">
-        <?php echo $form->dropDownList($model,'analysis_param_id', 
-        AnalysisParam::getAnalysisParamListData('insert')
-        );?>       
-		<?php echo $form->error($model,'analysis_param_id'); ?>
+                        <?php
+                        echo $form->dropDownList($model, 'analysis_param_id', AnalysisParam::getAnalysisParamListData('insert')
+                        );
+                        ?>       
+                        <?php echo $form->error($model, 'analysis_param_id'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'is_default', array(
+                    <?php
+                    echo $form->labelEx($model, 'is_default', array(
                         'class' => 'col-xs-8 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-4">
-        <?php echo $form->dropDownList($model,'is_default', 
-        ['0' => 'Нет', '1'=>'Да']
-        );?>       
-		<?php echo $form->error($model,'is_default'); ?>
+                        <?php
+                        echo $form->dropDownList($model, 'is_default', ['0' => 'Нет', '1' => 'Да']
+                        );
+                        ?>       
+                        <?php echo $form->error($model, 'is_default'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'seq_number', array(
+                    <?php
+                    echo $form->labelEx($model, 'seq_number', array(
                         'class' => 'col-xs-8 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-4">
-		<?php echo $form->textField($model,'seq_number', array('class' => 'col-xs-8')); ?>
-		<?php echo $form->error($model,'seq_number'); ?>
+                        <?php echo $form->textField($model, 'seq_number', array('class' => 'col-xs-8')); ?>
+                        <?php echo $form->error($model, 'seq_number'); ?>
                     </div>
                 </div>
             </div>
@@ -101,7 +113,7 @@
             ),
         ));
         ?>
-    <?php $this->endWidget(); ?>
-</div>
+        <?php $this->endWidget(); ?>
+    </div>
 
 </div><!-- form -->

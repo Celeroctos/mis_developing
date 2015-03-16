@@ -1,5 +1,5 @@
-<!--<<div class="modal-dialog"><!--<
-    div class="form">-->
+<!--<<div class="modal-dialog">-->
+<div class="form">
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
@@ -56,12 +56,14 @@
                     ));
                     ?>
                     <div class="col-xs-9">
-                        <?php echo $form->textArea($model, 'notes', array(
-                        'rows' => 6, 'cols' => 50,
+                        <?php
+                        echo $form->textArea($model, 'notes', array(
+                            'rows' => 6, 'cols' => 50,
                             'id' => 'notes',
                             'class' => 'form-control',
                             'placeholder' => 'Пометки'
-                        )); ?>
+                        ));
+                        ?>
                         <?php echo $form->error($model, 'notes'); ?>
                     </div>
                 </div> 
@@ -111,4 +113,4 @@
         <?php $this->endWidget(); ?>
     </div> 
 
-    </div><!-- form -->
+</div><!-- form -->

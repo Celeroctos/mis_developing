@@ -1,83 +1,101 @@
 <div class="modal-dialog">
 
-<?php 
-$form=$this->beginWidget('CActiveForm', array(
-	'id'=>'machine-form',
-	'enableAjaxValidation'=>false,
-)); 
-?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'machine-form',
+        'enableAjaxValidation' => false,
+    ));
+    ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'name', array(
+                    <?php
+                    echo $form->labelEx($model, 'name', array(
                         'class' => 'col-xs-3 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-9">
-		<?php echo $form->textField($model,'name', array(
+                        <?php
+                        echo $form->textField($model, 'name', array(
                             'id' => 'name',
                             'class' => 'form-control',
                             'placeholder' => 'Название аналтзатора'
-                        )); ?>
-		<?php echo $form->error($model,'name'); ?>
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'serial', array(
+                    <?php
+                    echo $form->labelEx($model, 'serial', array(
                         'class' => 'col-xs-3 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-9">
-		<?php echo $form->textField($model,'serial', array(
+                        <?php
+                        echo $form->textField($model, 'serial', array(
                             'id' => 'serial',
                             'class' => 'form-control',
                             'placeholder' => 'Номер'
-                        )); ?>
-		<?php echo $form->error($model,'serial'); ?>
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'serial'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'model', array(
+                    <?php
+                    echo $form->labelEx($model, 'model', array(
                         'class' => 'col-xs-3 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-9">
-		<?php echo $form->textField($model,'model', array(
+                        <?php
+                        echo $form->textField($model, 'model', array(
                             'id' => 'model',
                             'class' => 'form-control',
                             'placeholder' => 'Модель анализатора'
-                        )); ?>
-		<?php echo $form->error($model,'model'); ?>
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'model'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'software_version', array(
+                    <?php
+                    echo $form->labelEx($model, 'software_version', array(
                         'class' => 'col-xs-3 control-label'
-                    )); ?>
+                    ));
+                    ?>
                     <div class="col-xs-9">
-		<?php echo $form->textField($model,'software_version', array(
+                        <?php
+                        echo $form->textField($model, 'software_version', array(
                             'id' => 'software_version',
                             'class' => 'form-control',
                             'placeholder' => 'Версия ПО'
-                        )); ?>
-		<?php echo $form->error($model,'software_version'); ?>
+                        ));
+                        ?>
+                        <?php echo $form->error($model, 'software_version'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
-        <div class="form-group">
-            <?= $form->Label($model, 'analyzer_type_id', ['class'=>'col-xs-3 control-label']); ?>
-            <div class="col-xs-4">
-                <?= CHtml::activeDropDownList($model, 'analyzer_type_id', $analyzertypeList, [
-                    'class'=>'form-control',
-                ]); ?>
-            </div>
-        </div>
+                <div class="form-group">
+                    <?= $form->Label($model, 'analyzer_type_id', ['class' => 'col-xs-3 control-label']); ?>
+                    <div class="col-xs-4">
+                        <?=
+                        CHtml::activeDropDownList($model, 'analyzer_type_id', $analyzertypeList, [
+                            'class' => 'form-control',
+                        ]);
+                        ?>
+                    </div>
+                </div>
             </div> 
         </div> 
     </div> 
@@ -122,5 +140,6 @@ $form=$this->beginWidget('CActiveForm', array(
         ?>
 
         <?php $this->endWidget(); ?>
+    </div> 
 
-    </div><!-- form -->
+</div><!-- form -->

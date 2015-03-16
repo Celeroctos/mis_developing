@@ -19,32 +19,33 @@ $this->pageTitle = 'Образцы для типов анализов';
 
 
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-    'action'=>Yii::app()->createUrl($this->route),
-    'method'=>'get',
-)); ?>
+<?php
+$form = $this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl($this->route),
+    'method' => 'get',
+        ));
+?>
 
-        <?php echo CHtml::label('Выберите тип анализа','analysis_type_id'); ?>
-        <?php echo $form->dropDownList($model,'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert')); ?>
-        <?php echo CHtml::submitButton('Выбрать',['class' => 'btn btn-default']); ?>
+<?php echo CHtml::label('Выберите тип анализа', 'analysis_type_id'); ?>
+<?php echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert')); ?>
+<?php echo CHtml::submitButton('Выбрать', ['class' => 'btn btn-default']); ?>
 
 <?php $this->endWidget(); ?>
 
 <?php
-
-$this->beginWidget('zii.widgets.jui.CJuiDialog',array(
-        'id'=>'DialogCRUDForm',
-        'options'=>array(
-			'autoOpen'=>false,
-			'modal'=>true,
-			'width'=>'auto',
-			'height'=>'auto',
-			'resizable'=>'false',
-		),
-	));
+$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'DialogCRUDForm',
+    'options' => array(
+        'autoOpen' => false,
+        'modal' => true,
+        'width' => 'auto',
+        'height' => 'auto',
+        'resizable' => 'false',
+    ),
+));
 $this->endWidget();
 
-$updateDialog =<<<'EOT'
+$updateDialog = <<<'EOT'
 function() {
 	var url = $(this).attr('href');
     $.get(url, function(r){
@@ -65,9 +66,9 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<?php 
+<?php
 $template = '';
-if ( Yii::app()->user->checkAccess('guideEditAnalysisType')) {
+if (Yii::app()->user->checkAccess('guideEditAnalysisType')) {
     $template = '{update} {delete}';
 
     $buttons = array(
@@ -89,47 +90,48 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisType')) {
         )
     );
     ?>
-<?php if ($model->analysis_type_id > 0) { ?>
-    <?=
-    CHtml::link('Добавить', $this->createUrl('analysistypesample/add/id/'.$model->analysis_type_id), [ 'class' => 'btn btn-primary', 'ajax' => array(
-        'url' => $this->createUrl('analysistypesample/add/id/'.$model->analysis_type_id),
-        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление образца к списку").dialog("open"); return false;}',
-        ),
-    ]);
-    ?>
+    <?php if ($model->analysis_type_id > 0) { ?>
+        <?=
+        CHtml::link('Добавить', $this->createUrl('analysistypesample/add/id/' . $model->analysis_type_id), [ 'class' => 'btn btn-primary', 'ajax' => array(
+                'url' => $this->createUrl('analysistypesample/add/id/' . $model->analysis_type_id),
+                'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление образца к списку").dialog("open"); return false;}',
+            ),
+        ]);
+        ?>
     <?php } ?>
 
-    <?php } ?>
+<?php } ?>
 
 <?php if ($model->analysis_type_id > 0) { ?>
-<?php 
-$this->widget('zii.widgets.grid.CGridView', [
-	'id'=>'analysis-type-sample-grid',
-	'ajaxUpdate'=>false,
-    'ajaxType'=>'POST',
-	'dataProvider'=>$model->search(),
+    <?php
+    $this->widget('zii.widgets.grid.CGridView', [
+        'id' => 'analysis-type-sample-grid',
+        'ajaxUpdate' => false,
+        'ajaxType' => 'POST',
+        'dataProvider' => $model->search(),
 #	'filter'=>$model,
-    'itemsCssClass' => 'table table-bordered',
-	'columns'=>[
-                [
-            'name'=>'id',
-            'headerHtmlOptions' => array('style' => 'display:none'),
-            'htmlOptions' => array('style' => 'display:none'),        ],
-        [
-            'name' => 'analysis_sample_id',
-            'value'=> '$data->analysisSamples->type',
+        'itemsCssClass' => 'table table-bordered',
+        'columns' => [
+            [
+                'name' => 'id',
+                'headerHtmlOptions' => array('style' => 'display:none'),
+                'htmlOptions' => array('style' => 'display:none'),],
+            [
+                'name' => 'analysis_sample_id',
+                'value' => '$data->analysisSamples->type',
+            ],
+            [
+                'name' => 'Подтип образца',
+                'value' => '$data->analysisSamples->subtype',
+            ],
+            [
+                'class' => 'CButtonColumn',
+                'deleteConfirmation' => "js:'Вы уверены, что хотите удалить образец \'' + $(this).parent().parent().children(':nth-child(2)').text() + '\' из списка?'",
+                'template' => $template,
+                'buttons' => $buttons,
+            ],
         ],
-        [
-            'name' => 'Подтип образца',
-            'value'=> '$data->analysisSamples->subtype',
-        ],
-        [
-            'class'=>'CButtonColumn',
-            'deleteConfirmation' => "js:'Вы уверены, что хотите удалить образец \'' + $(this).parent().parent().children(':nth-child(2)').text() + '\' из списка?'",
-            'template' => $template,
-            'buttons' => $buttons,
-        ], 
-        ],
-]
-); ?>
-    <?php } ?>
+            ]
+    );
+    ?>
+<?php } ?>

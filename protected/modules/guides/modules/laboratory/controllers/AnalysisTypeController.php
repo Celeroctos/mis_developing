@@ -1,13 +1,12 @@
 <?php
 
-class AnalysisTypeController extends Controller
-{
+class AnalysisTypeController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-    public function actionView($id)
-    {
-        $this->render('view',array(
-            'model'=>$this->loadModel($id),
+    public function actionView($id) {
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
         ));
     }
 
@@ -17,14 +16,14 @@ class AnalysisTypeController extends Controller
 
         if (isset($_POST['AnalysisType'])) {
             $model->attributes = $_POST['AnalysisType'];
-            $result =$_POST['AnalysisType'];
-            $model->attributes = $result; 
+            $result = $_POST['AnalysisType'];
+            $model->attributes = $result;
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -35,8 +34,8 @@ class AnalysisTypeController extends Controller
             $model->scenario = 'analysistypes.update';
             $model->attributes = $_POST['AnalysisType'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
         $this->renderPartial('form', array('model' => $model), false, true);
@@ -67,7 +66,6 @@ class AnalysisTypeController extends Controller
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = AnalysisType::model()->findByPk($id);

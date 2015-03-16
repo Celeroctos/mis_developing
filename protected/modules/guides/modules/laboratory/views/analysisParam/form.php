@@ -1,4 +1,4 @@
-    <div class="form">
+<div class="form">
     <?php
     $form = $this->beginWidget('CActiveForm', array(
         'id' => 'analysis-param-form',
@@ -111,6 +111,6 @@
             ),
         ));
         ?>
-    <?php $this->endWidget(); ?>
-</div>
+        <?php $this->endWidget(); ?>
+    </div>
 </div>

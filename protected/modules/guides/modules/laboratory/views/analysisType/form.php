@@ -6,8 +6,8 @@
         'enableAjaxValidation' => false,
     ));
     ?>
-<?php
-$updateDialog = <<<'EOT'
+    <?php
+    $updateDialog = <<<'EOT'
 function() {
     var url = $(this).attr('href');
     $.get(url, function(r){
@@ -17,8 +17,7 @@ function() {
     return false;
 }
 EOT;
-
-?>
+    ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
@@ -63,7 +62,7 @@ EOT;
             <div class="row"> 
                 <div class="form-group">
                     <?php echo $form->labelEx($model, 'metodics'); ?>
-<!--                    <div class="col-xs-9">-->
+                    <!--                    <div class="col-xs-9">-->
 
                     <?php
                     echo $form->radioButtonList($model, 'metodics', array('Не определена', 'Автоматическая', 'Ручная'), array(
@@ -73,10 +72,10 @@ EOT;
                     ));
                     ?>
                     <?php echo $form->error($model, 'metodics'); ?>
-<!--                </div>-->
-            </div>
+                    <!--                </div>-->
+                </div>
+            </div> 
         </div> 
-    </div> 
     </div> 
 
     <div class="modal-footer">
@@ -118,7 +117,7 @@ EOT;
         ));
         ?>
 
-    </div>
         <?php $this->endWidget(); ?>
+    </div>
 
 </div><!-- form -->

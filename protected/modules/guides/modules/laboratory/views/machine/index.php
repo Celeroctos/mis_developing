@@ -1,12 +1,12 @@
 <script type="text/javascript">
-globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditAnalyserType'); ?>';</script>
+    globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditAnalyserType'); ?>';</script>
 
 <h4>Справочники лаборатории</h4>
 <?php
 $this->widget('application.modules.guides.components.widgets.LaboratoryTabMenu', array());
 ?>
 <?php
-$this->pageTitle = 'Параметры анализов';
+$this->pageTitle = 'Анализаторы';
 ?>
 <h4>Анализаторы</h4>
 
@@ -15,11 +15,10 @@ $this->pageTitle = 'Параметры анализов';
         <?= Yii::app()->user->getFlash('error'); ?>
         <?= Yii::app()->user->getFlash('success'); ?>
     </div>
-    <?php endif; ?>
+<?php endif; ?>
 
-<?php 
-
-$updateDialog =<<<'EOT'
+<?php
+$updateDialog = <<<'EOT'
 function() {
     var url = $(this).attr('href');
     $.get(url, function(r){
@@ -29,12 +28,11 @@ function() {
     return false;
 }
 EOT;
-
 ?>
 
-<?php 
+<?php
 $template = '';
-if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
+if (Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
     $template = '{update} {delete}';
 
     $buttons = array(
@@ -58,66 +56,66 @@ if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
     ?>
     <?=
     CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
-        'url' => $this->createUrl('create'),
-        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление анализатора").dialog("open"); return false;}',
+            'url' => $this->createUrl('create'),
+            'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление анализатора").dialog("open"); return false;}',
         ),
     ]);
     ?>
-    <?php } ?>
+<?php } ?>
 <?php
-$this->beginWidget('zii.widgets.jui.CJuiDialog',array(
-    'id'=>'DialogCRUDForm',
-    'options'=>array(
-        'autoOpen'=>false,
-        'modal'=>true,
-        'width'=>'auto',
-        'height'=>'auto',
-        'resizable'=>'false',
+$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'DialogCRUDForm',
+    'options' => array(
+        'autoOpen' => false,
+        'modal' => true,
+        'width' => 'auto',
+        'height' => 'auto',
+        'resizable' => 'false',
     ),
 ));
 $this->endWidget();
-
 ?>
 
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'machine-grid',
-    'ajaxUpdate'=>false,
-    'ajaxType'=>'POST',
-    'dataProvider'=>$model->search(),
+<?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'machine-grid',
+    'ajaxUpdate' => false,
+    'ajaxType' => 'POST',
+    'dataProvider' => $model->search(),
     //    'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',
-    'columns'=>array(
+    'columns' => array(
         #        'id',
         [
-            'name'=>'name',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'name',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
         [
-            'name'=>'serial',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'serial',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
         [
-            'name'=>'model',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'model',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
         [
-            'name'=>'software_version',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'software_version',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
         [
-            'name'=>'analyzer_type_id',
-            'value'=>'$data->getAnalyzer_Type($data->analyzer_type_id)',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-1',
+            'name' => 'analyzer_type_id',
+            'value' => '$data->getAnalyzer_Type($data->analyzer_type_id)',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-1',
             ],
         ],
         array(
@@ -127,5 +125,5 @@ $this->endWidget();
             'buttons' => $buttons,
         ),
     )
-)); 
+));
 ?>

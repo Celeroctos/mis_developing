@@ -1,23 +1,23 @@
 <?php
 
-class AnalysisTypeParamController extends Controller
-{
+class AnalysisTypeParamController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-/*	public function actionView()
-	{
-        $this->actionIndex();
-	} */
+    /* 	public function actionView()
+      {
+      $this->actionIndex();
+      } */
 
     public function actionAdd($id) {
 
         $model = new AnalysisTypeParam('analysistypeparam.create');
-        $model->analysis_type_id = ['analysis_type_id'=>$id];
+        $model->analysis_type_id = ['analysis_type_id' => $id];
         $this->renderPartial('form', array('model' => $model), false, true);
- ;
+        ;
     }
 
-        public function actionCreate() {
+    public function actionCreate() {
 
         $model = new AnalysisTypeParam('analysistypeparam.create');
         if (isset($_POST['AnalysisTypeParam'])) {
@@ -26,11 +26,11 @@ class AnalysisTypeParamController extends Controller
                 if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
                     Yii::app()->end();
+                }
             }
         }
-        }
-             $this->renderPartial('form', array('model' => $model), false, true);
-   }
+        $this->renderPartial('form', array('model' => $model), false, true);
+    }
 
     public function actionUpdate($id) {
 
@@ -40,11 +40,11 @@ class AnalysisTypeParamController extends Controller
             $model->scenario = 'analysistypeparam.update';
             $model->attributes = $_POST['AnalysisTypeParam'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -70,7 +70,7 @@ class AnalysisTypeParamController extends Controller
             Yii::app()->session['analysis_type_id'] = $model->attributes['analysis_type_id'];
         }
         $analysistype = Yii::app()->session['analysis_type_id'];
-        $model->attributes = ['analysis_type_id'=>$analysistype];
+        $model->attributes = ['analysis_type_id' => $analysistype];
 
         $this->render('index', array(
             'model' => $model, 'analysis_type_id' => $model->attributes['analysis_type_id'],
@@ -83,4 +83,5 @@ class AnalysisTypeParamController extends Controller
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
     }
+
 }

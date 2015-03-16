@@ -1,13 +1,12 @@
 <?php
 
-class AnalysisSampleTypeController extends Controller
-{
+class AnalysisSampleTypeController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
-	{
+    public function actionView($id) {
         $this->actionIndex();
-	}
+    }
 
     public function actionCreate() {
 
@@ -16,11 +15,11 @@ class AnalysisSampleTypeController extends Controller
         if (isset($_POST['AnalysisSampleType'])) {
             $model->attributes = $_POST['AnalysisSampleType'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -31,11 +30,11 @@ class AnalysisSampleTypeController extends Controller
             $model->scenario = 'AnalysisSampleType.update';
             $model->attributes = $_POST['AnalysisSampleType'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -63,7 +62,6 @@ class AnalysisSampleTypeController extends Controller
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = AnalysisSampleType::model()->findByPk($id);

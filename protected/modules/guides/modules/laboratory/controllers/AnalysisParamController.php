@@ -15,11 +15,11 @@ class AnalysisParamController extends Controller {
         if (isset($_POST['AnalysisParam'])) {
             $model->attributes = $_POST['AnalysisParam'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -30,11 +30,11 @@ class AnalysisParamController extends Controller {
             $model->scenario = 'analysisparams.update';
             $model->attributes = $_POST['AnalysisParam'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -62,7 +62,6 @@ class AnalysisParamController extends Controller {
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = AnalysisParam::model()->findByPk($id);

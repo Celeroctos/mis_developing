@@ -1,13 +1,12 @@
 <?php
 
-class AnalyzerTypeController extends Controller
-{
+class AnalyzerTypeController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
-	{
+    public function actionView($id) {
         $this->actionIndex();
-	}
+    }
 
     public function actionCreate() {
 
@@ -16,11 +15,11 @@ class AnalyzerTypeController extends Controller
         if (isset($_POST['AnalyzerType'])) {
             $model->attributes = $_POST['AnalyzerType'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -31,11 +30,11 @@ class AnalyzerTypeController extends Controller
             $model->scenario = 'analyzertypes.update';
             $model->attributes = $_POST['AnalyzerType'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -63,7 +62,6 @@ class AnalyzerTypeController extends Controller
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = AnalyzerType::model()->findByPk($id);

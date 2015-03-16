@@ -30,37 +30,36 @@ function() {
 EOT;
 ?>
 
-<?php 
+<?php
 $template = '';
-if (Yii::app()->user->checkAccess('guideEditAnalysisSample')) { 
+if (Yii::app()->user->checkAccess('guideEditAnalysisSample')) {
     $template = '{update} {delete}';
     $buttons = array(
-                'headerHtmlOptions' => array(
-                    'class' => 'col-md-1',
-                ),
-                'update' => array(
-                    'click' => $updateDialog,
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-primary btn-block btn-xs',
-                    ],
-                ),
-                'delete' => array(
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-default btn-block btn-xs',
-                    ],
-                )
-        );
-
+        'headerHtmlOptions' => array(
+            'class' => 'col-md-1',
+        ),
+        'update' => array(
+            'click' => $updateDialog,
+            'imageUrl' => false,
+            'options' => [
+                'class' => 'btn btn-primary btn-block btn-xs',
+            ],
+        ),
+        'delete' => array(
+            'imageUrl' => false,
+            'options' => [
+                'class' => 'btn btn-default btn-block btn-xs',
+            ],
+        )
+    );
     ?>
-<?=
-CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
-        'url' => $this->createUrl('create'),
-        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление типа образца для анализа").dialog("open"); return false;}',
-    ),
-]);
-?>
+    <?=
+    CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
+            'url' => $this->createUrl('create'),
+            'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление типа образца для анализа").dialog("open"); return false;}',
+        ),
+    ]);
+    ?>
 <?php } ?>
 
 <?php
@@ -74,14 +73,14 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     ),
         )
 );
-        $this->endWidget();
+$this->endWidget();
 ?>
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'analysis-param-grid',
     'ajaxUpdate' => false,
-    'ajaxType'=>'POST',
+    'ajaxType' => 'POST',
     'dataProvider' => $model->search(),
 //	'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',
