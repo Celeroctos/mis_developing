@@ -17,11 +17,11 @@
     <button type="button" class="btn btn-success" id="showTemplate">Просмотр шаблона</button>
 </div>
 
-<?php $this->widget('application.modals.admin.templates.AddTemplate') ?>
-<?php $this->widget('application.modals.admin.templates.AddTemplateError') ?>
-<?php $this->widget('application.modals.admin.templates.EditTemplate') ?>
-<?php $this->widget('application.modals.admin.templates.ShowTemplate') ?>
-<?php $this->widget('application.modals.admin.templates.DesignTemplate') ?>
+<?php $this->widget('application.modals.admin.templates.AddTemplate'); ?>
+<?php $this->widget('application.modals.admin.templates.AddTemplateError'); ?>
+<?php $this->widget('application.modals.admin.templates.EditTemplate'); ?>
+<?php $this->widget('application.modals.admin.templates.ShowTemplate'); ?>
+<?php $this->widget('application.modals.admin.templates.DesignTemplate'); ?>
 <?php $this->widget("application.modals.admin.templates.AddCategory"); ?>
 <?php $this->widget("application.modals.admin.templates.AddCategoryError"); ?>
 <?php $this->widget("application.modals.admin.templates.EditCategory"); ?>
