@@ -1,25 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "lis.analyzer_type_analysis".
+ * This is the model class for table "lis.analysis_types_samples".
  *
- * The followings are the available columns in table 'lis.analyzer_type_analysis':
+ * The followings are the available columns in table 'lis.analysis_types_samples':
  * @property integer $id
- * @property integer $analyser_type_id
  * @property integer $analysis_type_id
+ * @property integer $analysis_sample_id
  *
  * The followings are the available model relations:
- * @property AnalyzerTypes $analyserType
  * @property AnalysisTypes $analysisType
+ * @property AnalysisSamples $analysisSample
  */
-class AnalyzerTypeAnalysis extends MisActiveRecord
+class AnalysisTypeSample extends MisActiveRecord
 {
-    /**
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'lis.analyzer_type_analysis';
+		return 'lis.analysis_type_samples';
 	}
 
 	/**
@@ -30,10 +30,10 @@ class AnalyzerTypeAnalysis extends MisActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('analyser_type_id, analysis_type_id', 'numerical', 'integerOnly'=>true),
+			array('analysis_type_id, analysis_sample_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, analyser_type_id, analysis_type_id', 'safe', 'on'=>'search'),
+			array('id, analysis_type_id, analysis_sample_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,8 +45,8 @@ class AnalyzerTypeAnalysis extends MisActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'analyserTypes' => array(self::BELONGS_TO, 'AnalyzerType', 'analyser_type_id'),
 			'analysisTypes' => array(self::BELONGS_TO, 'AnalysisType', 'analysis_type_id'),
+			'analysisSamples' => array(self::BELONGS_TO, 'AnalysisSampleType', 'analysis_sample_id'),
 		);
 	}
 
@@ -57,8 +57,8 @@ class AnalyzerTypeAnalysis extends MisActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'analyser_type_id' => 'Тип анализатора',
 			'analysis_type_id' => 'Тип анализа',
+			'analysis_sample_id' => 'Тип образца',
 		);
 	}
 
@@ -81,8 +81,8 @@ class AnalyzerTypeAnalysis extends MisActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('analyser_type_id',$this->analyser_type_id);
 		$criteria->compare('analysis_type_id',$this->analysis_type_id);
+		$criteria->compare('analysis_sample_id',$this->analysis_sample_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -93,7 +93,7 @@ class AnalyzerTypeAnalysis extends MisActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return AnalyzerTypeAnalysis the static model class
+	 * @return AnalysisTypeSamples the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

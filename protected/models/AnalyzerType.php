@@ -11,22 +11,31 @@ class AnalyzerType extends MisActiveRecord
 
     public function rules()
     {
-        return [
-            ['type', 'required', 'on'=>'analyzertypes.update'],
-            ['type, name, notes', 'type', 'type'=>'string', 'on'=>'analyzertypes.update'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analyzertypes.update'], //[controller].[action]
-
-            ['type', 'required', 'on'=>'analyzertypes.create'],
-            ['type, name, notes', 'type', 'type'=>'string', 'on'=>'analyzertypes.create'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analyzertypes.create'], //[controller].[action]
-
-            ['id, type, name, notes', 'safe', 'on'=>'analyzertypes.search'],
-        ];
+        return array(
+            array('type', 'required'),
+            array('type, name', 'length', 'max'=>100),
+            array('notes, analysis_types', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, type, name, notes, analysis_types', 'safe', 'on'=>'search'),
+        );
     }
 
     public function tableName()
     {
         return 'lis.analyzer_types';
+    }
+
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'analyzerTypeAnalysises' => array(self::HAS_MANY, 'AnalyzerTypeAnalysis', 'analyser_type_id'),
+            'machines' => array(self::HAS_MANY, 'Machine', 'analyzer_type_id'),
+            'analyserTypeAnalysis'=>array(self::MANY_MANY, 'AnalysisType',
+                'lis.analyzer_type_analysis(analysis_type_id, analyser_type_id)'),
+        );
     }
 
     /**
@@ -39,15 +48,17 @@ class AnalyzerType extends MisActiveRecord
         $model=new AnalyzerType;
         $criteria=new CDbCriteria;
         $criteria->select='id, type';
+        $criteria->order='type';
         $analyzertypeList=$model->findAll($criteria);
 
         $qq =  CHtml::listData(
-            CMap::mergeArray([
+            ($typeQuery=='insert') ? CMap::mergeArray([
                 [
-                    'id'=>$typeQuery=='insert' ? null : null,
+                    'id'=>null,
                     'type'=>'',
                 ]
-                ], $analyzertypeList),
+                ], $analyzertypeList) :
+                $analyzertypeList,
             'id',
             'type'
         );

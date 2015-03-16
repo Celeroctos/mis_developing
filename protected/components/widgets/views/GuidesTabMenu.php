@@ -104,10 +104,10 @@ if (Yii::app()->user->checkAccess('guideAddMedcardRule') ||
         </li>
 <?php } ?>
 <?php
-if ( Yii::app()->user->checkAccess('guideEditAnalysisSampleType')||
+if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')||
         Yii::app()->user->checkAccess('guideEditAnalysisParam') ||
         Yii::app()->user->checkAccess('guideEditAnalysisType') ||
-        Yii::app()->user->checkAccess('guideEditAnalysisTypeTemplate') ||
+        Yii::app()->user->checkAccess('guideEditAnalysisTypeParam') ||
         Yii::app()->user->checkAccess('guideEditAnalyzerType') ||
         Yii::app()->user->checkAccess('guideEditAnalyzerTypeAnalysis')
 ) {
@@ -117,7 +117,7 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisSampleType')||
     ($controller == 'analysissampletype')||
     ($controller == 'analysisparam')||
     ($controller == 'analysistype')||
-    ($controller == 'analysistypetemplate')||
+    ($controller == 'analysistypeparam')||
     ($controller == 'analyseretype')||
     ($controller == 'analyzertypeanalysis')
     ) ? 'class="active"' : '';

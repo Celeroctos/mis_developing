@@ -4,11 +4,17 @@ class AnalyzerTypeAnalysisController extends Controller
 {
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
+	public function actionView()
 	{
         $this->actionIndex();
 	}
 
+    public function actionAdd($id) {
+
+        $model = new AnalyzerTypeAnalysis('analyzertypeanalysiss.create');
+        $model->analyser_type_id = ['analyser_type_id'=>$id];
+        $this->renderPartial('form', array('model' => $model), false, true);
+    }
     public function actionCreate() {
 
         $model = new AnalyzerTypeAnalysis('analyzertypeanalysiss.create');
@@ -56,8 +62,12 @@ class AnalyzerTypeAnalysisController extends Controller
     public function actionIndex() {
         $model = new AnalyzerTypeAnalysis('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AnalyzerTypeAnalysis']))
+        if (isset($_GET['AnalyzerTypeAnalysis'])) {
             $model->attributes = $_GET['AnalyzerTypeAnalysis'];
+            Yii::app()->session['analyser_type_id'] = $model->attributes['analyser_type_id'];
+        }
+        $analysertype = Yii::app()->session['analyser_type_id'];
+        $model->attributes = ['analyser_type_id'=>$analysertype];
 
         $this->render('index', array(
             'model' => $model,

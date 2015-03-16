@@ -25,24 +25,38 @@ class AnalysisType extends MisActiveRecord
 
     public function rules()
     {
-        return [
-            ['name', 'required', 'on'=>'analysistypes.update'],
-            ['name, short_name', 'type', 'type'=>'string', 'on'=>'analysistypes.update'],
-            ['id, metodics', 'type', 'type'=>'integer', 'on'=>'analysistypes.update'], //[controller].[action]
-            ['metodics', 'safe', 'on'=>'analysistypes.update'],
-
-            ['name', 'required', 'on'=>'analysistypes.create'],
-            ['name, short_name', 'type', 'type'=>'string', 'on'=>'analysistypes.create'],
-            ['id, metodics', 'type', 'type'=>'integer', 'on'=>'analysistypes.create'], //[controller].[action]
-            ['metodics', 'safe', 'on'=>'analysistypes.create'],
-
-            ['id, name, short_name, metodics', 'safe', 'on'=>'analysistypes.search'],
-        ];
+        return array(
+            array('name', 'required'),
+            array('metodics', 'numerical', 'integerOnly'=>true),
+            array('name', 'length', 'max'=>200),
+            array('short_name', 'length', 'max'=>20),
+            array('sample_types', 'safe'),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, name, short_name, metodics, sample_types', 'safe', 'on'=>'search'),
+        );
     }
 
     public function tableName()
     {
         return 'lis.analysis_types';
+    }
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'analysisTypeSamples' => array(self::HAS_MANY, 'AnalysisTypeSample', 'analysis_type_id'),
+            'analysisTypeParams' => array(self::HAS_MANY, 'AnalysisTypeParam', 'analysis_type_id'),
+            'analyzerTypeAnalysises' => array(self::HAS_MANY, 'AnalyzerTypeAnalysis', 'analysis_type_id'),
+            'directions' => array(self::HAS_MANY, 'Direction', 'analysis_type_id'),
+            'analysisTypeParams'=>array(self::MANY_MANY, 'AnalysisParam',
+                'lis.analysis_type_params(analysis_type_id, analysis_param_id)'),
+            'analysisTypeSamplesTypes'=>array(self::MANY_MANY, 'AnalysisSampleType',
+                'lis.analysis_types_samples(analysis_type_id, analysis_sample_id)'),
+            'analyserTypeAnalysis'=>array(self::MANY_MANY, 'AnalyserType',
+                'lis.analyzer_type_analysis(analysis_type_id, analyser_type_id)'),
+        );
     }
 
     /**
@@ -55,6 +69,7 @@ class AnalysisType extends MisActiveRecord
         $model=new AnalysisType;
         $criteria=new CDbCriteria;
         $criteria->select='id, name';
+        $criteria->order='name';
         $analysistypeList=$model->findAll($criteria);
         $ret = CHtml::listData( $typeQuery=='insert' ? 
         CMap::mergeArray([
@@ -68,7 +83,7 @@ class AnalysisType extends MisActiveRecord
                 );
         return $ret;
     }	
-
+/*
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
         $connection = Yii::app()->db;
         $analysistypes = $connection->createCommand()
@@ -93,8 +108,8 @@ class AnalysisType extends MisActiveRecord
 
         return $analysistypes->queryAll();
     }
-
-
+  */
+/*
     public function getOne($id) {
         try {
             $connection = Yii::app()->db;
@@ -110,7 +125,7 @@ class AnalysisType extends MisActiveRecord
             echo $e->getMessage();
         }
     }
-
+*/
     public function attributeLabels() {
         return [
             'id'=>'#ID',

@@ -84,6 +84,7 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'analysis-param-grid',
     'ajaxUpdate' => false,
+    'ajaxType'=>'POST',
     'dataProvider' => $model->search(),
 //	'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',

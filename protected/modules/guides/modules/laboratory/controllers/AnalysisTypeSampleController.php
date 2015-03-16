@@ -1,33 +1,38 @@
 <?php
 
-class AnalysisTypeTemplateController extends Controller
+class AnalysisTypeSampleController extends Controller
 {
+	/**
+	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+	 * using two-column layout. See 'protected/views/layouts/column2.php'.
+	 */
     public $layout = 'application.modules.guides.views.layouts.index';
-    public $defaultAction = 'index';
 
-    public function actionView($id) {
-        $this->actionIndex();
+
+
+    public function actionAdd($id){
+        
+        $model=new AnalysisTypeSample;
+        $model->analysis_type_id = ['analysis_type_id'=>$id];
+        $this->renderPartial('form',array('model'=>$model), false, true);
     }
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate(){
 		
-		$model=new AnalysisTypeTemplate('analysistypetemplate.create');
+		$model=new AnalysisTypeSample;
 		
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-		
-		if(isset($_POST['AnalysisTypeTemplate'])){
-			$model->attributes=$_POST['AnalysisTypeTemplate'];
+		if(isset($_POST['AnalysisTypeSample'])){
+			$model->attributes=$_POST['AnalysisTypeSample'];
 			if($model->save()){
 					echo 'success';
 					Yii::app()->end();
 			}
 		}
 			$this->renderPartial('form',array('model'=>$model), false, true);
-			
 	}
 
 	/**
@@ -39,20 +44,15 @@ class AnalysisTypeTemplateController extends Controller
 		
 		$model=$this->loadModel($id);
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['AnalysisTypeTemplate']))
+		if(isset($_POST['AnalysisTypeSample']))
 		{
-            $model->scenario = 'analysistypetemplate.update';
-			$model->attributes=$_POST['AnalysisTypeTemplate'];
+			$model->attributes=$_POST['AnalysisTypeSample'];
 			if($model->save()) {
 					echo 'success';
 					Yii::app()->end();
 			}
 		}
 			$this->renderPartial('form',array('model'=>$model), false, true);
-		
 	}
 
 	/**
@@ -80,10 +80,14 @@ class AnalysisTypeTemplateController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model=new AnalysisTypeTemplate('search');
+		$model=new AnalysisTypeSample('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['AnalysisTypeTemplate']))
-			$model->attributes=$_GET['AnalysisTypeTemplate'];
+		if(isset($_GET['AnalysisTypeSample'])) {
+			$model->attributes=$_GET['AnalysisTypeSample'];
+            Yii::app()->session['analysis_type_id'] = $model->attributes['analysis_type_id'];
+        }
+        $analysistype = Yii::app()->session['analysis_type_id'];
+        $model->attributes = ['analysis_type_id'=>$analysistype];
 
 		$this->render('index',array(
 			'model'=>$model,
@@ -97,22 +101,10 @@ class AnalysisTypeTemplateController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=AnalysisTypeTemplate::model()->findByPk($id);
+		$model=AnalysisTypeSample::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
 
-	/**
-	 * Performs the AJAX validation.
-	 * @param CModel the model to be validated
-	 */
-	protected function performAjaxValidation($model)
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='analysis-type-template-form')
-		{
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
 }

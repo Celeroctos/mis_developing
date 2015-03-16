@@ -14,26 +14,41 @@ class AnalysisParam extends MisActiveRecord
         return parent::model($className);
     }
 
-    public function rules()
-    {
-        return [
-            ['name', 'required', 'on'=>'analysisparams.update'],
-            ['name, long_name, comment', 'type', 'type'=>'string', 'on'=>'analysisparams.update'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analysisparams.update'], //[controller].[action]
-
-            ['name', 'required', 'on'=>'analysisparams.create'],
-            ['name, long_name, comment', 'type', 'type'=>'string', 'on'=>'analysisparams.create'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analysisparams.create'], //[controller].[action]
-
-            ['id, name, long_name, comment', 'safe', 'on'=>'analysisparams.search'],
-        ];
-    }
-
     public function tableName()
     {
         return 'lis.analysis_params';
     }
 
+    public function rules()
+    {
+        return [
+            ['name', 'required'],
+            ['name', 'length', 'max'=>30],
+            ['long_name', 'length', 'max'=>200],
+            ['comment', 'safe'],
+#            ['name, long_name, comment', 'type', 'type'=>'string', 'on'=>'analysisparams.update'],
+            ['id', 'type', 'type'=>'integer'], //[controller].[action]
+
+#            ['name', 'required', 'on'=>'analysisparams.create'],
+#            ['name, long_name, comment', 'type', 'type'=>'string', 'on'=>'analysisparams.create'],
+#            ['id', 'type', 'type'=>'integer', 'on'=>'analysisparams.create'], //[controller].[action]
+
+            ['id, name, long_name, comment', 'safe', 'on'=>'analysisparams.search'],
+        ];
+    }
+/**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'analysisTypeTemplates' => array(self::HAS_MANY, 'AnalysisTypeParams', 'analysis_param_id'),
+            'analysisTypeParams'=>array(self::MANY_MANY, 'AnalysisType',
+                'lis.analysis_type_params(analysis_type_id, analysis_param_id)'),
+        );
+    }
     /**
     * Список для выпадающего списка (см. dropDownList Yii)
     * @param string $typeQuery Добавить/обновить
@@ -44,15 +59,17 @@ class AnalysisParam extends MisActiveRecord
         $model=new AnalysisParam;
         $criteria=new CDbCriteria;
         $criteria->select='id, name';
+        $criteria->order='name';
         $analysisparamList=$model->findAll($criteria);
 
         return CHtml::listData(
-            CMap::mergeArray([
+            ($typeQuery=='insert') ? CMap::mergeArray([
                 [
-                    'id'=>$typeQuery=='insert' ? null : null,
+                    'id'=>null,
                     'name'=>'',
                 ]
-                ], $analysisparamList),
+                ], $analysisparamList) :
+                $analysisparamList,
             'id',
             'name'
         );
@@ -83,7 +100,7 @@ class AnalysisParam extends MisActiveRecord
         return $analysisparams->queryAll();
     }
 */
-
+ /*
     public function getOne($id) {
         try {
             $connection = Yii::app()->db;
@@ -99,7 +116,7 @@ class AnalysisParam extends MisActiveRecord
             echo $e->getMessage();
         }
     }
-
+   */
 
     public function attributeLabels() {
         return [
@@ -119,7 +136,7 @@ class AnalysisParam extends MisActiveRecord
 
         //        if($this->validate())
         {
-            $criteria->compare('id', $this->id, false);
+            $criteria->compare('id', $this->id);
             $criteria->compare('name', $this->name, true);
             $criteria->compare('long_name', $this->long_name, true);
             $criteria->compare('comment', $this->comment, true);

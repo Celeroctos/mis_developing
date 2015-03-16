@@ -6,9 +6,9 @@
 $this->widget('application.modules.guides.components.widgets.LaboratoryTabMenu', array());
 ?>
 <?php
-$this->pageTitle = 'Типы анализов для типов анализаторов';
+$this->pageTitle = 'Параметры для типов анализов';
 ?>
-<h4>Типы анализов для типов анализаторов</h4>
+<h4>Параметры для типов анализов</h4>
 
 <?php if (Yii::app()->user->hasFlash('error') || Yii::app()->user->hasFlash('success')): ?>
     <div class="alert alert-danger">
@@ -24,8 +24,8 @@ $this->pageTitle = 'Типы анализов для типов анализат
     'method'=>'get',
 )); ?>
 
-        <?php echo CHtml::label('Выберите тип анализатора','analysis_type_id'); ?>
-        <?php echo $form->dropDownList($model,'analyser_type_id', AnalyzerType::getAnalyzerTypeListData('insert')); ?>
+        <?php echo CHtml::label('Выберите тип анализа','analysis_type_id'); ?>
+        <?php echo $form->dropDownList($model,'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'),['id'=>'analysis_type_dropdown']); ?>
         <?php echo CHtml::submitButton('Выбрать',['class' => 'btn btn-default']); ?>
 
 <?php $this->endWidget(); ?>
@@ -49,7 +49,7 @@ function() {
 	var url = $(this).attr('href');
     $.get(url, function(r){
         $("#update").html(r).dialog("open");
-		$("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование списка типа анализатора").dialog("open");
+		$("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование параметра для типа анализв").dialog("open");
     });
     return false;
 }
@@ -89,11 +89,11 @@ if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
         )
     );
     ?>
-<?php if ($model->analyser_type_id > 0) { ?>
+<?php if ($model->analysis_type_id > 0) { ?>
     <?=
-    CHtml::link('Добавить', $this->createUrl('analyzertypeanalysis/add/id/'.$model->analyser_type_id), [ 'class' => 'btn btn-primary', 'ajax' => array(
-        'url' => $this->createUrl('analyzertypeanalysis/add/id/'.$model->analyser_type_id),
-        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление типа аназиза к списку").dialog("open"); return false;}',
+    CHtml::link('Добавить', $this->createUrl('analysistypeparam/add/id/'.$model->analysis_type_id), [ 'class' => 'btn btn-primary', 'ajax' => array(
+        'url' => $this->createUrl('analysistypeparam/add/id/'.$model->analysis_type_id),
+        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление параметра к списку").dialog("open"); return false;}',
         ),
     ]);
     ?>
@@ -101,10 +101,10 @@ if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
 
     <?php } ?>
 
-<?php if ($model->analyser_type_id > 0) { ?>
+<?php if ($model->analysis_type_id > 0) { ?>
 <?php 
 $this->widget('zii.widgets.grid.CGridView', [
-	'id'=>'analyzer-type-analysis-grid',
+	'id'=>'analysis-type-param-grid',
 	'ajaxUpdate'=>false,
     'ajaxType'=>'POST',
 	'dataProvider'=>$model->search(),
@@ -120,12 +120,17 @@ $this->widget('zii.widgets.grid.CGridView', [
 #            'headerHtmlOptions' => array('style' => 'display:none'),
 #            'htmlOptions' => array('style' => 'display:none'),        ],
         [
-            'name' => 'analyser_type_id',
-            'value'=> '$data->analysisTypes->name',
+            'name' => 'analysis_param_id',
+            'value'=> '$data->analysisParams->name',
         ],
+        [
+            'name' => 'is_default',
+            'value'=> '$data->getBool($data->is_default)',
+        ],
+		'seq_number',
 		[
 			'class'=>'CButtonColumn',
-            'deleteConfirmation' => "js:'Вы уверены, что хотите удалить тип анализа \'' + $(this).parent().parent().children(':nth-child(2)').text() + '\' из списка?'",
+            'deleteConfirmation' => "js:'Вы уверены, что хотите удалить параметр \'' + $(this).parent().parent().children(':nth-child(2)').text() + '\' из списка?'",
             'template' => $template,
 			'buttons' => $buttons,
 		], 

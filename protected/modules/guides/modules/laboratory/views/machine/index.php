@@ -24,7 +24,7 @@ function() {
     var url = $(this).attr('href');
     $.get(url, function(r){
         $("#update").html(r).dialog("open");
-        $("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование анализатор").dialog("open");
+        $("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование анализатора").dialog("open");
     });
     return false;
 }
@@ -83,6 +83,7 @@ $this->endWidget();
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'machine-grid',
     'ajaxUpdate'=>false,
+    'ajaxType'=>'POST',
     'dataProvider'=>$model->search(),
     //    'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',
