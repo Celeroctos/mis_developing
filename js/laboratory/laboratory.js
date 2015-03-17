@@ -554,7 +554,11 @@ var TreatmentViewHeader = {
 			this.active = null;
 		}
 		$("button.treatment-header-rounded[data-tab]").click(function() {
-			console.log($(this).data("tab"));
+			$("button.treatment-header-rounded[data-tab]").each(function(i, t) {
+				$($(t).data("tab")).addClass("no-display");
+			});
+			$($(this).data("tab")).removeClass("no-display")
+				.trigger("change");
 		});
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
 			Common.cleanup(this);

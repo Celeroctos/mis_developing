@@ -8,9 +8,14 @@ class LGridView extends LWidget {
     public $id = null;
 
     /**
-     * @var LModel - Model to render, it must be instance of LModel class
+     * @var LModel|string - Model to render, it must be instance of LModel class
      */
     public $model = null;
+
+	/**
+	 * @var string - Default model scenario
+	 */
+	public $scenario = "";
 
     /**
      * @var string - Basic table class
@@ -29,9 +34,15 @@ class LGridView extends LWidget {
      * This method is called by {@link CBaseController::endWidget}.
      */
     public function run() {
+		if (is_string($this->model)) {
+			$this->model = new $this->model();
+		}
         if (!($this->model instanceof LModel)) {
             throw new CException("Model must be instance of LModel class");
         }
+		if ($this->model->getScenario() == "") {
+			$this->model->setScenario($this->scenario);
+		}
         if (empty($this->columns)) {
             $this->columns = [];
             foreach ($this->model->getKeys() as $key => $ignored) {

@@ -102,7 +102,16 @@ $this->widget("LModal", [
 	]
 ]);
 
+$this->widget("LModal", [
+	"title" => "Новое направление",
+	"body" => $this->getWidget("LForm", [
+		"model" => new LDirectionForm()
+	]),
+	"id" => "direction-register-modal"
+]);
+
 ?>
+<button data-toggle="modal" data-target="#direction-register-modal">123</button>
 <div class="treatment-header-wrapper">
 	<div align="center" class="col-xs-12 col-xs-offset-6 treatment-header">
 		<div class="col-xs-12">
@@ -122,7 +131,7 @@ $this->widget("LModal", [
 			</button>
 		</div>
 		<div class="col-xs-4">
-			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeat-grid-wrapper" type="button">
+			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
 				<span class="badge">3</span>
 			</button>
@@ -142,14 +151,16 @@ $this->widget("LModal", [
 	<div class="col-xs-12 treatment-table-wrapper">
 		<div id="treatment-direction-grid-wrapper">
 			<?= $this->getWidget("LGridView", [
-				"model" => new LDirection(),
+				"model" => "LDirection",
+				"scenario" => "grid.direction",
 				"id" => "direction-grid"
 			]) ?>
 		</div>
-		<div id="treatment-repeat-grid-wrapper">
+		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?= $this->getWidget("LGridView", [
-				"model" => new LDirection(),
-				"id" => "direction-grid"
+				"model" => "LDirection",
+				"scenario" => "grid.repeated-direction",
+				"id" => "direction-repeat-grid"
 			]) ?>
 		</div>
 	</div>
