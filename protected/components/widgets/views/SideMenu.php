@@ -114,26 +114,6 @@
                 </li>
             </ul>
         </li>
-        <?php if (Yii::app()->user->checkAccess('menuStat')) { ?>
-            <li <?php echo $module == 'statistic' || ($controller == 'tasu' && $module == 'admin') ? 'class="active"' : ''; ?>>
-                <?php echo CHtml::link('<img src="/images/icons/stat.png" width="32" height="32" alt="" />Статистика', array('#')) ?>
-                <ul class="nav">
-                    <?php if (Yii::app()->user->checkAccess('menuTasuIn')) { ?>
-                        <li <?php echo $controller == 'tasu' && $module == 'admin' && $action == 'viewin' ? 'class="active"' : ''; ?>>
-                            <?php echo CHtml::link('<img src="/images/icons/3.1.jpg" width="32" height="32" alt="" />Экспорт', array('/admin/tasu/viewin')) ?>
-                        </li>
-                    <?php } ?>
-                    <!--
-                    <li <?php echo $module == 'hospital' ? 'class="active"' : ''; ?>>
-                    <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
-                            <ul class="nav">
-                                    <li <?php echo $controller == 'monitoring' && $module == 'hospital' ? 'class="active"' : ''; ?>>
-                    <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/greeting_patient.png" width="32" height="32" alt="" />Мониторинг', array('/hospital/monitoring/view')) ?>
-                                    </li>
-                    -->
-                </ul>
-            </li>
-        <?php } ?>
 
         <?php if (Yii::app()->user->checkAccess('menuAdmin')) { ?>
             <li <?php echo ($module == 'laboratory') ? 'class="active"' : ''; ?>>

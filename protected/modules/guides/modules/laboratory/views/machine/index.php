@@ -113,7 +113,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ],
         [
             'name' => 'analyzer_type_id',
-            'value' => '$data->getAnalyzer_Type($data->analyzer_type_id)',
+            'value' => '$data->analyzerTypes->type',
             'headerHtmlOptions' => [
                 'class' => 'col-md-1',
             ],

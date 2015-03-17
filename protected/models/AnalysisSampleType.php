@@ -97,20 +97,19 @@ class AnalysisSampleType extends MisActiveRecord {
       echo $e->getMessage();
       }
       }
-
-
-      public function attributeLabels() {
-      return [
-      'id'=>'#ID',
-      'type'=>'Тип образца',
-      'subtype'=>'Подтип образца',
-      ];
-      }
-
-      /**
-     * Метод для поиска в CGridView
      */
 
+    public function attributeLabels() {
+        return [
+            'id' => '#ID',
+            'type' => 'Тип образца',
+            'subtype' => 'Подтип образца',
+        ];
+    }
+
+    /**
+     * Метод для поиска в CGridView
+     */
     public function search() {
         $criteria = new CDbCriteria;
 
