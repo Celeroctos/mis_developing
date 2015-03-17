@@ -17,15 +17,14 @@ class AnalysisTypeController extends Controller
 
         if (isset($_POST['AnalysisType'])) {
             $model->attributes = $_POST['AnalysisType'];
+            $result =$_POST['AnalysisType'];
+            $model->attributes = $result; 
             if ($model->save()) {
                     echo 'success';
                     Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array(
-            'model' => $model,
-            'analysistypetemplate'=>null,
-), false, true);
+            $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
@@ -40,11 +39,7 @@ class AnalysisTypeController extends Controller
                     Yii::app()->end();
             }
         }
-            $analysistypetemplate = AnalysisTypeTemplate::model()->search($id);
-            $this->renderPartial('form', array(
-            'model' => $model,
-            'analysistypetemplate'=>$analysistypetemplate,
-            ), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {

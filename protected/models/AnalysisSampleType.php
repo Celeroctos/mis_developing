@@ -11,17 +11,22 @@ class AnalysisSampleType extends MisActiveRecord
 
     public function rules()
     {
-        return [
-            ['type', 'required', 'on'=>'analysissampletypes.update'],
-            ['type, subtype', 'type', 'type'=>'string', 'on'=>'analysissampletypes.update'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analysissampletypes.update'], //[controller].[action]
+        return array(
+            array('type', 'required'),
+            array('type, subtype', 'length', 'max'=>100),
+            // The following rule isx used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, type, subtype', 'safe', 'on'=>'search'),
+        );
+    }
 
-            ['type', 'required', 'on'=>'analysissampletypes.create'],
-            ['type, subtype', 'type', 'type'=>'string', 'on'=>'analysissampletypes.create'],
-            ['id', 'type', 'type'=>'integer', 'on'=>'analysissampletypes.create'], //[controller].[action]
-
-            ['id, type, subtype', 'safe', 'on'=>'analysissampletypes.search'],
-        ];
+    public function relations()
+    {
+        return array(
+        'analysisTypeSample' => array(self::HAS_MANY, 'AnalysisTypeSample', 'analysis_sample_id'),
+        'analysisType_Samples'=>array(self::MANY_MANY, 'AnalysisType',
+                'lis.analysis_types_samples(analysis_type_id, analysis_sample_id)'),
+                );
     }
 
     public function tableName()
@@ -38,29 +43,31 @@ class AnalysisSampleType extends MisActiveRecord
     {
         $model=new AnalysisSampleType;
         $criteria=new CDbCriteria;
-        $criteria->select='id, type';
-        $analysissampletypeList=$model->findAll($criteria);
-
-        return CHtml::listData(
-            CMap::mergeArray([
+        $criteria->select="id, concat(concat(concat(type, '('), subtype), ')') as type";
+        $criteria->order="type";#"concat(concat(concat(type, '('), subtype), ')')";
+        $analysissampleList=$model->findAll($criteria);
+        $res = CHtml::listData(
+            $typeQuery=='insert' ? CMap::mergeArray([
                 [
-                    'id'=>$typeQuery=='insert' ? null : null,
+                    'id'=> null,
                     'type'=>'',
                 ]
-                ], $analysissampletypeList),
+                ], $analysissampleList) :
+                $analysissampleList,
             'id',
             'type'
-        );
+        );;
+        return $res;
     }	
 /*
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
         $connection = Yii::app()->db;
-        $analysissampletypes = $connection->createCommand()
+        $analysissamples = $connection->createCommand()
         ->select('at.*')
         ->from('lis.analysis_params ap');
 
         if($filters !== false) {
-            $this->getSearchConditions($analysissampletypes, $filters, array(
+            $this->getSearchConditions($analysissamples, $filters, array(
                 ), array(
                     'ap' => array('analysis_param', 'name')
                 ), array(
@@ -69,26 +76,26 @@ class AnalysisSampleType extends MisActiveRecord
         }
 
         if($sidx !== false && $sord !== false) {
-            $analysissampletypes->order($sidx.' '.$sord);
+            $analysissamples->order($sidx.' '.$sord);
         }
         if($start !== false && $limit !== false) {
-            $analysissampletypes->limit($limit, $start);
+            $analysissamples->limit($limit, $start);
         }
 
-        return $analysissampletypes->queryAll();
+        return $analysissamples->queryAll();
     }
 */
-
+/*
     public function getOne($id) {
         try {
             $connection = Yii::app()->db;
-            $analysissampletype = $connection->createCommand()
+            $analysissample = $connection->createCommand()
             ->select('ast.*')
             ->from('lis.analysis_sample_types ast')
             ->where('ast.id = :id', array(':id' => $id))
             ->queryRow();
 
-            return $analysissampletype;
+            return $analysissample;
 
         } catch(Exception $e) {
             echo $e->getMessage();

@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs default-margin-bottom">
-    <?php if ( Yii::app()->user->checkAccess('guideEditAnalysisSampleType')) { ?>
+    <?php if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')) { ?>
     <li <?php echo $controller == 'analysissampletype' ? 'class="active"' : ''; ?>>
         <?php echo CHtml::link('Типы образцов для анализов', array('/guides/laboratory/analysissampletype')) ?>
     </li>
@@ -14,11 +14,18 @@
         <?php echo CHtml::link('Типы анализов', array('/guides/laboratory/analysistype')) ?>
     </li>
     <?php } ?>
-    <?php if ( Yii::app()->user->checkAccess('guideEditAnalysisTypeTemplate')) { ?>
-    <li <?php echo $controller == 'analysistypetemplate' ? 'class="active"' : ''; ?>>
-        <?php echo CHtml::link('Шаблоны типов анализов', array('/guides/laboratory/analysistypetemplate')) ?>
+
+    <?php if ( Yii::app()->user->checkAccess('guideEditAnalysisType')) { ?>
+    <li <?php echo $controller == 'analysistypeparam' ? 'class="active"' : ''; ?>>
+        <?php echo CHtml::link('Параметры для типов анализов', array('/guides/laboratory/analysistypeparam')) ?>
     </li>
     <?php } ?>
+    <?php if ( Yii::app()->user->checkAccess('guideEditAnalysisType')) { ?>
+    <li <?php echo $controller == 'analysistypesample' ? 'class="active"' : ''; ?>>
+        <?php echo CHtml::link('Образцы для типов анализов', array('/guides/laboratory/analysistypesample')) ?>
+    </li>
+    <?php } ?>
+
     <?php if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) { ?>
     <li <?php echo $controller == 'analyzertype' ? 'class="active"' : ''; ?>>
         <?php echo CHtml::link('Типы анализаторов', array('/guides/laboratory/analyzertype')) ?>
@@ -26,7 +33,7 @@
     <?php } ?>
     <?php if ( Yii::app()->user->checkAccess('guideEditAnalyzerTypeAnalysis')) { ?>
     <li <?php echo $controller == 'analyzertypeanalysis' ? 'class="active"' : ''; ?>>
-        <?php echo CHtml::link('Анализы доступные для анализаторов', array('/guides/laboratory/analyzertypeanalysis')) ?>
+        <?php echo CHtml::link('Анализы для типов анализаторов', array('/guides/laboratory/analyzertypeanalysis')) ?>
     </li>
     <?php } ?>
     <?php if ( Yii::app()->user->checkAccess('guideEditAnalyzerType')) { ?>

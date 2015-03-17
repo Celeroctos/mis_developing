@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditAnalysisSampleType'); ?>';</script>
+    globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditAnalysisSample'); ?>';</script>
 
 <h4>Справочники лаборатории</h4>
 <?php
@@ -32,7 +32,7 @@ EOT;
 
 <?php 
 $template = '';
-if (Yii::app()->user->checkAccess('guideEditAnalysisSampleType')) { 
+if (Yii::app()->user->checkAccess('guideEditAnalysisSample')) { 
     $template = '{update} {delete}';
     $buttons = array(
                 'headerHtmlOptions' => array(
@@ -81,6 +81,7 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'analysis-param-grid',
     'ajaxUpdate' => false,
+    'ajaxType'=>'POST',
     'dataProvider' => $model->search(),
 //	'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',

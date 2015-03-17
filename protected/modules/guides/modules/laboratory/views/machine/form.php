@@ -71,8 +71,8 @@ $form=$this->beginWidget('CActiveForm', array(
             </div>
             <div class="row"> 
         <div class="form-group">
-            <?= $form->Label($model, 'analyzer_type_id', ['class'=>'col-xs-2 control-label']); ?>
-            <div class="col-xs-6">
+            <?= $form->Label($model, 'analyzer_type_id', ['class'=>'col-xs-3 control-label']); ?>
+            <div class="col-xs-4">
                 <?= CHtml::activeDropDownList($model, 'analyzer_type_id', $analyzertypeList, [
                     'class'=>'form-control',
                 ]); ?>

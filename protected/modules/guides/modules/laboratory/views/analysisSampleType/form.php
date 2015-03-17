@@ -67,7 +67,7 @@
 					window.location.reload();
                                     }
                                     else{
-					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalysisSampleType").dialog("open"); return false;
+					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalysisSample").dialog("open"); return false;
                                     }
 				}',
                 ),
