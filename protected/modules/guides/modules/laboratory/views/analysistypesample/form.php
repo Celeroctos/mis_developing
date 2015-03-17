@@ -7,10 +7,11 @@
     ));
     ?>
 
-    <?php echo $form->errorSummary($model); ?>
-
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -23,7 +24,6 @@
                         echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control', 'disabled' => true]
                         );
                         ?>       
-                        <?php echo $form->error($model, 'analysis_type_id'); ?>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,6 @@
                             ]
                     );
                     ?>       
-                    <?php echo $form->error($model, 'analysis_sample_id'); ?>
                 </div>
             </div>
         </div> 

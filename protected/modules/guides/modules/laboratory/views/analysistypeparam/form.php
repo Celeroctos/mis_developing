@@ -7,10 +7,11 @@
     ));
     ?>
 
-    <?php echo $form->errorSummary($model); ?>
-
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -23,7 +24,6 @@
                         echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control',  'disabled'=> true ]
                         );
                         ?>       
-                        <?php echo $form->error($model, 'analysis_type_id'); ?>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,6 @@
                         echo $form->dropDownList($model, 'analysis_param_id', AnalysisParam::getAnalysisParamListData('insert')
                         );
                         ?>       
-                        <?php echo $form->error($model, 'analysis_param_id'); ?>
                     </div>
                 </div>
             </div>
@@ -55,7 +54,6 @@
                         echo $form->dropDownList($model, 'is_default', ['0' => 'Нет', '1' => 'Да']
                         );
                         ?>       
-                        <?php echo $form->error($model, 'is_default'); ?>
                     </div>
                 </div>
             </div>
@@ -68,7 +66,6 @@
                     ?>
                     <div class="col-xs-4">
                         <?php echo $form->textField($model, 'seq_number', array('class' => 'col-xs-8')); ?>
-                        <?php echo $form->error($model, 'seq_number'); ?>
                     </div>
                 </div>
             </div>

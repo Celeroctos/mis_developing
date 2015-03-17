@@ -6,21 +6,12 @@
         'enableAjaxValidation' => false,
     ));
     ?>
-    <?php
-    $updateDialog = <<<'EOT'
-function() {
-    var url = $(this).attr('href');
-    $.get(url, function(r){
-        $("#update").html(r).dialog("open");
-        $("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование типа анализа").dialog("open");
-    });
-    return false;
-}
-EOT;
-    ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -36,7 +27,6 @@ EOT;
                             'placeholder' => 'Наименование типа анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
@@ -55,7 +45,6 @@ EOT;
                             'placeholder' => 'Краткое наименование типа анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'short_name'); ?>
                     </div>
                 </div>
             </div>
@@ -71,8 +60,6 @@ EOT;
                         'separator' => '&nbsp',
                     ));
                     ?>
-                    <?php echo $form->error($model, 'metodics'); ?>
-                    <!--                </div>-->
                 </div>
             </div> 
         </div> 

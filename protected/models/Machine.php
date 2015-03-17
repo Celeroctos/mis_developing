@@ -27,11 +27,11 @@ class Machine extends MisActiveRecord
     public function rules()
     {
         return [
-            ['name', 'required', 'on'=>'machines.update'],
+            ['name, analyzer_type_id', 'required', 'on'=>'machines.update'],
             ['name, model, software_version', 'type', 'type'=>'string', 'on'=>'machines.update'],
             ['id, serial, analyzer_type_id', 'type', 'type'=>'integer', 'on'=>'machines.update'], //[controller].[action]
 
-            ['name', 'required', 'on'=>'machines.create'],
+            ['name, analyzer_type_id', 'required', 'on'=>'machines.create'],
             ['name, model, software_version', 'type', 'type'=>'string', 'on'=>'machines.create'],
             ['id, serial, analyzer_type_id', 'type', 'type'=>'integer', 'on'=>'machines.create'], //[controller].[action]
 

@@ -9,6 +9,9 @@
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -24,7 +27,6 @@
                             'placeholder' => 'Название аналтзатора'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
@@ -43,7 +45,6 @@
                             'placeholder' => 'Номер'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'serial'); ?>
                     </div>
                 </div>
             </div>
@@ -62,7 +63,6 @@
                             'placeholder' => 'Модель анализатора'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'model'); ?>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,6 @@
                             'placeholder' => 'Версия ПО'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'software_version'); ?>
                     </div>
                 </div>
             </div>

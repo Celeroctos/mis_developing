@@ -8,6 +8,9 @@
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -23,7 +26,6 @@
                             'placeholder' => 'Краткое наименование параметра анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
@@ -42,9 +44,6 @@
                             'placeholder' => 'Полное наименование параметра анализа'
                         ));
                         ?>
-                        <?php
-                        echo $form->error($model, 'long_name');
-                        ?>
                     </div>
                 </div>
             </div>
@@ -62,9 +61,6 @@
                             'class' => 'form-control',
                             'placeholder' => 'Примечания'
                         ));
-                        ?>
-                        <?php
-                        echo $form->error($model, 'comment');
                         ?>
                     </div>
                 </div>

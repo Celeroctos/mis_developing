@@ -10,6 +10,9 @@
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -25,7 +28,6 @@
                             'placeholder' => 'Тип образца'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'type'); ?>
                     </div>
                 </div>
             </div>
@@ -44,7 +46,6 @@
                             'placeholder' => 'Подтип образца'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'subtype'); ?>
                     </div>
                 </div>
             </div> 
