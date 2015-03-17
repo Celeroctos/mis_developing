@@ -20,7 +20,7 @@
                     ?>
                     <div class="col-xs-4">
                         <?php
-                        echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control', /* 'disabled'=> true */]
+                        echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control',  'disabled'=> true ]
                         );
                         ?>       
                         <?php echo $form->error($model, 'analysis_type_id'); ?>

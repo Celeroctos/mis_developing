@@ -22,7 +22,7 @@
                             ?>
                             <div class="col-xs-4">
                                 <?php
-                                echo $form->dropDownList($model, 'analyser_type_id', AnalyzerType::getAnalyzerTypeListData('insert')
+                                echo $form->dropDownList($model, 'analyser_type_id', AnalyzerType::getAnalyzerTypeListData('insert'), ['class' => 'form-control',  'disabled'=> true ]
                                 );
                                 ?>       
                                 <?php echo $form->error($model, 'analyser_type_id'); ?>

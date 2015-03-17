@@ -115,13 +115,14 @@ if (Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
             [
                 'name' => 'id',
                 'headerHtmlOptions' => array('style' => 'display:none'),
-                'htmlOptions' => array('style' => 'display:none'),],
-#                [
-#            'name'=>'analysis_type_id',
-#            'headerHtmlOptions' => array('style' => 'display:none'),
-#            'htmlOptions' => array('style' => 'display:none'),        ],
+                'htmlOptions' => array('style' => 'display:none'),
+            ],
             [
                 'name' => 'analyser_type_id',
+                'value' => '$data->analyserTypes->type',
+            ],
+            [
+                'name' => 'analysis_type_id',
                 'value' => '$data->analysisTypes->name',
             ],
             [

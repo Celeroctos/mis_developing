@@ -25,6 +25,8 @@ class AnalysisTypeSampleController extends Controller {
 
         if (isset($_POST['AnalysisTypeSample'])) {
             $model->attributes = $_POST['AnalysisTypeSample'];
+            $analysistype = Yii::app()->session['analysis_type_id'];
+            $model->attributes = ['analysis_type_id' => $analysistype];
             if ($model->save()) {
                 echo 'success';
                 Yii::app()->end();
@@ -44,6 +46,8 @@ class AnalysisTypeSampleController extends Controller {
 
         if (isset($_POST['AnalysisTypeSample'])) {
             $model->attributes = $_POST['AnalysisTypeSample'];
+            $analysistype = Yii::app()->session['analysis_type_id'];
+            $model->attributes = ['analysis_type_id' => $analysistype];
             if ($model->save()) {
                 echo 'success';
                 Yii::app()->end();

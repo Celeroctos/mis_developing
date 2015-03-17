@@ -22,6 +22,8 @@ class AnalysisTypeParamController extends Controller {
         $model = new AnalysisTypeParam('analysistypeparam.create');
         if (isset($_POST['AnalysisTypeParam'])) {
             $model->attributes = $_POST['AnalysisTypeParam'];
+            $analysistype = Yii::app()->session['analysis_type_id'];
+            $model->attributes = ['analysis_type_id' => $analysistype];
             if ($model->save()) {
                 if (Yii::app()->request->isAjaxRequest) {
                     echo 'success';
@@ -39,6 +41,8 @@ class AnalysisTypeParamController extends Controller {
         if (isset($_POST['AnalysisTypeParam'])) {
             $model->scenario = 'analysistypeparam.update';
             $model->attributes = $_POST['AnalysisTypeParam'];
+            $analysistype = Yii::app()->session['analysis_type_id'];
+            $model->attributes = ['analysis_type_id' => $analysistype];
             if ($model->save()) {
                 echo 'success';
                 Yii::app()->end();

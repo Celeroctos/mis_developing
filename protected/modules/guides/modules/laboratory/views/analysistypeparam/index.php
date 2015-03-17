@@ -115,11 +115,12 @@ if (Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
             [
                 'name' => 'id',
                 'headerHtmlOptions' => array('style' => 'display:none'),
-                'htmlOptions' => array('style' => 'display:none'),],
-#                [
-#            'name'=>'analysis_type_id',
-#            'headerHtmlOptions' => array('style' => 'display:none'),
-#            'htmlOptions' => array('style' => 'display:none'),        ],
+                'htmlOptions' => array('style' => 'display:none'),
+            ],
+            [
+                'name' => 'analysis_type_id',
+                'value' => '$data->analysisTypes->name',
+            ],
             [
                 'name' => 'analysis_param_id',
                 'value' => '$data->analysisParams->name',
@@ -136,7 +137,6 @@ if (Yii::app()->user->checkAccess('guideEditAnalyzerType')) {
                 'buttons' => $buttons,
             ],
         ],
-            ]
-    );
+    ]);
     ?>
 <?php } ?>

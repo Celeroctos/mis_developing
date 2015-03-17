@@ -3,8 +3,9 @@
 class MachineController extends Controller {
 
     public $layout = 'application.modules.guides.views.layouts.index';
+    public $defaultAction = 'index';
 
-    public function actionView($id) {
+    public function actionView() {
         $this->actionIndex();
     }
 

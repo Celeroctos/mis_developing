@@ -18,17 +18,13 @@
                         'class' => 'col-xs-6 control-label'
                     ));
                     ?>
-                    <!--                    <div class="col-xs-4">-->
-                    <?php
-                    $ddl = AnalysisType::getAnalysisTypeListData('insert');
-                    echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), [
-                        'class' => 'form-control',
-                        'class' => "col-xs-6"
-                            ]
-                    );
-                    ?>       
-                    <?php echo $form->error($model, 'analysis_type_id'); ?>
-                    <!--                    </div>-->
+                    <div class="col-xs-6">
+                        <?php
+                        echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control', 'disabled' => true]
+                        );
+                        ?>       
+                        <?php echo $form->error($model, 'analysis_type_id'); ?>
+                    </div>
                 </div>
             </div>
             <div class="row"> 
