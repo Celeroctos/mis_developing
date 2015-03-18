@@ -1,20 +1,8 @@
 <?php
 
-class LaboratoryModule2 extends WebModule {
+class LaboratoryModule2 extends CWebModule {
 
-	/**
-	 * Override that method to return paths to javascript,
-	 * css and less files for current module
-	 */
-	public function getClientScripts() {
-		return [
-			"core.js",
-			"laboratory.js",
-			"form.js",
-            "multiple.js",
-			"laboratory.css",
-			"message.js",
-			"address.js"
-		];
-	}
+    protected function init() {
+        AssetBundleManager::getManager()->register("LaboratoryAsset");
+    }
 }

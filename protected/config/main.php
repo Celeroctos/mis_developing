@@ -37,6 +37,7 @@ return array(
 		'application.components.*',
 		'application.components.widgets.*',
         'application.controllers.*',
+        'application.assets.*',
 	),
 
 	'modules'=>array(
