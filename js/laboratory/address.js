@@ -4,8 +4,44 @@ var Laboratory = Laboratory || {};
 
 	"use strict";
 
+	var getID = function() {
+	};
+
 	var Address = function(properties, selector) {
-		Lab.Component.call(this, properties, {}, selector);
+		Lab.Component.call(this, properties, {
+			list: {
+				"region_name": {
+					"label": "Регион / Город",
+					"prefix": "",
+					"style": "width: 100%"
+				},
+				"street_name": {
+					"label": "Улица",
+					"prefix": "ул",
+					"style": "width: 50%"
+				},
+				"district_name": {
+					"label": "Район",
+					"prefix": "р",
+					"style": "width: 50%"
+				},
+				"house_number": {
+					"label": "Дом",
+					"prefix": "д",
+					"style": "width: 33%"
+				},
+				"flat_number": {
+					"label": "Квартира",
+					"prefix": "кв",
+					"style": "width: 33%"
+				},
+				"post_index": {
+					"label": "Индекс",
+					"prefix": "п/и",
+					"style": "width: 34%"
+				}
+			}
+		}, selector);
 	};
 
 	Lab.extend(Address, Lab.Component);
@@ -14,7 +50,7 @@ var Laboratory = Laboratory || {};
 		var p;
 		var s = this.selector()
 			.clone()
-			.data("doc", this)
+			.data("lab", this)
 			.prop("readonly", true)
 			.attr("aria-describedBy", "address-addon-" + count)
 			.addClass("address-input");
@@ -43,46 +79,20 @@ var Laboratory = Laboratory || {};
 		return c;
 	};
 
-	var list = {
-		"city": {
-			"label": "Город",
-			"prefix": "г",
-			"style": "width: 50%"
-		},
-		"street_name": {
-			"label": "Название улицы",
-			"prefix": "ул",
-			"style": "width: 50%"
-		},
-		"house_number": {
-			"label": "Дом",
-			"prefix": "д",
-			"style": "width: 33%"
-		},
-		"flag_number": {
-			"label": "Квартира",
-			"prefix": "кв",
-			"style": "width: 33%"
-		},
-		"post_index": {
-			"label": "Индекс",
-			"prefix": "п/и",
-			"style": "width: 34%"
-		}
-	};
-
 	Address.prototype.form = function() {
+		var id = this.selector().data("form") || "form-" + count;
 		var c = $("<form>", {
-			class: "address-container"
+			class: "address-container",
+			id: id
 		}).append($("<input>", {
-			type: "hidden",
-			id: "id"
+			type: "hidden"
 		}));
+		var list = this.property("list");
 		for (var i in list) {
 			$("<input>", {
 				placeholder: list[i]["label"],
 				type: "text",
-				class: "form-control col-xs-6",
+				class: "form-control col-xs-6 text-center",
 				id: i,
 				name: "LAddressForm[" + i + "]",
 				style: list[i]["style"]
@@ -94,12 +104,13 @@ var Laboratory = Laboratory || {};
 	Address.prototype.calculate = function() {
 		var b = this.selector().find(".panel-body");
 		var t = "";
+		var list = this.property("list");
 		for (var i in list) {
 			var v = b.find("#" + i).val();
 			if (v == '') {
 				continue;
 			}
-			t += list[i]["prefix"] + ". " + v + ", ";
+			t += list[i]["prefix"] + (list[i]["prefix"].length > 0 ? ". " : "") + v + ", ";
 		}
 		this.selector().find(".address-input").val(
 			t.replace(/, $/, '')
@@ -115,7 +126,13 @@ var Laboratory = Laboratory || {};
 		this.selector().find(".address-edit-button").click(function() {
 			me.toggle();
 		});
+		this.selector().find("input[data-laboratory]").dblclick(function() {
+			me.toggle();
+		});
 		this.selector().find(".panel-body input").keyup(function() {
+			me.calculate();
+		});
+		this.selector().find(".panel-body input").change(function() {
 			me.calculate();
 		});
 	};
@@ -141,7 +158,7 @@ var Laboratory = Laboratory || {};
 			return void 0;
 		}
 		++count;
-		Lab.create(new Address(properties, $(selector)), selector, true);
+		return Lab.create(new Address(properties, $(selector)), selector, true);
 	};
 
 	$.fn.address = Lab.createPlugin(

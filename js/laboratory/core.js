@@ -71,7 +71,7 @@ var Laboratory = Laboratory || {};
 			if (!(selector instanceof jQuery)) {
 				throw new Error("Selector must be an instance of jQuery object");
 			}
-            if (!selector.data("laboratory")) {
+            if (!selector.data("lab")) {
                 selector.data("laboratory", this);
             }
             this._selector = selector;
@@ -158,7 +158,7 @@ var Laboratory = Laboratory || {};
     };
 
 	/**
-	 * Create plugin for component where
+	 * Create plugin for component
 	 * @param func {String} - Name of create function, for example 'createMessage'
 	 * @static
 	 */
@@ -172,18 +172,18 @@ var Laboratory = Laboratory || {};
 				}
 			}
 			if (options !== void 0 && typeof options == "string") {
-				var c = me.data("doc");
+				var c = me.data("lab");
 				if (!c) {
 					if (!(c = register(me, {}, [], true))) {
 						throw new Error("Component hasn't been initialized, create it first");
 					}
-					me.data("doc", c);
+					me.data("lab", c);
 				}
 				if ((r = c[options].apply(c, a)) !== void 0) {
 					return r;
 				}
 			} else {
-				if (me.data("doc") != void 0) {
+				if (me.data("lab") != void 0) {
 					return void 0;
 				}
 				if (typeof me != "function") {
