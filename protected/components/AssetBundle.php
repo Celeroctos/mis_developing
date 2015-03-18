@@ -3,17 +3,32 @@
 abstract class AssetBundle extends CComponent {
 
     /**
-     * @var array - Array with javascript scripts (relative path, like 'js/main.js')
+     * Use that help method to register current bundle
+     * @see AssetBundleManager::register
+     * @throws CException
+     */
+    public static function register() {
+        AssetBundleManager::getManager()->register(get_called_class());
+    }
+
+    /**
+     * @var array - Array with javascript scripts (relative path, like 'js/main.js'), be
+     *  careful with dependencies
+     * @see AssetBundle::dependecies
      */
     public $js = [];
 
     /**
-     * @var array - Array with less styles
+     * @var array - Array with less styles, be
+     *  careful with dependencies
+     * @see AssetBundle::dependecies
      */
     public $less = [];
 
     /**
-     * @var array - Array with style scripts
+     * @var array - Array with style scripts, be
+     *  careful with dependencies
+     * @see AssetBundle::dependecies
      */
     public $css = [];
 
@@ -25,12 +40,4 @@ abstract class AssetBundle extends CComponent {
      *  or overwrite your styles
      */
     public $dependencies = [];
-
-    /**
-     * Use that help method to register current bundle
-     * @throws CException - (@see AssetBundleManager::register)
-     */
-    public final static function register() {
-        AssetBundleManager::getManager()->register(get_called_class());
-    }
 } 

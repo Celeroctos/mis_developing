@@ -1,5 +1,6 @@
-<? AssetBundleManager::getManager()->register("MainAsset") ?>
+<? MainAsset::register() ?>
 <!DOCTYPE html>
+<html>
 <head>
     <title>МИС МОНИИАГ</title>
 <!--    <link href="--><?php //echo Yii::app()->request->baseUrl; ?><!--/assets/libs/bootstrap-3.0.0/less/bootstrap.less" rel="stylesheet/less" media="screen">-->
@@ -38,7 +39,6 @@
         <div class="col-xs-9">
             <?php echo $content; ?>
         </div>
-
     </div>
 </div>
 <div class ="buttonUpContainer">
