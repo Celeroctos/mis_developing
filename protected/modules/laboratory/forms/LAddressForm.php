@@ -30,30 +30,35 @@ class LAddressForm extends LFormModel {
 				"type" => "number",
 				"rules" => "safe, numerical"
 			],
+			"region_name" => [
+				"label" => "Регион",
+				"type" => "text",
+				"rules" => "safe"
+			],
+			"district_name" => [
+				"label" => "Район",
+				"type" => "text",
+				"rules" => "safe"
+			],
 			"street_name" => [
 				"label" => "Название улицы",
 				"type" => "text",
-				"rules" => "required"
+				"rules" => "safe"
 			],
 			"house_number" => [
 				"label" => "Номер дома",
 				"type" => "text",
-				"rules" => "required"
+				"rules" => "safe"
 			],
 			"flat_number" => [
 				"label" => "Номер квартиры",
 				"type" => "text",
-				"rules" => "required"
+				"rules" => "safe"
 			],
 			"post_index" => [
 				"label" => "Почтовый индекс",
 				"type" => "text",
 				"rules" => "safe"
-			],
-			"city" => [
-				"label" => "Город",
-				"type" => "text",
-				"rules" => "required"
 			]
 		];
 	}

@@ -92,6 +92,82 @@ class LMedcard2 extends LModel {
 	}
 
 	/**
+	 * Fetch information from mis medcard and format it to laboratory
+	 * medcard with all sub forms
+	 * @param string $number - Card number in mis
+	 * @return array - Array with model information
+	 */
+	public function fetchInformationLaboratoryLike($number) {
+		if (($model = $this->fetchInformation($number)) == null) {
+			return null;
+		}
+		$result = [
+			"medcard" => [
+				"mis_medcard" => $this->read($model, "card_number"),
+				"enterprise_id" => $this->read($model, "enterprise_id"),
+				"card_number" => null,
+				"sender_id" => null,
+				"patient_id" => null
+			],
+			"patient" => [
+				"surname" => $this->read($model, "last_name"),
+				"name" => $this->read($model, "first_name"),
+				"patronymic" => $this->read($model, "middle_name"),
+				"sex" => $this->read($model, "gender"),
+				"birthday" => $this->read($model, "birthday"),
+				"policy_number" => $this->read($model, "oms_number"),
+				"policy_issue_date" => $this->read($model, "givedate"),
+				"policy_insurance_id" => $this->read($model, "insurance"),
+				"register_address_id" => null,
+				"address_id" => null,
+				"document_type" => $this->read($model, "doctype")
+			]
+		];
+		if (($address = $this->read($model, "address")) != null) {
+			$result["address_id"] = [
+				"street_name" => $this->read($address, "street", "name"),
+				"house_number" => $this->read($address, "house"),
+				"flat_number" => $this->read($address, "flat"),
+				"post_index" => $this->read($address, "postindex"),
+				"region_name" => $this->read($address, "region", "name"),
+				"district_name" => $this->read($address, "district", "name")
+			];
+		}
+		if (($address = $this->read($model, "address_reg")) != null) {
+			$result["register_address_id"] = [
+				"street_name" => $this->read($address, "street", "name"),
+				"house_number" => $this->read($address, "house"),
+				"flat_number" => $this->read($address, "flat"),
+				"post_index" => $this->read($address, "postindex"),
+				"region_name" => $this->read($address, "region", "name"),
+				"district_name" => $this->read($address, "district", "name")
+			];
+		}
+		return $result;
+	}
+
+	/**
+	 * Ready key sequence from object or array
+	 * @param mixed $obj - Mixed object or array
+	 * @param string... [$key] - Sequence with keys
+	 * @return mixed|null - Found value or null
+	 */
+	private function read($obj) {
+		for ($i = 1; $i < func_num_args(); $i++) {
+			$key = func_get_arg($i);
+			if (is_array($obj)) {
+				$obj = isset($obj[$key]) ? $obj[$key] : null;
+			} else {
+				$obj = isset($obj->$key) ? $obj->$key : null;
+			}
+			if ($obj == null) {
+				break;
+			}
+		}
+		return $obj;
+	}
+
+	/**
 	 * Fetch information about address from cladr
 	 * @param array $row - Array with parsed json object from [mis.medcards.address]
 	 * @return array - Array with received information about address

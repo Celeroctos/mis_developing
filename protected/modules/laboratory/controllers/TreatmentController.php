@@ -6,7 +6,9 @@ class TreatmentController extends LController {
 	 * Default view action
 	 */
 	public function actionView() {
-		$this->render("view");
+		$this->render("view", [
+			"directionRepeats" => 5
+		]);
 	}
 
 	/**

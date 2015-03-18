@@ -114,10 +114,20 @@ class LForm extends LWidget {
         }
         $key = $table["key"];
         $value = $table["value"];
-        $data = Yii::app()->getDb()->createCommand()
-            ->select("$key, $value")
-            ->from($table["name"])
-            ->queryAll();
+		if (isset($table["group"]) && $table["group"]) {
+			$query = Yii::app()->getDb()->createCommand()
+				->select("max($key) as $key, $value")
+				->from($table["name"])
+				->group($value);
+		} else {
+			$query = Yii::app()->getDb()->createCommand()
+				->select("$key, $value")
+				->from($table["name"]);
+		}
+		if (isset($table["order"]) && $table["order"]) {
+			$query->order($value);
+		}
+		$data = $query->queryAll();
         $result = [];
         if (isset($table["format"])) {
             foreach ($data as $row) {

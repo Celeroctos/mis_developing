@@ -22,7 +22,7 @@ class MedcardController extends LController {
 	 */
 	public function actionLoad() {
 		try {
-			$row = LMedcard2::model()->fetchInformation($this->get("number"));
+			$row = LMedcard2::model()->fetchInformationLaboratoryLike($this->get("number"));
 			if ($row == null) {
 				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
 			}

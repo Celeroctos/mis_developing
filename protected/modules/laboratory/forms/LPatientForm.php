@@ -9,18 +9,6 @@ class LPatientForm extends LFormModel {
 	 */
 	public function backward() {
 		return [
-			$this->createFilter("treatment.patient", [
-				"surname",
-				"name",
-				"patronymic",
-				"birthday",
-				"sex",
-				"document_type",
-				"policy_number",
-				"policy_issue_date",
-				"address_id",
-				"register_address_id"
-			])
 		];
 	}
 
@@ -64,6 +52,22 @@ class LPatientForm extends LFormModel {
 				"type" => "date",
 				"rules" => "required"
 			],
+			"register_address_id" => [
+				"label" => "Адрес регистрации",
+				"type" => "address",
+				"rules" => "safe",
+				"table" => [
+					"name" => "lis.address",
+					"format" => "р. %{region_name}, район. %{district_name}, ул. %{street_name}, д. %{house_number}, кв. %{flat_number}",
+					"key" => "id",
+					"value" => "street_name, house_number, flat_number, region_name, district_name"
+				]
+			],
+			"address_id" => [
+				"label" => "Адрес проживания",
+				"type" => "address",
+				"rules" => "safe"
+			],
 			"document_type" => [
 				"label" => "Тип документа",
 				"type" => "DropDown",
@@ -86,33 +90,15 @@ class LPatientForm extends LFormModel {
 			],
 			"policy_insurance_id" => [
 				"label" => "СМО, выдавшая полис",
-				"type" => "text",
+				"type" => "DropDown",
 				"rules" => "safe",
 				"table" => [
 					"name" => "mis.insurances",
+					"group" => "true",
+					"order" => "true",
 					"key" => "id",
 					"value" => "name"
 				]
-			],
-			"register_address_id" => [
-				"label" => "Адрес регистрации",
-				"type" => "address",
-				"rules" => "safe",
-				"table" => [
-					"name" => "lis.address",
-					"format" => "г. %{city}, ул. %{street_name}, д. %{house_number}, кв. %{flat_number}",
-					"key" => "id",
-					"value" => "street_name, house_number, flat_number, city"
-				],
-				"options" => [
-					"disabled" => "disabled"
-				]
-			],
-			"address_id" => [
-				"label" => "Адрес фактического проживания",
-				"type" => "number",
-				"rules" => "safe",
-				"form" => "LAddressForm"
 			]
 		];
 	}

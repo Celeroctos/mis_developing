@@ -3,6 +3,18 @@
 class LMedcardForm extends LFormModel {
 
 	/**
+	 * Override that method to return additional rule configuration, like
+	 * scenario conditions or others
+	 * @return array - Array with rule configuration
+	 */
+	public function backward() {
+		return [
+			// hide identification number and reference to patient on medcard edit from treatment room
+			[ [ "id", "patient_id" ], "hide", "on" => "treatment.edit" ],
+		];
+	}
+
+	/**
 	 * Override that method to return config. Config should return array associated with
 	 * model's variables. Every field must contains 3 parameters:
 	 *  + label - Variable's label, will be displayed in the form
@@ -14,8 +26,7 @@ class LMedcardForm extends LFormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number",
-				"hidden" => "true"
+				"type" => "number"
 			],
 			"card_number" => [
 				"label" => "Номер карты",
@@ -23,9 +34,12 @@ class LMedcardForm extends LFormModel {
 				"rules" => "required"
 			],
 			"mis_medcard" => [
-				"label" => "Идентификатор в МИС",
-				"type" => "number",
-				"hidden" => "true"
+				"label" => "Номер карты в МИС",
+				"type" => "text",
+				"options" => [
+					"readonly" => "true"
+				],
+				"rules" => "safe"
 			],
 			"sender_id" => [
 				"label" => "Врач направитель",
@@ -33,15 +47,16 @@ class LMedcardForm extends LFormModel {
 				"table" => [
 					"name" => "mis.doctors",
 					"key" => "id",
-					"value" => "surname, name",
-					"format" => "%{surname} %{name}"
-				]
+					"value" => "last_name, first_name",
+					"format" => "%{last_name} %{first_name}"
+				],
+				"rules" => "required",
+				"value" => LUserIdentity::get("doctorId")
 			],
 			"patient_id" => [
-				"label" => "Информаия о пациенте",
-				"type" => "form",
-				"rules" => "required",
-				"form" => "LPatientForm"
+				"label" => "Идентификатор пациента",
+				"type" => "number",
+				"rules" => "safe"
 			]
 		];
 	}

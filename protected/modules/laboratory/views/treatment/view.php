@@ -1,6 +1,7 @@
 <?php
 /**
  * @var TreatmentController $this - Self instance
+ * @var int $directionRepeats - Count of direction repeats
  */
 
 $this->widget("LModal", [
@@ -111,32 +112,34 @@ $this->widget("LModal", [
 ]);
 
 ?>
-<button data-toggle="modal" data-target="#direction-register-modal">123</button>
-<div class="treatment-header-wrapper">
-	<div align="center" class="col-xs-12 col-xs-offset-6 treatment-header">
-		<div class="col-xs-12">
-			<div class="treatment-header-rounded">
-				<div class="row col-xs-12">
-					<span class="col-xs-10">
-						<b>Процедурный кабинет</b><br>
-						<span><?= Yii::app()->user->getState("fio") ?></span>
-					</span>
-					<button class="btn btn-default col-xs-2 logout-button">Выйти</button>
-				</div>
+
+<div class="treatment-header-wrapper row">
+	<div class="treatment-header">
+		<div class="treatment-header-rounded">
+			<div class="row col-xs-12">
+				<span class="col-xs-10">
+					<b>Процедурный кабинет</b><br>
+					<span><?= Yii::app()->user->getState("fio") ?></span>
+				</span>
+				<button class="btn btn-default col-xs-2 logout-button">Выйти</button>
 			</div>
 		</div>
-		<div class="col-xs-4">
+		<div class="col-xs-4 no-padding">
 			<button class="btn btn-default btn-block treatment-header-rounded active" data-tab="#treatment-direction-grid-wrapper" type="button">
 				<span>Направления</span>
 			</button>
 		</div>
-		<div class="col-xs-4">
+		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<span class="badge">3</span>
+				<? if ($directionRepeats > 0): ?>
+					<span class="badge">
+						<?= $directionRepeats ?>
+					</span>
+				<? endif ?>
 			</button>
 		</div>
-		<div class="col-xs-4">
+		<div class="col-xs-4 no-padding">
 			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="dropdown" aria-expanded="false">
 				<span>Создать направление</span>
 				<span class="caret"></span>
@@ -148,19 +151,42 @@ $this->widget("LModal", [
 			</ul>
 		</div>
 	</div>
-	<div class="col-xs-12 treatment-table-wrapper">
+	<div class="treatment-table-wrapper treatment-header-rounded">
 		<div id="treatment-direction-grid-wrapper">
-			<?= $this->getWidget("LGridView", [
-				"model" => "LDirection",
-				"scenario" => "grid.direction",
-				"id" => "direction-grid"
+			<?= $this->getWidget("LTable", [
+				"table" => new LDirection("grid.direction"),
+				"header" => [
+					"id" => [
+						"label" => "#",
+						"style" => "width: 15%"
+					],
+					"card_number" => [
+						"label" => "Номер карты",
+						"style" => "width: 25%"
+					],
+					"status" => [
+						"label" => "Статус",
+						"style" => "width: 20%"
+					],
+					"sender_id" => [
+						"label" => "Направитель",
+						"style" => "width: 15%"
+					],
+					"analysis_type_id" => [
+						"label" => "Тип анализа"
+					]
+				],
+				"pk" => "id",
+				"sort" => "id",
+				"id" => "direction-table",
+				"limit" => 25
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?= $this->getWidget("LGridView", [
 				"model" => "LDirection",
 				"scenario" => "grid.repeated-direction",
-				"id" => "direction-repeat-grid"
+				"id" => "direction-repeated-grid"
 			]) ?>
 		</div>
 	</div>

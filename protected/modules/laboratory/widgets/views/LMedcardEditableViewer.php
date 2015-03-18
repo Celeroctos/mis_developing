@@ -19,26 +19,18 @@ $this->beginWidget("CActiveForm", [
 <div class="row">
 	<div class="col-xs-12">
 		<div class="col-xs-12 text-center">
-			<b>ОМС</b>
+			<b>Медицинская карта</b>
 			<br><br>
 			<? $this->widget("LForm", [
-				"model" => new LPolicyForm("treatment.policy")
+				"model" => new LMedcardForm("treatment.edit")
 			]) ?>
-			<hr>
 		</div>
+		<hr>
 		<div class="col-xs-12 text-center">
-			<b>Сведения о работе</b>
+			<b>Пациент</b>
 			<br><br>
 			<? $this->widget("LForm", [
-				"model" => new LMedcardForm2("treatment.show")
-			]) ?>
-			<hr>
-		</div>
-		<div class="col-xs-12 text-center">
-			<b>Личные данные</b>
-			<br><br>
-			<? $this->widget("LForm", [
-				"model" => new LPatientForm("treatment.patient")
+				"model" => new LPatientForm("treatment.edit")
 			]) ?>
 		</div>
 	</div>

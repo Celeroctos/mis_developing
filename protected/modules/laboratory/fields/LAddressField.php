@@ -9,8 +9,9 @@ class LAddressField extends LField {
 	 * @return String - Just rendered field result
 	 */
 	public function render($form, $model) {
-		return LTextField::field()->render2($form, $model, $this->getKey(), [
-			"data-laboratory" => "address"
+		return LTextField::field()->render2($form, $model, $this->getKey(), $this->getOptions() + [
+			"data-form" => LGenerator::generate("form"),
+			"data-laboratory" => "address",
 		]);
 	}
 
