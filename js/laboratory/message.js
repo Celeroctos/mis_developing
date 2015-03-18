@@ -148,6 +148,9 @@ var Laboratory = Laboratory || {};
 					top: parseInt(move[i].selector().css("top")) - component.selector().height() - 37
 				});
 			}
+            component.selector().promise(component.selector()).done(function() {
+                component.selector().remove();
+            });
 		},
 		_components: []
 	};

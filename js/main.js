@@ -656,6 +656,10 @@ $('select[multiple="multiple"]').each(function(index, select) {
     /* Двигающиеся модалки */
     $('.modal').draggable({
         handle: ".modal-header" // Only header please
+    }).bind('hidden.bs.modal', function () {
+        $("html").css("margin-right", "0px");
+    }).bind('show.bs.modal', function () {
+        $("html").css("margin-right", "-15px");
     });
 
     // По нажатию на кнопку "удалить" - спрашиваем подтверждение на удаление
@@ -832,7 +836,8 @@ $('select[multiple="multiple"]').each(function(index, select) {
     [
     ];
     $(document).on('keydown' ,function(e){
-        if ((e.keyCode==13 || e.keyCode==9) && (!e.ctrlKey))
+
+        if ((e.keyCode==13 /* || e.keyCode==9 */) && (!e.ctrlKey))
         {
             //console.log('Нажата клавиша Enter');
             //console.log(e.currentTarget);
