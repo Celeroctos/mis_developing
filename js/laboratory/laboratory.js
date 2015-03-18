@@ -683,6 +683,7 @@ var MedcardEditableViewerModal = {
 			modal.find("form").each(function(i, f) {
 				forms.push($(f).serialize());
 			});
+			Laboratory.resetFormErrors(modal);
 			$.post(url("laboratory/medcard/register"), {
 				model: forms
 			}, function(json) {

@@ -50,8 +50,7 @@ class LMedcardForm extends LFormModel {
 					"value" => "last_name, first_name",
 					"format" => "%{last_name} %{first_name}"
 				],
-				"rules" => "required",
-				"value" => LUserIdentity::get("doctorId")
+				"rules" => "required"
 			],
 			"patient_id" => [
 				"label" => "Идентификатор пациента",

@@ -9,6 +9,7 @@ class LPatientForm extends LFormModel {
 	 */
 	public function backward() {
 		return [
+			[ "id", "hide", "on" => "treatment.edit" ]
 		];
 	}
 

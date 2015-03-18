@@ -96,6 +96,13 @@ var Laboratory = Laboratory || {};
         });
     };
 
+	/**
+	 *
+	 * @param where
+	 * @param json
+	 * @returns {*}
+	 * @static
+	 */
     Laboratory.postFormErrors = function(where, json) {
         var html = $("<ul>");
         for (var i in json["errors"] || []) {
@@ -111,6 +118,15 @@ var Laboratory = Laboratory || {};
             delay: 10000
         });
     };
+
+	/**
+	 *
+	 * @param where
+	 * @static
+	 */
+	Laboratory.resetFormErrors = function(where) {
+		$(where).find(".form-group").removeClass("has-error");
+	};
 
     Form.prototype.send = function(after) {
         this.selector().find(".form-group").removeClass("has-error");

@@ -4,9 +4,6 @@ var Laboratory = Laboratory || {};
 
 	"use strict";
 
-	var getID = function() {
-	};
-
 	var Address = function(properties, selector) {
 		Lab.Component.call(this, properties, {
 			list: {
@@ -33,12 +30,12 @@ var Laboratory = Laboratory || {};
 				"flat_number": {
 					"label": "Квартира",
 					"prefix": "кв",
-					"style": "width: 33%"
+					"style": "width: 34%"
 				},
 				"post_index": {
 					"label": "Индекс",
 					"prefix": "п/и",
-					"style": "width: 34%"
+					"style": "width: 33%"
 				}
 			}
 		}, selector);
@@ -80,7 +77,12 @@ var Laboratory = Laboratory || {};
 	};
 
 	Address.prototype.form = function() {
-		var id = this.selector().data("form") || "form-" + count;
+		var id;
+		if (this.selector().data("form")) {
+			id = this.selector().data("form");
+		} else {
+			this.selector().attr("data-form", id = "form-" + count)
+		}
 		var c = $("<form>", {
 			class: "address-container",
 			id: id
