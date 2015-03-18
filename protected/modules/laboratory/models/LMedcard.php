@@ -1,6 +1,6 @@
 <?php
 
-class LMedcard extends LModel {
+class LMedcard extends ActiveRecord {
 
 	public $id;
 	public $mis_medcard;

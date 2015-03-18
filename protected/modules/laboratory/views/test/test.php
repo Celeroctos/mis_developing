@@ -6,7 +6,7 @@
 
 $this->widget("LModal", [
     "body" => $this->getWidget("LForm", [
-        "model" => new LAnalysisParamForm("update"),
+        "model" => new AnalysisParamForm("update"),
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/laboratory/register"
     ]),
     "title" => "Создание направления",
@@ -34,14 +34,14 @@ $this->widget("LPagination", [
 $this->widget("LModal", [
 	"title" => "Test",
 	"body" => $this->getWidget("LForm", [
-		"model" => new LPatientForm()
+		"model" => new PatientForm()
 	]),
 	"id" => "test-modal-address-modal"
 ]);
 
 $this->widget("LModal", [
 	"body" => $this->getWidget("LForm", [
-		"model" => new LTestForm("register"),
+		"model" => new TestForm("register"),
 		"id" => "test-form",
 		"url" => "/moniiag/laboratory/test/register"
 	]),

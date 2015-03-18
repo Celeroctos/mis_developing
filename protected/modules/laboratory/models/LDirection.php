@@ -1,9 +1,9 @@
 <?php
 
-class LDirection extends LModel {
+class LDirection extends ActiveRecord {
 
 	/**
-	 * @return LDirection - Cached model instance
+	 * @return Direction - Cached model instance
 	 */
     public static function model() {
         return parent::model(__CLASS__);
@@ -22,7 +22,7 @@ class LDirection extends LModel {
             ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
         $array = $query->queryAll();
         foreach ($array as &$value) {
-            $value["status"] = LDirectionStatusField::field()->getOption($value["status"]);
+            $value["status"] = DirectionStatusField::field()->getOption($value["status"]);
         }
         return $array;
     }

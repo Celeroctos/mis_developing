@@ -11,7 +11,7 @@ class DirectionController extends LController {
 
 	/**
 	 * Register some form's values in database, it will automatically
-	 * fetch model from $_POST["model"], decode it, build it's LFormModel
+	 * fetch model from $_POST["model"], decode it, build it's FormModel
 	 * object and save into database. But you must override
 	 * LController::getModel and return instance of controller's model else
 	 * it will throw an exception
@@ -34,7 +34,7 @@ class DirectionController extends LController {
 
 	/**
      * Override that method to return controller's model
-     * @return LModel - Controller's model instance
+     * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
         return new LDirection();

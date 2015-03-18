@@ -3,7 +3,7 @@
 class LGuideColumnEditor extends LForm {
 
 	/**
-	 * @var LGuideForm - Guide basic form model with
+	 * @var GuideForm - Guide basic form model with
 	 * declared table fields
 	 */
 	public $model = null;
@@ -21,14 +21,14 @@ class LGuideColumnEditor extends LForm {
 	public $columns = null;
 
 	/**
-	 * @var LGuideColumnForm - Default form model, it will be loaded with default
+	 * @var GuideColumnForm - Default form model, it will be loaded with default
 	 * guide's identification value
 	 */
 	public $default = null;
 
 	public function run() {
 		if (!$this->default) {
-			$this->default = new LGuideColumnForm();
+			$this->default = new GuideColumnForm();
 		}
 		if ($this->model && $this->model->id) {
 			$this->columns = [];
@@ -45,7 +45,7 @@ class LGuideColumnEditor extends LForm {
 				":guide_id" => $this->model->id
 			]);
 			foreach ($columns as $i => $column) {
-				$form = new LGuideColumnForm();
+				$form = new GuideColumnForm();
 				foreach ($column as $key => $value) {
 					$form->$key = $value;
 				}
@@ -54,7 +54,7 @@ class LGuideColumnEditor extends LForm {
 			}
 			$this->default->guide_id = $this->model->id;
 		} else {
-			$this->model = new LGuideForm();
+			$this->model = new GuideForm();
 		}
 		if ($this->columns == null) {
 			$this->columns = [];

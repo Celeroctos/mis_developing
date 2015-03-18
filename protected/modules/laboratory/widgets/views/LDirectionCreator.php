@@ -2,7 +2,7 @@
 
 /**
  * @var LDirectionCreator $this - Self instance
- * @var LDirectionForm $model - Direction's model
+ * @var DirectionForm $model - Direction's model
  */
 
 $this->beginWidget("CActiveForm", [

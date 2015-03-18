@@ -10,12 +10,9 @@ $siteName = '';
 // Вот за такое надо расстреливать на месте. Но автор сего шедевра не знает как сделать что-то более правильное
 //          относительно быстро (( а времени нет((
 // Если в строке есть "moniiag" - значит мы на тестовом
-if (  strpos( $_SERVER['HTTP_HOST'], 'moniiag')!==false && strpos( $_SERVER['HTTP_HOST'], 'moniiag')>=0 )
-{
+if (strpos($_SERVER['HTTP_HOST'], 'moniiag') !== false && strpos($_SERVER['HTTP_HOST'], 'moniiag') >= 0) {
     $siteName = 'МИС Notum Тестовый сервер';
-}
-else
-{
+} else {
     $siteName = 'МИС Notum';
 }
 
@@ -35,9 +32,12 @@ return array(
 		'application.models.*',
         'application.models.forms.*',
 		'application.components.*',
-		'application.components.widgets.*',
         'application.controllers.*',
         'application.assets.*',
+        'application.widgets.*',
+        'application.forms.*',
+        'application.fields.*',
+        'application.validators.*',
 	),
 
 	'modules'=>array(
@@ -114,8 +114,6 @@ return array(
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
-                'application.modules.laboratory.fields.*',
-                'application.modules.laboratory.validators.*'
             )
         )
 	),

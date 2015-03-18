@@ -1,7 +1,7 @@
 <?php
 /**
  * @var LMedcardEditor $this - Self instance
- * @var LModel $model - Medcard model
+ * @var ActiveRecord $model - LMedcard model
  * @var CActiveForm $form - Active form widget
  * @var array $privileges - List with privileges
  */

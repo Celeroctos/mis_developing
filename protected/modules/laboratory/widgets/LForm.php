@@ -27,7 +27,7 @@ class LForm extends LWidget {
     public $url = null;
 
     /**
-     * @var LFormModel - Form's model
+     * @var FormModel - Form's model
      */
     public $model = null;
 
@@ -44,7 +44,7 @@ class LForm extends LWidget {
                     $config += $model->getConfig();
                 }
             }
-            $this->model = new LFormModelAdapter($config);
+            $this->model = new FormModelAdapter($config);
         } else {
             $this->test($this->model);
         }
@@ -55,14 +55,14 @@ class LForm extends LWidget {
     }
 
     /**
-     * Test model for LFormModel inheritance and not null
-     * @param Mixed $model - Model which must extends LFormModel
+     * Test model for FormModel inheritance and not null
+     * @param Mixed $model - ActiveRecord which must extends FormModel
      * @return bool - True if everything ok
      * @throws CException
      */
     private function test($model) {
-        if (!$model || !($model instanceof LFormModel)) {
-            throw new CException("Unresolved model field or form model isn't instance of LFormModel ".(int)$model);
+        if (!$model || !($model instanceof FormModel)) {
+            throw new CException("Unresolved model field or form model isn't instance of FormModel ".(int)$model);
         }
         return true;
     }
@@ -197,7 +197,7 @@ class LForm extends LWidget {
             $data = $this->fetch($config["table"]);
         }
 
-        $result = LFieldCollection::getCollection()->find($type)->renderEx(
+        $result = FieldCollection::getCollection()->find($type)->renderEx(
             $form, $this->model, $key, $label, $value, $data, $options
         );
 

@@ -6,7 +6,7 @@ class LDirectionCreator extends LWidget {
 
     public function run() {
         $this->render(__CLASS__, [
-            "model" => new LDirectionForm()
+            "model" => new DirectionForm()
         ]);
     }
 } 

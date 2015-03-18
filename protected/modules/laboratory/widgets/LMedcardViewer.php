@@ -3,7 +3,7 @@
 class LMedcardViewer extends LWidget {
 
 	/**
-	 * @var string - Medcard number
+	 * @var string - LMedcard number
 	 * @db mis.medcards.card_number
 	 */
 	public $number;

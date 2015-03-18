@@ -2,7 +2,7 @@
 
 class LTable extends LWidget {
 
-	use LTableTrait;
+	use TableTrait;
 
 	public $widget = null;
 	public $table = null;
@@ -19,8 +19,8 @@ class LTable extends LWidget {
 	public function run() {
 
 		// Check table instance
-		if (!($this->table instanceof LModel)) {
-			throw new CException("Table's model must extends LModel");
+		if (!($this->table instanceof ActiveRecord)) {
+			throw new CException("Table's model must extends ActiveRecord");
 		}
 
 		// Copy parameters from parent widget

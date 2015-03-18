@@ -2,7 +2,7 @@
 /**
  * @var LForm $this - Form widget instance
  * @var CActiveForm $form - Form widget
- * @var LFormModel $model - Form model
+ * @var FormModel $model - Form model
  */
 
 $form = $this->beginWidget('CActiveForm', [

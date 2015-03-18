@@ -22,7 +22,7 @@ $this->beginWidget("CActiveForm", [
 			<b>Медицинская карта</b>
 			<br><br>
 			<? $this->widget("LForm", [
-				"model" => new LMedcardForm("treatment.edit")
+				"model" => new MedcardForm("treatment.edit")
 			]) ?>
 		</div>
 		<hr>
@@ -30,7 +30,7 @@ $this->beginWidget("CActiveForm", [
 			<b>Пациент</b>
 			<br><br>
 			<? $this->widget("LForm", [
-				"model" => new LPatientForm("treatment.edit")
+				"model" => new PatientForm("treatment.edit")
 			]) ?>
 		</div>
 	</div>
@@ -42,14 +42,14 @@ $this->beginWidget("CActiveForm", [
 <!--			<b>ОМС</b>-->
 <!--			<hr>-->
 <!--			--><?// $this->widget("LForm", [
-//				"model" => new LPolicyForm("treatment.policy")
+//				"model" => new PolicyForm("treatment.policy")
 //			]) ?>
 <!--		</div>-->
 <!--		<div class="col-xs-6 text-center">-->
 <!--			<b>Сведения о работе</b>-->
 <!--			<hr>-->
 <!--			--><?// $this->widget("LForm", [
-//				"model" => new LMedcardForm2("treatment.show")
+//				"model" => new MedcardForm2("treatment.show")
 //			]) ?>
 <!--		</div>-->
 <!--	</div>-->
@@ -61,7 +61,7 @@ $this->beginWidget("CActiveForm", [
 <!--		<hr>-->
 <!--		<div class="col-xs-6 col-xs-offset-3 text-center">-->
 <!--			--><?// $this->widget("LForm", [
-//				"model" => new LPolicyForm("treatment.patient")
+//				"model" => new PolicyForm("treatment.patient")
 //			]) ?>
 <!--		</div>-->
 <!--	</div>-->

@@ -1,6 +1,6 @@
 <?php
 
-class LMedcard2 extends LModel {
+class LMedcard2 extends ActiveRecord {
 
 	public $privilege_code;
 	public $snils;
@@ -27,7 +27,7 @@ class LMedcard2 extends LModel {
 
 	/**
 	 * @param string $className - Name of class to load
-	 * @return LMedcard2 - Model instance
+	 * @return LMedcard2 - ActiveRecord instance
 	 */
 	public static function model($className = __CLASS__) {
 		return parent::model($className);

@@ -2,7 +2,7 @@
 
 class LMedcardTable extends LWidget {
 
-	use LTableTrait;
+	use TableTrait;
 
 	/**
 	 * @var string - Default search mode, set it to "lis" if you

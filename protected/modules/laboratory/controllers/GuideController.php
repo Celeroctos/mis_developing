@@ -23,8 +23,8 @@ class GuideController extends LController {
 	public function actionRegister() {
 		try {
 			$model = $this->getFormModel("model", "post");
-			if (!($model instanceof LGuideForm)) {
-				$this->error("Model must be an instance of LGuideForm");
+			if (!($model instanceof GuideForm)) {
+				$this->error("Model must be an instance of GuideForm");
 			}
 			$name = trim($model->name);
 			$row = LGuide::model()->find("lower(name) = lower(:name)", [
@@ -53,7 +53,7 @@ class GuideController extends LController {
 	 *
 	 * @in (GET):
 	 *  + $model - String with encode serialized form or array with models, it that way
-	 * 			it will take model with index 0 as LGuideForm model and others as LGuideColumn model
+	 * 			it will take model with index 0 as GuideForm model and others as LGuideColumn model
 	 * @out (JSON):
 	 *  + model - Just received decode model or array with models (redundant)
 	 *  + message - Response message with error or success
@@ -132,14 +132,14 @@ class GuideController extends LController {
 					throw new CException("Can't resolve column name for guide \"{$guideId}\" with position \"{$c["position"]}\"");
 				}
 				if (isset($c["id"])) {
-					$value = LGuideValue::model()->find("id = :id", [
+					$value = GuideValue::model()->find("id = :id", [
 						":id" => $c["id"]
 					]);
 					if (!$value) {
 						throw new CException("Can't resolve value from guide with \"{$c["id"]}\" identification number");
 					}
 				} else {
-					$value = new LGuideValue();
+					$value = new GuideValue();
 					$value->guide_column_id = $column->id;
 					$value->guide_row_id = $table->id;
 				}
@@ -198,7 +198,7 @@ class GuideController extends LController {
 
 	/**
 	 * Override that method to return controller's model
-	 * @return LModel - Controller's model instance
+	 * @return ActiveRecord - Controller's model instance
 	 */
 	public function getModel() {
 		return new LGuide();
