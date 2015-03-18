@@ -155,12 +155,12 @@ var DropDown = {
     update: function(select, after) {
         var f;
         var form = $(select.parents("form")[0]);
-        if (!form.data("laboratory")) {
+        if (!form.data("lab")) {
             f = Laboratory.createForm(form[0], {
                 url: url("/laboratory/guide/getWidget")
             });
         } else {
-            f = form.data("laboratory");
+            f = form.data("lab");
         }
         f.update(after);
     },
@@ -564,8 +564,7 @@ var TreatmentViewHeader = {
 			Common.cleanup(this);
 		});
 	},
-	active: null,
-	copied: false
+	active: null
 };
 
 var LogoutButton = {
@@ -582,7 +581,7 @@ var LogoutButton = {
 };
 
 var MedcardSearchModal = {
-	construct: function(selector) {
+	ready: function(selector) {
 		var modal = $(selector);
 		modal.on("show.bs.modal", function() {
 			$(this).find("#load").prop("disabled", "disabled");
@@ -615,12 +614,16 @@ var MedcardSearchModal = {
 				})
 		});
 	},
+	construct: function() {
+		this.ready("#mis-medcard-search-modal");
+		this.ready("#lis-medcard-search-modal");
+	},
 	id: null
 };
 
 var MedcardEditableViewerModal = {
 	check: function() {
-		if (TreatmentViewHeader.copied !== false) {
+		if (MedcardEditableViewerModal.copied !== false) {
 			$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
 		} else {
 			$("#medcard-editable-viewer-modal #insert-button").prop("disabled", true);
@@ -633,11 +636,15 @@ var MedcardEditableViewerModal = {
 			me.check();
 		});
 		modal.find("#copy-button").click(function() {
-			var json = {};
-			modal.find("input, select, textarea").each(function(i, it) {
-				json[$(it).attr("id")] = $(it).val();
+			var json = [];
+			modal.find("form").each(function(i, f) {
+				var j = {};
+				$(f).find("input, select, textarea").each(function(i, it) {
+					j[$(it).attr("id")] = $(it).val();
+				});
+				json[$(f).attr("id")] = j;
 			});
-			TreatmentViewHeader.copied = json;
+			MedcardEditableViewerModal.copied = json;
 			me.check();
 			Laboratory.createMessage({
 				message: "Данные скопированы",
@@ -646,12 +653,15 @@ var MedcardEditableViewerModal = {
 			});
 		});
 		modal.find("#insert-button").click(function() {
-			if (TreatmentViewHeader.copied === false) {
+			if (MedcardEditableViewerModal.copied === false) {
 				return void 0;
 			}
-			var json = TreatmentViewHeader.copied;
+			var json = MedcardEditableViewerModal.copied;
 			for (var i in json) {
-				modal.find("[id='" + i + "']").val(json[i]);
+				var f = $("[id='" + i + "']");
+				for (var j in json[i]) {
+					f.find($("[id='" + j + "']")).val(json[i][j]);
+				}
 			}
 			Laboratory.createMessage({
 				message: "Данные вставлены",
@@ -688,26 +698,34 @@ var MedcardEditableViewerModal = {
 	load: function(model) {
 		var modal = $("#medcard-editable-viewer-modal")
 			.modal();
-		for (var i in model) {
-			var offset = 0;
-			var chances = [
-				model[i], -1, 0, 1
+		var put = function(from, key, value) {
+			var offset = 0, chances = [
+				value, -1, 0, 1
 			];
-			var field = modal.find("[id='" + i + "']");
-			if (!field.length) {
-				field = modal.find("#" + i);
-			}
-			do {
-				field.each(function(i, item) {
+			from.find("[id='" + key + "']").each(function(i, item) {
+				do {
 					$(item).val(chances[offset]);
-				});
-				if (++offset > chances.length) {
-					break;
-				}
-			} while (field.val() === null);
+					if ($(item)[0].tagName != "SELECT" || ++offset > chances.length) {
+						break;
+					}
+				} while ($(item).val() === null);
+			});
+		};
+		for (var i in model) {
+			var m = model[i], f, base;
+			if ((f = modal.find("#" + i)).length > 0 && f.data("form")) {
+				base = $("#" + f.data("form"));
+			} else {
+				base = modal
+			}
+			for (var j in m) {
+				put(base, j, m[j]);
+			}
 		}
-		modal.find("#card_number").text(model["card_number"]);
-	}
+		modal.find("input[data-laboratory='address']").address("calculate");
+		modal.find("span[id='card_number']").text(model["medcard"]["card_number"]);
+	},
+	copied: false
 };
 
 $(document).ready(function() {
@@ -720,6 +738,5 @@ $(document).ready(function() {
 	MedcardEditableViewerModal.construct();
 	TreatmentViewHeader.construct();
 	LogoutButton.construct();
-	MedcardSearchModal.construct("#mis-medcard-search-modal");
-	MedcardSearchModal.construct("#lis-medcard-search-modal");
+	MedcardSearchModal.construct();
 });

@@ -117,17 +117,16 @@
                     </ul>
             </li>
             -->
+		<?php if (Yii::app()->user->checkAccess('menuAdmin')) { ?>
+			<li <?php echo ($module == 'laboratory' && $controller == 'treatment' && $action == 'view') ? 'class="active"' : ''; ?>>
+				<?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/treatment.png" width="32" height="32" alt="" />Процедурная', array('/laboratory/treatment/view')) ?>
+			</li>
+		<?php } ?>
             <?php if (Yii::app()->user->checkAccess('menuAdmin')) { ?>
-                <li <?php echo ($module == 'laboratory') ? 'class="active"' : ''; ?>>
+                <li <?php echo ($module == 'laboratory' && $controller != 'treatment') ? 'class="active"' : ''; ?>>
                     <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/laboratory.png" width="32" height="32" alt="" />Лаборатория', array('#')) ?>
                     <ul class="nav">
                         <?php if (Yii::app()->user->checkAccess('menuOrgGuides')) { ?>
-                            <li <?php echo ($controller == 'medcard' && $action == 'view') ? 'class="active"' : ''; ?>>
-                                <?php echo CHtml::link('Медицинские карты', array('/laboratory/medcard/view')) ?>
-                            </li>
-                            <li <?php echo ($controller == 'treatment' && $action == 'view') ? 'class="active"' : ''; ?>>
-                                <?php echo CHtml::link('Процедурный кабинет', array('/laboratory/treatment/view')) ?>
-                            </li>
                             <li <?php echo ($controller == 'direction' && $action == 'view') ? 'class="active"' : ''; ?>>
                                 <?php echo CHtml::link('Направления', array('/laboratory/direction/view')) ?>
                             </li>
