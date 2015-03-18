@@ -1,6 +1,6 @@
 <?php
 
-class DirectionForm extends FormModel {
+class LDirectionForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

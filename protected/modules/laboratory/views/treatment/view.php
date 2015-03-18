@@ -7,7 +7,7 @@
 $this->widget("LModal", [
 	"title" => "Создать направление",
 	"body" => $this->getWidget("LForm", [
-		"model" => new DirectionForm(),
+		"model" => new LDirectionForm(),
 		"id" => "direction-register-form",
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/direction/register"
 	]),
@@ -106,7 +106,7 @@ $this->widget("LModal", [
 $this->widget("LModal", [
 	"title" => "Новое направление",
 	"body" => $this->getWidget("LForm", [
-		"model" => new DirectionForm()
+		"model" => new LDirectionForm()
 	]),
 	"id" => "direction-register-modal"
 ]);

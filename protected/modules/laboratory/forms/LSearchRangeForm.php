@@ -1,6 +1,6 @@
 <?php
 
-class SearchRangeForm extends FormModel {
+class LSearchRangeForm extends FormModel {
 
     /**
      * Override that method to return config. Config should return array associated with

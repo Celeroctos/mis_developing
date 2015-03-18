@@ -1,6 +1,6 @@
 <?php
 
-class AddressForm extends FormModel {
+class LAddressForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

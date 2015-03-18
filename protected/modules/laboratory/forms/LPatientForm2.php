@@ -1,6 +1,6 @@
 <?php
 
-class PatientForm2 extends CFormModel {
+class LPatientForm2 extends CFormModel {
 
 	public $doctype;
 	public $serie;

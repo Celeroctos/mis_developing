@@ -36,7 +36,7 @@ class MedcardController extends LController {
 
 	/**
 	 * Search action, which accepts array with search serialized form
-	 * models (MedcardSearchForm + SearchRangeForm). That action will
+	 * models (LMedcardSearchForm + LSearchRangeForm). That action will
 	 * fetch form's values and build search condition form form model
 	 * and return LTable widget with medcards
 	 *

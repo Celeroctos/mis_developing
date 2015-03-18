@@ -1,9 +1,6 @@
 <?php
 
-class GuideRowForm extends FormModel {
-
-	public $id;
-	public $guide_id;
+class LPhoneForm extends FormModel {
 
 	/**
 	 * Override that method to return config. Config should return array associated with
@@ -17,16 +14,18 @@ class GuideRowForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "Number",
-				"rules" => "required, numerical",
+				"type" => "number",
 				"hidden" => "true"
 			],
-			"guide_id" => [
-				"label" => "Справочник",
-				"type" => "DropDown",
-				"rules" => "required",
-				"data" => LGuide::model()->findForDropDown(),
-				"format" => "%{name}"
+			"number" => [
+				"label" => "Телефон",
+				"type" => "phone",
+				"rules" => "required, LPhoneValidator"
+			],
+			"type" => [
+				"label" => "Тип",
+				"type" => "PhoneType",
+				"rules" => "required, numerical"
 			]
 		];
 	}

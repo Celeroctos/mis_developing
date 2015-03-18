@@ -1,6 +1,6 @@
 <?php
 
-class AnalyzerTypeAnalysisForm extends FormModel {
+class LAnalyzerTypeAnalysisForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

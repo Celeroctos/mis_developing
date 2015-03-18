@@ -1,6 +1,6 @@
 <?php
 
-class AnalysisTypeForm extends FormModel {
+class LAnalysisSampleTypeForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -12,12 +12,9 @@ class AnalysisTypeForm extends FormModel {
 
 			// don't validate identification number on register
 			[ "id", "required", "on" => [ "update", "search" ] ],
-
-			// set maximum length of name field
-			[ "name", "length", "max" => 200 ],
-
-			// set maximum length of short name field
-			[ "short_name", "length", "max" => 20 ]
+			
+			// set maximum length of type and subtype
+			[ ["type", "subtype"], "length", "max" => 100 ]
 		];
 	}
 
@@ -35,24 +32,14 @@ class AnalysisTypeForm extends FormModel {
 				"label" => "Идентификатор",
 				"type" => "number"
 			],
-			"name" => [
-				"label" => "Наименование",
+			"type" => [
+				"label" => "Тип образца",
 				"type" => "text",
 				"rules" => "required"
 			],
-			"short_name" => [
-				"label" => "Краткое наименование анализа",
+			"subtype" => [
+				"label" => "Подтип образца",
 				"type" => "text",
-				"rules" => "required"
-			],
-			"automatic" => [
-				"label" => "Ручная методика",
-				"type" => "YesNo",
-				"rules" => "required"
-			],
-			"manual" => [
-				"label" => "Автоматическая методика",
-				"type" => "YesNo",
 				"rules" => "required"
 			]
 		];

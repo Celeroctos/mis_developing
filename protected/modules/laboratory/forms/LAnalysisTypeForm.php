@@ -1,6 +1,6 @@
 <?php
 
-class MedcardForm extends FormModel {
+class LAnalysisTypeForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -9,8 +9,15 @@ class MedcardForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			// hide identification number and reference to patient on medcard edit from treatment room
-			[ [ "id", "patient_id" ], "hide", "on" => "treatment.edit" ],
+
+			// don't validate identification number on register
+			[ "id", "required", "on" => [ "update", "search" ] ],
+
+			// set maximum length of name field
+			[ "name", "length", "max" => 200 ],
+
+			// set maximum length of short name field
+			[ "short_name", "length", "max" => 20 ]
 		];
 	}
 
@@ -28,34 +35,25 @@ class MedcardForm extends FormModel {
 				"label" => "Идентификатор",
 				"type" => "number"
 			],
-			"card_number" => [
-				"label" => "Номер карты",
+			"name" => [
+				"label" => "Наименование",
 				"type" => "text",
 				"rules" => "required"
 			],
-			"mis_medcard" => [
-				"label" => "Номер карты в МИС",
+			"short_name" => [
+				"label" => "Краткое наименование анализа",
 				"type" => "text",
-				"options" => [
-					"readonly" => "true"
-				],
-				"rules" => "safe"
-			],
-			"sender_id" => [
-				"label" => "Врач направитель",
-				"type" => "DropDown",
-				"table" => [
-					"name" => "mis.doctors",
-					"key" => "id",
-					"value" => "last_name, first_name",
-					"format" => "%{last_name} %{first_name}"
-				],
 				"rules" => "required"
 			],
-			"patient_id" => [
-				"label" => "Идентификатор пациента",
-				"type" => "number",
-				"rules" => "safe"
+			"automatic" => [
+				"label" => "Ручная методика",
+				"type" => "YesNo",
+				"rules" => "required"
+			],
+			"manual" => [
+				"label" => "Автоматическая методика",
+				"type" => "YesNo",
+				"rules" => "required"
 			]
 		];
 	}

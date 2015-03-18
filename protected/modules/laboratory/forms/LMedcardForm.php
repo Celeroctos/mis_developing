@@ -1,6 +1,6 @@
 <?php
 
-class AnalysisSampleTypeForm extends FormModel {
+class LMedcardForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -9,12 +9,8 @@ class AnalysisSampleTypeForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-
-			// don't validate identification number on register
-			[ "id", "required", "on" => [ "update", "search" ] ],
-			
-			// set maximum length of type and subtype
-			[ ["type", "subtype"], "length", "max" => 100 ]
+			// hide identification number and reference to patient on medcard edit from treatment room
+			[ [ "id", "patient_id" ], "hide", "on" => "treatment.edit" ],
 		];
 	}
 
@@ -32,15 +28,34 @@ class AnalysisSampleTypeForm extends FormModel {
 				"label" => "Идентификатор",
 				"type" => "number"
 			],
-			"type" => [
-				"label" => "Тип образца",
+			"card_number" => [
+				"label" => "Номер карты",
 				"type" => "text",
 				"rules" => "required"
 			],
-			"subtype" => [
-				"label" => "Подтип образца",
+			"mis_medcard" => [
+				"label" => "Номер карты в МИС",
 				"type" => "text",
+				"options" => [
+					"readonly" => "true"
+				],
+				"rules" => "safe"
+			],
+			"sender_id" => [
+				"label" => "Врач направитель",
+				"type" => "DropDown",
+				"table" => [
+					"name" => "mis.doctors",
+					"key" => "id",
+					"value" => "last_name, first_name",
+					"format" => "%{last_name} %{first_name}"
+				],
 				"rules" => "required"
+			],
+			"patient_id" => [
+				"label" => "Идентификатор пациента",
+				"type" => "number",
+				"rules" => "safe"
 			]
 		];
 	}

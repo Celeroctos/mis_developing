@@ -1,6 +1,6 @@
 <?php
 
-class MedcardSearchForm extends FormModel {
+class LMedcardSearchForm extends FormModel {
 
     /**
      * Override that method to return config. Config should return array associated with

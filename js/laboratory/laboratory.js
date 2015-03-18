@@ -230,7 +230,7 @@ var GuideColumnEditor = {
 		GuideColumnEditor.before(button);
 		$.get(url("/laboratory/guide/getWidget"), {
 			class: "LForm",
-			model: "GuideColumnForm",
+			model: "LGuideColumnForm",
 			form: { guide_id: GuideColumnEditor.id }
 		}, function(json) {
 			GuideColumnEditor.after(button);
@@ -276,7 +276,7 @@ var GuideTableViewer = {
         $.get(url("/laboratory/guide/getWidget"), {
             class: "LGuideColumnEditor",
             form: { id: id },
-            model: "GuideForm"
+            model: "LGuideForm"
         }, function(json) {
             if (!Message.display(json)) {
                 return void 0;

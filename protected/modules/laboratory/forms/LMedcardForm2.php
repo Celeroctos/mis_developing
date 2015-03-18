@@ -1,6 +1,6 @@
 <?php
 
-class MedcardForm2 extends FormModel {
+class LMedcardForm2 extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

@@ -1,6 +1,6 @@
 <?php
 
-class PassportForm extends FormModel {
+class LPassportForm extends FormModel {
 
 	public $id;
 	public $series;

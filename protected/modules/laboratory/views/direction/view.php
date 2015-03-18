@@ -4,5 +4,5 @@
  */
 
 $this->widget("LForm", [
-    "model" => new DepartmentForm()
+    "model" => new LDepartmentForm()
 ]);

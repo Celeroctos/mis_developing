@@ -1,6 +1,6 @@
 <?php
 
-class PolicyForm extends FormModel {
+class LPolicyForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

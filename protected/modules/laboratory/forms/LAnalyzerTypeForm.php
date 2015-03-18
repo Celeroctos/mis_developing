@@ -1,6 +1,6 @@
 <?php
 
-class AnalysisParamForm extends FormModel {
+class LAnalyzerTypeForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -10,14 +10,11 @@ class AnalysisParamForm extends FormModel {
 	public function backward() {
 		return [
 
-			// don't validate 'id' on register
+			// don't validate identification number on register
 			[ "id", "required", "on" => [ "update", "search" ] ],
 
-			// set maximum name length
-			[ "name", "length", "max" => 30 ],
-
-			// set maximum long name length
-			[ "long_name", "length", "max" => 200 ]
+			// set maximum length of type and name fields
+			[ ["type", "name"], "length", "max" => 100 ]
 		];
 	}
 
@@ -33,20 +30,20 @@ class AnalysisParamForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "text"
+				"type" => "number"
 			],
-			"name" => [
-				"label" => "Наименование",
+			"type" => [
+				"label" => "Название типа анализатора",
 				"type" => "text",
 				"rules" => "required"
 			],
-			"long_name" => [
-				"label" => "Описание",
-				"type" => "TextArea",
-				"rules" => "safe"
+			"name" => [
+				"label" => "Название анализатора",
+				"type" => "text",
+				"rules" => "required"
 			],
-			"comment" => [
-				"label" => "Комментарий",
+			"notes" => [
+				"label" => "Пометки",
 				"type" => "TextArea",
 				"rules" => "safe"
 			]

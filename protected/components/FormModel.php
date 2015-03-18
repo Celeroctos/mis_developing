@@ -9,7 +9,7 @@ abstract class FormModel extends CFormModel {
 	 * @see replace
 	 */
 	protected $replace = [
-		"required" => "LRequiredValidator"
+		"required" => "RequiredValidator"
 	];
 
 	/**

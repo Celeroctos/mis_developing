@@ -1,6 +1,6 @@
 <?php
 
-class PatientForm extends FormModel {
+class LPatientForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like

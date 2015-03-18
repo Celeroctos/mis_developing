@@ -1,6 +1,6 @@
 <?php
 
-class GuideValueForm extends FormModel {
+class LGuideValueForm extends FormModel {
 
 	public $id;
 	public $guide_row_id;

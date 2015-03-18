@@ -23,8 +23,8 @@ class GuideController extends LController {
 	public function actionRegister() {
 		try {
 			$model = $this->getFormModel("model", "post");
-			if (!($model instanceof GuideForm)) {
-				$this->error("Model must be an instance of GuideForm");
+			if (!($model instanceof LGuideForm)) {
+				$this->error("Model must be an instance of LGuideForm");
 			}
 			$name = trim($model->name);
 			$row = LGuide::model()->find("lower(name) = lower(:name)", [
@@ -53,7 +53,7 @@ class GuideController extends LController {
 	 *
 	 * @in (GET):
 	 *  + $model - String with encode serialized form or array with models, it that way
-	 * 			it will take model with index 0 as GuideForm model and others as LGuideColumn model
+	 * 			it will take model with index 0 as LGuideForm model and others as LGuideColumn model
 	 * @out (JSON):
 	 *  + model - Just received decode model or array with models (redundant)
 	 *  + message - Response message with error or success

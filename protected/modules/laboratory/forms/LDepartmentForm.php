@@ -1,6 +1,6 @@
 <?php
 
-class AnalysisTypeTemplateForm extends FormModel {
+class LDepartmentForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -25,31 +25,23 @@ class AnalysisTypeTemplateForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "number",
+				"hidden" => "true",
+				"rules" => "numerical, required"
 			],
-			"analysis_type_id" => [
-				"label" => "Тип анализа",
+			"name" => [
+				"label" => "Название",
+				"type" => "text",
+				"rules" => "required"
+			],
+			"department_id" => [
+				"label" => "Департамент в МИС",
 				"type" => "DropDown",
-				"rules" => "required",
 				"table" => [
-					"name" => "lis.analysis_types",
+					"name" => "mis.enterprise_params",
 					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"analysis_param_id" => [
-				"label" => "Параметр анализа",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "lis.analysis_params",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"is_default" => [
-				"label" => "Сделать по умолчанию",
-				"type" => "YesNo",
+					"value" => "shortname"
+				],
 				"rules" => "required"
 			]
 		];
