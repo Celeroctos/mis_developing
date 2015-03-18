@@ -18,7 +18,11 @@ abstract class AssetBundle extends CComponent {
     public $css = [];
 
     /**
-     * @var array - Array with dependencies bundles (class name)
+     * @var array - Array with dependencies bundles (class name), if you want to register
+     *  asset bundle in module, for example 'init' method, then done't forget to set
+     *  dependency to parent bundle, cuz else it will be registered in index layout
+     *  and scripts will be added after yours, so it might crash your event handlers
+     *  or overwrite your styles
      */
     public $dependencies = [];
 
