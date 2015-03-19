@@ -15,7 +15,7 @@ class m150319_013305_laboratory_passport extends CDbMigration {
               "subdivision_code" VARCHAR(10),
               "issue_date" DATE
             );
-            ALTER TABLE "lis"."medcard" ADD "passport_id" INT REFERENCES "lis"."passport"("id") DEFAULT NULL;
+            ALTER TABLE "lis"."patient" ADD "passport_id" INT REFERENCES "lis"."passport"("id") DEFAULT NULL;
 SQL;
         foreach (explode(";", $sql) as $s) {
             $this->execute($s);
@@ -24,7 +24,7 @@ SQL;
 
     public function safeDown() {
         $sql = <<< SQL
-          ALTER TABLE "lis"."medcard" DROP "passport_id";
+          ALTER TABLE "lis"."patient" DROP "passport_id";
           DROP TABLE "lis"."passport";
 SQL;
         foreach (explode(";", $sql) as $s) {
