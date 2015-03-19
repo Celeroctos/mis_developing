@@ -35,9 +35,9 @@ class m150304_195327_laboratory_dynamic_guides extends CDbMigration {
 
 	public function safeDown() {
 
-        $this->dropTable("lis.guide");
-        $this->dropTable("lis.guide_column");
-        $this->dropTable("lis.guide_row");
         $this->dropTable("lis.guide_value");
+        $this->dropTable("lis.guide_row");
+        $this->dropTable("lis.guide_column");
+        $this->dropTable("lis.guide");
     }
 }
