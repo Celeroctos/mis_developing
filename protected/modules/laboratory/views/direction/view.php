@@ -3,6 +3,6 @@
  * @var DirectionController $this
  */
 
-$this->widget("LForm", [
+$this->widget("Form", [
     "model" => new LDepartmentForm()
 ]);

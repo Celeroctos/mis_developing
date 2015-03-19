@@ -18,7 +18,7 @@ class DirectionController extends LController {
 	 *
 	 * @in (POST):
 	 *  + model - String with serialized client form via $("form").serialize(), if you're
-	 * 		using LModal or LPanel widgets that it will automatically find button with
+	 * 		using Modal or Panel widgets that it will automatically find button with
 	 * 		submit type and send ajax request
 	 * @out (JSON):
 	 *  + message - Message with status

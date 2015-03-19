@@ -10,7 +10,7 @@ class AddressField extends Field {
 	 */
 	public function render($form, $model) {
 		return TextField::field()->render2($form, $model, $this->getKey(), $this->getOptions() + [
-			"data-form" => Generator::generate("form"),
+			"data-form" => UniqueGenerator::generate("form"),
 			"data-laboratory" => "address",
 		]);
 	}

@@ -38,7 +38,7 @@ class MedcardController extends LController {
 	 * Search action, which accepts array with search serialized form
 	 * models (LMedcardSearchForm + LSearchRangeForm). That action will
 	 * fetch form's values and build search condition form form model
-	 * and return LTable widget with medcards
+	 * and return Table widget with medcards
 	 *
 	 * @in (POST):
 	 *  + model - Array with serialized forms (string)
@@ -83,7 +83,7 @@ class MedcardController extends LController {
 				$criteria->addSearchCondition($key, $value);
 			}
 			$this->leave([
-				"component" => $this->getWidget("LMedcardTable", [
+				"component" => $this->getWidget("MedcardTable", [
 					"criteria" => $criteria,
 					"mode" => $mode,
 				])
@@ -102,7 +102,7 @@ class MedcardController extends LController {
 	 *
 	 * @in (POST):
 	 *  + model - String with serialized client form via $("form").serialize(), if you're
-	 * 		using LModal or LPanel widgets that it will automatically find button with
+	 * 		using Modal or Panel widgets that it will automatically find button with
 	 * 		submit type and send ajax request
 	 * @out (JSON):
 	 *  + message - Message with status

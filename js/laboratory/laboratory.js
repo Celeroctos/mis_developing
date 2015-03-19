@@ -229,7 +229,7 @@ var GuideColumnEditor = {
 	add: function(button) {
 		GuideColumnEditor.before(button);
 		$.get(url("/laboratory/guide/getWidget"), {
-			class: "LForm",
+			class: "Form",
 			model: "LGuideColumnForm",
 			form: { guide_id: GuideColumnEditor.id }
 		}, function(json) {
@@ -274,7 +274,7 @@ var GuideTableViewer = {
         }
         GuideColumnEditor.id = id;
         $.get(url("/laboratory/guide/getWidget"), {
-            class: "LGuideColumnEditor",
+            class: "GuideColumnEditor",
             form: { id: id },
             model: "LGuideForm"
         }, function(json) {
@@ -359,7 +359,7 @@ var GuideTableViewer = {
                 }))
             );
             $.get(url("/laboratory/guide/getWidget"), {
-                class: "LGuideValueEditor",
+                class: "GuideValueEditor",
                 guide_id: id
             }, function(json) {
                 if (!Message.display(json)) {
@@ -392,7 +392,7 @@ var GuideTableViewer = {
 	},
 	update: function() {
 		$.get(url("/laboratory/guide/getWidget"), {
-			class: "LGuideTable"
+			class: "GuideTable"
 		}, function(json) {
 			if (!json["status"]) {
 				return Laboratory.createMessage({

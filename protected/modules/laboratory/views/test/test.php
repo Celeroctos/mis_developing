@@ -4,8 +4,8 @@
  * @var $this LController
  */
 
-$this->widget("LModal", [
-    "body" => $this->getWidget("LForm", [
+$this->widget("Modal", [
+    "body" => $this->getWidget("Form", [
         "model" => new LAnalysisParamForm("update"),
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/laboratory/register"
     ]),
@@ -24,23 +24,23 @@ print "<pre>";
 print_r(array_keys($_GET));
 print "</pre>";
 
-$this->widget("LPagination", [
+$this->widget("Pagination", [
 	"pages" => 50,
 	"page" => isset($_GET["page"]) ? $_GET["page"] : 1,
 	"limit" => 10,
 	"action" => "reloadPage.call"
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Test",
-	"body" => $this->getWidget("LForm", [
+	"body" => $this->getWidget("Form", [
 		"model" => new LPatientForm()
 	]),
 	"id" => "test-modal-address-modal"
 ]);
 
-$this->widget("LModal", [
-	"body" => $this->getWidget("LForm", [
+$this->widget("Modal", [
+	"body" => $this->getWidget("Form", [
 		"model" => new TestForm("register"),
 		"id" => "test-form",
 		"url" => "/moniiag/laboratory/test/register"

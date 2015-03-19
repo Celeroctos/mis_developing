@@ -43,7 +43,7 @@ abstract class LController extends Controller {
 
     /**
      * Override that method to update some widget if you want
-     * @return null|LWidget - Widget component
+     * @return null|Widget - Widget component
      */
     protected function onWidgetUpdate() {
         return null;
@@ -276,14 +276,14 @@ abstract class LController extends Controller {
                 ];
             }
 
-            // Create widget, check for LWidget instance and copy parameters
+            // Create widget, check for Widget instance and copy parameters
             $widget = $this->createWidget($class, $parameters);
 
-            if (!($widget instanceof LWidget)) {
-                throw new CException("Can't update widget which don't extends LWidget component");
+            if (!($widget instanceof Widget)) {
+                throw new CException("Can't update widget which don't extends Widget component");
             }
 
-            if ($form != null && $widget instanceof LForm && is_array($form)) {
+            if ($form != null && $widget instanceof Form && is_array($form)) {
                 foreach ($form as $key => $value) {
                     $widget->model->$key = $value;
                 }
@@ -308,7 +308,7 @@ abstract class LController extends Controller {
 	 *
 	 * @in (POST):
 	 *  + model - String with serialized client form via $("form").serialize(), if you're
-	 * 		using LModal or LPanel widgets that it will automatically find button with
+	 * 		using Modal or Panel widgets that it will automatically find button with
 	 * 		submit type and send ajax request
 	 * @out (JSON):
 	 *  + message - Message with status

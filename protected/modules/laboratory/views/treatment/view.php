@@ -4,9 +4,9 @@
  * @var int $directionRepeats - Count of direction repeats
  */
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Создать направление",
-	"body" => $this->getWidget("LForm", [
+	"body" => $this->getWidget("Form", [
 		"model" => new LDirectionForm(),
 		"id" => "direction-register-form",
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/direction/register"
@@ -21,11 +21,11 @@ $this->widget("LModal", [
 	]
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Поиск медкарты в МИС",
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
-	], $this->getWidget("LMedcardSearch", [
+	], $this->getWidget("MedcardSearch", [
 		"mode" => "mis"
 	])),
 	"id" => "mis-medcard-search-modal",
@@ -42,11 +42,11 @@ $this->widget("LModal", [
 	"class" => "modal-lg"
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Поиск медкарты в ЛИС",
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
-	], $this->getWidget("LMedcardSearch", [
+	], $this->getWidget("MedcardSearch", [
 		"mode" => "lis"
 	])),
 	"id" => "lis-medcard-search-modal",
@@ -63,18 +63,18 @@ $this->widget("LModal", [
 	"class" => "modal-lg"
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Новое направление",
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
-	], $this->getWidget("LDirectionCreator"))
+	], $this->getWidget("DirectionCreator"))
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Медицинская карта № " . CHtml::tag("span", [
 			"id" => "card_number"
 		], ""),
-	"body" => $this->getWidget("LMedcardEditableViewer"),
+	"body" => $this->getWidget("MedcardEditableViewer"),
 	"id" => "medcard-editable-viewer-modal",
 	"buttons" => [
 		"save-button" => [
@@ -103,9 +103,9 @@ $this->widget("LModal", [
 	]
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Новое направление",
-	"body" => $this->getWidget("LForm", [
+	"body" => $this->getWidget("Form", [
 		"model" => new LDirectionForm()
 	]),
 	"id" => "direction-register-modal"
@@ -153,7 +153,7 @@ $this->widget("LModal", [
 	</div>
 	<div class="treatment-table-wrapper treatment-header-rounded">
 		<div id="treatment-direction-grid-wrapper">
-			<?= $this->getWidget("LTable", [
+			<?= $this->getWidget("Table", [
 				"table" => new LDirection("grid.direction"),
 				"header" => [
 					"id" => [
@@ -183,7 +183,7 @@ $this->widget("LModal", [
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?= $this->getWidget("LGridView", [
+			<?= $this->getWidget("GridView", [
 				"model" => "LDirection",
 				"scenario" => "grid.repeated-direction",
 				"id" => "direction-repeated-grid"

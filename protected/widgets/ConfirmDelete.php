@@ -1,0 +1,11 @@
+<?php
+
+class ConfirmDelete extends Widget {
+
+	public $title = null;
+	public $id = null;
+
+	public function run() {
+		$this->render(__CLASS__, null);
+	}
+}

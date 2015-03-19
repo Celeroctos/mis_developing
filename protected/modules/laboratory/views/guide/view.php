@@ -4,13 +4,13 @@
  * @var $this LController
  */
 
-$this->widget("LConfirmDelete", [
+$this->widget("ConfirmDelete", [
     "title" => "Удалить?",
     "id" => "confirm-delete-modal"
 ]);
 
-$this->widget("LModal", [
-    "body" => $this->getWidget("LForm", [
+$this->widget("Modal", [
+    "body" => $this->getWidget("Form", [
         "url" => Yii::app()->getBaseUrl()."/laboratory/guide/register",
         "model" => new LGuideForm("register"),
         "id" => "guide-register-form"
@@ -26,7 +26,7 @@ $this->widget("LModal", [
     ]
 ]);
 
-$this->widget("LModal", [
+$this->widget("Modal", [
     "title" => "Редактирование значений",
     "id" => "guide-edit-values-modal",
     "buttons" => [
@@ -43,7 +43,7 @@ $this->widget("LModal", [
 
 <div class="col-xs-12">
     <div class="col-xs-4">
-        <? $this->beginWidget("LPanel", [ "title" => "Справочники", "id" => "guide-panel" ]); $this->widget("LGuideTable"); ?>
+        <? $this->beginWidget("Panel", [ "title" => "Справочники", "id" => "guide-panel" ]); $this->widget("GuideTable"); ?>
         <hr>
         <button data-toggle="modal" data-target="#guide-register-modal" type="button" class="btn btn-primary btn-sm">
             Добавить справочник
