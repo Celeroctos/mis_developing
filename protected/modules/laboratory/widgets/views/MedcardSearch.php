@@ -9,12 +9,12 @@
 		<div class="col-xs-5">
 			<h4>Поиск</h4>
 			<br>
-			<? $this->widget("Form", [ "model" => new LMedcardSearchForm(), "id" => "medcard-search-form" ]); ?>
+			<? $this->widget("AutoForm", [ "model" => new LMedcardSearchForm(), "id" => "medcard-search-form" ]); ?>
 		</div>
 		<div class="col-xs-5">
 			<h4>Дата проведения анализа</h4>
 			<br>
-			<? $this->widget("Form", [ "model" => new LSearchRangeForm(), "id" => "medcard-range-form" ]); ?>
+			<? $this->widget("AutoForm", [ "model" => new LSearchRangeForm(), "id" => "medcard-range-form" ]); ?>
 		</div>
 		<div class="col-xs-2"></div>
 	</div>

@@ -49,7 +49,7 @@ var Laboratory = Laboratory || {};
         var form = this.selector();
         if (!this.property("url")) {
             return Laboratory.createMessage({
-                message: "Missed 'url' property for Form component"
+                message: "Missed 'url' property for AutoForm component"
             });
         }
         var url = this.property("url").substring(
@@ -133,7 +133,7 @@ var Laboratory = Laboratory || {};
         var form = this.selector();
         if (!this.property("url")) {
             return Laboratory.createMessage({
-                message: "Missed 'url' property for Form component"
+                message: "Missed 'url' property for AutoForm component"
             });
         }
         var me = this;
@@ -143,19 +143,7 @@ var Laboratory = Laboratory || {};
             me.after();
             if (!json["status"]) {
                 after && after(me, false);
-                var html = $("<ul>");
-                for (var i in json["errors"] || []) {
-                    $($("#" + i).parents(".form-group")[0]).addClass("has-error");
-                    for (var j in json["errors"][i]) {
-                        $("<li>", {
-                            text: json["errors"][i][j]
-                        }).appendTo(html);
-                    }
-                }
-                return Laboratory.createMessage({
-                    message: json["message"] + html.html(),
-                    delay: 10000
-                });
+				return Laboratory.postFormErrors(me.selector(), json);
             } else {
                 if (me.property("success")) {
                     me.property("success").call(me, json);

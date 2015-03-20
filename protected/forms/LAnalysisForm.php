@@ -9,14 +9,8 @@ class LAnalysisForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-
-			// don't validate identification number no register
 			[ "id", "required", "on" => [ "update", "search" ] ],
-
-			// hide primary key on register
 			[ "id", "hidden", "on" => "register" ],
-
-			// maximum length of medcard number
 			[ "medcard_number", "length", "max" => 50 ]
 		];
 	}
@@ -34,7 +28,7 @@ class LAnalysisForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "hidden"
 			],
 			"registration_date" => [
 				"label" => "Дата регистрации",

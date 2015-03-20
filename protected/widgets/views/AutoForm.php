@@ -1,6 +1,6 @@
 <?
 /**
- * @var Form $this - Form widget instance
+ * @var AutoForm $this - Form widget instance
  * @var CActiveForm $form - Form widget
  * @var FormModel $model - Form model
  */

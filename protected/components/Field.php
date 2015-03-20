@@ -49,14 +49,22 @@ abstract class Field extends CComponent {
 	 * Render field with value or data
 	 * @param CActiveForm $form - Active form for which we're rendering fields
 	 * @param FormModel $model - Form's model with data configuration
-	 * @param String $key - Unique key for field (identification value)
-	 * @param String $label - Field's label
-	 * @param Mixed $value - Any value for field
-	 * @param Array $data - Array with values (for DropDown lists)
-	 * @param array $options - Html options for field component
 	 * @return String - Just rendered field result
 	 */
-	public final function renderEx($form, $model, $key, $label = "", $value = null, $data = [], $options = []) {
+	public final function renderEx($form, $model) {
+		return $this->render($form, $model);
+	}
+
+	/**
+	 * Bind render parameters to field instance
+	 * @param string $key - Unique key for field (identification value)
+	 * @param string $label - Field's label
+	 * @param mixed $value - Any value for field
+	 * @param array $data - Array with values (for DropDown lists)
+	 * @param array $options - Html options for field component
+	 * @return Field - Field instance
+	 */
+	public function bind($key, $label = "", $value = null, $data = [], $options = []) {
 
 		assert(is_string($label), "Label must be with String type");
 		assert(is_string($key), "Key must be with String type");
@@ -74,7 +82,7 @@ abstract class Field extends CComponent {
 			"placeholder" => $label
 		];
 
-		return $this->render($form, $model);
+		return $this;
 	}
 
 	/**

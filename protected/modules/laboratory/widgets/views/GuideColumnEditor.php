@@ -4,7 +4,7 @@
  * @var $this GuideColumnEditor - Widget's instance
  */
 
-$this->widget("Form", [
+$this->widget("AutoForm", [
 	"url" => Yii::app()->getBaseUrl()."/laboratory/guide/update",
 	"model" => $this->model,
 	"id" => "add-guide-form"
@@ -16,14 +16,14 @@ $this->widget("Form", [
 	<div class="panel-heading" style="text-align: right">
 		<div class="column-container" style="padding-top: 5px">
 			<? if (count($this->columns) == 0): ?>
-				<div><? $this->widget("Form", [ "model" => $this->default ]) ?><hr></div>
+				<div><? $this->widget("AutoForm", [ "model" => $this->default ]) ?><hr></div>
 			<? endif; ?>
 			<? foreach ($this->columns as $column): ?>
 				<div class="guide-column-handle">
 					<a href="javascript:void(0)">
 						<span class="glyphicon glyphicon-remove guide-remove-column" style="color: #af1010"></span>
 					</a>
-					<? $this->widget("Form", [ "model" => $column ]) ?>
+					<? $this->widget("AutoForm", [ "model" => $column ]) ?>
 					<hr>
 				</div>
 			<? endforeach; ?>

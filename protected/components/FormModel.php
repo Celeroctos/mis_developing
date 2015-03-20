@@ -130,7 +130,7 @@ abstract class FormModel extends CFormModel {
         if (isset($this->_container[$name])) {
             return $this->_container[$name];
         } else {
-            return null;
+			return parent::__get($name);
         }
     }
 
@@ -142,6 +142,7 @@ abstract class FormModel extends CFormModel {
      */
     public function __set($name, $value) {
         $this->_container[$name] = $value;
+		parent::__set($name, $value);
     }
 
 	/**

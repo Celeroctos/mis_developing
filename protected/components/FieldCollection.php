@@ -32,12 +32,16 @@ class FieldCollection extends CComponent {
 	/**
 	 * Find field by it's key in collection
 	 * @param String $key - Field's key
+	 * @param bool $throw - Don't throw an exception
 	 * @return Field - Field instance
 	 * @throws CException
 	 */
-	public function find($key) {
+	public function find($key, $throw = true) {
 		$key = strtolower($key);
 		if (!isset($this->fields[$key])) {
+			if (!$throw) {
+				return null;
+			}
 			throw new CException("Unresolved or not implemented field type ({$key})");
 		}
 		return $this->fields[$key];

@@ -10,7 +10,7 @@ $this->widget("ConfirmDelete", [
 ]);
 
 $this->widget("Modal", [
-    "body" => $this->getWidget("Form", [
+    "body" => $this->getWidget("AutoForm", [
         "url" => Yii::app()->getBaseUrl()."/laboratory/guide/register",
         "model" => new LGuideForm("register"),
         "id" => "guide-register-form"

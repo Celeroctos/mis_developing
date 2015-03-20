@@ -62,6 +62,7 @@ return array(
             'class' => 'application.modules.guides.GuidesModule',
             'import'=>array(
                 'application.modules.guides.models.*',
+				'application.modules.guides.components.widgets.*',
                 'application.modules.guides.components.*',
                 'application.modules.guides.controllers.*'
             ),

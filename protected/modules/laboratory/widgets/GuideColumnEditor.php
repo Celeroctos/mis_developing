@@ -1,6 +1,6 @@
 <?php
 
-class GuideColumnEditor extends Form {
+class GuideColumnEditor extends AutoForm {
 
 	/**
 	 * @var LGuideForm - Guide basic form model with

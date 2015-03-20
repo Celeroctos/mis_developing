@@ -16,7 +16,7 @@ abstract class ActiveRecord extends CActiveRecord {
 
     /**
      * Override that method to return list with table
-     * keys for CGridView widget
+     * keys for GridView widget
      * @return array - Array with keys names
      */
     public function getKeys() {

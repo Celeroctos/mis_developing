@@ -4,8 +4,7 @@ class AnalysisSampleTypeController extends Controller
 {
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
-	{
+	public function actionView($id) {
         $this->actionIndex();
 	}
 

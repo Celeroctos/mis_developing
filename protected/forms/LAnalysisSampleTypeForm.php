@@ -1,6 +1,6 @@
 <?php
 
-class LAnalyzerTypeAnalysisForm extends FormModel {
+class LAnalysisSampleTypeForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -9,7 +9,12 @@ class LAnalyzerTypeAnalysisForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			[ "id", "required", "on" => [ "update", "search" ] ]
+
+			// don't validate identification number on register
+			[ "id", "required", "on" => [ "update", "search" ] ],
+			
+			// set maximum length of type and subtype
+			[ ["type", "subtype"], "length", "max" => 100 ]
 		];
 	}
 
@@ -25,27 +30,17 @@ class LAnalyzerTypeAnalysisForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "hidden"
 			],
-			"analyzer_type_id" => [
-				"label" => "Тип анализатора",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "lis.analyzer_types",
-					"key" => "id",
-					"value" => "name"
-				]
+			"type" => [
+				"label" => "Тип образца",
+				"type" => "text",
+				"rules" => "required"
 			],
-			"analysis_type_id" => [
-				"label" => "Тип анализа",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "lis.analysis_types",
-					"key" => "id",
-					"value" => "short_name"
-				]
+			"subtype" => [
+				"label" => "Подтип образца",
+				"type" => "text",
+				"rules" => "required"
 			]
 		];
 	}

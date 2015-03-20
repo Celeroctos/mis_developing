@@ -1,6 +1,6 @@
 <?php
 
-class LAnalysisTypeTemplateForm extends FormModel {
+class LAnalyzerTypeAnalysisForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -25,7 +25,17 @@ class LAnalysisTypeTemplateForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "hidden"
+			],
+			"analyzer_type_id" => [
+				"label" => "Тип анализатора",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"name" => "lis.analyzer_types",
+					"key" => "id",
+					"value" => "name"
+				]
 			],
 			"analysis_type_id" => [
 				"label" => "Тип анализа",
@@ -34,23 +44,8 @@ class LAnalysisTypeTemplateForm extends FormModel {
 				"table" => [
 					"name" => "lis.analysis_types",
 					"key" => "id",
-					"value" => "name"
+					"value" => "short_name"
 				]
-			],
-			"analysis_param_id" => [
-				"label" => "Параметр анализа",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "lis.analysis_params",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"is_default" => [
-				"label" => "Сделать по умолчанию",
-				"type" => "YesNo",
-				"rules" => "required"
 			]
 		];
 	}

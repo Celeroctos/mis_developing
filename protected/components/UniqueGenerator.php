@@ -10,6 +10,6 @@ class UniqueGenerator extends CComponent {
 	 * @return string - Generated string
 	 */
 	public static function generate($prefix, $length = 10) {
-		return $prefix . "-" . Yii::app()->getSecurityManager()->generateRandomString($length);
+		return $prefix . "-" . bin2hex(Yii::app()->getSecurityManager()->generateRandomBytes($length / 2));
 	}
 }

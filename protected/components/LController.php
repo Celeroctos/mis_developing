@@ -29,7 +29,7 @@ abstract class LController extends Controller {
 
     /**
      * Override that method to return controller's model
-     * @return Model - Controller's model instance
+     * @return ActiveRecord - Controller's model instance
      */
     public abstract function getModel();
 
@@ -202,6 +202,20 @@ abstract class LController extends Controller {
         }
         return $form;
     }
+
+	/**
+	 * Validate some form and terminate script execution on error
+	 * @param CFormModel $form - Form model instance with data
+	 */
+	public function validateForm($form) {
+		if (!$form->validate()) {
+			$this->leave([
+				"message" => "Произошли ошибки во время валидации формы",
+				"errors" => $form->getErrors(),
+				"status" => false
+			]);
+		}
+	}
 
     /**
      * Get model via GET method, it will check it for array and decode if model

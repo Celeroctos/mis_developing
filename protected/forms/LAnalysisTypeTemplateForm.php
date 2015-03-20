@@ -1,6 +1,6 @@
 <?php
 
-class LAnalysisParamForm extends FormModel {
+class LAnalysisTypeTemplateForm extends FormModel {
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -9,15 +9,7 @@ class LAnalysisParamForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-
-			// don't validate 'id' on register
-			[ "id", "required", "on" => [ "update", "search" ] ],
-
-			// set maximum name length
-			[ "name", "length", "max" => 30 ],
-
-			// set maximum long name length
-			[ "long_name", "length", "max" => 200 ]
+			[ "id", "required", "on" => [ "update", "search" ] ]
 		];
 	}
 
@@ -33,22 +25,32 @@ class LAnalysisParamForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "text"
+				"type" => "hidden"
 			],
-			"name" => [
-				"label" => "Наименование",
-				"type" => "text",
+			"analysis_type_id" => [
+				"label" => "Тип анализа",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"name" => "lis.analysis_types",
+					"key" => "id",
+					"value" => "name"
+				]
+			],
+			"analysis_param_id" => [
+				"label" => "Параметр анализа",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"name" => "lis.analysis_params",
+					"key" => "id",
+					"value" => "name"
+				]
+			],
+			"is_default" => [
+				"label" => "Сделать по умолчанию",
+				"type" => "YesNo",
 				"rules" => "required"
-			],
-			"long_name" => [
-				"label" => "Описание",
-				"type" => "TextArea",
-				"rules" => "safe"
-			],
-			"comment" => [
-				"label" => "Комментарий",
-				"type" => "TextArea",
-				"rules" => "safe"
 			]
 		];
 	}

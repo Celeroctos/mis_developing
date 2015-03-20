@@ -1,6 +1,6 @@
 <?php
 
-class Form extends Widget {
+class AutoForm extends Widget {
 
     public $id = null;
     public $url = null;
@@ -16,6 +16,9 @@ class Form extends Widget {
      * @return string - Just rendered component or nothing
      */
     public function run() {
+		if ($this->id == null) {
+			$this->id = UniqueGenerator::generate("form");
+		}
         if (is_array($this->model)) {
             $config = [];
             foreach ($this->model as $i => $model) {
@@ -52,7 +55,7 @@ class Form extends Widget {
      * @param String $format - String with data format, for example ${id} or ${surname}
      * @param Array $data - Array with data to format
      */
-    private function format($format, array& $data) {
+    public static function format($format, array& $data) {
         foreach ($data as $i => &$value) {
 			if (is_object($value)) {
 				$model = clone $value;
@@ -84,7 +87,7 @@ class Form extends Widget {
      * @return array - Array with prepared data
      * @throws CException
      */
-    private function fetch($table) {
+    public static function fetch($table) {
         if (!isset($table["name"]) && !isset($table["value"])) {
             throw new CException("Table configuration requires key, value and name");
         }
@@ -112,7 +115,7 @@ class Form extends Widget {
             foreach ($data as $row) {
                 $result[$row[$key]] = $row;
             }
-            $this->format($table["format"], $result);
+            static::format($table["format"], $result);
         } else {
             foreach ($data as $row) {
                 $result[$row[$key]] = $row[$value];
@@ -121,67 +124,67 @@ class Form extends Widget {
         return $result;
     }
 
-    /**
-     * That function will render all form elements based on it's type
-     * @param CActiveForm $form - Form widget
-     * @param String $key - Field name
-     * @return string - Result string
-     * @throws CException - If field's type hasn't been implemented in renderer
-     */
-    public function renderField($form, $key) {
-
-        $config = $this->model->getConfig()[$key];
-
-        if (isset($config["type"])) {
-            $type = strtolower($config["type"]);
-        } else {
-            $type = "text";
-        }
-
-		if (!($data = $this->model->getKeyData($key))) {
-			if (isset($config["data"])) {
-				$data = $config["data"];
-			} else {
-				$data = [];
-			}
+	/**
+	 * Get configuration option or it's default value
+	 * @param array $config - Array with configuration
+	 * @param string $key - Name of key to get
+	 * @param mixed $default - Default value
+	 * @return mixed - It's value or default
+	 */
+	private function option(array& $config, $key, $default = null) {
+		if (isset($config[$key])) {
+			return $config[$key];
+		} else {
+			return $default;
 		}
+	}
 
-        if (isset($config["value"])) {
-            $value =  $config["value"];
-        } else {
-            $value = null;
-        }
+	/**
+	 * Prepare field for render, it will build it's configuration
+	 * and return Field instance
+	 * @param string $key - Name of field's key (type)
+	 * @return Field - Field instance
+	 */
+	public function prepare($key) {
+		$config = $this->model->getConfig($key);
+		$options = $this->option($config, "options", []);
+		if (isset($config["update"])) {
+			$options["data-update"] = $config["update"];
+		}
+		if (isset($config["table"])) {
+			$data = $this->fetch($config["table"]);
+		} else {
+			$data = [];
+		}
+		$type = $this->option($config, "type", "text");
+		$value = $this->option($config, "value");
+		$label = $this->option($config, "label", "");
+		return FieldCollection::getCollection()->find($type)
+			->bind($key, $label, $value, $data, $options);
+	}
 
-        if (isset($config["format"])) {
-            $this->format($config["format"], $data);
-        }
+	/**
+	 * That function will render all form elements based on it's type
+	 * @param CActiveForm $form - Active form instance
+	 * @param string $key - Field name
+	 * @return string - Result string
+	 * @throws ErrorException - If field's type hasn't been implemented in renderer
+	 */
+	public function renderField($form, $key) {
+		return $this->prepare($key)->render($form, $this->model);
+	}
 
-        if (isset($config["label"])) {
-            $label = $config["label"];
-        } else {
-            $label = "";
-        }
-
-        if (isset($config["options"])) {
-            $options = $config["options"];
-        } else {
-            $options = [];
-        }
-
-        if (isset($config["update"])) {
-            $options["data-update"] = $config["update"];
-        }
-
-        if (isset($config["table"])) {
-            $data = $this->fetch($config["table"]);
-        }
-
-        $result = FieldCollection::getCollection()->find($type)->renderEx(
-            $form, $this->model, $key, $label, $value, $data, $options
-        );
-
-        return $result;
-    }
+	/**
+	 * Render form control element
+	 * @param string $class - Main class name
+	 * @param array $control - Array with single control configuration
+	 * @return string - Rendered element
+	 */
+	public function renderControl($class, array $control) {
+		return CHtml::tag(isset($control["tag"]) ? $control["tag"] : "button", isset($control["text"]) ? $control["text"] : "", [
+			"class" => (isset($control["class"]) ? $control["class"] : "btn btn-primary") . " $class",
+		] + isset($control["options"]) ? $control["options"] : []);
+	}
 
     /**
      * Check model's type via it's configuration

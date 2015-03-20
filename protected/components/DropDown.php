@@ -34,14 +34,21 @@ abstract class DropDown extends Field {
 
 	/**
 	 * Get cached array with drop down list data
+	 * @param string $key - Data key to get
 	 * @return array - Array with drop down list
 	 */
-	public function getData() {
+	public function getData($key = null) {
 		if ($this->data == null) {
-			return ($this->data = $this->data());
-		} else {
-			return $this->data;
+			$this->data = $this->data();
 		}
+		if ($key != null) {
+			if (isset($this->data[$key])) {
+				return $this->data[$key];
+			} else {
+				return null;
+			}
+		}
+		return $this->data;
 	}
 
 	private $data = null;

@@ -5,7 +5,7 @@
  */
 
 $this->widget("Modal", [
-    "body" => $this->getWidget("Form", [
+    "body" => $this->getWidget("AutoForm", [
         "model" => new LAnalysisParamForm("update"),
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/laboratory/register"
     ]),
@@ -33,14 +33,14 @@ $this->widget("Pagination", [
 
 $this->widget("Modal", [
 	"title" => "Test",
-	"body" => $this->getWidget("Form", [
+	"body" => $this->getWidget("AutoForm", [
 		"model" => new LPatientForm()
 	]),
 	"id" => "test-modal-address-modal"
 ]);
 
 $this->widget("Modal", [
-	"body" => $this->getWidget("Form", [
+	"body" => $this->getWidget("AutoForm", [
 		"model" => new TestForm("register"),
 		"id" => "test-form",
 		"url" => "/moniiag/laboratory/test/register"
