@@ -1,5 +1,4 @@
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/767e5633/jquery.yiiactiveform.js"></script>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/libs/jquery-json.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/settings/system.js"></script>
 <h4>Системные настройки</h4>
 <div class="row" id="system-settings-block">
@@ -73,13 +72,16 @@
 <h4>Обслуживание</h4>
 <div class="row">
     <div class="form-group">
-        <?php echo CHtml::button(
-            'Очистить таблицы для приёмов пациентов',
-            array(
-                'class' => 'btn btn-success',
-                'id' => 'clearGreetingDataSubmit'
-            )
-        ); ?>
+        <?php 
+		if(Yii::app()->user->checkAccess('systemCleanGreetings')) { 
+			echo CHtml::button(
+				'Очистить таблицы для приёмов пациентов',
+				array(
+					'class' => 'btn btn-success',
+					'id' => 'clearGreetingDataSubmit'
+				)
+			); 
+		}?>
     </div>
 </div>
 <div class="modal fade error-popup" id="successSystemSettingsEditPopup">

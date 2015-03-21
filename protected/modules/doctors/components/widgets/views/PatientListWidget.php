@@ -88,7 +88,9 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
         <td>
             <?php 
 			if($patient['medcard_id'] != null) {
-				echo CHtml::link($patient['fio'], array('/doctors/shedule/view?cardid=' . $patient['medcard_id'] . '&date=' . $filterModel->date . '&rowid=' . $patient['id'])); 
+				echo CHtml::link($patient['fio'], array('/doctors/shedule/view?cardid=' . $patient['medcard_id'] . '&date=' . $filterModel->date . '&rowid=' . $patient['id']), array(
+                    'class' => 'showPatientGreetingLink'
+                ));
 			} else {
 				echo $patient['fio'];
 			}
@@ -125,10 +127,15 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
                             </td>-->
         <td>
             <?php
-            if (($patient['id'] == $currentSheduleId)&&Yii::app()->user->checkAccess('canCloseGreetings') && !($patient['is_accepted'] == 1 || $patient['is_beginned'] != 1)) {
-                echo CHtml::link('<span class="glyphicon glyphicon-flag"></span>', '#' . $patient['id'],
-                    array('title' => 'Закончить приём',
-                        'class' => 'accept-greeting-link'));
+            if (($patient['id'] == $currentSheduleId) && Yii::app()->user->checkAccess('canCloseGreetings') && !($patient['is_accepted'] == 1 || $patient['is_beginned'] != 1)) {
+
+                echo CHtml::link('<span class="glyphicon glyphicon-flag"></span>', '#',
+                    array(
+                        'title' => 'Закончить приём',
+                        'class' => 'accept-greeting-link',
+                        'id' => 'cl'.$patient['id']
+                    )
+                );
             }
             ?>
         </td>

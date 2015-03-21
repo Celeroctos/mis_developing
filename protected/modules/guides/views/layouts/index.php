@@ -12,14 +12,15 @@
 </head>
 <body>
 <?php $this->widget("ConfirmDelete") ?>
-<?php $this->widget('application.widgets.MainNavBar') ?>
+<?php $this->widget('MainNavBar') ?>
 <div class="container-fluid" id="content">
 	<div class="row main-container">
 		<div class="col-xs-2">
-			<?php $this->widget('application.widgets.SideMenu') ?>
+			<?php $this->widget('SideMenu') ?>
 		</div>
 		<div class="col-xs-9">
-			<?php $this->widget('application.widgets.GuidesTabMenu') ?>
+			<?php $this->widget('GuidesTabMenu') ?>
+			<?php $this->widget('FlashMessager'); ?>
 			<?php echo $content; ?>
 		</div>
 	</div>
@@ -30,7 +31,8 @@
 			<span class="glyphicon glyphicon-chevron-up buttonUpSign"></span>
 			<span class="buttonUpText">Наверх</span>
 		</span>
-	<nobr>
+	</nobr>
 </div>
+<?php $this->widget('FooterPanel'); ?>
 </body>
 </html>

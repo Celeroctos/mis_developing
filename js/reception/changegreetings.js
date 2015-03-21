@@ -14,28 +14,63 @@ $(document).ready(function() {
             }
         }
 
+        // Смотрим на ФИО пациента
+        var patientFio = $('#patientFio').val();
+        var parts = patientFio.split(' '); // По пробелу. ФИО = Ф_И_О
+        var patientFioFields = [];
+        for(var i = 0; i < parts.length; i++) {
+            if($.trim(parts[i]) != '') {
+                patientFioFields.push($.trim(parts[i]).toLowerCase());
+            }
+        }
+
+        // Смотрим на ФИО врача
+        var doctorFio = $('#doctorFio').val();
+        var parts = doctorFio.split(' '); // По пробелу. ФИО = Ф_И_О
+        var doctorFioFields = [];
+        for(var i = 0; i < parts.length; i++) {
+            if($.trim(parts[i]) != '') {
+                doctorFioFields.push($.trim(parts[i]).toLowerCase());
+            }
+        }
+
         var result = {
             'groupOp' : 'AND',
             'rules' : [
                 {
-                    'field' : 'doctor_fio',
-                    'op' : 'bw',
-                    'data' :  $('#doctorFio').val()
+                    'field' : 'p_middle_name',
+                    'op' : 'cn',
+                    'data' : patientFioFields.length > 2 ?  patientFioFields[2] : '' //$('#middleName').val()
                 },
-				{
-                    'field' : 'patient_fio',
-                    'op' : 'bw',
-                    'data' :  $('#patientFio').val()
+                {
+                    'field' : 'p_last_name',
+                    'op' : 'cn',
+                    'data' :  patientFioFields.length > 0 ?  patientFioFields[0] : '' //$('#lastName').val()
+                },
+                {
+                    'field' : 'p_first_name',
+                    'op' : 'cn',
+                    'data' : patientFioFields.length > 1 ?  patientFioFields[1] : '' //$('#firstName').val()
+                },
+                {
+                    'field' : 'd_middle_name',
+                    'op' : 'cn',
+                    'data' : doctorFioFields.length > 2 ?  doctorFioFields[2] : '' //$('#middleName').val()
+                },
+                {
+                    'field' : 'd_last_name',
+                    'op' : 'cn',
+                    'data' :  doctorFioFields.length > 0 ?  doctorFioFields[0] : '' //$('#lastName').val()
+                },
+                {
+                    'field' : 'd_first_name',
+                    'op' : 'cn',
+                    'data' : doctorFioFields.length > 1 ?  doctorFioFields[1] : '' //$('#firstName').val()
                 },
                 {
                     'field' : 'medcard_id',
                     'op' : 'bw',
                     'data' : $('#cardNumber').val()
-                },
-                {
-                    'field' : 'phone',
-                    'op' : 'cn',
-                    'data' : $('#phoneFilter').val()
                 },
 				{
 					'field' : 'patient_day',
@@ -44,6 +79,15 @@ $(document).ready(function() {
 				}
             ]
         };
+
+        if($.trim($('#phoneFilter').val()) != '+7') {
+            result.rules.push({
+                'field' : 'phone',
+                'op' : 'cn',
+                'data' : $('#phoneFilter').val()
+            });
+        }
+
         return result;
     }
 	
@@ -66,13 +110,14 @@ $(document).ready(function() {
 			'data' : {
 				'mediateonly' : 0,
                 'notBeginned': 1,
+                'isCallcenter' : globalVariables.isCallCenter ? globalVariables.isCallCenter : 0,
 				'filters' : $.toJSON(filters)
 			},
             'type' : 'GET',
             'success' : function(data, textStatus, jqXHR) {
                 $('#greetings-search-submit').trigger('end');
                 if(data.success) {
-                    if(data.rows.length > 0) {
+					if(data.rows.length > 0) {
                         displayAllGreetings(data.rows);
                         printPagination('greetingsSearchResult',data.total);
                     } else {
@@ -95,9 +140,11 @@ $(document).ready(function() {
         mediateStatus = [];
         for(var i = 0; i < data.length; i++) {
             data[i].patient_day = data[i].patient_day.split('-').reverse().join('.');
-            var timeSplit = data[i].patient_time.split(':');
-            timeSplit.pop();
-            data[i].patient_time = timeSplit.join(':');
+            if(data[i].patient_time) {
+				var timeSplit = data[i].patient_time.split(':');
+				timeSplit.pop();
+				data[i].patient_time = timeSplit.join(':');
+			} 
             mediateStatus['i' + data[i].id] = {
                 id : data[i].id,
                 isMediate : data[i].card_number == null ? 1 : 0,
@@ -120,15 +167,19 @@ $(document).ready(function() {
                     '<a href="#" class="" title="Изменить дату приёма">' + data[i].patient_day + '</a>' +
                 '</td>' +
                 '<td>' +
-                    '<a href="#" class="" title="Изменить время приёма">' + data[i].patient_time + '</a>' +
+                    (data[i].patient_time ?  '<a href="#" class="" title="Изменить время приёма">' + data[i].patient_time + '</a>' : 'Живая очередь') +
                 '</td>' +
                 '<td>' +
                     '<a href="#">' +
                     data[i].d_last_name + ' ' + data[i].d_first_name + ' ' + data[i].d_middle_name + ', ' + data[i].post + '</a>' +
                 '</td>' +
                 '<td>' + data[i].phone + '</td>';
-
-            var timeSplitted = data[i].patient_time.split(':');
+			
+			if(data[i].patient_time) {
+				var timeSplitted = data[i].patient_time.split(':');
+			} else {
+				var timeSplitted = '';
+			}
             var daySplitted = data[i].patient_day.split('.');
             var iterateDate = new Date(parseInt(daySplitted[2]), parseInt(daySplitted[1]) - 1, parseInt(daySplitted[0]), parseInt(timeSplitted[0]), parseInt(timeSplitted[1]));
 

@@ -1,42 +1,91 @@
 <?php
 class UsersController extends Controller {
+
     public function actionLogin() {
-        if(isset($_POST['FormLogin'])) {
-
-            $formModel = new FormLogin();
-            $formModel->attributes = $_POST['FormLogin'];
-            if($formModel->validate()) {
-                $userIdent = new UserIdentity($formModel->login, $formModel->password);
-                if($userIdent->authenticate()) {
-                    Yii::app()->user->login($userIdent);
-                    echo CJSON::encode(array('success' => 'true',
-                                             'data' => Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl));
-                    exit();
-                } else {
-
-                    $resultCode = 'loginError';
-                    // анализируем код ошибки из экземпляра класса userIdentity
-                    if ($userIdent->wrongLogin())
-                    {
-                        $resultCode = 'notFoundLogin';
-                    }
-
-                    if ($userIdent->wrongPassword())
-                    {
-                        $resultCode = 'wrongPassword';
-                    }
-
-                    echo CJSON::encode(array('success' => $resultCode,
-                                             'errors' => $userIdent->errorMessage));
-                }
-            } else {
-                echo CJSON::encode(array('success' => 'false',
-                                         'errors' => $formModel->getErrors()));
-            }
-        } else {
-            echo CJSON::encode(array('success' => 'false',
-                                     'text' => ''));
-        }
+    	try {
+	        if(isset($_POST['FormLogin'])) {
+	            $formModel = new FormLogin();
+	            $formModel->attributes = $_POST['FormLogin'];
+	            if($formModel->validate()) {
+	                $userIdent = new UserIdentity($formModel->login, $formModel->password);
+                    if($userIdent->authenticateStep1()) {
+	                    Yii::app()->user->login($userIdent);
+						if(isset(Yii::app()->user->doctorId) && Yii::app()->user->getState('doctorId', -1) != -1) { // пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ..
+							echo CJSON::encode(array('success' => 'true',
+													 'data' => Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl));
+						} else {
+							Yii::app()->user->setState('authStep', 1);
+							echo CJSON::encode(array(
+								'success' => 'true',
+								'data' => Doctor::model()->findAll('user_id = :user_id', array(':user_id' => Yii::app()->user->id))
+							));
+							exit();
+						}
+	                } else {
+	                    $resultCode = 'loginError';
+	                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ userIdentity
+	                    if ($userIdent->wrongLogin()) {
+	                        $resultCode = 'notFoundLogin';
+	                    }
+	                    if ($userIdent->wrongPassword()) {
+	                        $resultCode = 'wrongPassword';
+	                    }
+	                    echo CJSON::encode(array('success' => $resultCode,
+	                                             'errors' => $userIdent->errorMessage));
+	                }
+	            } else {
+	                echo CJSON::encode(array('success' => 'false',
+	                                         'errors' => $formModel->getErrors()));
+	            }
+	        } else {
+	            echo CJSON::encode(array('success' => 'false',
+	                                     'text' => ''));
+	        }
+    	} catch (Exception $e) {
+	            echo CJSON::encode(array('success' => 'false',
+                             'text' => $e->getMessage()));
+    	}
+    }
+	
+	public function actionApi() {
+    	try {
+	        if(isset($_GET['login']) && isset($_GET['password'])) {
+				$userIdent = new UserIdentity($_GET['login'], $_GET['password']);
+				if($userIdent->authenticateStep1(true)) {
+					Yii::app()->user->login($userIdent);
+					echo CJSON::encode(array(
+						'success' => 'true',
+						'session' => Yii::app()->getSession()->getSessionId(),
+						'data' => Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl
+					));
+					exit();
+				} else {
+					$resultCode = 'loginError';
+					// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ userIdentity
+					if ($userIdent->wrongLogin()) {
+						$resultCode = 'notFoundLogin';
+					}
+					if ($userIdent->wrongPassword()) {
+						$resultCode = 'wrongPassword';
+					}
+					echo CJSON::encode(array(
+						'success' => $resultCode,
+						'errors' => $userIdent->errorMessage
+					));
+				}
+			} else {
+				echo CJSON::encode(array(
+					'success' => 'false',
+					'text' => 'POST.login, POST.password'
+				));
+			}
+    	} catch (Exception $e) {
+			echo CJSON::encode(array(
+				'success' => 'false',
+				'text' => $e->getMessage()
+			));
+    	}
+    	die;
     }
 
     public function actionLogout() {
@@ -44,6 +93,35 @@ class UsersController extends Controller {
         echo CJSON::encode(array('success' => 'true',
                                  'msg' => ''));
     }
+	
+	public function actionLoginStep2() {
+		if(isset($_POST['FormChooseEmployee']) && Yii::app()->request->getIsAjaxRequest()) {
+			$form = new FormChooseEmployee();
+			$form->attributes = $_POST['FormChooseEmployee'];
+			if($form->validate()) {
+				$userIdent = new UserIdentity(Yii::app()->user->login, Yii::app()->user->password);
+				// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				if($userIdent->authenticateStep1() && $userIdent->authenticateStep2(false, $form)) {;
+					echo CJSON::encode(array(
+						'success' => 'true',
+						'data' => Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl
+						)
+					);
+					exit();
+				}
+			} else {
+				var_dump($form->getErrors());
+				echo CJSON::encode(array(
+					'success' => 'false',
+					'errors' => array(
+						'employee' => array(
+							'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!'
+						)
+					)
+				));
+			}
+		}
+	}
 }
 
 ?>

@@ -35,6 +35,7 @@ class FormPatientAdd extends FormMisDefault
     public $policyGivedate;
     public $policyEnddate;
     public $status;
+	public $cardNumber;
 
     public function rules()
     {
@@ -47,17 +48,17 @@ class FormPatientAdd extends FormMisDefault
             array(
                 //'policy, lastName, firstName, gender, birthday, doctype, serie, docnumber, addressReg, address, contact, omsType, policyGivedate, status, privilege', 'required'
                                 //'policy, lastName, firstName, gender, birthday, doctype, addressReg, address, contact, omsType, policyGivedate, status, privilege', 'required'
-                                'lastName, firstName, gender, birthday, doctype, addressReg, address, contact, omsType, policyGivedate, status, privilege', 'required'
+                                'lastName, firstName, gender, birthday, doctype, addressReg, address, contact, omsType, status, privilege', 'required'
             ),
             array(
-                'policy, workPlace, workAddress, post, snils, invalidGroup, middleName, privDocname, privDocnumber, privDocserie, privDocGivedate, profession, policyEnddate, addressRegHidden, addressHidden, omsSeries', 'safe'
+                'policy, workPlace, workAddress, post, snils, invalidGroup, middleName, privDocname, privDocnumber, privDocserie, privDocGivedate, profession, policyEnddate, addressRegHidden, addressHidden, omsSeries, cardNumber, policyGivedate, serie, docnumber', 'safe'
+            ),
+            array(
+                'serie, docnumber', 'SerialNumberValidator'
             ),
 			array(
 				'snils', 'SNILSValidator'
 				),
-			array(
-				'serie,docnumber', 'SerialNumberValidator'
-			),
 			array(
 				'lastName', 'FamilyValidator'
 			),

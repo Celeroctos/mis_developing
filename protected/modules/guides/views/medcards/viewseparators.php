@@ -3,7 +3,7 @@
 ));
 ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/guides/medcardsSeparators.js"></script>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/libs/jquery-json.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js"></script>
 <script type="text/javascript">
     globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditPrivelege'); ?>';
 </script>
@@ -25,7 +25,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Редактировать постфикс</h4>
+                <h4 class="modal-title">Редактировать разделитель</h4>
             </div>
             <?php
             $form = $this->beginWidget('CActiveForm', array(
@@ -86,7 +86,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Добавить постфикс</h4>
+                <h4 class="modal-title">Добавить разделитель</h4>
             </div>
             <?php
             $form = $this->beginWidget('CActiveForm', array(

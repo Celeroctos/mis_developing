@@ -3,6 +3,7 @@
 class MainAsset extends AssetBundle {
 
     public $js = [
+		"js/sidemenu.js",
         "js/main.js",
         "js/timecontrol.js",
         "js/datecontrol.js",

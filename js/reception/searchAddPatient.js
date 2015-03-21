@@ -27,8 +27,7 @@
 		var counter = 0;
 		var check = [
 			$.trim($('#docnumber').val()),
-			$.trim($('#serie').val()),
-			$.trim($('#birthday2').val())
+			$.trim($('#serie').val())
 		].forEach(function(element) {
 			if(element != '') {
 				counter++;
@@ -48,47 +47,47 @@
                 {
                     'field' : 'oms_number',
                     'op' : 'eq',
-                    'data' :  $('#omsNumber').val()
+                    'data' : $.trim($('#omsNumber').val())
                 },
                 {
                     'field' : 'first_name',
                     'op' : 'eq',
-                    'data' : $('#firstName').val().toUpperCase()
+                    'data' : $.trim($('#firstName').val().toUpperCase())
                 },
                 {
                     'field' : 'middle_name',
                     'op' : 'eq',
-                    'data' : $('#middleName').val().toUpperCase()
+                    'data' : $.trim($('#middleName').val().toUpperCase())
                 },
                 {
                     'field' : 'last_name',
                     'op' : 'eq',
-                    'data' : $('#lastName').val().toUpperCase()
+                    'data' : $.trim($('#lastName').val().toUpperCase())
                 },
                 {
                     'field' : 'address_reg_str',
                     'op' : 'cn',
-                    'data' : $('#addressReg').val()
+                    'data' : $.trim($('#addressReg').val())
                 },
                 {
                     'field' : 'address_str',
                     'op': 'cn',
-                    'data' : $('#address').val()
+                    'data' : $.trim($('#address').val())
                 },
                 {
                     'field' : 'card_number',
                     'op' : 'bw',
-                    'data' : $('#cardNumber').val()
+                    'data' : $.trim($('#cardNumber').val())
                 },
                 {
                     'field' : 'serie',
                     'op' : 'eq',
-                    'data' : $('#serie').val()
+                    'data' : $.trim($('#serie').val())
                 },
                 {
                     'field' : 'docnumber',
                     'op' : 'eq',
-                    'data' : $('#docnumber').val()
+                    'data' : $.trim($('#docnumber').val())
                 },
                 {
                     'field' : 'snils',
@@ -201,6 +200,7 @@
         isRightOmsNumber = $.fn.checkOmsNumber();
         if (!isRightOmsNumber)
         {
+            cancelSaving = true;
             return false;
         }
 
@@ -212,7 +212,11 @@
             'data' : {
                 'omsNumberToCheck' : $('#patient-oms-edit-form #policy').val(),
                 'omsSeriesToCheck' :  $('#patient-oms-edit-form #omsSeries').val(),
-                'omsIdToCheck' : $('#patient-oms-edit-form #id').val()
+                'omsIdToCheck' : $('#patient-oms-edit-form #id').val(),
+				'firstName' : $('#patient-oms-edit-form #firstName').val().toUpperCase(),
+				'lastName' : $('#patient-oms-edit-form #lastName').val().toUpperCase(),
+				'middleName' : $('#patient-oms-edit-form #middleName').val().toUpperCase(),
+				'birthday' : $('#patient-oms-edit-form #birthday').val()
             },
             'cache' : false,
             'dataType' : 'json',
@@ -222,7 +226,7 @@
             'success' : function(data, textStatus, jqXHR) {
                 data = data.answer;
 
-                if (data.newOms==undefined) return;
+                if (data.newOms == undefined) return;
                 //if (data.newOms.id >= 0)
                 //{
 
@@ -230,7 +234,7 @@
                     //globalVariables.medcardOmsToEdit
                     globalVariables.newOmsId = data.newOms.id;
 
-                    if (data.nonCoincides!=undefined)
+                    if (data.nonCoincides != undefined)
                     {
                         $('.concidesOmsDataMessage').addClass('no-display');
                         $('.nonConcidesOmsDataMessage').removeClass('no-display');
@@ -546,7 +550,7 @@
                         '</a>' +
                     '</td>' +
                     '<td>' +
-                        '<a href="#' + data[i].card_number + '" class="writePatientLink">' +
+                        '<a href="#' + data[i].card_number + '" class="writePatientLink" title="Записать пациента к врачу">' +
                             '<span class="glyphicon glyphicon-dashboard"></span>' +
                         '</a>' +
                     '</td>' +
@@ -963,13 +967,22 @@
                     $('#regionPolicyChooser .variants').addClass('no-display');
                     $('#regionPolicyChooser .variants').css('display', '');
 
+                    $('#insuranceChooser .choosed').empty();
+                    $('#insuranceChooser input').removeAttr('disabled', '');
+                    $('#insuranceHidden input').val('');
+                    $.fn['insuranceChooser'].clearAll();
                     if (insId!='' && insId!=null)
                     {
-                        $('#insuranceChooser .choosed').html(
+                       /* $('#insuranceChooser .choosed').html(
                             "<span class=\"item\"" +
                             "id=\"r"+ insId +"\">" + insName +
                                 "<span class=\"glyphicon glyphicon-remove\"></span></span>"
+                        );*/
+
+                        $.fn['insuranceChooser'].addChoosed(
+                            $('<li>').prop('id', 'r' + insId).text(insName), { id:insId,  name: insName  }
                         );
+
 
                         // Заблочим чюзер
                         $('#insuranceChooser input').attr('disabled', '');
@@ -979,18 +992,27 @@
                     }
                     else
                     {
-                        $('#insuranceChooser .choosed').empty();
-                        $('#insuranceChooser input').removeAttr('disabled', '');
-                        $('#insuranceHidden input').val('');
+
                     }
 
+                    $.fn['regionPolicyChooser'].clearAll();
+
+                    $('#regionPolicyChooser input').removeAttr('disabled', '');
+
+
+                    $('#policyRegionHidden input').val('');
+                    $.fn['regionPolicyChooser'].clearAll();
                     // Запишем в чюзер регион
                     if (regId!='' && regId!=null)
                     {
-                        $('#regionPolicyChooser .choosed').html(
+                        /*$('#regionPolicyChooser .choosed').html(
                             "<span class=\"item\"" +
                                 "id=\"r"+ regId +"\">" + regName +
                                 "<span class=\"glyphicon glyphicon-remove\"></span></span>"
+                        );*/
+
+                        $.fn['regionPolicyChooser'].addChoosed(
+                            $('<li>').prop('id', 'r' + regId).text(regName), { id:regId,  name: regName  }
                         );
 
                         // Заблочим чюзер
@@ -1002,12 +1024,7 @@
                     else
                     {
                         //$('#regionPolicyChooser .choosed').empty();
-                        $.fn['regionPolicyChooser'].clearAll();
 
-                        $('#regionPolicyChooser input').removeAttr('disabled', '');
-
-
-                        $('#policyRegionHidden input').val('');
                     }
 
                     $(document).trigger('omsnumberpopulate');
@@ -1100,7 +1117,9 @@
     });
     // --- End 17.06.2014 ---
 
-    $('#editAddressPopup .editSubmit').on('click', function(e) {
+
+    function saveAddress()
+    {
         if($.fn['regionChooser'].getChoosed().length > 0) {
             var region = $.fn['regionChooser'].getChoosed()[0].name + ', ';
             var regionId = $.fn['regionChooser'].getChoosed()[0].id;
@@ -1108,6 +1127,8 @@
             var region = '';
             var regionId = null;
         }
+
+        // Проверяем - если не указана улица, надо об этом вывести пользователю и спросить что желать дальше
 
         if($.fn['districtChooser'].getChoosed().length > 0) {
             var district = $.fn['districtChooser'].getChoosed()[0].name + ', ';
@@ -1137,22 +1158,22 @@
         if($.trim(house) == '') {
             house = '';
         } else {
-			house += ', '
-		}
+            house += ', '
+        }
 
         var building = $('#building').val();
         if($.trim(building) == '') {
             building = '';
         } else {
-			building += ', ';
-		}
+            building += ', ';
+        }
 
         var flat = $('#flat').val();
         if($.trim(flat) == '') {
             flat = '';
         } else {
-			flat += ', ';
-		}
+            flat += ', ';
+        }
 
         var postindex = $('#postindex').val();
         if($.trim(postindex) == '') {
@@ -1181,6 +1202,42 @@
         }
 
         $('#editAddressPopup').modal('hide');
+    }
+
+    $('#editAddressPopup .editSubmit').on('click', function(e) {
+        // Проверка данных
+        // 1. Проверим - если не указан нас пункт и не указано, что регион = 77 или 78, то выводим пользователю какой он плохой
+        if($.fn['settlementChooser'].getChoosed().length <= 0)
+        {
+            //regId = null;
+            var regionId = null;
+            if($.fn['regionChooser'].getChoosed().length > 0) {
+                regionId = $.fn['regionChooser'].getChoosed()[0].code_cladr;
+            }
+
+            if (! ((regionId=='77')||(regionId=='78')||(regionId==77)||(regionId==78)))
+            {
+                $('#needCityPopup').modal({});
+                return;
+            }
+        }
+
+        // Проверим наличие улицы
+        if($.fn['streetChooser'].getChoosed().length <= 0)
+        {
+            // Вызываем специальный поп-ап, по нажатию кнопочки в котором будет сразу вызвано сохранение адреса
+            $('#noStreetPopup').modal({});
+        }
+        else
+        {
+            // Вызываем сохранение адреса
+            saveAddress();
+        }
+
+    });
+
+    $('.saveAddressWithoutStreet').on( 'click',function(e){
+        saveAddress();
     });
 
     $('#editAddressPopup').on('hidden.bs.modal', function(e) {

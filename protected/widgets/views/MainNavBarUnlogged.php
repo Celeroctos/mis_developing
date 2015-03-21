@@ -10,7 +10,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#">Справка</a></li>
+                <li><a href="<?php echo Yii::app()->request->baseUrl; ?>/uploads/files/userguide.pdf" target="_blank">Справка</a></li>
             </ul>
             <div class="row" id="dateInfoCont">
                 Сегодня <?php echo $weekdayDesc; ?>, <br /> <?php echo $day; ?> <?php echo $monthDesc; ?> <?php echo $year; ?> года, <?php echo $time; ?>
@@ -107,6 +107,56 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade error-popup" id="loginEmployeeChoose">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Выберите сотрудника, под которым сейчас хотите начать работу</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <?php
+					$form = $this->beginWidget('CActiveForm', array(
+						'id' => 'choose-employee-form',
+						'enableAjaxValidation' => true,
+						'enableClientValidation' => true,
+						'htmlOptions' => array(
+							'class' => 'form-horizontal col-xs-12',
+							'role' => 'form'
+						)
+					));
+					?>
+					<div class="form-group">
+						<?php echo $form->label($modelChooseEmployee,'id', array(
+							'class' => 'col-xs-3 control-label text-left'
+						)); ?>
+						<div class="col-xs-9">
+							<?php echo $form->dropDownList($modelChooseEmployee, 'id', array(), array(
+								'id' => 'employeeId',
+								'class' => 'form-control'
+							)); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<?php echo CHtml::ajaxSubmitButton(
+							'Выбрать',
+							CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/users/loginStep2'),
+							array(
+								'success' => 'function(data, textStatus, jqXHR) {
+									$("#choose-employee-form").trigger("success", [data, textStatus, jqXHR])
+								}'
+							),
+							array(
+								'class' => 'btn btn-success'
+							)
+						); ?>
+					</div>
+					<?php $this->endWidget(); ?>
+                </div>
             </div>
         </div>
     </div>

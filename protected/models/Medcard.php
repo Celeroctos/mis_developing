@@ -1,5 +1,33 @@
 <?php
-class Medcard extends MisActiveRecord  {
+/**
+ * Класс для работы с медкартами пациентов
+ */
+class Medcard extends MisActiveRecord  
+{
+	public $privelege_code;
+	public $snils;
+	public $address;
+	public $address_reg;
+	public $doctype;
+	public $serie;
+	public $docnumber;
+	public $who_gived;
+	public $contant;
+	public $invalid_group;
+	public $card_number;
+	public $enterprise_id;
+	public $policy_id; //id oms
+	public $reg_date;
+	public $work_place;
+	public $work_address;
+	public $post;
+	public $profession;
+	public $motion;
+	public $address_str;
+	public $address_reg_str;
+	public $user_created;
+	public $date_created;
+ 
     public static function model($className=__CLASS__)
     {
         return parent::model($className);
@@ -10,9 +38,36 @@ class Medcard extends MisActiveRecord  {
         return 'mis.medcards';
     }
 
+	public function relations()
+	{
+		return [
+			'oms'=>[self::BELONGS_TO, 'Oms', 'policy_id'],
+		];
+	}
+	
+	public function rules()
+	{
+		return [
+			['card_number, serie, docnumber, address_reg, address, snils', 'type', 'type'=>'string', 'on'=>'reception.search'],
+		];
+	}
+	
+	/**
+	 * Labels for forms
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'card_number'=>'№ Медкарты',
+			'serie'=>'Серия',
+			'docnumber'=>'Номер',
+			'address_reg'=>'Адрес регистрации',
+			'address'=>'Адрес фактического проживания',
+			'snils'=>'СНИЛС',
+		];
+	}
+	
     public function getAll() {
-
-
     }
 
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false, $enterpriseId = false, $wardId = false, $employeeId = false) {
@@ -113,6 +168,30 @@ class Medcard extends MisActiveRecord  {
             ->from('mis.medcards m')
             ->leftJoin('mis.oms o', 'm.policy_id = o.id')
             ->where('o.tasu_id IS NULL');
+        return $medcards->queryAll();
+    }
+
+    public function getByDocuments($formModel, $oms) {
+        $connection = Yii::app()->db;
+        $medcards = $connection->createCommand()
+            ->select('m.*, o.*')
+            ->from('mis.medcards m')
+            ->leftJoin('mis.oms o', 'm.policy_id = o.id')
+            ->where("REPLACE(m.serie, ' ', '') = :serie", array(':serie' => str_replace(' ', '', $formModel->serie)))
+            ->andWhere("REPLACE(m.docnumber, ' ', '') = :docnumber", array(':docnumber' => str_replace(' ', '', $formModel->docnumber)))
+            ->andWhere("m.doctype = :doctype", array(':doctype' => $formModel->doctype))
+            ->andWhere('(UPPER(o.first_name) != :first_name
+                OR UPPER(o.last_name) != :last_name
+                OR UPPER(o.middle_name) != :middle_name
+                OR o.birthday != :birthday)',
+                array(
+                    ':first_name' => is_array($oms) ? $oms['first_name'] : $oms->first_name,
+                    ':last_name' => is_array($oms) ? $oms['last_name'] : $oms->last_name,
+                    ':middle_name' => is_array($oms) ? $oms['middle_name'] : $oms->middle_name,
+                    ':birthday' => is_array($oms) ? $oms['birthday'] :  $oms->birthday
+                )
+            );
+
         return $medcards->queryAll();
     }
 

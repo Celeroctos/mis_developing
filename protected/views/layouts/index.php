@@ -29,7 +29,7 @@
 			<span class="glyphicon glyphicon-chevron-up buttonUpSign"></span>
 			<span class="buttonUpText">Наверх</span>
 		</span>
-		<nobr>
+	</nobr>
 </div>
 </body>
 </html>

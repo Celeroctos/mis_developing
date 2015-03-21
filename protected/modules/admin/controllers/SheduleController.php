@@ -3,7 +3,9 @@ class SheduleController extends Controller {
     public $layout = 'application.modules.admin.views.layouts.index';
 
     public function actionView() {
-        //var_dump("ля-ля");
+
+        //$DFM = new DateFormatterMis('1990-02-12');
+        //var_dump($DFM->getFullAge());
         //exit();
 
         $ward = new Ward();
@@ -136,23 +138,11 @@ class SheduleController extends Controller {
             // $oneDoctorIds - берём IDшник и записываем строку
             $doctorsTimeTableLink = new DoctorsTimetable();
             $doctorsTimeTableLink->id_doctor = $oneDoctorIds;
-            /*if ($timeTableModel->EntryID!=null)
-            {
-                $doctorsTimeTableLink->id_timetable = $timeTableModel->EntryID;
-            }
-            else
-            {
-                $doctorsTimeTableLink->id_timetable = $_GET['timeTableId'];
-            }
-            */
+
             $doctorsTimeTableLink->id_timetable = $timetableId;
             $doctorsTimeTableLink->save();
         }
 
-        /*
-        echo CJSON::encode(array('success' => true,
-            'msg' => 'Выходные дни успешно сохранены.'));
-        */
 
         $this->checkTimetableTerms($timeTableModel, $doctorsIds[0]);
 
@@ -792,20 +782,13 @@ class SheduleController extends Controller {
         $findCondition = '( doctor_id = :doctor )';
         $findArray = array(':doctor'=>$doctorId);
 
-        if ($dateBegin===false)
-        {
-            $findCondition .= 'AND (time_begin is NULL) AND ( patient_day > \''. date('Y-n-j') .'\')';
+        if ($dateBegin===false) {
+            $findCondition .= 'AND (time_begin is NULL) AND ( patient_day >= \''. date('Y-n-j') .'\')';
         }
 
-        if ($timeBegin===false)
-        {
+        if ($timeBegin===false) {
             $findCondition .= 'AND ( (patient_time > \'' .date('h:i:s'). '\') OR (patient_time is NULL))';
         }
-
-
-        //var_dump($findCondition);
-        //var_dump($findArray);
-        //exit();
 
         $sheduleByDayObject = new SheduleByDay();
         $greetingToCheck = $sheduleByDayObject::model()->findAll(
@@ -816,17 +799,11 @@ class SheduleController extends Controller {
         $maxGreetingDate = strtotime(date('Y-n-j'));
         $greetingDays = array();
         // Найдём максимальное число, на которое отменяется хотя бы один приём
-        foreach ($greetingToCheck as $oneGreeting)
-        {
-
-
+        foreach ($greetingToCheck as $oneGreeting) {
             $greetingPatientDay = strtotime($oneGreeting['patient_day']);
-            if (!in_array( $oneGreeting['patient_day'],$greetingDays ) )
-            {
+            if (!in_array( $oneGreeting['patient_day'],$greetingDays ) )  {
                 array_push( $greetingDays ,  $oneGreeting['patient_day']);
-            }
-            if ($greetingPatientDay > $maxGreetingDate)
-            {
+            }  if ($greetingPatientDay > $maxGreetingDate) {
                 $maxGreetingDate = $greetingPatientDay;
             }
 
@@ -877,7 +854,7 @@ class SheduleController extends Controller {
                 // Тут надо проверить - попадают ли приёмы в расписание по времени (работает ли врач в то время, на которое записан пациент)
                 // Получим правило из расписания
                 $timeTableObject = new Timetable();
-                $ruleToCheck = $timeTableObject->getRuleFromTimetable($sheduleForDay, $oneGreetingDate);
+                $ruleToCheck = $timeTableObject->getRuleFromTimetable($sheduleForDay, $oneGreetingDate, true);
                 // Если правила нет - то добавляем все правила на этот день в удаление
                 if ($ruleToCheck == null)
                 {
@@ -891,6 +868,7 @@ class SheduleController extends Controller {
                 }
                 else
                 {
+
                     // Вот тут сравниваем времена работы врача
                     foreach ($greetingToCheck as $oneGreeting)
                     {
@@ -910,14 +888,8 @@ class SheduleController extends Controller {
                      //   $greetingsIdToDelete[] = $oneGreeting['id'];
                     }
                 }
-
-
             }
-
         }
-
-       // var_dump($greetingsIdToDelete);
-       // exit();
 
         // отписываем приёмы, которые мы набрали
         if (  count($greetingsIdToDelete) > 0 )
@@ -933,6 +905,7 @@ class SheduleController extends Controller {
                 SheduleByDay::model()->deleteByPk($oneGreetingToDel['id']);
             }
         }
+
         return $result;
     }
 

@@ -5,7 +5,7 @@
     <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/reception/organizer.js" ></script>
 <?php } ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/datecontrol.js" ></script>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/libs/jquery-json.js" ></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js" ></script>
 <script type="text/javascript">
     globalVariables.cardNumber = '<?php echo $medcard['card_number']; ?>';
     globalVariables.months = [
@@ -286,7 +286,7 @@
         </div>
     </div>
     <?php }  elseif($calendarType == 1) { ?>
-        <h4>Выберите врача и дату</h4>
+        <h4 class="organizerH">Выберите врача и дату</h4>
         <div class="row organizerNav no-display">
             <button class="btn btn-primary back">
                 <span class="glyphicon glyphicon-arrow-left"></span>Раньше

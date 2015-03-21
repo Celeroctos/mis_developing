@@ -2,3 +2,5 @@
 /nbproject
 /assets/*
 /protected/runtime/*
+/protected/config/db/db.php
+/yii

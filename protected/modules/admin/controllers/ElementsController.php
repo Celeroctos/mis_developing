@@ -97,6 +97,9 @@ class ElementsController extends Controller {
             $model->attributes = $_POST['FormElementAdd'];
             // Проверим - изменился ли тип у элемента,
 
+            //var_dump($model);
+            //exit();
+
             if ($_POST['FormElementAdd']['id']!='')
             {
 
@@ -108,7 +111,7 @@ class ElementsController extends Controller {
 
                 // Если у старого элемента тип 2 или 3 - проверяем зависимости
 
-                if (($oldElementState['type']==2 )||($oldElementState['type']==3 ))
+                if ($oldElementState['type'] == 2 || $oldElementState['type'] == 3)
                 {
                     $existanceDependencies = MedcardElementDependence::model()->findAll(
                         'element_id = :ahead_element OR dep_element_id = :back_element',
@@ -117,14 +120,14 @@ class ElementsController extends Controller {
                    // var_dump($existanceDependencies);
                    // exit();
                     // Если счёт зависимостей больше нуля и тип изменился - выводим сообщение об ошибке
-                    if ((count($existanceDependencies)>0) && ($_POST['FormElementAdd']['type']!=$oldElementState['type']))
+                    if (isset($_POST['FormElementAdd']['type']) && count($existanceDependencies) > 0 && $_POST['FormElementAdd']['type'] != $oldElementState['type'])
                     {
                         echo CJSON::encode(array('success' => 'false',
                             'errors' => array(array( 'Не удалось изменить элемент, так как при редактировании был изменён тип элемента. Если на элементе заданы зависимости, то нельзя менять его тип.')) ));
                         exit();
                     }
                     // Если счёт зависимостей больше нуля и изменился ИД справочника - также выводим сообщение об ошибке
-                    if ((count($existanceDependencies)>0) && ($_POST['FormElementAdd']['guideId']!=$oldElementState['guide_id']))
+                    if (isset($_POST['FormElementAdd']['guideId']) && count($existanceDependencies) > 0 && $_POST['FormElementAdd']['guideId'] != $oldElementState['guide_id'])
                     {
                         echo CJSON::encode(array('success' => 'false',
                             'errors' => array(array( 'Не удалось изменить элемент, так как при редактировании был изменён справочник элемента. Если на элементе заданы зависимости, то нельзя менять его справочник.')) ));
@@ -152,18 +155,21 @@ class ElementsController extends Controller {
                 $element = new MedcardElement();
                 $this->addEditModel($element, $model, 'Элемент успешно добавлен.');
             } else {
-                echo CJSON::encode(array('success' => 'false',
-                                         'errors' => $model->errors));
+                echo CJSON::encode(array(
+					'success' => 'false',
+					'errors' => $model->errors));
             }
         }
 
     }
 
     private function addEditModel($element, $model, $msg) {
+
         // Посмотрим, нет ли уже элемента с такой позицией в данной категории: категории или элемента:
-        $issetPositionInCats = MedcardCategorie::model()->find('position = :position AND parent_id = :categorie_id', array(':position' => $model->position, ':categorie_id' => $model->categorieId));
+        /*$issetPositionInCats = MedcardCategorie::model()->find('position = :position AND parent_id = :categorie_id', array(':position' => $model->position, ':categorie_id' => $model->categorieId));
         $issetPositionInElements = MedcardElement::model()->find('position = :position AND categorie_id = :categorie_id', array(':position' => $model->position, ':categorie_id' => $model->categorieId));
-        if($issetPositionInCats != null || $issetPositionInElements != null) {
+
+		if($issetPositionInCats != null || $issetPositionInElements != null) {
             if(($issetPositionInElements != null && $issetPositionInElements->id != $element->id) || $issetPositionInCats != null) {
                 echo CJSON::encode(array('success' => false,
                         'errors' => array(
@@ -175,7 +181,7 @@ class ElementsController extends Controller {
                 );
                 exit();
             }
-        }
+        }*/
 
         $element->type = $model->type;
         $element->categorie_id = $model->categorieId;
@@ -186,6 +192,7 @@ class ElementsController extends Controller {
         $element->position = $model->position;
         $element->label_display = $model->labelDisplay;
         $element->is_required = $model->isRequired;
+        $element->hide_label_before = $model->hideLabelBefore;
         
         if($model->guideId != -1) { // Если справочник выбран
             $element->guide_id = $model->guideId;
@@ -203,38 +210,52 @@ class ElementsController extends Controller {
         } else {
           //  $element->allow_add = 0;
             // Если текст или текстовая область - берём другое поле модели
-            if ($model->type == 0 || $model->type == 1)
-            {
+            if ($model->type == 0 || $model->type == 1) {
                 $element->default_value = $model->defaultValueText;
-            }
-            else
-            {
+            } else {
                 $element->default_value = null;
             }
         }
-		
+
+		/*
+		 * Сломан элемент управления таблица
+		 */
+
 		$config = array();
+		if(isset($model->directLink)) {
+			$config['directLink'] = $model->directLink;
+		}
+		
         if($model->type == 4) {
             $config += $model->config;
         }
 		if($model->type == 5) {
-			if($model->numberFieldMaxValue != null && $model->numberFieldMinValue != null && $model->numberFieldMaxValue < $model->numberFieldMinValue) {
-                echo CJSON::encode(array('success' => false,
-                        'errors' => array(
-                            'maxminvalue' => array(
-                                'Максимальное значение поля меньше, чем минимальное!'
-                            )
-                        )
-                    )
-                );
+			if(isset($model->numberFieldMaxValue) && isset($model->numberFieldMinValue) && $model->numberFieldMaxValue < $model->numberFieldMinValue) {
+                echo CJSON::encode(array('success' => false, 'errors' => array(
+                    'maxminvalue' => array('Максимальное значение поля меньше, чем минимальное!')
+                )));
                 exit();
             }
-
-			$config += CJSON::encode(array(
-                'maxValue' => $model->numberFieldMaxValue,
-                'minValue' => $model->numberFieldMinValue,
-                'step' => $model->numberStep
-            ));
+			$params = array();
+			if (isset($model->numberFieldMaxValue)) {
+				$params['maxValue'] = $model->numberFieldMaxValue;
+			} else {
+				$params['maxValue'] = '';
+			}
+			
+			if (isset($model->numberFieldMinValue)) {
+				$params['minValue'] = $model->numberFieldMinValue;
+			} else {
+				$params['minValue'] = '';
+			}
+			
+			if (isset($model->numberStep)) {
+				$params['step'] = $model->numberStep;
+			} else {
+				$params['step'] = '';
+			}
+			
+			$config += $params;
 		}
 
 		if($model->showDynamic) {
@@ -243,22 +264,26 @@ class ElementsController extends Controller {
 		
 		if ($model->type == 6) {
             // Проверим - больше ли максимальное значение минимального
-            if (strtotime($model->dateFieldMaxValue)<strtotime($model->dateFieldMinValue))
-            {
-                echo CJSON::encode(array('success' => false,
-                        'errors' => array(
-                            'maxminvalue' => array(
-                                'Максимальное значение поля меньше, чем минимальное!'
-                            )
-                        )
-                    )
-                );
+            if (strtotime($model->dateFieldMaxValue) < strtotime($model->dateFieldMinValue)) {
+                echo CJSON::encode(array('success' => false, 'errors' => array('maxminvalue' => array(
+                    'Максимальное значение поля меньше, чем минимальное!'
+                ))));
                 exit();
             }
-			$config += CJSON::encode(array(
-				'maxValue' => $model->dateFieldMaxValue,
-				'minValue' => $model->dateFieldMinValue
-			));
+			$params = array();
+			if(isset($model->dateFieldMaxValue)) {
+				$params['maxValue'] = $model->dateFieldMaxValue;
+			} else {
+				$params['maxValue'] = '';
+			}
+			
+			if(isset($model->dateFieldMinValue)) {
+				$params['minValue'] = $model->dateFieldMinValue;
+			} else {
+				$params['minValue'] = '';
+			}
+			
+			$config += $params;
 		}
 
 		$element->config = CJSON::encode($config); 
@@ -266,11 +291,13 @@ class ElementsController extends Controller {
         // Теперь посчитаем путь до элемента. Посмотрим на категорию, выберем иерархию категорий и прибавим введённую позицию
         $partOfPath = $this->getElementPath($element->categorie_id);
         $partOfPath = implode('.', array_reverse(explode('.', $partOfPath)));
-        $element->path = $partOfPath.'.'.$element->position;
 
         if($element->save()) {
-            echo CJSON::encode(array('success' => true,
-                                     'text' => $msg));
+            echo CJSON::encode(array(
+				'success' => true,
+				'text' => $msg,
+				'model' => $element
+			));
         }
     }
 
@@ -299,15 +326,15 @@ class ElementsController extends Controller {
                 return $categorie->position;
             }
         } else {
-            echo CJSON::encode(array('success' => false,
+			// Не будем выкидывать эту ошибку, чтобы сохранять элементы в шаблонизаторе
+            /* echo CJSON::encode(array('success' => false,
                     'errors' => array(
                         'position' => array(
                             'Одна или несколько позиций в иерархии отсутствует!'
                         )
                     )
                 )
-            );
-            exit();
+            ); exit(); */
         }
         return $path;
     }
@@ -402,6 +429,7 @@ class ElementsController extends Controller {
                  'dependences' => $dependencesArr,
                  'comboValues' => $comboValues,
                  'controls' => $controls,
+                 'notPrintedValues' => $elementModel['not_printing_values'],
                  'actions' => array(
                      'Нет',
                      'Скрыть',
@@ -446,6 +474,56 @@ class ElementsController extends Controller {
             $dependencesArr[] = $dependence;
         }
         return $dependencesArr;
+    }
+
+    public function actionSaveNonPrintableValues()
+    {
+        //var_dump($_GET);
+        //exit();
+        $elementId = $_GET['element'];
+        $valueId = $_GET['valueId'];
+        $actionToDo = $_GET['action'];
+
+        // Прочитать невыводимые элементы из базы
+        $elementToChange = MedcardElement::model()->findByPk($elementId);
+        // Берём у него поле
+        $arrayNonPrintables = CJSON::decode( $elementToChange['not_printing_values'] );
+
+        if ($arrayNonPrintables==null)
+            $arrayNonPrintables = array();
+        // Теперь ищем в массиве
+        $needleKey = array_search($valueId, $arrayNonPrintables);
+        //var_dump($needleKey);
+        //exit();
+        if ($needleKey===false)
+        {
+            if ($actionToDo==true || $actionToDo=='true')
+            {
+                // Вставить элемент
+                array_push($arrayNonPrintables, $valueId  );
+            }// Иначе ничего не делаем
+        }
+        else
+        {
+            if ($actionToDo==false || $actionToDo=='false')
+            {
+                // Удалить элемент
+                array_splice($arrayNonPrintables, $needleKey,1);
+            }// Иначе ничего не делаем
+        }
+        $newArrayString = CJSON::encode($arrayNonPrintables);
+        $elementToChange['not_printing_values'] = $newArrayString;
+        $elementToChange->save();
+
+        // Возвращаем назад строку
+        echo CJSON::encode(array(
+                'success' => true,
+                'data' => array(
+                    'notPrintValues' => $newArrayString
+                )
+            )
+        );
+
     }
 
     // Сохранить все зависимости. Есть зависимость == "Нет", это означает, что строку из базы зависимостей надо удалить

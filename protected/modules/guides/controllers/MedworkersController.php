@@ -1,36 +1,172 @@
 <?php
-class MedworkersController extends Controller {
+class MedworkersController extends Controller
+{
     public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
+	
+	public function actionList()
+	{
+		$model=new Medpersonal;
+		$this->render('list', [
+			'model'=>$model,
+		]);
+	}
+	
+	public function actionCreate()
+	{
+		$modelMedpersonal=new Medpersonal('medworkers.create');
+		
+		if(isset($_POST['Medpersonal']))
+		{
+			$modelMedpersonal->attributes=Yii::app()->request->getPost('Medpersonal');
+			$transaction=Yii::app()->db->beginTransaction();
+			try
+			{
+				if($modelMedpersonal->save())
+				{
+					is_array($modelMedpersonal->medcard_templates) ? : $modelMedpersonal->medcard_templates=array();
+					foreach($modelMedpersonal->medcard_templates as $key=>$value)
+					{ //Вбиваем шаблоны у данного медперсонала
+						$modelMedpersonal_templates=new Medpersonal_templates;
+						$modelMedpersonal_templates->id_medpersonal=$modelMedpersonal->id;
+						$modelMedpersonal_templates->id_template=$value;
+						$modelMedpersonal_templates->save(); //валидация уникальности
+					}
+					$transaction->commit();
+					Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Вы успешно добавили должность!');
+					$this->redirect(['medworkers/view']);
+				}
+			} 
+			catch (Exception $e) 
+			{
+				$transaction->rollback(); //откат транзакции.
+				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Ошибка в запросе к БД');
+			}
+		}
+		
+		$this->render('create', [
+			'model'=>$modelMedpersonal,
+			'typeList'=>Medpersonal_types::getNameList(),
+			'payment_typeList'=>Medpersonal::getPayment_typeList(),
+			'is_medworkerList'=>Medpersonal::getIs_medworkerList(),
+			'is_for_pregnantsList'=>Medpersonal::getIs_for_pregnantsList(),
+		]);
+	}
+	
+	public function actionUpdate($id)
+	{
+		$recordMedpersonal=Medpersonal::model()->findByPk($id);
+		
+		if($recordMedpersonal===null)
+		{
+			throw new CHttpException(404, 'Обновляемый объект не найден!');
+		}
+		$criteria=new CDbCriteria;
+		$criteria->condition='id_medpersonal=:id_medpersonal';
+		$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
+		$recordMedpersonal->medcard_templates=CHtml::listData(Medpersonal_templates::model()->findAll($criteria), 'id', 'id_template');
+		unset($criteria);
+		
+		if(isset($_POST['Medpersonal']))
+		{
+			$recordMedpersonal->scenario='medworkers.update';
+			$recordMedpersonal->attributes=Yii::app()->request->getPost('Medpersonal');
+			
+			$transaction=Yii::app()->db->beginTransaction();
+			try
+			{
+				if($recordMedpersonal->save())
+				{ //обновляем 
+					$criteria=new CDbCriteria;
+					$criteria->condition='id_medpersonal=:id_medpersonal';
+					$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
+					Medpersonal_templates::model()->deleteAll($criteria); //удаляем старые шаблоны
 
-    public function actionView() {
-        try {
-            // Модель формы для добавления и редактирования записи
-            $formAddEdit = new FormMedworkerAdd;
+					is_array($recordMedpersonal->medcard_templates) ? : $recordMedpersonal->medcard_templates=array();
 
-            // Список вариантов для типов медработников
-            $connection = Yii::app()->db;
-            $typesListDb = $connection->createCommand()
-                ->select('mt.*')
-                ->from('mis.medpersonal_types mt')
-                ->queryAll();
-
-            $typesList = array();
-            foreach($typesListDb as $value) {
-                $typesList[(string)$value['id']] = $value['name'];
-            }
-
-            // Выберем все шаблоны приёмов, чтобы из вывести в интерфейс
-            $allTemplates = MedcardTemplate::model()->findAll();
-            
-            $this->render('view', array(
-                'model' => $formAddEdit,
-                'typesList' => $typesList,
-                'allTemplates' => $allTemplates
-            ));
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
+					foreach($recordMedpersonal->medcard_templates as $key=>$value)
+					{ //Вбиваем шаблоны у данного медперсонала
+						$modelMedpersonal_templates=new Medpersonal_templates;
+						$modelMedpersonal_templates->id_medpersonal=$recordMedpersonal->id;
+						$modelMedpersonal_templates->id_template=$value;
+						$modelMedpersonal_templates->save(); //валидация уникальности
+					}
+					$transaction->commit();
+					Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Вы успешно обновили должность с #ID ' . $recordMedpersonal->id . '!');
+					$this->redirect(['medworkers/view']);
+				}
+			}
+			catch (Exception $e) 
+			{
+				$transaction->rollback(); //откат транзакции.
+				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Ошибка в запросе к БД');
+			}
+		}
+		
+		$this->render('update', [
+			'record'=>$recordMedpersonal,
+			'typeList'=>Medpersonal_types::getNameList(),
+			'payment_typeList'=>Medpersonal::getPayment_typeList(),
+			'is_medworkerList'=>Medpersonal::getIs_medworkerList(),
+			'is_for_pregnantsList'=>Medpersonal::getIs_for_pregnantsList(),
+		]);
+	}
+	
+    public function actionDelete($id) 
+	{ //TODO УДАЛЯТЬ шаблоны за удалением должности??
+		$record=Medpersonal::model()->findByPk($id);
+		
+		$criteria=new CDbCriteria;
+		$criteria->condition='post_id=:post_id';
+		$criteria->params=[':post_id'=>$id];
+		$recordDoctor=Doctor::model()->find($criteria);
+		
+		if($record===null)
+		{
+			throw new CHttpException(404, 'Удаляемый объект не найден');
+		}
+		elseif($recordDoctor!=null)
+		{
+			Yii::app()->user->addFlashMessage(WebUser::MSG_ERROR, 'Нельзя удалить должность, У которой присутствует(ют) врач(и)!');
+			$this->redirect(['medworkers/view']);
+		}
+		elseif(Medpersonal::model()->deleteByPk($id))
+		{
+			Yii::app()->user->addFlashMessage(WebUser::MSG_INFO, 'Вы успешно удалили должность с номером ' . $id . '!');
+			$this->redirect(['medworkers/view']);
+		}
+    }
+	
+    public function actionView() 
+	{
+		return $this->actionList();
+//        try {
+//            // Модель формы для добавления и редактирования записи
+//            $formAddEdit = new FormMedworkerAdd;
+//
+//            // Список вариантов для типов медработников
+//            $connection = Yii::app()->db;
+//            $typesListDb = $connection->createCommand()
+//                ->select('mt.*')
+//                ->from('mis.medpersonal_types mt')
+//                ->queryAll();
+//
+//            $typesList = array();
+//            foreach($typesListDb as $value) {
+//                $typesList[(string)$value['id']] = $value['name'];
+//            }
+//
+//            // Выберем все шаблоны приёмов, чтобы из вывести в интерфейс
+//            $allTemplates = MedcardTemplate::model()->findAll();
+//            
+//            $this->render('view', array(
+//                'model' => $formAddEdit,
+//                'typesList' => $typesList,
+//                'allTemplates' => $allTemplates
+//            ));
+//        } catch(Exception $e) {
+//            echo $e->getMessage();
+//        }
     }
 
     public function actionEdit() {
@@ -47,18 +183,18 @@ class MedworkersController extends Controller {
         }
     }
 
-    public function actionDelete($id) {
-        try {
-            $medworker = Medworker::model()->findByPk($id);
-            $medworker->delete();
-            echo CJSON::encode(array('success' => 'true',
-                                     'text' => 'Медицинский работник успешно удалён.'));
-        } catch(Exception $e) {
-            // Это нарушение целостности FK
-            echo CJSON::encode(array('success' => 'false',
-                                     'error' => 'На данную запись есть ссылки!'));
-        }
-    }
+//    public function actionDelete($id) {
+//        try {
+//            $medworker = Medworker::model()->findByPk($id);
+//            $medworker->delete();
+//            echo CJSON::encode(array('success' => 'true',
+//                                     'text' => 'Медицинский работник успешно удалён.'));
+//        } catch(Exception $e) {
+//            // Это нарушение целостности FK
+//            echo CJSON::encode(array('success' => 'false',
+//                                     'error' => 'На данную запись есть ссылки!'));
+//        }
+//    }
 
     public function addEditModel($medworker, $model, $msg) {
         $medworker->name = $model->name;
@@ -96,8 +232,15 @@ class MedworkersController extends Controller {
             echo CJSON::encode(array('success' => true,
                                      'text' => $msg));
         }
-
     }
+	
+	public function actionIssetDoctorPerMedworker($id) {
+		$issetDoctors = Doctor::model()->findAll('post_id = :post_id', array(':post_id' => $id));
+		echo CJSON::encode(array(
+			'success' => true,
+			'doctors' => $issetDoctors
+		));
+	}
 
     public function actionAdd() {
         $model = new FormMedworkerAdd();

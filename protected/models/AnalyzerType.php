@@ -1,7 +1,5 @@
 <?php
-/**
-* AR-модель для работы с analysis_params
-*/
+
 class AnalyzerType extends GActiveRecord {
 
 	public function getForm() {

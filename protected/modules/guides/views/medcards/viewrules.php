@@ -3,7 +3,7 @@
 ));
 ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/guides/medcardsRules.js"></script>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/libs/jquery-json.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js"></script>
 <script type="text/javascript">
     globalVariables.guideEdit = '<?php echo Yii::app()->user->checkAccess('guideEditPrivelege'); ?>';
 </script>
@@ -52,6 +52,17 @@
 						<div class="col-xs-9">
 							<?php echo $form->textField($model, 'name', array(
 								'id' => 'name',
+								'class' => 'form-control'
+							)); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<?php echo $form->label($model,'cardType', array(
+							'class' => 'col-xs-3 control-label text-left'
+						)); ?>
+						<div class="col-xs-9">
+							<?php echo $form->dropDownList($model, 'cardType', array('Амбулаторная', 'Стационарная'), array(
+								'id' => 'cardType',
 								'class' => 'form-control'
 							)); ?>
 						</div>
@@ -204,6 +215,17 @@
 						<div class="col-xs-9">
 							<?php echo $form->textField($model, 'name', array(
 								'id' => 'name',
+								'class' => 'form-control'
+							)); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<?php echo $form->label($model,'cardType', array(
+							'class' => 'col-xs-3 control-label text-left'
+						)); ?>
+						<div class="col-xs-9">
+							<?php echo $form->dropDownList($model, 'cardType', array('Амбулаторная', 'Стационарная'), array(
+								'id' => 'cardType',
 								'class' => 'form-control'
 							)); ?>
 						</div>
