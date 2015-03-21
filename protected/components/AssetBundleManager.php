@@ -54,17 +54,14 @@ class AssetBundleManager extends CComponent {
             return ;
         } else {
             $this->prepared = [
-                "less" => [],
                 "css" => [],
+				"less" => [],
                 "js" => [],
             ];
         }
         foreach ($this->bundles as $bundle) {
             foreach ($bundle->css as $name) {
                 $this->prepared["css"][] = $this->registerStyle($url . $name);
-            }
-            foreach ($bundle->less as $name) {
-                $this->prepared["less"][] = $this->registerLess($url . $name);
             }
             foreach ($bundle->js as $name) {
                 $this->prepared["js"][] = $this->registerJavaScript($url . $name);
@@ -120,16 +117,11 @@ class AssetBundleManager extends CComponent {
      * @return string
      */
     private function registerStyle($path) {
-        return "<link href=\"{$path}\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\"/>\r\n";
-    }
-
-    /**
-     * Write to output stream less tag
-     * @param string $path - Path to file
-     * @return string
-     */
-    private function registerLess($path) {
-        return "<link href=\"{$path}\" rel=\"stylesheet\" type=\"text/less\" media=\"screen\"/>\r\n";
+		if (preg_match("/^.*\\.less$/", $path)) {
+			return "<link href=\"{$path}\" rel=\"stylesheet\" type=\"text/less\" media=\"screen\"/>\r\n";
+		} else {
+			return "<link href=\"{$path}\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\"/>\r\n";
+		}
     }
 
     /**

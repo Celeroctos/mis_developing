@@ -1,6 +1,6 @@
 var ConfirmDelete = {
     construct: function() {
-        $(document).on("click", ".confirm", function(e) {
+        $(document).on("click", ".confirm-delete", function(e) {
             if (ConfirmDelete.lock) {
                 return void 0;
             }

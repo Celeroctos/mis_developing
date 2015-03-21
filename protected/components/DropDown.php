@@ -41,7 +41,7 @@ abstract class DropDown extends Field {
 		if ($this->data == null) {
 			$this->data = $this->data();
 		}
-		if ($key != null) {
+		if ($key !== null) {
 			if (isset($this->data[$key])) {
 				return $this->data[$key];
 			} else {

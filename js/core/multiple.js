@@ -13,7 +13,7 @@ var Laboratory = Laboratory || {};
 	Multiple.prototype.render = function() {
 		return $("<div>", {
 			class: "multiple"
-		}).append(this.selector().clone().addClass("multiple-value")).append(
+		}).append(this.selector().clone().data("lab", this).addClass("multiple-value")).append(
 			$("<div>", {
 				class: "multiple-container form-control"
 			})
@@ -92,6 +92,9 @@ var Laboratory = Laboratory || {};
 		set: function(item, list) {
 			var multiple = $(item).parents(".multiple");
 			var instance = multiple.data("lab");
+			if (!instance) {
+				instance = $(item).data("lab");
+			}
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
 			}
@@ -106,10 +109,10 @@ var Laboratory = Laboratory || {};
 		},
 		get: function(item) {
 			var list = [];
-			this.container(item).find(".multiple-chosen div").each(function(i, div) {
-				list.push($(div).data("key"));
+			this.container(item).find(".multiple-chosen div").each(function(i, c) {
+				list.push("" + $(c).data("key"));
 			});
-			return list;
+			return (list);
 		}
 	};
 

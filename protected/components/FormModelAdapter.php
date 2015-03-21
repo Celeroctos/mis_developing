@@ -9,11 +9,37 @@ class FormModelAdapter extends FormModel {
 	 * @param array $config - Dynamic form configuration
 	 * @see getScenario
 	 */
-    public function __construct($scenario, $config = []) {
-        parent::__construct($scenario); $this->_config = $config;
+    public function __construct($scenario = "", $config = []) {
+		foreach ($config as $key => $c) {
+			$this->$key = null;
+		}
+        parent::__construct($scenario);
+		$this->_config = $config;
     }
 
-    /**
+	/**
+	 * Set attribute
+	 * @param string $name - Name of attribute
+	 * @param mixed $value - Attribute value
+	 */
+	public function __set($name, $value) {
+		$this->_attr[$name] = $value;
+	}
+
+	/**
+	 * Get attribute
+	 * @param string $name - Name of attribute
+	 * @return mixed|null - Attribute value
+	 */
+	public function __get($name) {
+		if (isset($this->_attr[$name])) {
+			return $this->_attr[$name];
+		} else {
+			return null;
+		}
+	}
+
+	/**
      * Override that method to return config. Config should return array associated with
      * model's variables. Every field must contains 3 parameters:
      *  + label - Variable's label, will be displayed in the form
@@ -24,4 +50,6 @@ class FormModelAdapter extends FormModel {
     public function config() {
         return $this->_config;
     }
+
+	private $_attr = [];
 }

@@ -2,6 +2,10 @@
 
 class RaceField extends DropDown {
 
+	public function isBoolean() {
+		return true;
+	}
+
 	/**
 	 * Override that method to return associative array
 	 * for drop down list

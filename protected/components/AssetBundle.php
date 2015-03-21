@@ -19,13 +19,6 @@ abstract class AssetBundle extends CComponent {
     public $js = [];
 
     /**
-     * @var array - Array with less styles, be
-     *  careful with dependencies
-     * @see AssetBundle::dependecies
-     */
-    public $less = [];
-
-    /**
      * @var array - Array with style scripts, be
      *  careful with dependencies
      * @see AssetBundle::dependecies

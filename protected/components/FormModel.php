@@ -74,7 +74,6 @@ abstract class FormModel extends CFormModel {
 	 */
 	public function backward() {
 		return [
-			[ "id", "required", "on" => [ "update", "search" ] ]
 		];
 	}
 
@@ -171,24 +170,25 @@ abstract class FormModel extends CFormModel {
 		$this->_backward = $this->backward();
 
 		foreach ($this->_backward as $i => &$b) {
-			if (isset($b[1]) && $b[1] == "hide") {
-				$checked = $this->checkScenario($b["on"]);
-				$keys = $b[0];
-				if (is_array($keys)) {
-					if ($checked) {
-						foreach ($keys as $r) {
-							$this->_config[$r]["hidden"] = true;
-						}
-					}
-				} else if (is_string($keys)) {
-					if ($checked) {
-						$this->_config[$keys]["hidden"] = true;
-					}
-				} else {
-					throw new CException("Illegal key type, found \"" . gettype($keys) . "\", require array or string");
-				}
-				array_splice($this->_backward, $i, 1);
+			if (!isset($b[1]) || $b[1] != "hide") {
+				continue;
 			}
+			$checked = $this->checkScenario($b["on"]);
+			$keys = $b[0];
+			if (is_array($keys)) {
+				if ($checked) {
+					foreach ($keys as $r) {
+						$this->_config[$r]["hidden"] = true;
+					}
+				}
+			} else if (is_string($keys)) {
+				if ($checked) {
+					$this->_config[$keys]["hidden"] = true;
+				}
+			} else {
+				throw new CException("Illegal key type, found \"" . gettype($keys) . "\", require array or string");
+			}
+			array_splice($this->_backward, $i, 1);
 		}
 
         foreach ($config as $key => &$field) {
@@ -384,6 +384,14 @@ abstract class FormModel extends CFormModel {
 		}
         return $this->_container;
     }
+
+	/**
+	 * Get rules from [rules] method
+	 * @return array - Array with rules
+	 */
+	public function getRules() {
+		return $this->_rules;
+	}
 
 	protected $_container = [];
 	protected $_rules = null;

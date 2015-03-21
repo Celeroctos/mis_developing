@@ -12,11 +12,8 @@ class MainAsset extends AssetBundle {
         "js/ajaxbutton.js",
     ];
 
-    public $less = [
-        "css/main.less"
-    ];
-
     public $css = [
+		"css/main.less"
     ];
 
     public $dependencies = [

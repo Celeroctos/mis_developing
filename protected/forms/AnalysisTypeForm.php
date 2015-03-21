@@ -14,8 +14,8 @@ class AnalysisTypeForm extends FormModel {
 	 */
 	public function backward() {
 		return [
+			[ "short_name", "length", "max" => 20 ],
 			[ "name", "length", "max" => 200 ],
-			[ "short_name", "length", "max" => 20 ]
 		];
 	}
 

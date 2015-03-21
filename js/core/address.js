@@ -96,7 +96,7 @@ var Laboratory = Laboratory || {};
 				type: "text",
 				class: "form-control col-xs-6 text-center",
 				id: i,
-				name: "LAddressForm[" + i + "]",
+				name: "AddressForm[" + i + "]",
 				style: list[i]["style"]
 			}).appendTo(c);
 		}

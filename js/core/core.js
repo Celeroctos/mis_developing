@@ -139,6 +139,22 @@ var Laboratory = Laboratory || {};
         return this.component().property.apply(this.component(), arguments);
     };
 
+	/**
+	 * @static
+	 * @returns {{cleanup: Function}}
+	 */
+	Lab.getCommon = function() {
+		return {
+			cleanup: function(component) {
+				$(component).find("input, textarea").val("");
+				$(component).find("select:not([multiple])").each(function(i, item) {
+					$(item).val($(item).find("option:eq(0)").val());
+				});
+				$(component).find("select[multiple]").val("");
+			}
+		};
+	};
+
     /**
      * Create new component's instance and render to DOM
      * @param component {Laboratory.Component|Object} - Component's instance
@@ -146,7 +162,7 @@ var Laboratory = Laboratory || {};
      * @param [update] {Boolean} - Update component or not (default yes)
      */
     Lab.create = function(component, selector, update) {
-        $(selector).data("laboratory", component).append(
+        $(selector).data("lab", component).append(
             component.selector()
         );
         if (update !== false) {

@@ -16,13 +16,17 @@ class DropDownField extends Field {
 		if (!count($data)) {
 			$data = [ -1 => "Нет" ];
 		}
+		if ($this->getValue() !== null) {
+			$value = $this->getValue();
+		} else {
+			$value = -1;
+		}
 		return $form->dropDownList($model, $this->getKey(), $data, $this->getOptions() + [
 			'placeholder' => $this->getLabel(),
 			'id' => $this->getKey(),
 			'class' => 'form-control',
 			'value' => $this->getValue(),
-			'onchange' => "DropDown && DropDown.change && DropDown.change.call(this)",
-			'options' => [ $this->getValue() => [ 'selected' => true ] ]
+			'options' => [ $value => [ 'selected' => true ] ]
 		]);
 	}
 

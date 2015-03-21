@@ -3,38 +3,26 @@
 class LaboratoryTabMenu extends CWidget {
 
 	public $list = [
-		"analysisSampleType" => [
-			"label" => "Типы образцов для анализов",
-			"privilege" => "guideEditAnalysisSample"
-		],
-		"analysisParam" => [
-			"label" => "Параметры анализов",
-			"privilege" => "guideEditAnalysisParam"
-		],
 		"analysisType" => [
 			"label" => "Типы анализов",
 			"privilege" => "guideEditAnalysisType"
 		],
-		"analysisTypeParam" => [
-			"label" => "Параметры для типов анализов",
+		"analysisTypeParameter" => [
+			"label" => "Параметры анализов",
 			"privilege" => "guideEditAnalysisType"
 		],
-		"analysisTypeSample" => [
-			"label" => "Образцы для типов анализов",
+		"sampleType" => [
+			"label" => "Типы и подтипы образцов",
 			"privilege" => "guideEditAnalysisType"
 		],
 		"analyzerType" => [
 			"label" => "Типы анализаторов",
 			"privilege" => "guideEditAnalyzerType"
 		],
-		"analyzerTypeAnalysis" => [
-			"label" => "Анализы для типов анализаторов",
-			"privilege" => "guideEditAnalyzerTypeAnalysis"
-		],
-		"machine" => [
-			"label" => "Анализаторы",
-			"privilege" => "guideEditAnalyzerType"
-		]
+//		"analyzer" => [
+//			"label" => "Анализаторы",
+//			"privilege" => "guideEditAnalyzerType"
+//		]
 	];
 
 	/**

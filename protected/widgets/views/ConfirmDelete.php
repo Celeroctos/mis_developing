@@ -4,8 +4,8 @@
  */
 ?>
 
-<div class="modal" tabindex="10" role="dialog" aria-hidden="true" id="<?=$this->id?>">
-    <div class="modal-dialog modal-sm" style="width: 300px;">
+<div class="modal fade" tabindex="10" role="dialog" aria-hidden="true" id="<?=$this->id?>">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

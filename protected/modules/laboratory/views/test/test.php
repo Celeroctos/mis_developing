@@ -6,7 +6,7 @@
 
 $this->widget("Modal", [
     "body" => $this->getWidget("AutoForm", [
-        "model" => new LAnalysisParamForm("update"),
+        "model" => new AnalysisTypeParameterForm("update"),
 		"url" => Yii::app()->getBaseUrl() . "/laboratory/laboratory/register"
     ]),
     "title" => "Создание направления",

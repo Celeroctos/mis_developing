@@ -59,7 +59,12 @@ class ActiveDataProvider extends CActiveDataProvider {
 					$row[$key] = $field->getData($row[$key]);
 				}
 			} else {
-				$row[$key] = AutoForm::fetch($config["table"]);
+				$data = AutoForm::fetch($config["table"]);
+				if (($value = $row[$key]) != null && isset($data[$value])) {
+					$row[$key] = $data[$value];
+				} else {
+					$row[$key] = "Нет";
+				}
 			}
 		}
 	}

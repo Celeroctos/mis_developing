@@ -64,7 +64,7 @@ return array(
                 'application.modules.guides.models.*',
 				'application.modules.guides.components.widgets.*',
                 'application.modules.guides.components.*',
-                'application.modules.guides.controllers.*'
+                'application.modules.guides.controllers.*',
             ),
         ),
         'admin' => array(

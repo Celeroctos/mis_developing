@@ -3,7 +3,6 @@
 class GuidesModule extends CWebModule {
 
     public function init() {
-
         $this->setModules([
 			'laboratory' => [
 				'class' => 'application.modules.guides.modules.laboratory.LaboratoryModule',
@@ -13,7 +12,5 @@ class GuidesModule extends CWebModule {
 				]
 			]
 		]);
-
-		GuideAsset::register();
     }
 }

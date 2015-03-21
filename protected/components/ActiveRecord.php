@@ -127,6 +127,24 @@ abstract class ActiveRecord extends CActiveRecord {
 		return $array;
 	}
 
+	/**
+	 * Convert array with active records or arrays to list with ids
+	 * @param array $array - Array with models
+	 * @param string $pk - Primary key name
+	 * @return array - List with ids
+	 */
+	public static function getIds(array $array, $pk = "id") {
+		$result = [];
+		foreach ($array as $r) {
+			if (is_array($r)) {
+				$result[] = $r[$pk];
+			} else {
+				$result[] = $r->$pk;
+			}
+		}
+		return $result;
+	}
+
     /**
      * Get data provider for CGridView widget
      * @return CActiveDataProvider - Data provider

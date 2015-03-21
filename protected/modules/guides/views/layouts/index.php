@@ -11,6 +11,7 @@
 	<?= AssetBundleManager::getManager()->render() ?>
 </head>
 <body>
+<?php $this->widget("ConfirmDelete") ?>
 <?php $this->widget('application.widgets.MainNavBar') ?>
 <div class="container-fluid" id="content">
 	<div class="row main-container">

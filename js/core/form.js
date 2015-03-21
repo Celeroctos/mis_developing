@@ -9,7 +9,8 @@ var Laboratory = Laboratory || {};
             opacity: 0.4,
             animation: 100,
             url: null,
-            parent: null
+            parent: null,
+			disabled: false
         }, selector);
     };
 
@@ -129,6 +130,9 @@ var Laboratory = Laboratory || {};
 	};
 
     Form.prototype.send = function(after) {
+		if (this.property("disabled")) {
+			return false;
+		}
         this.selector().find(".form-group").removeClass("has-error");
         var form = this.selector();
         if (!this.property("url")) {

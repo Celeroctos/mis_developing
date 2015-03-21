@@ -10,6 +10,11 @@ class AutoForm extends Widget {
      */
     public $model = null;
 
+	/**
+	 * @var bool - Shall display labels?
+	 */
+	public $labels = true;
+
     /**
      * Override that method to return just rendered component
      * @throws CException
@@ -102,12 +107,19 @@ class AutoForm extends Widget {
 				->from($table["name"])
 				->group($value);
 		} else {
-			$query = Yii::app()->getDb()->createCommand()
-				->select("$key, $value")
-				->from($table["name"]);
+			$query = Yii::app()->getDb()->createCommand();
+			if (strstr($value, "id") !== false) {
+				$query->select("$value");
+			} else {
+				$query->select("$key, $value");
+			}
+			$query->from($table["name"]);
 		}
 		if (isset($table["order"]) && $table["order"]) {
 			$query->order($value);
+		}
+		if (isset($table["join"])) {
+			$query->leftJoin($table["join"]["table"], $table["join"]["on"]);
 		}
 		$data = $query->queryAll();
         $result = [];

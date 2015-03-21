@@ -92,51 +92,55 @@ abstract class LController extends Controller {
         return $this->widget($class, $properties, true);
     }
 
-    /**
-     * That method will help to remove row from an array. Why do you need it? For example you
-     * have table with rows and also you have user interface with forms to edit/add new rows
-     * into that table. After sending request for data update you can remove all stuff
-     * from db and reappend rows but you might crash foreign keys, so you can use
-     * basic method <code>Model::findIds</code> to fetch list with identification
-     * numbers (primary keys) and look though every received row and invoke that method. The
-     * result array of your iterations will be array with row's ids to remove from db.
-     *
-     * <pre>
-     * // Fetch rows identifications from database by some condition
-     * $rows = MyTable::model()->findIds();
-     *
-     * // look though each row in received data
-     * foreach ($_GET['data'] as $row) {
-     *     self::arrayInDrop($row, $rows);
-     *     // provide your actions with row
-     * }
-     *
-     * // remove remaining rows
-     * foreach ($rows as $id) {
-     *     MyTable::model()->deleteByPk($id);
-     * }
-     * </pre>
-     *
-     * @param $row mixed - Current row with "id" field
-     * @param $rows array - Array with rows
-     * @param string $id - Primary key name
+	/**
+	 * That method will help to remove row from an array. Why do you need it? For example you
+	 * have table with rows and also you have user interface with forms to edit/add new rows
+	 * into that table. After sending request for data update you can remove all stuff
+	 * from db and reappend rows but you might crash foreign keys, so you can use
+	 * basic method <code>Model::findIds</code> to fetch list with identification
+	 * numbers (primary keys) and look though every received row and invoke that method. The
+	 * result array of your iterations will be array with row's ids to remove from db.
+	 *
+	 * <pre>
+	 * // Fetch rows identifications from database by some condition
+	 * $rows = MyTable::model()->findIds();
+	 *
+	 * // look though each row in received data
+	 * foreach ($_GET['data'] as $row) {
+	 *     self::arrayInDrop($row, $rows);
+	 *     // provide your actions with row
+	 * }
+	 *
+	 * // remove remaining rows
+	 * foreach ($rows as $id) {
+	 *     MyTable::model()->deleteByPk($id);
+	 * }
+	 * </pre>
+	 *
+	 * @param $row mixed - Current row with "id" field
+	 * @param $rows array - Array with rows
+	 * @param string $id - Primary key name
 	 * @see LModel::findIds
-     */
+	 * @return bool - Is id have to be dropped
+	 */
     public static function arrayInDrop($row, array &$rows, $id = "id") {
         if (is_array($row)) {
             if (!isset($row[$id])) {
-                return ;
+                return false;
             }
             $id = $row[$id];
         } else {
             if (!isset($row->$id)) {
-                return ;
+                return false;
             }
             $id = $row->$id;
         }
         if ($id && ($index = array_search(intval($id), $rows)) !== false) {
             array_splice($rows, $index, 1);
-        }
+        } else {
+			return false;
+		}
+		return true;
     }
 
     /**

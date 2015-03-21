@@ -6,13 +6,10 @@
  */
 
 $form = $this->beginWidget('CActiveForm', [
-    'focus' => [
-        $this->model, 'name'
-    ],
-    'id' => $this->id,
 	'enableClientValidation' => true,
     'enableAjaxValidation' => true,
     'action' => CHtml::normalizeUrl($this->url),
+	'id' => $this->id,
     'htmlOptions' => [
         'class' => 'form-horizontal col-xs-12',
         'role' => 'form',
@@ -23,22 +20,22 @@ $form = $this->beginWidget('CActiveForm', [
 
 <? foreach ($model->getContainer() as $key => $value): ?>
     <div class="form-group <?= $this->isHidden($key) ? "hidden" : "" ?>">
-        <?php if (!$this->checkType($key, "Hidden")) {
-            echo $form->labelEx($model, $key, array(
-                'class' => 'col-xs-4 control-label'
-            ));
-        } ?>
-        <div class="col-xs-7">
-            <?= $this->renderField($form, $key); ?>
-        </div>
-        <? if ($this->checkType($key, "DropDown") && $this->getForm($key)): ?>
-            <a data-form="<?= $this->getForm($key) ?>" href="javascript:void(0)">
-				<span style="font-size: 15px; margin-left: -15px; margin-top: 5px" class="col-xs-1 glyphicon glyphicon-plus form-search-button"></span>
-			</a>
-        <? elseif ($this->checkType($key, "Multiple")): ?>
-            <a href="javascript:void(0)"><span style="font-size: 15px; margin-left: -15px; margin-top: 5px" class="col-xs-1 glyphicon glyphicon-arrow-up form-up-button"></span></a>
-            <a href="javascript:void(0)"><span style="font-size: 15px; margin-left: -15px; margin-top: 5px" class="col-xs-1 glyphicon glyphicon-arrow-down form-down-button"></span></a>
-        <? endif; ?>
+		<? if ($this->labels == true): ?>
+			<? if (!$this->checkType($key, "Hidden")) {
+				echo $form->labelEx($model, $key, array(
+					'class' => 'col-xs-3 col-md-3 col-lg-3 col-xs-offset-1 col-md-offset-1 col-lg-offset-1 control-label'
+				));
+			} ?>
+			<div class="col-xs-7">
+				<?= $this->renderField($form, $key); ?>
+			</div>
+		<? else: ?>
+			<div class="col-xs-10 col-md-10 col-lg-10 col-xs-offset-1 col-md-offset-1 col-lg-offset-1">
+				<?= $this->renderField($form, $key); ?>
+			</div>
+		<? endif ?>
+		<div class="col-xs-1">
+		</div>
     </div>
 <? endforeach; ?>
 
