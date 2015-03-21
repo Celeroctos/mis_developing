@@ -33,7 +33,7 @@ print CHtml::tag("h4", [
 
 $this->widget("AutoForm", [
 	"model" => new FormModelAdapter("", [
-		"analysis_parameter_id" => [
+		"sample_type_id" => [
 			"label" => "Типы образцов",
 			"type" => "Multiple",
 			"table" => [
