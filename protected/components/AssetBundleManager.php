@@ -124,6 +124,22 @@ class AssetBundleManager extends CComponent {
 		}
     }
 
+	/**
+	 * Get asset manager component
+	 * @return CAssetManager - Component instance
+	 */
+	public static function getAssetManager() {
+		return Yii::app()->{"assetManager"};
+	}
+
+	/**
+	 * Get client script component
+	 * @return CClientScript - Component instance
+	 */
+	public static function getClientScript() {
+		return Yii::app()->{"clientScript"};
+	}
+
     /**
      * @var array - Array with prepared to render components
      */
