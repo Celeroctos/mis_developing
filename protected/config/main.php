@@ -124,7 +124,7 @@ return array(
         ),
         'clientScript' => array(
             'scriptMap' => array(
-                'jquery.js' => '/moniiag/js/libs/jquery-1.10.2.min.js'
+                'jquery.js' => 'js/libs/jquery-1.10.2.min.js'
             ),
 			'packages'=>[
 				'datetimepicker' => [
