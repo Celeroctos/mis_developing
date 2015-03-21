@@ -9,6 +9,7 @@ class LPatientForm extends FormModel {
 	public $sex;
 	public $birthday;
 	public $passport_id;
+	public $policy_id;
 	public $register_address_id;
 	public $address_id;
 
@@ -63,6 +64,14 @@ class LPatientForm extends FormModel {
 				"type" => "date",
 				"rules" => "required"
 			],
+			"passport_id" => [
+				"label" => "Пасспорт",
+				"type" => "hidden"
+			],
+			"policy_id" => [
+				"label" => "Полис",
+				"type" => "hidden"
+			],
 			"register_address_id" => [
 				"label" => "Адрес регистрации",
 				"type" => "address",
@@ -78,38 +87,6 @@ class LPatientForm extends FormModel {
 				"label" => "Адрес проживания",
 				"type" => "address",
 				"rules" => "safe"
-			],
-			"document_type" => [
-				"label" => "Тип документа",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "mis.doctypes",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"policy_number" => [
-				"label" => "Номер полиса",
-				"type" => "text",
-				"rules" => "safe"
-			],
-			"policy_issue_date" => [
-				"label" => "Дата выдачи полиса",
-				"type" => "date",
-				"rules" => "safe"
-			],
-			"policy_insurance_id" => [
-				"label" => "СМО, выдавшая полис",
-				"type" => "DropDown",
-				"rules" => "safe",
-				"table" => [
-					"name" => "mis.insurances",
-					"group" => "true",
-					"order" => "true",
-					"key" => "id",
-					"value" => "name"
-				]
 			]
 		];
 	}

@@ -2,8 +2,10 @@
 
 class LDirection extends ActiveRecord {
 
+	public $department_id;
+
 	/**
-	 * @return Direction - Cached model instance
+	 * @return LDirection - Cached model instance
 	 */
     public static function model() {
         return parent::model(__CLASS__);
@@ -18,7 +20,7 @@ class LDirection extends ActiveRecord {
         $query = $this->getDbConnection()->createCommand()
             ->select("d.*, at.name as analysis_type_id, m.card_number")
             ->from("lis.direction as d")
-            ->leftJoin("lis.analysis_types as at", "at.id = d.analysis_type_id")
+            ->leftJoin("lis.analysis_type as at", "at.id = d.analysis_type_id")
             ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
         $array = $query->queryAll();
         foreach ($array as &$value) {

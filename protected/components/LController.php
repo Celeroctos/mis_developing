@@ -345,7 +345,7 @@ abstract class LController extends Controller {
 			if (($table = $this->getModel()) == null) {
 				throw new CException("Your controller must override LController::getModel method");
 			}
-			$attributes = $model->getContainer();
+			$attributes = $model->getConfig();
 			if (isset($attributes)) {
 				unset($attributes["id"]);
 			}

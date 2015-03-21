@@ -120,30 +120,6 @@ abstract class FormModel extends CFormModel {
 		return $type == "dropdown" || $type == "multiple";
 	}
 
-    /**
-     * That method will return declared variable from models
-     * @param String $name - Variable name
-     * @return mixed|null - Variable value or null
-     */
-    public function __get($name) {
-        if (isset($this->_container[$name])) {
-            return $this->_container[$name];
-        } else {
-			return parent::__get($name);
-        }
-    }
-
-    /**
-     * Assign some value to variable and store it in container
-     * @param String $name - Name
-     * @param mixed $value - Value
-     * @return void
-     */
-    public function __set($name, $value) {
-        $this->_container[$name] = $value;
-		parent::__set($name, $value);
-    }
-
 	/**
 	 * Build form from models configuration
 	 * @param array|null $config - Array with model's configuration
@@ -210,9 +186,9 @@ abstract class FormModel extends CFormModel {
 
             // Dynamically declare empty variable
 			if (isset($field["value"])) {
-				$this->_container[$key] = $field["value"];
+				$this->$key = $field["value"];
 			} else {
-				$this->_container[$key] = null;
+				$this->$key = null;
 			}
         }
     }
@@ -375,16 +351,6 @@ abstract class FormModel extends CFormModel {
         return $this->_labels;
     }
 
-    /**
-     * @return Array - Array with declared variables
-     */
-    public function getContainer() {
-		if (!$this->_rules) {
-			$this->buildConfig();
-		}
-        return $this->_container;
-    }
-
 	/**
 	 * Get rules from [rules] method
 	 * @return array - Array with rules
@@ -393,7 +359,6 @@ abstract class FormModel extends CFormModel {
 		return $this->_rules;
 	}
 
-	protected $_container = [];
 	protected $_rules = null;
 	protected $_strong = null;
 	protected $_labels = null;

@@ -94,7 +94,7 @@ abstract class Field extends CComponent {
 	 * @return String - Just rendered content
 	 */
 	public function render2($form, $model, $key, $options) {
-		return $this->renderEx($form, $model, $key, "", null, [], $options);
+		return $this->bind($key, "", null, [], $options)->renderEx($form, $model);
 	}
 
 	/**

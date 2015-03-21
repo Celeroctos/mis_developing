@@ -18,12 +18,12 @@ $form = $this->beginWidget('CActiveForm', [
     ]
 ]); ?>
 
-<? foreach ($model->getContainer() as $key => $value): ?>
+<? foreach ($model->getConfig() as $key => $value): ?>
     <div class="form-group <?= $this->isHidden($key) ? "hidden" : "" ?>">
 		<? if ($this->labels == true): ?>
 			<? if (!$this->checkType($key, "Hidden")) {
 				echo $form->labelEx($model, $key, array(
-					'class' => 'col-xs-3 col-md-3 col-lg-3 col-xs-offset-1 col-md-offset-1 col-lg-offset-1 control-label'
+					'class' => 'col-xs-4 control-label'
 				));
 			} ?>
 			<div class="col-xs-7">
