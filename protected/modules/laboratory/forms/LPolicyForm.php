@@ -2,6 +2,16 @@
 
 class LPolicyForm extends FormModel {
 
+	public $id;
+	public $surname;
+	public $name;
+	public $patronymic;
+	public $birthday;
+	public $number;
+	public $issue_date;
+	public $insurance_id;
+	public $document_type;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others
@@ -34,82 +44,10 @@ class LPolicyForm extends FormModel {
 				"label" => "Первичный ключ",
 				"type" => "number"
 			],
-			"last_name" => [
+			"surname" => [
 				"label" => "Фамилия",
 				"type" => "text",
 				"rules" => "required"
-			],
-			"first_name" => [
-				"label" => "Имя",
-				"type" => "text",
-				"rules" => "required"
-			],
-			"middle_name" => [
-				"label" => "Отчество",
-				"type" => "text"
-			],
-			"oms_number" => [
-				"label" => "Номер ОМС",
-				"type" => "text",
-				"rules" => "required"
-			],
-			"gender" => [
-				"label" => "Пол",
-				"type" => "sex",
-				"rules" => "required"
-			],
-			"birthday" => [
-				"label" => "Дата рождения",
-				"type" => "date",
-				"rules" => "required"
-			],
-			"type" => [
-				"label" => "Тип полиса",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "mis.oms_types",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"givedate" => [
-				"label" => "Дата выдачи",
-				"type" => "date",
-				"rules" => "required"
-			],
-			"status" => [
-				"label" => "Статус",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "mis.oms_statuses",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"insurance" => [
-				"label" => "Страховая компания",
-				"type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "mis.insurances",
-					"key" => "id",
-					"value" => "name"
-				]
-			],
-			"region" => [
-				"label" => "Регион",
-				"type" => "text"
-			],
-			"oms_series" => [
-				"label" => "Серия",
-				"type" => "text"
-			],
-			"oms_series_number" => [
-				"label" => "Серия и номер ОМС (дефисы, пробелы)",
-				"type" => "text",
-				"hidden" => "true"
 			]
 		];
 	}

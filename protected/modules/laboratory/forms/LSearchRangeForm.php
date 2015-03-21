@@ -2,6 +2,9 @@
 
 class LSearchRangeForm extends FormModel {
 
+	public $begin_date;
+	public $end_date;
+
     /**
      * Override that method to return config. Config should return array associated with
      * model's variables. Every field must contains 3 parameters:

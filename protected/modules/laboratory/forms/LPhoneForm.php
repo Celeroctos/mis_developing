@@ -2,6 +2,10 @@
 
 class LPhoneForm extends FormModel {
 
+	public $id;
+	public $number;
+	public $type;
+
 	/**
 	 * Override that method to return config. Config should return array associated with
 	 * model's variables. Every field must contains 3 parameters:

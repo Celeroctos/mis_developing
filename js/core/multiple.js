@@ -49,6 +49,9 @@ var Laboratory = Laboratory || {};
 
 	Multiple.prototype.choose = function(key) {
 		var multiple = this.selector();
+		if (typeof key == "string") {
+			key = $.parseJSON(key);
+		}
 		if (Array.isArray(key)) {
 			for (var i in key) {
 				this.choose(key[i]);
@@ -130,9 +133,21 @@ var Laboratory = Laboratory || {};
 
 	$(document).ready(function() {
 		$("select[multiple]").multiple();
+		$("select[multiple][value!='']").each(function() {
+			if ($(this).attr("value") != void 0) {
+				$(this).multiple("choose", $(this).attr("value"));
+			}
+			$(this).attr("value", false);
+		});
 	});
 	$(document).bind("ajaxSuccess", function() {
 		$("select[multiple]").multiple();
+		$("select[multiple][value!='']").each(function() {
+			if ($(this).attr("value") != void 0) {
+				$(this).multiple("choose", $(this).attr("value"));
+			}
+			$(this).attr("value", false);
+		});
 	});
 
 })(Laboratory);

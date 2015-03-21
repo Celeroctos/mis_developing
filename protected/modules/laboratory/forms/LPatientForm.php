@@ -2,6 +2,16 @@
 
 class LPatientForm extends FormModel {
 
+	public $id;
+	public $surname;
+	public $name;
+	public $patronymic;
+	public $sex;
+	public $birthday;
+	public $passport_id;
+	public $register_address_id;
+	public $address_id;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others

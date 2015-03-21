@@ -2,6 +2,31 @@
 
 class LMedcardForm2 extends FormModel {
 
+	public $privelege_code;
+	public $snils;
+	public $address;
+	public $address_reg;
+	public $doctype;
+	public $serie;
+	public $docnumber;
+	public $who_gived;
+	public $gived_date;
+	public $contact;
+	public $invalid_group;
+	public $card_number;
+	public $enterprise_id;
+	public $policy_id;
+	public $reg_date;
+	public $work_place;
+	public $work_address;
+	public $post;
+	public $profession;
+	public $motion;
+	public $address_str;
+	public $address_reg_str;
+	public $user_created;
+	public $date_created;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others

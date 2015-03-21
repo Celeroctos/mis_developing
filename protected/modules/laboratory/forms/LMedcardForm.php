@@ -2,6 +2,13 @@
 
 class LMedcardForm extends FormModel {
 
+	public $id;
+	public $mis_medcard;
+	public $sender_id;
+	public $patient_id;
+	public $card_number;
+	public $enterprise_id;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others

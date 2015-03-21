@@ -108,18 +108,11 @@ class AutoForm extends Widget {
 				->group($value);
 		} else {
 			$query = Yii::app()->getDb()->createCommand();
-			if (strstr($value, "id") !== false) {
-				$query->select("$value");
-			} else {
-				$query->select("$key, $value");
-			}
+			$query->select("$key, $value");
 			$query->from($table["name"]);
 		}
 		if (isset($table["order"]) && $table["order"]) {
 			$query->order($value);
-		}
-		if (isset($table["join"])) {
-			$query->leftJoin($table["join"]["table"], $table["join"]["on"]);
 		}
 		$data = $query->queryAll();
         $result = [];

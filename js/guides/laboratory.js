@@ -32,6 +32,31 @@ var GuideGridView = {
 		$(".grid-view .delete-button").click(function() {
 			me.drop($(this).parents("tr[data-id]").data("id"));
 		});
+		$("[id='clef-save-button']").click(function() {
+			var url = $(this).data("url");
+			if (!url) {
+				throw new Error("Lost url for clef save button");
+			}
+			var str = "";
+			$(this).parents(".modal").find("form").each(function(i, f) {
+				str += $(f).serialize() + "&";
+			});
+			var me = this;
+			$.post(url, str.replace(/&$/, ""), function(json) {
+				if (!json["status"]) {
+					Laboratory.createMessage({
+						message: json["message"]
+					});
+				} else if (json["message"]) {
+					Laboratory.createMessage({
+						message: json["message"],
+						sign: "ok",
+						type: "success"
+					});
+				}
+				$(me).parents(".modal").modal("hide");
+			}, "json");
+		});
 	},
 	create: function(model) {
 		var form = $("#register-guide-modal form");

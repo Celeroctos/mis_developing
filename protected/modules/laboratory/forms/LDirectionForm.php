@@ -2,6 +2,21 @@
 
 class LDirectionForm extends FormModel {
 
+	public $id;
+	public $barcode;
+	public $status;
+	public $comment;
+	public $analysis_type_id;
+	public $medcard_id;
+	public $sender_id;
+	public $sending_date;
+	public $treatment_room_employee_id;
+	public $laboratory_employee_id;
+	public $history;
+	public $ward_id;
+	public $enterprise_id;
+	public $is_repeated;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others
@@ -50,22 +65,16 @@ class LDirectionForm extends FormModel {
 				"type" => "DropDown",
 				"rules" => "required",
                 "table" => [
-                    "name" => "lis.analysis_types",
+                    "name" => "lis.analysis_type",
                     "key" => "id",
                     "value" => "name"
                 ]
 			],
-            "patient_id" => [
-                "label" => "Пациент",
-                "type" => "DropDown",
-				"rules" => "required",
-				"table" => [
-					"name" => "lis.patient",
-					"key" => "id",
-					"format" => "%{surname} %{name}",
-					"value" => "surname, name"
-				]
-            ],
+			"medcard_id" => [
+				"label" => "Медкарта",
+				"type" => "number",
+				"rules" => "required"
+			],
             "history" => [
                 "label" => "Медикаментозный анамнез",
                 "type" => "TextArea"
@@ -80,12 +89,12 @@ class LDirectionForm extends FormModel {
 				"rules" => "required",
                 "hidden" => "true"
 			],
-            "department_id" => [
+            "enterprise_id" => [
                 "label" => "Направитель",
                 "type" => "DropDown",
                 "rules" => "required",
                 "table" => [
-                    "name" => "mis.enterprise_params",
+                    "name" => "lis.enterprise",
                     "key" => "id",
                     "value" => "shortname"
                 ]

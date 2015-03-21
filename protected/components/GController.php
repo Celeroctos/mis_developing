@@ -123,6 +123,10 @@ abstract class GController extends LController {
 		$post = Yii::app()->getRequest()->getPost($name);
 		unset($post["id"]);
 		foreach ($post as $key => $value) {
+			// @ - fix for default -1 value for reference with foreign key
+			if ($value == -1 && $form->getConfig($key)["type"] == "DropDown") {
+				$value = null;
+			}
 			$model->$key = $value;
 			$form->$key = $value;
 		}
@@ -193,6 +197,68 @@ abstract class GController extends LController {
 		} catch (Exception $e) {
 			$this->exception($e);
 		}
+	}
+
+	/**
+	 * Update clef sequence, that locks table from
+	 * another module
+	 * @throws Exception
+	 */
+	public function actionClef() {
+		try {
+			if (isset($_POST["FormModelAdapter"])) {
+				$post = Yii::app()->getRequest()->getPost("FormModelAdapter");
+				if (isset($post["keys"])) {
+					$keys = $post["keys"];
+				} else {
+					$keys = [];
+				}
+			} else {
+				$keys = [];
+			}
+			if (($clef = $this->getClefTable()) == null) {
+				throw new CException("You must override [getClefTable] method to return clef configuration");
+			}
+			$rows = Yii::app()->getDb()->createCommand()
+				->select($clef["key"])
+				->from($clef["table"])
+				->queryAll();
+			$rows = ActiveRecord::getIds($rows, $clef["key"]);
+			$save = [];
+			foreach ($keys as $key) {
+				if (!self::arrayInDrop([ "id" => $key ], $rows)) {
+					$save[] = $key;
+				}
+			}
+			foreach ($rows as $key) {
+				Yii::app()->getDb()->createCommand()
+					->delete($clef["table"], "{$clef["key"]} = :id", [
+						":id" => $key
+					]);
+			}
+			foreach ($save as $key) {
+				Yii::app()->getDb()->createCommand()
+					->insert($clef["table"], [
+						$clef["key"] => $key
+					]);
+			}
+			$this->leave([
+				"message" => "Данные успешно сохранены"
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	/**
+	 * Override that method to return name of table with
+	 * clef locked to automate key saving
+	 *  + table - Name of clef table
+	 *  + key - Name of column with key in table
+	 * @return array - Array with clef configuration
+	 */
+	public function getClefTable() {
+		return null;
 	}
 
 	/**

@@ -2,6 +2,13 @@
 
 class LMedcardSearchForm extends FormModel {
 
+	public $card_number;
+	public $enterprise_id;
+	public $phone;
+	public $first_name;
+	public $middle_name;
+	public $last_name;
+
     /**
      * Override that method to return config. Config should return array associated with
      * model's variables. Every field must contains 3 parameters:
