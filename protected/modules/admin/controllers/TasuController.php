@@ -643,7 +643,7 @@ class TasuController extends Controller {
 		$defaultPaymentType = false;
 		foreach($paymentsListDb as $value) {
 			// Дефолтный тип оплаты
-			if($value['is_default'] == 1) {
+			if(isset($value['is_default']) && $value['is_default'] == 1) {
 				$defaultPaymentType = $value['id'];
 			}
 			$paymentsList[(string)$value['id']] = $value['name'];

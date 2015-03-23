@@ -1,14 +1,6 @@
 <?php
 class MisActiveRecord extends CActiveRecord {
-    /**
-     * @param $conn
-     * @param $filters
-     * @param $multipleFields - массив, раскрывающий значение "сборных" полей в интерфейсе. Например, поле ФИО, являющееся Именем + Фамилией + Отчеством. Формат:
-     * array('interfaceField' => array('dbfield1' ... ) ... )
-     * @param $aliases - массив в виде array('aliasOfTable' => array(field1, ...) ... ) - алиасы таблиц для поиска. Первое измерение - псевдоним таблицы, второе - поля данной таблицы-алиаса
-     * @param $fieldAliases - массив алиасов полей
-     * @subGroupOp - субгрупповой оператор в формате 'Оператор' => 'Поле'
-     */
+
     public function __construct($scenario = 'insert') {
         parent::__construct($scenario);
     }
@@ -20,6 +12,15 @@ class MisActiveRecord extends CActiveRecord {
         return true;
     }
 
+	/**
+	 * @param $conn
+	 * @param $filters
+	 * @param $multipleFields - массив, раскрывающий значение "сборных" полей в интерфейсе. Например, поле ФИО, являющееся Именем + Фамилией + Отчеством. Формат:
+	 * array('interfaceField' => array('dbfield1' ... ) ... )
+	 * @param $aliases - массив в виде array('aliasOfTable' => array(field1, ...) ... ) - алиасы таблиц для поиска. Первое измерение - псевдоним таблицы, второе - поля данной таблицы-алиаса
+	 * @param $fieldAliases - массив алиасов полей
+	 * @subGroupOp - субгрупповой оператор в формате 'Оператор' => 'Поле'
+	 */
     protected function getSearchConditions($conn, $filters, $multipleFields, $aliases, $fieldAliases, $subGroupOp = array()) {
         foreach($filters['rules'] as $index => $filter) {
 	        if(!isset($filter['data']) || (!is_array($filter['data']) && trim($filter['data']) == '') || (is_array($filter['data']) && count($filter['data']) == 0)) { // При пустых входных данных не нужно делать доп. условие
