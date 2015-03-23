@@ -60,6 +60,7 @@ var GuideGridView = {
 	},
 	create: function(model) {
 		var form = $("#register-guide-modal form");
+		console.log(this.actions);
 		$.post(this.actions.create, model, function(json) {
 			if (!json["status"]) {
 				return Laboratory.postFormErrors(form, json)

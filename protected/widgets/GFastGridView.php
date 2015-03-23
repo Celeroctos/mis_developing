@@ -1,41 +1,20 @@
 <?php
 
-class GGridView extends Widget {
+class GFastGridView extends Widget {
 
 	/**
-	 * @var GActiveRecord - Active record instance for guides
+	 * @var GActiveRecord - Active record instance with search method
 	 */
-	public $model = null;
+	public $model;
 
 	/**
-	 * @var string - Displayable title (guide name)
+	 * @var
 	 */
-	public $title = null;
-
-	/**
-	 * @var string - Path to controller (without action)
-	 */
-	public $url = null;
-
-	/**
-	 * @var array - Default form actions
-	 */
-	public $actions = [
-		"create" => "create",
-		"update" => "update",
-		"load" => "load",
-		"delete" => "delete"
-	];
-
-	/**
-	 * @var string - Extra content to render, it will be added to
-	 * 	modal windows ('create' and 'update') after main form, need
-	 * 	for many to many references
-	 */
-	public $content = "";
+	public $url;
 
 	/**
 	 * Run widget
+	 * @throws CException
 	 */
 	public function run() {
 		$columns = [];
@@ -56,7 +35,7 @@ class GGridView extends Widget {
 			];
 		}
 		if (strrpos($this->url, "/") !== strlen($this->url)) {
-			$this->url .= "/";
+//			$this->url .= "/";
 		}
 		$this->render(__CLASS__, [
 			"columns" => $columns

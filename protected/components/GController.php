@@ -75,12 +75,15 @@ abstract class GController extends LController {
 			$form->attributes = $post;
 			$this->validateForm($form);
 			$model->setAttributes($post);
+			$model->unsetAttributes(["id"]);
 			if (!$model->save()) {
 				$this->leave([
 					"message" => "Произошла ошибка при сохранении данных, данные не были сохранены",
 					"status" => false
 				]);
 			}
+			print_r($model);
+			die;
 			$this->after("create", $model, $form);
 			$this->leave([
 				"message" => "Данные были успешно сохранены"
@@ -245,6 +248,34 @@ abstract class GController extends LController {
 			$this->leave([
 				"message" => "Данные успешно сохранены"
 			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	/**
+	 * Render grid (for future ajax requests)
+	 * @throws Exception
+	 */
+	public function actionGrid() {
+		try {
+			if (!($model = $this->getModel()) instanceof GActiveRecord) {
+				throw new CException("Model must be an instance of GActiveRecord class");
+			}
+			$model->setScenario("search");
+			$model->unsetAttributes();
+			$model->attributes = Yii::app()->getRequest()
+				->getQuery(get_class($model), []);
+			$params = [
+				"model" => $model
+			];
+			if (!Yii::app()->getRequest()->getIsAjaxRequest()) {
+				$this->render("index", $params);
+			} else {
+				$this->widget("GFastGridView", [
+					"model" => $model
+				]);
+			}
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

@@ -112,7 +112,7 @@ class AutoForm extends Widget {
 			$query->from($table["name"]);
 		}
 		if (isset($table["order"]) && $table["order"]) {
-			$query->order($value);
+			$query->order($table["order"]);
 		}
 		$data = $query->queryAll();
         $result = [];

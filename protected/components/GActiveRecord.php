@@ -6,7 +6,7 @@ abstract class GActiveRecord extends ActiveRecord {
 	 * @param string $scenario
 	 * @throws CException
 	 */
-	public function __construct($scenario = 'insert') {
+	public function __construct($scenario = 'search') {
 		if (!($this->form = $this->getForm()) instanceof FormModel) {
 			throw new CException("Active record's form must be an instance of FormModel, and mustn't be null");
 		}
@@ -64,17 +64,14 @@ abstract class GActiveRecord extends ActiveRecord {
 				$criteria->compare($key, $this->getAttribute($key));
 			}
 		}
-		return new ActiveDataProvider($this, [
-			"form" => $this->form,
+		return new CActiveDataProvider($this, [
+			"sort" => [
+				"defaultOrder" => "id asc"
+			],
 			"pagination" => [
 				"pageSize" => $this->getItemsPerPage()
 			],
-			"sort" => [
-				"attributes" => $this->getSort(),
-				"defaultOrder" => [
-					"id" => $this->getOrderDirection(),
-				],
-			],
+//			"form" => $this->form,
 		]);
 	}
 

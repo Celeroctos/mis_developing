@@ -24,13 +24,14 @@ class LaboratoryTabMenu extends CWidget {
 			"privilege" => "guideEditAnalyzerType",
 			"clef" => [
 				"name" => "mis.doctors",
-				"format" => "%{last_name} %{first_name} %{middle_name}",
+				"format" => "%{name}",
 				"key" => "id",
-				"value" => "last_name, first_name, middle_name",
+				"value" => "(last_name || ' ' || first_name) as name",
 				"clef" => [
 					"table" => "lis.doctor_clef",
 					"key" => "doctor_id"
-				]
+				],
+				"order" => "name"
 			]
 		],
 		"enterprise" => [

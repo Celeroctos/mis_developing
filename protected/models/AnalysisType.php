@@ -66,7 +66,7 @@ class AnalysisType extends GActiveRecord {
 	 * @param array $ids - Array with parameters ids
 	 * @return int - Count of saved parameters
 	 */
-	public function addAnalysisParameters($id, array $ids) {
+	public function saveAnalysisParameters($id, array $ids) {
 		$rows = 0;
 		foreach ($ids as $i) {
 			$rows += $this->getDbConnection()->createCommand()
@@ -84,7 +84,7 @@ class AnalysisType extends GActiveRecord {
 	 * @param array $ids - Array with sample types ids
 	 * @return int - Count of saved sample types
 	 */
-	public function addSampleTypes($id, array $ids) {
+	public function saveSampleTypes($id, array $ids) {
 		$rows = 0;
 		foreach ($ids as $i) {
 			$rows += $this->getDbConnection()->createCommand()

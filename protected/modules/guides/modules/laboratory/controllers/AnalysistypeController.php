@@ -28,6 +28,9 @@ class AnalysisTypeController extends GController {
 		}
 		/** @var AnalysisType $table */
 		$table = $model;
+		if (!isset($model->{"id"}) || empty($model->{"id"})) {
+			throw new CException("Model's identification can't be null after save");
+		}
 		$parameters = ActiveRecord::getIds($table->findAnalysisParameters($model->{"id"}));
 		$save = [];
 		foreach ($post["analysis_parameter_id"] as $id) {
@@ -35,7 +38,7 @@ class AnalysisTypeController extends GController {
 				$save[] = $id;
 			}
 		}
-		$table->addAnalysisParameters($model->{"id"}, $save);
+		$table->saveAnalysisParameters($model->{"id"}, $save);
 		$table->dropAnalysisParameters($model->{"id"}, $parameters);
 		/** @var AnalysisType $table */
 		$table = $model;
@@ -46,15 +49,17 @@ class AnalysisTypeController extends GController {
 				$save[] = $id;
 			}
 		}
-		$table->addSampleTypes($model->{"id"}, $save);
+		$table->saveSampleTypes($model->{"id"}, $save);
 		$table->dropSampleTypes($model->{"id"}, $parameters);
 	}
 
 	public function afterLoad(&$model) {
 		$parameters = AnalysisType::model()->findAnalysisParameters($model["id"]);
-		$model["analysis_parameter_id"] = json_encode(ActiveRecord::getIds($parameters));
 		$samples = AnalysisType::model()->findSampleTypes($model["id"]);
-		$model["sample_type_id"] = json_encode(ActiveRecord::getIds($samples));
+		$model += [
+			"analysis_parameter_id" => json_encode(ActiveRecord::getIds($parameters)),
+			"sample_type_id" => json_encode(ActiveRecord::getIds($samples))
+		];
 	}
 
 	public function after($action, &$model, $form) {

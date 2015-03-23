@@ -122,9 +122,41 @@ return array(
             //'enableCsrfValidation' => true,
             //'enableCookieValidation' => true,
         ),
+		'widgetFactory' => [
+			'widgets' => [
+				'CBreadcrumbs' => [
+					'tagName' => 'ol',
+					'separator' => '',
+					'homeLink' => false,
+					'activeLinkTemplate' => '<li><a href="{url}">{label}</a></li>',
+					'inactiveLinkTemplate' => '<li>{label}</li>',
+					'htmlOptions' => [
+						'class' => 'breadcrumb'
+					]
+				],
+				'CGridView' => [
+					'cssFile' => false,
+					'itemsCssClass' => 'table table-hover table-bordered',
+					'pagerCssClass' => 'pagerCssClass',
+				],
+				'CLinkPager' => [
+					'cssFile' => false,
+					'htmlOptions' => [
+						'class' => 'pagination pagination-sm'
+					],
+					'prevPageLabel' => '<span class="glyphicon glyphicon-chevron-left"></span>',
+					'nextPageLabel' => '<span class="glyphicon glyphicon-chevron-right"></span>',
+					'firstPageLabel' => '<span class="glyphicon glyphicon-fast-backward"></span>',
+					'lastPageLabel' => '<span class="glyphicon glyphicon-fast-forward"></span>',
+					'hiddenPageCssClass' => 'disabled',
+					'header' => '',
+					'selectedPageCssClass' => 'active',
+				],
+			],
+		],
         'clientScript' => array(
             'scriptMap' => array(
-                'jquery.js' => 'js/libs/jquery-1.10.2.min.js'
+                'jquery.js' => '/js/libs/jquery-1.10.2.min.js'
             ),
 			'packages'=>[
 				'datetimepicker' => [

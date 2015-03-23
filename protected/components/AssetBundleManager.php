@@ -49,7 +49,9 @@ class AssetBundleManager extends CComponent {
         $url = Yii::app()->getBaseUrl();
         if (strrpos($url, "/") != strlen($url)) {
             $url = $url . "/";
-        }
+		} else if (empty($url)) {
+			$url = "/";
+		}
         if ($this->prepared != null) {
             return ;
         } else {
