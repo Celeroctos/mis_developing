@@ -1,6 +1,6 @@
 <?php
 class EmployeesController extends Controller {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
 	private $employeeCategories = array(
 		'Нет',

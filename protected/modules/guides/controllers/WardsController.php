@@ -1,7 +1,7 @@
 <?php
 class WardsController extends Controller 
 {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
 	
 	public function actionList()

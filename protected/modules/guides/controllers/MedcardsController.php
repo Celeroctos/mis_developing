@@ -1,6 +1,6 @@
 <?php
 class MedcardsController extends Controller {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'viewprefixes';
 	protected $typesList = array(
 		'Каждый год с первого номера',

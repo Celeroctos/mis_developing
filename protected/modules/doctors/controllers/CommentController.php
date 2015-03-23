@@ -1,6 +1,6 @@
 <?php
 class CommentController extends Controller {
-    public $layout = 'index';
+//    public $layout = 'index';
 
 
     public function actionAdd()

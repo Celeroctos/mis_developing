@@ -1,6 +1,6 @@
 <?php
 class DiagnosisController extends Controller {
-    public $layout = 'application.modules.admin.views.layouts.index';
+//    public $layout = 'application.modules.admin.views.layouts.index';
 
     // Получить страницу с шаблоном "любимых" диагнозов
     public function actionAllView() {

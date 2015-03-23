@@ -1,7 +1,7 @@
 <?php
 class PaymentsController extends Controller 
 {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
 
 	/*

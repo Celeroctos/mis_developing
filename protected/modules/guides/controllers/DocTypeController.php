@@ -1,6 +1,6 @@
 <?php
 class DocTypeController extends Controller {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
     public function actionView() {
         $formAddEdit = new FormDocTypeAdd();

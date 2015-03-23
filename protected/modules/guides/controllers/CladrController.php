@@ -1,6 +1,6 @@
 <?php
 class CladrController extends Controller {
-    public $layout = 'application.modules.guides.views.layouts.index';
+//    public $layout = 'application.modules.guides.views.layouts.index';
 
     public function actionGetCladrData($data = false) {
         if(!isset($_GET['data']) && !$data) {
