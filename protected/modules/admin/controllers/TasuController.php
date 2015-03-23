@@ -1,6 +1,6 @@
 <?php
 class TasuController extends Controller {
-    public $layout = 'application.modules.admin.views.layouts.index';
+//    public $layout = 'application.modules.admin.views.layouts.index';
     public $answer = array();
     public $tableSchema = 'mis';
     public $version_end = '9223372036854775807';
