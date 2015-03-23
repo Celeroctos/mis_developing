@@ -1,19 +1,39 @@
-
-/* Remove padding or margin */
-.no-padding {
-    padding: 0;
+.jaw-message-wrapper {
+    position: fixed;
+    left: 5px;
+    top: 5px;
+    z-index: 2000;
+    max-width: calc(100% - 10px);
 }
-.no-margin {
-    margin: 0;
-}
-
-/* Red glyphicon */
-.glyphicon-red {
-    color: #af1010;
-    cursor: pointer;
+.jaw-message-wrapper li {
+    margin-left: 10px;
 }
 
-/* Form component */
+.rotate {
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@-moz-keyframes spin {
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform:rotate(360deg);
+    }
+}
+
 .refresh-button {
     font-size: 25px;
     cursor: pointer;
@@ -24,20 +44,45 @@
     margin-top: 5px;
 }
 
-/* Table widget */
+.multiple .multiple-value {
+    min-height: 100px;
+}
+
+.multiple-container {
+    min-height: 20px;
+    height: auto;
+    padding: 5px 10px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.multiple-container .multiple-chosen {
+    border-radius: 2px;
+    padding: 2px;
+}
+
+.multiple-container .multiple-chosen:hover {
+    background-color: lightblue;
+}
+
+.multiple-container:empty:after {
+    content: 'Нет элементов';
+}
+
+.multiple select {
+    min-height: 200px;
+}
+
 .table .table-remove {
     color: #af1010;
 }
 
-/* Dynamic guides (redundant) */
 #guide-panel .panel-body {
     padding: 0;
 }
-
 #guide-panel .panel-body hr {
     margin: 0;
 }
-
 #guide-panel .panel-body button {
     margin: 5px;
 }
@@ -71,6 +116,18 @@
     cursor: pointer;
 }
 
+.glyphicon-red {
+    color: #af1010;
+    cursor: pointer;
+}
+
+/* From Bootstrap 3.3.2 */
+@media (min-width: 992px) {
+    .modal-lg {
+        width: 900px;
+    }
+}
+
 .guide-column-handle {
     background-color: whitesmoke;
     border-radius: 5px;
@@ -93,7 +150,6 @@
     text-align: left;
 }
 
-/* Medcard search panel */
 #medcard-search-button,
 #medcard-register-button,
 #medcard-edit-button {
@@ -122,21 +178,42 @@
     font-size: 14px;
 }
 
-/* Treatment room */
 .treatment-header-wrapper {
     text-align: center;
     width: 100%;
-    margin: 0;
+}
+
+.treatment-header-wrapper {
+    width: 100%;
+}
+
+.treatment-table-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
 }
 
 .treatment-header {
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+    margin-bottom: 75px;
+}
+
+.treatment-header .col-xs-6,
+.treatment-header .col-xs-12,
+.treatment-header .col-xs-4 {
+    padding-right: 2px;
+    padding-left: 2px;
 }
 
 .treatment-header-rounded {
     display: table;
     border: 1px #47a347 solid;
     border-radius: 3px;
+    padding: 5px;
     width: 100%;
+    margin: 2px;
     height: 50px;
     white-space: normal;
 }
@@ -150,10 +227,6 @@
     vertical-align: middle;
 }
 
-.treatment-header .dropdown-menu li {
-    text-align: left;
-}
-
 .treatment-header-wrapper .active {
     background-color: #47a347;
     color: white;
@@ -161,76 +234,9 @@
 }
 
 .treatment-header-wrapper .treatment-header-rounded span.badge {
+    position: absolute;
+    transform: translate(calc(100% - 20px), -2px) scale(0.75);
     border: 1px darkred solid;
     background-color: white;
     color: black;
-    margin-left: 10px;
-}
-
-.treatment-header-rounded .container,
-.treatment-table-wrapper,
-.treatment-table-wrapper .table {
-    padding: 0;
-    margin: 0;
-}
-
-.treatment-table-wrapper .pagination {
-    margin: 0;
-}
-
-.treatment-header-wrapper .dropdown-menu a[data-toggle] {
-    cursor: pointer;
-}
-
-.treatment-header-rounded {
-    margin-bottom: 10px;
-}
-.treatment-center-block {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.treatment-table-wrapper tfoot > tr > td {
-    padding: 2px;
-}
-.treatment-table-wrapper tfoot > tr > td .pagination {
-    margin-top: 5px;
-}
-
-/* Medcard search modal window */
-#medcard-search-modal button#load-button {
-    min-width: 150px;
-    width: auto;
-}
-
-/* Medcard editable view modal window */
-#medcard-editable-viewer-form .text-center b {
-    font-size: 15px;
-}
-
-.medcard-editable-viewer-number b {
-    font-size: 20px;
-}
-
-.medcard-editable-viewer-number #card_number:empty:after {
-    content: '0000/00';
-}
-
-/* Address component */
-.laboratory-address .address-edit-button {
-    cursor: pointer;
-}
-.laboratory-address .panel {
-    margin-bottom: 0;
-}
-.laboratory-address .address-body {
-    margin-top: 5px;
-}
-.laboratory-address .panel-body {
-    padding: 0;
-}
-.laboratory-address .panel-body input {
-    margin: 0;
-    border: 1px solid #d3d3d3;
-    border-radius: 0;
 }

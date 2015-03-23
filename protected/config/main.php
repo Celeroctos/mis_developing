@@ -6,7 +6,7 @@ define('_STATIC', 'static_src'); //папка с ресурсами (для да
 // Вот за такое надо расстреливать на месте. Но автор сего шедевра не знает как сделать что-то более правильное
 //          относительно быстро (( а времени нет((
 // Если в строке есть "moniiag" - значит мы на тестовом
-if (strpos($_SERVER['HTTP_HOST'], 'moniiag') !== false && strpos($_SERVER['HTTP_HOST'], 'moniiag') >= 0) {
+if (  strpos( $_SERVER['HTTP_HOST'], 'moniiag')!==false && strpos( $_SERVER['HTTP_HOST'], 'moniiag')>=0 ) {
     $siteName = 'МИС Notum Тестовый сервер';
 } else {
     $siteName = 'МИС Notum';
@@ -28,12 +28,8 @@ return array(
 		'application.models.*',
         'application.models.forms.*',
 		'application.components.*',
+		'application.components.widgets.*',
         'application.controllers.*',
-        'application.assets.*',
-        'application.widgets.*',
-        'application.forms.*',
-        'application.fields.*',
-        'application.validators.*'
 	),
 
 	'modules'=>array(
@@ -58,9 +54,8 @@ return array(
             'class' => 'application.modules.guides.GuidesModule',
             'import'=>array(
                 'application.modules.guides.models.*',
-				'application.modules.guides.components.widgets.*',
                 'application.modules.guides.components.*',
-                'application.modules.guides.controllers.*',
+                'application.modules.guides.controllers.*'
             ),
         ),
         'admin' => array(
@@ -105,13 +100,15 @@ return array(
             ),
         ),
         'laboratory' => array(
-            'class' => 'application.modules.laboratory.LaboratoryModule2',
+            'class' => 'application.modules.laboratory.LaboratoryModule',
             'import' => array(
                 'application.modules.laboratory.components.*',
                 'application.modules.laboratory.controllers.*',
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
+                'application.modules.laboratory.fields.*',
+                'application.modules.laboratory.validators.*'
             )
         )
 	),
@@ -122,38 +119,6 @@ return array(
             //'enableCsrfValidation' => true,
             //'enableCookieValidation' => true,
         ),
-		'widgetFactory' => [
-			'widgets' => [
-				'CBreadcrumbs' => [
-					'tagName' => 'ol',
-					'separator' => '',
-					'homeLink' => false,
-					'activeLinkTemplate' => '<li><a href="{url}">{label}</a></li>',
-					'inactiveLinkTemplate' => '<li>{label}</li>',
-					'htmlOptions' => [
-						'class' => 'breadcrumb'
-					]
-				],
-				'CGridView' => [
-					'cssFile' => false,
-					'itemsCssClass' => 'table table-hover table-bordered',
-					'pagerCssClass' => 'pagerCssClass',
-				],
-				'CLinkPager' => [
-					'cssFile' => false,
-					'htmlOptions' => [
-						'class' => 'pagination pagination-sm'
-					],
-					'prevPageLabel' => '<span class="glyphicon glyphicon-chevron-left"></span>',
-					'nextPageLabel' => '<span class="glyphicon glyphicon-chevron-right"></span>',
-					'firstPageLabel' => '<span class="glyphicon glyphicon-fast-backward"></span>',
-					'lastPageLabel' => '<span class="glyphicon glyphicon-fast-forward"></span>',
-					'hiddenPageCssClass' => 'disabled',
-					'header' => '',
-					'selectedPageCssClass' => 'active',
-				],
-			],
-		],
         'clientScript' => array(
             'scriptMap' => array(
                 'jquery.js' => '/js/libs/jquery-1.10.2.min.js'

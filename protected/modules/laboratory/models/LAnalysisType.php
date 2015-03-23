@@ -1,9 +1,9 @@
 <?php
 
-class LAnalysisType extends ActiveRecord {
+class LAnalysisType extends LModel {
 
 	/**
-	 * @return AnalysisType - Cached model instance
+	 * @return LAnalysisType - Cached model instance
 	 */
 	public static function model() {
 		return parent::model(__CLASS__);

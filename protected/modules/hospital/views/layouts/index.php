@@ -43,11 +43,11 @@
     <meta http-equiv="Expires" content="0">
 </head>
 <body>
-<?php $this->widget('application.widgets.MainNavBar') ?>
+<?php $this->widget('application.components.widgets.MainNavBar') ?>
 <div class="container-fluid" id="content">
     <div class="row main-container">
         <div class="col-xs-2">
-            <?php $this->widget('application.widgets.SideMenu') ?>
+            <?php $this->widget('application.components.widgets.SideMenu') ?>
         </div>
         <div class="col-xs-9">
             <?php echo $content; ?>
@@ -57,7 +57,7 @@
 <div class ="buttonUpContainer">
 		<nobr><span class="buttonUp"><span class ="glyphicon glyphicon-chevron-up buttonUpSign"></span><span class="buttonUpText">Наверх</span></span><nobr>
 </div>
-<?php $this->widget('FooterPanel'); ?>
+<?php $this->widget('application.components.widgets.FooterPanel'); ?>
 </body>
 
 </html>

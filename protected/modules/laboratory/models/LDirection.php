@@ -1,8 +1,6 @@
 <?php
 
-class LDirection extends ActiveRecord {
-
-	public $department_id;
+class LDirection extends LModel {
 
 	/**
 	 * @return LDirection - Cached model instance
@@ -13,18 +11,24 @@ class LDirection extends ActiveRecord {
 
     /**
      * Override that method to return data for grid view
+     * @param CDbCriteria $criteria - Search criteria
      * @throws CDbException
      * @return array - Array with fetched rows
      */
-    public function getGridViewData() {
+    public function getGridViewData(CDbCriteria $criteria = null) {
+        if (empty($criteria)) {
+            $criteria = new CDbCriteria();
+        }
         $query = $this->getDbConnection()->createCommand()
-            ->select("d.*, at.name as analysis_type_id, m.card_number")
+            ->select("d.*, at.name as analysis_type_id")
             ->from("lis.direction as d")
-            ->leftJoin("lis.analysis_type as at", "at.id = d.analysis_type_id")
-            ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
+            ->leftJoin("lis.analysis_types as at", "at.id = d.analysis_type_id")
+            ->leftJoin("mis.medcards as m", "m.card_number = d.card_number")
+            ->where($criteria->condition, $criteria->params);
         $array = $query->queryAll();
         foreach ($array as &$value) {
-            $value["status"] = DirectionStatusField::field()->getOption($value["status"]);
+            $value["status"] = LDirectionStatusField::field()
+                ->getOption($value["status"]);
         }
         return $array;
     }
@@ -36,7 +40,7 @@ class LDirection extends ActiveRecord {
     public function getKeys() {
         return [
             "id" => "№",
-            "medcard_id" => "Номер карты",
+            "card_number" => "Номер карты",
             "status" => "Статус",
             "department_id" => "Направитель",
             "analysis_type_id" => "Тип анализа"

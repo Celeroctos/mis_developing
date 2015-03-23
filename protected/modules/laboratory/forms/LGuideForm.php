@@ -1,6 +1,6 @@
 <?php
 
-class LGuideForm extends FormModel {
+class LGuideForm extends LFormModel {
 
 	public $id;
 	public $name;

@@ -408,7 +408,7 @@ $this->widget('application.modules.reception.components.widgets.MedcardFormWidge
     'model' => $modelMedcard,
     'privilegesList' => $privilegesList,
     'showEditIcon' => 1,
-//    'template' => 'application.modules.reception.components.widgets.views.addressEditPopup'
+    'template' => 'application.modules.reception.components.widgets.views.addressEditPopup'
 ));
 ?>
 <div class="modal fade error-popup" id="existOmsPopup">

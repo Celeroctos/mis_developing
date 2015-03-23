@@ -1,6 +1,6 @@
 <?php
 
-class LPassportForm extends FormModel {
+class LPassportForm extends LFormModel {
 
 	public $id;
 	public $series;
@@ -15,7 +15,7 @@ class LPassportForm extends FormModel {
 	 *  + label - Variable's label, will be displayed in the form
 	 *  + type - Input type (@see _LFormInternalRender#render())
 	 *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-	 * @return Array - ActiveRecord's config
+	 * @return Array - Model's config
 	 */
 	public function config() {
 		return [

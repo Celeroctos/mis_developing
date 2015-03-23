@@ -1,6 +1,6 @@
 <?php
 class UsersController extends Controller {
-//    public $layout = 'application.modules.admin.views.layouts.index';
+    public $layout = 'application.modules.admin.views.layouts.index';
     public $defaultAction = 'view';
 
     public function actionView() {

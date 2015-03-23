@@ -2,21 +2,12 @@
 
 class LUserIdentity extends CUserIdentity {
 
-	/**
-	 * Get some state from opened user's session
-	 * @param string $key - Name of value to get
-	 * @return mixed - Value associated with key
-	 */
-	public static function get($key) {
-		return Yii::app()->user->getState($key);
-	}
-
     public function authenticate() {
 
-        $record = User::model()->findByAttributes([
+        $record = User::model()->findByAttributes(array(
             'password' => md5(md5($this->password)),
             'login' => $this->username
-        ]);
+        ));
 
         if($record === null) {
 

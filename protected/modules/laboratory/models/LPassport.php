@@ -1,6 +1,6 @@
 <?php
 
-class LPassport extends ActiveRecord {
+class LPassport extends LModel {
 
 	public function tableName() {
 		return "lis.passport";

@@ -44,11 +44,11 @@
     <meta http-equiv="Expires" content="0">
 </head>
 <body>
-<?php $this->widget('application.widgets.MainNavBar') ?>
+<?php $this->widget('application.components.widgets.MainNavBar') ?>
 <div class="container-fluid" id="content">
     <div class="row main-container">
         <div class="col-xs-2">
-            <?php $this->widget('application.widgets.SideMenu') ?>
+            <?php $this->widget('application.components.widgets.SideMenu') ?>
         </div>
         <div class="col-xs-9">
             <?php echo $content; ?>
@@ -85,6 +85,6 @@
         <source src="/content/audio/signal.wav" type="audio/wav">
     </audio>
 </div-->
-<?php $this->widget('FooterPanel'); ?>
+<?php $this->widget('application.components.widgets.FooterPanel'); ?>
 </body>
 </html>

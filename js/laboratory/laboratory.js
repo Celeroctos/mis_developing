@@ -1,6 +1,6 @@
 var ConfirmDelete = {
     construct: function() {
-        $(document).on("click", ".confirm-delete", function(e) {
+        $(document).on("click", ".confirm", function(e) {
             if (ConfirmDelete.lock) {
                 return void 0;
             }
@@ -21,16 +21,6 @@ var ConfirmDelete = {
     },
     item: null,
     lock: false
-};
-
-var Common = {
-	cleanup: function(component) {
-		$(component).find("input, textarea").val("");
-		$(component).find("select:not([multiple])").each(function(i, item) {
-			$(item).val($(item).find("option:eq(0)").val());
-		});
-		$(component).find("select[multiple]").val("");
-	}
 };
 
 var Panel = {
@@ -155,12 +145,12 @@ var DropDown = {
     update: function(select, after) {
         var f;
         var form = $(select.parents("form")[0]);
-        if (!form.data("lab")) {
+        if (!form.data("laboratory")) {
             f = Laboratory.createForm(form[0], {
                 url: url("/laboratory/guide/getWidget")
             });
         } else {
-            f = form.data("lab");
+            f = form.data("laboratory");
         }
         f.update(after);
     },
@@ -170,9 +160,9 @@ var DropDown = {
 var Message = {
     display: function(json) {
         if (!json["status"]) {
-			Laboratory.createMessage({
-				message: json["message"]
-			});
+            Laboratory.createMessage({
+                message: json["message"]
+            });
             return false
         } else if (json["message"]) {
             Laboratory.createMessage({
@@ -229,7 +219,7 @@ var GuideColumnEditor = {
 	add: function(button) {
 		GuideColumnEditor.before(button);
 		$.get(url("/laboratory/guide/getWidget"), {
-			class: "Form",
+			class: "LForm",
 			model: "LGuideColumnForm",
 			form: { guide_id: GuideColumnEditor.id }
 		}, function(json) {
@@ -274,7 +264,7 @@ var GuideTableViewer = {
         }
         GuideColumnEditor.id = id;
         $.get(url("/laboratory/guide/getWidget"), {
-            class: "GuideColumnEditor",
+            class: "LGuideColumnEditor",
             form: { id: id },
             model: "LGuideForm"
         }, function(json) {
@@ -331,7 +321,7 @@ var GuideTableViewer = {
         panel.find("form").each(function(i, form) {
             serialized.push($(form).serialize());
         });
-        $.post(url("/laboratory/guide/update"), {
+        $.get(url("/laboratory/guide/update"), {
             model: serialized
         }, function(json) {
             if (!json["status"]) {
@@ -359,7 +349,7 @@ var GuideTableViewer = {
                 }))
             );
             $.get(url("/laboratory/guide/getWidget"), {
-                class: "GuideValueEditor",
+                class: "LGuideValueEditor",
                 guide_id: id
             }, function(json) {
                 if (!Message.display(json)) {
@@ -392,7 +382,7 @@ var GuideTableViewer = {
 	},
 	update: function() {
 		$.get(url("/laboratory/guide/getWidget"), {
-			class: "GuideTable"
+			class: "LGuideTable"
 		}, function(json) {
 			if (!json["status"]) {
 				return Laboratory.createMessage({
@@ -473,7 +463,7 @@ var GuideValueEditor = {
 
 var MedcardSearch = {
 	construct: function() {
-		$("[id='medcard-search-button']").click(function() {
+		$("#medcard-search-button").click(function() {
 			MedcardSearch.search();
 		});
 		$("#medcard-edit-button").click(function() {
@@ -488,7 +478,7 @@ var MedcardSearch = {
 			return void 0;
 		}
 		$.get(url("/reception/patient/getMedcardData"), {
-			cardId: number
+			cardid: number
 		}, function(data) {
 			if(data.success == true) {
 				data = data.data["formModel"];
@@ -545,24 +535,20 @@ var MedcardSearch = {
 
 var TreatmentViewHeader = {
 	construct: function() {
-		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
-			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("active");
-			TreatmentViewHeader.active = $(this).addClass("active");
+		$("button.treatment-header-rounded[data-toggle!='modal']").click(function() {
+			TreatmentViewHeader.activate($(this));
 		});
-		this.active = $(".treatment-header").find("button.active");
-		if (!this.active.length) {
-			this.active = null;
-		}
-		$("button.treatment-header-rounded[data-tab]").click(function() {
-			$("button.treatment-header-rounded[data-tab]").each(function(i, t) {
-				$($(t).data("tab")).addClass("no-display");
+		$("#direction-register-modal").on("show.bs.modal", function() {
+			$(this).find("input, textarea").val("");
+			$(this).find("select:not([multiple])").each(function(i, item) {
+				$(item).val($(item).find("option:eq(0)").val());
 			});
-			$($(this).data("tab")).removeClass("no-display")
-				.trigger("change");
+			$(this).find("select[multiple]").val("");
 		});
-		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
-			Common.cleanup(this);
-		});
+	},
+	activate: function(item) {
+		this.active && this.active.removeClass("active");
+		return (this.active = item.addClass("active"));
 	},
 	active: null
 };
@@ -580,155 +566,6 @@ var LogoutButton = {
 	}
 };
 
-var MedcardSearchModal = {
-	ready: function(selector) {
-		var modal = $(selector);
-		modal.on("show.bs.modal", function() {
-			$(this).find("#load").prop("disabled", "disabled");
-		});
-		modal.on("click", "#medcard-table tr[data-id]", function() {
-			MedcardSearchModal.id = $(this).data("id");
-			$(modal.find("#load")[0]).text("Открыть (" + MedcardSearchModal.id + ")").removeProp("disabled");
-		});
-		modal.find("#load").click(function() {
-			if (!MedcardSearchModal.id) {
-				return void 0;
-			}
-			var text = $(this).text();
-			var btn = $(this).button("loading");
-			$.get(url("laboratory/medcard/load"), {
-				number: MedcardSearchModal.id
-			}, function(json) {
-				if (!Message.display(json)) {
-					return void 0;
-				}
-				MedcardEditableViewerModal.load(json["model"]);
-				modal.modal("hide");
-			}, "json")
-				.always(function() {
-					btn.button("reset").text(text);
-				}).fail(function() {
-					Laboratory.createMessage({
-						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-					});
-				})
-		});
-	},
-	construct: function() {
-		this.ready("#mis-medcard-search-modal");
-		this.ready("#lis-medcard-search-modal");
-	},
-	id: null
-};
-
-var MedcardEditableViewerModal = {
-	check: function() {
-		if (MedcardEditableViewerModal.copied !== false) {
-			$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
-		} else {
-			$("#medcard-editable-viewer-modal #insert-button").prop("disabled", true);
-		}
-	},
-	construct: function() {
-		var me = this;
-		var modal = $("#medcard-editable-viewer-modal");
-		modal.on("show.bs.modal", function() {
-			me.check();
-		});
-		modal.find("#copy-button").click(function() {
-			var json = [];
-			modal.find("form").each(function(i, f) {
-				var j = {};
-				$(f).find("input, select, textarea").each(function(i, it) {
-					j[$(it).attr("id")] = $(it).val();
-				});
-				json[$(f).attr("id")] = j;
-			});
-			MedcardEditableViewerModal.copied = json;
-			me.check();
-			Laboratory.createMessage({
-				message: "Данные скопированы",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#insert-button").click(function() {
-			if (MedcardEditableViewerModal.copied === false) {
-				return void 0;
-			}
-			var json = MedcardEditableViewerModal.copied;
-			for (var i in json) {
-				var f = $("[id='" + i + "']");
-				for (var j in json[i]) {
-					f.find($("[id='" + j + "']")).val(json[i][j]);
-				}
-			}
-			Laboratory.createMessage({
-				message: "Данные вставлены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#clear-button").click(function() {
-			Common.cleanup(modal);
-			me.check();
-			Laboratory.createMessage({
-				message: "Данные очищены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#save-button").click(function() {
-			var forms = [];
-			modal.find("form").each(function(i, f) {
-				forms.push($(f).serialize());
-			});
-			Laboratory.resetFormErrors(modal);
-			$.post(url("laboratory/medcard/register"), {
-				model: forms
-			}, function(json) {
-				if (json["errors"]) {
-					Laboratory.postFormErrors(modal, json);
-				} else if (!Message.display(json)) {
-					return void 0;
-				}
-				console.log(json);
-			}, "json");
-		});
-	},
-	load: function(model) {
-		var modal = $("#medcard-editable-viewer-modal")
-			.modal();
-		var put = function(from, key, value) {
-			var offset = 0, chances = [
-				value, -1, 0, 1
-			];
-			from.find("[id='" + key + "']").each(function(i, item) {
-				do {
-					$(item).val(chances[offset]);
-					if ($(item)[0].tagName != "SELECT" || ++offset > chances.length) {
-						break;
-					}
-				} while ($(item).val() === null);
-			});
-		};
-		for (var i in model) {
-			var m = model[i], f, base;
-			if ((f = modal.find("#" + i)).length > 0 && f.data("form")) {
-				base = $("#" + f.data("form"));
-			} else {
-				base = modal
-			}
-			for (var j in m) {
-				put(base, j, m[j]);
-			}
-		}
-		modal.find("input[data-laboratory='address']").address("calculate");
-		modal.find("span[id='card_number']").text(model["medcard"]["card_number"]);
-	},
-	copied: false
-};
-
 $(document).ready(function() {
 	GuideColumnEditor.construct();
 	ConfirmDelete.construct();
@@ -736,8 +573,6 @@ $(document).ready(function() {
 	GuideTableViewer.construct();
 	GuideValueEditor.construct();
 	MedcardSearch.construct();
-	MedcardEditableViewerModal.construct();
 	TreatmentViewHeader.construct();
 	LogoutButton.construct();
-	MedcardSearchModal.construct();
 });

@@ -1,6 +1,6 @@
 <?php
 class LogsController extends Controller {
-//    public $layout = 'application.views.layouts.index';
+    public $layout = 'application.views.layouts.index';
     public function actionView() {
         $this->render('view', array());
     }
@@ -11,7 +11,7 @@ class LogsController extends Controller {
         $sidx = $_GET['sidx'];
         $sord = $_GET['sord'];
 
-		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+		// Фильтры поиска
 		if(isset($_GET['filters']) && trim($_GET['filters']) != '') {
 			$filters = CJSON::decode($_GET['filters']);
 		} else {
@@ -42,7 +42,7 @@ class LogsController extends Controller {
 	 private function checkFilters($filters = false) {
 	    if((!isset($_GET['filters']) || trim($_GET['filters']) == '') && (bool)$filters === false) {
             echo CJSON::encode(array('success' => false,
-                                     'data' => 'пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.')
+                                     'data' => 'Задан пустой поисковой запрос.')
             );
             exit();
         }

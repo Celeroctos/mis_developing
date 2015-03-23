@@ -1,10 +1,6 @@
 <?php
 
-class LPhoneForm extends FormModel {
-
-	public $id;
-	public $number;
-	public $type;
+class LPhoneForm extends LFormModel {
 
 	/**
 	 * Override that method to return config. Config should return array associated with
@@ -12,7 +8,7 @@ class LPhoneForm extends FormModel {
 	 *  + label - Variable's label, will be displayed in the form
 	 *  + type - Input type (@see _LFormInternalRender#render())
 	 *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-	 * @return Array - ActiveRecord's config
+	 * @return Array - Model's config
 	 */
 	public function config() {
 		return [

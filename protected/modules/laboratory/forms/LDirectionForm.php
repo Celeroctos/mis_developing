@@ -1,39 +1,6 @@
 <?php
 
-class LDirectionForm extends FormModel {
-
-	public $id;
-	public $barcode;
-	public $status;
-	public $comment;
-	public $analysis_type_id;
-	public $medcard_id;
-	public $sender_id;
-	public $sending_date;
-	public $treatment_room_employee_id;
-	public $laboratory_employee_id;
-	public $history;
-	public $ward_id;
-	public $enterprise_id;
-	public $is_repeated;
-
-	/**
-	 * Override that method to return additional rule configuration, like
-	 * scenario conditions or others
-	 * @return array - Array with rule configuration
-	 */
-	public function backward() {
-		return [
-
-			// don't require identification number on update or search
-			[ "id", "required", "on" => [ "update", "search" ] ],
-
-			// set maximum length of card number
-			[ "card_number", "length", "max" => 50 ],
-
-			[ "sender_id", "default", "value" => LUserIdentity::get("doctorId") ]
-		];
-	}
+class LDirectionForm extends LFormModel {
 
 	/**
 	 * Override that method to return config. Config should return array associated with
@@ -65,16 +32,15 @@ class LDirectionForm extends FormModel {
 				"type" => "DropDown",
 				"rules" => "required",
                 "table" => [
-                    "name" => "lis.analysis_type",
+                    "name" => "lis.analysis_types",
                     "key" => "id",
                     "value" => "name"
                 ]
 			],
-			"medcard_id" => [
-				"label" => "Медкарта",
-				"type" => "number",
-				"rules" => "required"
-			],
+            "card_number" => [
+                "label" => "Номер карты",
+                "type" => "text"
+            ],
             "history" => [
                 "label" => "Медикаментозный анамнез",
                 "type" => "TextArea"
@@ -87,14 +53,15 @@ class LDirectionForm extends FormModel {
 				"label" => "Врач",
 				"type" => "number",
 				"rules" => "required",
+                "value" => Yii::app()->user->getState("doctorId"),
                 "hidden" => "true"
 			],
-            "enterprise_id" => [
+            "department_id" => [
                 "label" => "Направитель",
                 "type" => "DropDown",
                 "rules" => "required",
                 "table" => [
-                    "name" => "lis.enterprise",
+                    "name" => "mis.enterprise_params",
                     "key" => "id",
                     "value" => "shortname"
                 ]

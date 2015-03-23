@@ -1,6 +1,6 @@
 <?php
 
-class LPatient extends ActiveRecord {
+class LPatient extends LModel {
 
     public function tableName() {
         return "lis.patient";

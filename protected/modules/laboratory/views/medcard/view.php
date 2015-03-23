@@ -6,9 +6,9 @@
  * @var $this MedcardController
  */
 
-$this->widget("Modal", [
+$this->widget("LModal", [
 	"title" => "Редактирование данных медкарты пациента",
-	"body" => $this->getWidget("MedcardEditor"),
+	"body" => $this->getWidget("LMedcardEditor"),
 	"buttons" => [
 		"save" => [
 			"text" => "Сохранить",
@@ -19,9 +19,7 @@ $this->widget("Modal", [
 	"id" => "patient-medcard-edit-modal"
 ]);
 
-$this->widget("MedcardSearch", [
-	"mode" => "mis"
-]);
+$this->widget("LMedcardSearch");
 
 ?>
 <hr>

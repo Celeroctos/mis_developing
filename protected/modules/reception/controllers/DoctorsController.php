@@ -1,6 +1,6 @@
 <?php
 class DoctorsController extends Controller {
-//    public $layout = 'application.views.layouts.index';
+    public $layout = 'application.views.layouts.index';
     private $choosedDiagnosis = array();
     private $greetingDate = null;
 

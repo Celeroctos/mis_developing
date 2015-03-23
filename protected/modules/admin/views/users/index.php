@@ -1,4 +1,4 @@
-<?php $this->widget('application.widgets.AdminUsersTabMenu') ?>
+<?php $this->widget('application.components.widgets.AdminUsersTabMenu') ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/admin/users.js"></script>
 <table id="users"></table>
 <div id="usersPager"></div>

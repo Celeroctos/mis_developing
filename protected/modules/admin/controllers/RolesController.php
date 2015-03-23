@@ -1,6 +1,6 @@
 <?php
 class RolesController extends Controller {
-//    public $layout = 'application.modules.admin.views.layouts.index';
+    public $layout = 'application.modules.admin.views.layouts.index';
     public $defaultAction = 'view';
 
     public function actionView() {
@@ -70,8 +70,8 @@ class RolesController extends Controller {
 
             echo CJSON::encode(
                 array('rows' => $roles,
-                    'total' => $totalPages,
-                    'records' => count($num))
+                      'total' => $totalPages,
+                      'records' => count($num))
             );
         } catch(Exception $e) {
             echo $e->getMessage();
@@ -95,7 +95,7 @@ class RolesController extends Controller {
         }
 
         echo CJSON::encode(array('success' => true,
-                'data' => $role)
+                                 'data' => $role)
         );
     }
 
@@ -109,7 +109,7 @@ class RolesController extends Controller {
                 $this->addEditModel($role, $model, 'Роль успешно отредактирована.');
             } else {
                 echo CJSON::encode(array('success' => 'false',
-                    'errors' => $model->errors));
+                                         'errors' => $model->errors));
             }
         }
     }
@@ -123,7 +123,7 @@ class RolesController extends Controller {
                 $this->addEditModel($role, $model, 'Роль успешно добавлена.');
             } else {
                 echo CJSON::encode(array('success' => 'false',
-                    'errors' => $model->errors));
+                                         'errors' => $model->errors));
             }
         }
     }
@@ -152,17 +152,17 @@ class RolesController extends Controller {
                 $checked = new CheckedAction();
                 $checked->action_id = $action['id'];
                 $checked->role_id = $role->id;
-                $checked->employee_id = -1;
+				$checked->employee_id = -1;
                 if(!$checked->save()) {
                     echo CJSON::encode(array('success' => false,
-                        'text' => 'Невозможно сохранить действие.'));
+                                             'text' => 'Невозможно сохранить действие.'));
                 }
             }
         }
 
         if($success) {
             echo CJSON::encode(array('success' => true,
-                'text' => $msg));
+                                     'text' => $msg));
         }
     }
 
@@ -175,11 +175,11 @@ class RolesController extends Controller {
             $checked->deleteByRole($id);
 
             echo CJSON::encode(array('success' => 'true',
-                'text' => 'Роль успешно удалена.'));
+                                     'text' => 'Роль успешно удалена.'));
         } catch(Exception $e) {
             // Это нарушение целостности FK
             echo CJSON::encode(array('success' => 'false',
-                'error' => 'На данную запись есть ссылки!'));
+                                     'error' => 'На данную запись есть ссылки!'));
         }
     }
 
@@ -215,8 +215,8 @@ class RolesController extends Controller {
 
             echo CJSON::encode(
                 array('rows' => $startpages,
-                    'total' => $totalPages,
-                    'records' => count($num))
+                      'total' => $totalPages,
+                      'records' => count($num))
             );
         } catch(Exception $e) {
             echo $e->getMessage();
@@ -228,7 +228,7 @@ class RolesController extends Controller {
         $startpage = $model->getOne($id);
 
         echo CJSON::encode(array('success' => true,
-                'data' => $startpage)
+                                 'data' => $startpage)
         );
     }
 
@@ -241,7 +241,7 @@ class RolesController extends Controller {
                 $this->addEditModelStartpage($startpage, $model, 'Стартовая страница успешно отредактирована.');
             } else {
                 echo CJSON::encode(array('success' => 'false',
-                    'errors' => $model->errors));
+                                         'errors' => $model->errors));
             }
         }
     }
@@ -260,11 +260,11 @@ class RolesController extends Controller {
         $issetStartPage = Startpage::model()->find('priority = :priority', array(':priority' => $model->priority));
         if($issetStartPage != null) {
             echo CJSON::encode(array('success' => false,
-                'errors' => array(
-                    'priority' => array(
-                        'Такой приоритет страницы уже существует!'
-                    )
-                )));
+                                     'errors' => array(
+                                         'priority' => array(
+                                            'Такой приоритет страницы уже существует!'
+                                         )
+                                     )));
             exit();
         }
 
@@ -274,7 +274,7 @@ class RolesController extends Controller {
 
         if($startpage->save()) {
             echo CJSON::encode(array('success' => true,
-                'text' => $msg));
+                                     'text' => $msg));
         }
     }
 
@@ -287,7 +287,7 @@ class RolesController extends Controller {
                 $this->addEditModelStartpage($startpage, $model, 'Стартовая страница успешно добавлена.');
             } else {
                 echo CJSON::encode(array('success' => 'false',
-                    'errors' => $model->errors));
+                                         'errors' => $model->errors));
             }
         }
     }
@@ -303,11 +303,11 @@ class RolesController extends Controller {
             $startpage->delete();
 
             echo CJSON::encode(array('success' => 'true',
-                'text' => 'Стартовая страница успешно удалена.'));
+                                     'text' => 'Стартовая страница успешно удалена.'));
         } catch(Exception $e) {
             // Это нарушение целостности FK
             echo CJSON::encode(array('success' => 'false',
-                'error' => 'На данную запись есть ссылки!'));
+                                     'error' => 'На данную запись есть ссылки!'));
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 class SheduleController extends Controller {
-//    public $layout = 'index';
+    public $layout = 'index';
     public $filterModel = null;
     public $currentPatient = false;
     public $currentSheduleId = false;

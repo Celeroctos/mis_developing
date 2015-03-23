@@ -1,93 +1,62 @@
 <?php
 
-class LPatientForm extends FormModel {
+class LPatientForm extends CFormModel {
 
-	public $id;
-	public $surname;
-	public $name;
-	public $patronymic;
-	public $sex;
-	public $birthday;
-	public $passport_id;
-	public $policy_id;
-	public $register_address_id;
-	public $address_id;
+	public $doctype;
+	public $serie;
+	public $docnumber;
+	public $addressReg;
+	public $addressRegHidden;
+	public $address;
+	public $addressHidden;
+	public $workPlace;
+	public $workAddress;
+	public $post;
+	public $contact;
+	public $snils;
+	public $invalidGroup;
+	public $policy;
+	public $cardNumber;
+	public $privilege;
+	public $privDocname;
+	public $privDocnumber;
+	public $privDocserie;
+	public $privDocGivedate;
+	public $profession;
+	public $mediateId; // Опосредованный пациент может быть
 
-	/**
-	 * Override that method to return additional rule configuration, like
-	 * scenario conditions or others
-	 * @return array - Array with rule configuration
-	 */
-	public function backward() {
+	public function rules() {
+		Yii::import('ext.validators.SNILSValidator');
+		Yii::import('ext.validators.SerialNumberValidator');
 		return [
-			[ "id", "hide", "on" => "treatment.edit" ]
+			[ 'doctype, addressReg, address, contact, privilege', 'required' ],
+			[ 'workPlace, workAddress, post, snils, invalidGroup, policy, cardNumber, privDocname, privDocnumber, privDocserie, privDocGivedate, profession, mediateId, addressRegHidden, addressHidden', 'safe' ],
+			[ 'snils', 'SNILSValidator' ],
+			[ 'serie, docnumber', 'SerialNumberValidator' ]
 		];
 	}
 
-	/**
-	 * Override that method to return config. Config should return array associated with
-	 * model's variables. Every field must contains 3 parameters:
-	 *  + label - Variable's label, will be displayed in the form
-	 *  + type - Input type (@see _LFormInternalRender#render())
-	 *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-	 * @return Array - ActiveRecord's config
-	 */
-	public function config() {
+	public function attributeLabels() {
 		return [
-			"id" => [
-				"label" => "Идентификатор",
-				"type" => "number",
-				"rules" => "safe, numerical"
-			],
-			"surname" => [
-				"label" => "Фамилия",
-				"type" => "text",
-				"rules" => "required"
-			],
-			"name" => [
-				"label" => "Имя",
-				"type" => "text",
-				"rules" => "required"
-			],
-			"patronymic" => [
-				"label" => "Отчество",
-				"type" => "text",
-				"rules" => "safe"
-			],
-			"sex" => [
-				"label" => "Пол",
-				"type" => "sex",
-				"rules" => "required"
-			],
-			"birthday" => [
-				"label" => "Дата рождения",
-				"type" => "date",
-				"rules" => "required"
-			],
-			"passport_id" => [
-				"label" => "Пасспорт",
-				"type" => "hidden"
-			],
-			"policy_id" => [
-				"label" => "Полис",
-				"type" => "hidden"
-			],
-			"register_address_id" => [
-				"label" => "Адрес регистрации",
-				"type" => "address",
-				"rules" => "safe",
-				"table" => [
-					"name" => "lis.address",
-					"format" => "р. %{region_name}, район. %{district_name}, ул. %{street_name}, д. %{house_number}, кв. %{flat_number}",
-					"key" => "id",
-					"value" => "street_name, house_number, flat_number, region_name, district_name"
-				]
-			],
-			"address_id" => [
-				"label" => "Адрес проживания",
-				"type" => "address",
-				"rules" => "safe"
-			]
+			'doctype' => 'Тип документа',
+			'serie' => 'Серия',
+			'docnumber' => 'Номер',
+			// 'whoGived' => 'Кем выдан',
+			// 'documentGivedate' => 'Дата выдачи',
+			'addressReg' => 'Адрес регистрации',
+			'address' => 'Адрес проживания',
+			'workPlace' => 'Место работы',
+			'workAddress' => 'Адрес работы',
+			'post' => 'Должность',
+			'contact' => 'Телефон',
+			'snils' => 'СНИЛС',
+			'invalidGroup' => 'Группа инвалидности',
+			'privilege' => 'Льгота',
+			'privDocname' => 'Название документа',
+			'privDocnumber' => 'Номер',
+			'privDocserie' => 'Серия, номер',
+			'privDocGivedate' => 'Дата выдачи',
+			'profession' => 'Профессия'
 		];
 	}
 }

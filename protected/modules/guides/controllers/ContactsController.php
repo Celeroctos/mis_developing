@@ -1,6 +1,6 @@
 <?php
 class ContactsController extends Controller {
-//    public $layout = 'application.modules.guides.views.layouts.index';
+    public $layout = 'application.modules.guides.views.layouts.index';
     public $defaultAction = 'view';
     protected $contactTypes = array(
         'Электронная почта',

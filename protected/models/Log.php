@@ -1,8 +1,4 @@
 <?php
-
-/**
- * Class Log
- */
 class Log extends MisActiveRecord {
     public static function model($className=__CLASS__)
     {

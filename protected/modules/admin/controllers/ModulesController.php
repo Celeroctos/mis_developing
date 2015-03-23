@@ -1,6 +1,6 @@
 <?php
 class ModulesController extends Controller {
-//    public $layout = 'index';
+    public $layout = 'index';
     public $formModel = null;
 
     public function actionInfoView() {

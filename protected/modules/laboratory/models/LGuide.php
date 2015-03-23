@@ -1,6 +1,6 @@
 <?php
 
-class LGuide extends ActiveRecord {
+class LGuide extends LModel {
 
 	public $id;
 	public $name;

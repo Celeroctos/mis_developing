@@ -9,28 +9,23 @@ class MedcardController extends LController {
         $this->render("view");
     }
 
+    /**
+     * Display page with medcard registration
+     */
+    public function actionViewAdd() {
+        $this->render("register");
+    }
+
 	/**
-	 * That action will load full information about medcard with
-	 * patient's addresses
-	 *
-	 * @in (POST):
-	 *  + number - Medcard number
-	 * @out (JSON):
-	 *  + model - Model with full information about medcard
-	 *  + status - True on success
-	 *  + [message] - Message with response
+	 * Display page with card information
 	 */
-	public function actionLoad() {
-		try {
-			$row = LMedcard2::model()->fetchInformationLaboratoryLike($this->get("number"));
-			if ($row == null) {
-				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
-			}
-			$this->leave([
-				"model" => $row
+	public function actionCard() {
+		if (isset($_GET["number"])) {
+			$this->render("card", [
+				"number" => $_GET["number"]
 			]);
-		} catch (Exception $e) {
-			$this->exception($e);
+		} else {
+			header("Location: ".Yii::app()->getBaseUrl()."/laboratory/medcard/view");
 		}
 	}
 
@@ -38,7 +33,7 @@ class MedcardController extends LController {
 	 * Search action, which accepts array with search serialized form
 	 * models (LMedcardSearchForm + LSearchRangeForm). That action will
 	 * fetch form's values and build search condition form form model
-	 * and return Table widget with medcards
+	 * and return LTable widget with medcards
 	 *
 	 * @in (POST):
 	 *  + model - Array with serialized forms (string)
@@ -48,11 +43,7 @@ class MedcardController extends LController {
 	 */
 	public function actionSearch() {
 		try {
-			if (isset($_POST["mode"])) {
-				$mode = $_POST["mode"];
-			} else {
-				$mode = "mis";
-			}
+			// Build an array with search parameters
 			$like = [];
 			$compare = [];
 			foreach ($this->getFormModel("model", "post") as $model) {
@@ -83,9 +74,8 @@ class MedcardController extends LController {
 				$criteria->addSearchCondition($key, $value);
 			}
 			$this->leave([
-				"component" => $this->getWidget("MedcardTable", [
-					"criteria" => $criteria,
-					"mode" => $mode,
+				"component" => $this->getWidget("LMedcardTable", [
+					"criteria" => $criteria
 				])
 			]);
 		} catch (Exception $e) {
@@ -95,14 +85,14 @@ class MedcardController extends LController {
 
 	/**
 	 * Register some form's values in database, it will automatically
-	 * fetch model from $_POST["model"], decode it, build it's FormModel
+	 * fetch model from $_POST["model"], decode it, build it's LFormModel
 	 * object and save into database. But you must override
 	 * LController::getModel and return instance of controller's model else
 	 * it will throw an exception
 	 *
 	 * @in (POST):
 	 *  + model - String with serialized client form via $("form").serialize(), if you're
-	 * 		using Modal or Panel widgets that it will automatically find button with
+	 * 		using LModal or LPanel widgets that it will automatically find button with
 	 * 		submit type and send ajax request
 	 * @out (JSON):
 	 *  + message - Message with status
@@ -113,22 +103,12 @@ class MedcardController extends LController {
 	 * @see LPanel
 	 */
 	public function actionRegister() {
-		try {
-			$model = $this->getFormModel("model", "post");
-			
-			$attributes = [];
-			LMedcard::model()->insert();
-			$this->leave([
-				"message" => "Данные медкарты были успешно сохранены"
-			]);
-		} catch (Exception $e) {
-			$this->exception($e);
-		}
+		parent::actionRegister();
 	}
 
 	/**
      * Override that method to return controller's model
-     * @return ActiveRecord - Controller's model instance
+     * @return LModel - Controller's model instance
      */
     public function getModel() {
         return new LMedcard();

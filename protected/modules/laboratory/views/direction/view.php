@@ -3,6 +3,6 @@
  * @var DirectionController $this
  */
 
-$this->widget("AutoForm", [
+$this->widget("LForm", [
     "model" => new LDepartmentForm()
 ]);

@@ -1,6 +1,6 @@
 <?php
 class GreetingsController extends Controller {
-//	public $layout = 'application.modules.statistic.views.layouts.index';
+	public $layout = 'application.modules.statistic.views.layouts.index';
     public function actionView() {
 		// Список отделений
 		$wardsListDb = Ward::model()->getRows(false, 'name', 'asc');

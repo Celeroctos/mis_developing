@@ -220,7 +220,7 @@ class ApiController extends LController {
 
     /**
      * Override that method to return controller's model
-     * @return ActiveRecord - Controller's model instance
+     * @return LModel - Controller's model instance
      */
     public function getModel() {
         return null;

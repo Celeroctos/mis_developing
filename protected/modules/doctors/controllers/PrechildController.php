@@ -1,6 +1,6 @@
 <?php
 class PrechildController extends CController {
-//    public $layout = 'index';
+    public $layout = 'index';
     public $currentPatient = false;
     public function actionView() {
         if(isset($_GET['cardid']) && trim($_GET['cardid']) != '') {

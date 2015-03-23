@@ -1,6 +1,6 @@
 <?php
 
-class LGuideRowForm extends FormModel {
+class LGuideRowForm extends LFormModel {
 
 	public $id;
 	public $guide_id;
@@ -11,7 +11,7 @@ class LGuideRowForm extends FormModel {
 	 *  + label - Variable's label, will be displayed in the form
 	 *  + type - Input type (@see _LFormInternalRender#render())
 	 *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-	 * @return Array - ActiveRecord's config
+	 * @return Array - Model's config
 	 */
 	public function config() {
 		return [

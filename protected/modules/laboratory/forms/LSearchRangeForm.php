@@ -1,9 +1,6 @@
 <?php
 
-class LSearchRangeForm extends FormModel {
-
-	public $begin_date;
-	public $end_date;
+class LSearchRangeForm extends LFormModel {
 
     /**
      * Override that method to return config. Config should return array associated with
@@ -11,7 +8,7 @@ class LSearchRangeForm extends FormModel {
      *  + label - Variable's label, will be displayed in the form
      *  + type - Input type (@see _LFormInternalRender#render())
      *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-     * @return Array - ActiveRecord's config
+     * @return Array - Model's config
      */
     public function config() {
         return [

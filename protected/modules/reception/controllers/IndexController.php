@@ -1,6 +1,6 @@
 <?php
 class IndexController extends Controller {
-//   public $layout = 'application.views.layouts.index';
+   public $layout = 'application.views.layouts.index';
 
    // Стартовая модуля
    public function actionIndex() {

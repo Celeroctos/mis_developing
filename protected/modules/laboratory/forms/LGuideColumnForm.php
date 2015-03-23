@@ -1,6 +1,6 @@
 <?php
 
-class LGuideColumnForm extends FormModel {
+class LGuideColumnForm extends LFormModel {
 
 	public $id;
 	public $name;
@@ -12,7 +12,7 @@ class LGuideColumnForm extends FormModel {
 	public $default_value;
 
 	public function getType() {
-		return FieldCollection::getCollection()->getDropDown([
+		return LFieldCollection::getCollection()->getDropDown([
 			"Text",
 			"TextArea",
 			"Number",
@@ -41,44 +41,33 @@ class LGuideColumnForm extends FormModel {
 			"id" => [
 				"label" => "Идентификатор",
 				"type" => "number",
-				"rules" => "safe, numerical",
+				"rules" => "required",
 				"hidden" => "true"
 			],
 			"name" => [
 				"label" => "Название столбца",
 				"type" => "Text",
-				"rules" => "safe, required"
+				"rules" => "required"
 			],
 			"type" => [
 				"label" => "Тип данных",
 				"type" => "DropDown",
-				"rules" => "safe, required",
+				"rules" => "required",
 				"update" => "default_value"
 			],
 			"guide_id" => [
 				"label" => "Справочник",
 				"type" => "DropDown",
-				"rules" => "safe, required",
+				"rules" => "required",
 				"format" => "%{name}",
-				"hidden" => "true",
-				"table" => [
-					"name" => "lis.guide",
-					"key" => "id",
-					"value" => "name"
-				]
+				"hidden" => "true"
 			],
 			"lis_guide_id" => [
 				"label" => "Справочник",
 				"type" => "DropDown",
 				"format" => "%{name}",
 				"hidden" => $this->hasListType(),
-				"update" => "display_id",
-				"table" => [
-					"name" => "lis.guide",
-					"key" => "id",
-					"value" => "name"
-				],
-				"rules" => "safe"
+				"update" => "display_id"
 			],
 			"position" => [
 				"label" => "Позиция",
@@ -86,24 +75,29 @@ class LGuideColumnForm extends FormModel {
 				"hidden" => "true",
 				"options" => [
 					"min" => 1
-				],
-				"rules" => "safe, required"
+				]
 			],
 			"display_id" => [
 				"label" => "Отображаемое значение",
 				"type" => "DropDown",
 				"format" => "%{name}",
 				"hidden" => $this->hasListType(),
-				"update" => "default_value",
-				"rules" => "safe"
+				"update" => "default_value"
 			],
 			"default_value" => [
 				"label" => "Значение по умолчанию",
 				"type" => $this->isActive("type") ? $this->type : "hidden",
-				"value" => $this->default_value,
-				"rules" => "safe"
+				"value" => $this->default_value
 			]
 		];
+	}
+
+	public function getGuideId() {
+		return LGuide::model()->findForDropDown();
+	}
+
+	public function getLisGuideId() {
+		return LGuide::model()->findForDropDown();
 	}
 
 	public function getDisplayId() {

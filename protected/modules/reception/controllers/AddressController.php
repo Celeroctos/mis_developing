@@ -1,6 +1,6 @@
 <?php
 class AddressController extends Controller {
-//    public $layout = 'application.views.layouts.index';
+    public $layout = 'application.views.layouts.index';
 
     public function actionGetRegionForm() {
         echo CJSON::encode(array(
