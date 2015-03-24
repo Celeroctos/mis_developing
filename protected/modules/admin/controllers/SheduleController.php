@@ -872,20 +872,22 @@ class SheduleController extends Controller {
                     // Вот тут сравниваем времена работы врача
                     foreach ($greetingToCheck as $oneGreeting)
                     {
-                        if ( strtotime($oneGreeting['patient_day']) != strtotime($oneGreetingDate)  )
-                        {
-                            continue;
-                        }
-                        // Даты отсеяли - теперь проверяем на временной промежуток
-                        if (!(
-                        (  strtotime($oneGreeting['patient_time']) >=   strtotime($ruleToCheck['greetingBegin']) )
-                        &&
-                        (   strtotime($oneGreeting['patient_time']) <   strtotime($ruleToCheck['greetingEnd'])   )
-                        ))
-                        {
+                        if(isset($ruleToCheck['isFact']) && $ruleToCheck['isFact']) {
                             $greetingsIdToDelete[] = $oneGreeting['id'];
+                        } else {
+                            if (strtotime($oneGreeting['patient_day']) != strtotime($oneGreetingDate)) {
+                                continue;
+                            }
+                            // Даты отсеяли - теперь проверяем на временной промежуток
+                            if (!(
+                                (strtotime($oneGreeting['patient_time']) >= strtotime($ruleToCheck['greetingBegin']))
+                                &&
+                                (strtotime($oneGreeting['patient_time']) < strtotime($ruleToCheck['greetingEnd']))
+                            )
+                            ) {
+                                $greetingsIdToDelete[] = $oneGreeting['id'];
+                            }
                         }
-                     //   $greetingsIdToDelete[] = $oneGreeting['id'];
                     }
                 }
             }

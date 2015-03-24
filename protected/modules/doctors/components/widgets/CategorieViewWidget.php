@@ -52,26 +52,7 @@ class CategorieViewWidget extends CWidget {
         } else {		
 			$categories = $this->getCategories($this->templateType, $this->medcardRecordId,$this->templateId);
         }
-		/*
-		//
-		echo('--------');
-		var_dump($categories);
-		
-		echo('--------');
-		exit();
-		//
-        */
-/*
-        //
-        echo('--------');
-        var_dump($this->formModel);
 
-        echo('--------');
-        exit();
-        //*/
-        //echo '<pre>';
-        //var_dump($categories);
-        //exit();
         $answer = $this->render('application.modules.doctors.components.widgets.views.CategorieViewWidget', array(
             'categories' => $categories,
             'model' => $this->formModel,
@@ -559,10 +540,6 @@ class CategorieViewWidget extends CWidget {
                     }
                 } else {
                     if(!$this->previewMode) {
-
-                       //var_dump('!');
-                       // exit();
-
                         $categoriesChildren = MedcardElementForPatient::model()->findAll(
                             'categorie_id = :categorie_id
                             AND element_id = :element_id

@@ -1,35 +1,27 @@
-<?php
-if(isset($categorie['id'])) {
-    ?>
+<?php if(isset($categorie['id'])) { ?>
 <div id="accordion<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" class="accordion medcard-accordion">
-<div class="accordion-group">
-<div class="accordion-heading">
-    <a href="#collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" data-parent="#accordion<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" data-toggle="collapse" class="accordion-toggle"><?php echo $categorie['name']; ?>
-        <?php if(count($categorie['elements']) == 0 && ((isset($categorie['children']) && count($categorie['children']) == 0) || !isset($categorie['children']))) { ?>
-            (пустая категория)
-        <?php }
-        else
-        {
-            ?> <div class ="accordeonToggleAlt"> <?php echo $categorie['config']['isWrapped'] == 1 ? '(Свернуть)' : '(Раскрыть)'; ?></div> <?php
-        }
-
-        ?>
-    </a>
-    <?php if($categorie['is_dynamic'] == 1 || isset($categorie['pr_key']))  { ?>
-        <button class="btn btn-default btn-sm accordion-clone-btn" type="button">
-            <span class="glyphicon glyphicon-plus"></span>
-            <span class="no-display pr-key"><?php echo $categorie['pr_key']; ?></span>
-        </button>
-    <? } ?>
-</div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a href="#collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" data-parent="#accordion<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" data-toggle="collapse" class="accordion-toggle"><?php echo $categorie['name']; ?>
+                <?php if(count($categorie['elements']) == 0 && ((isset($categorie['children']) && count($categorie['children']) == 0) || !isset($categorie['children']))) { ?>
+                    (пустая категория)
+                <?php } else { ?>
+                    <div class ="accordeonToggleAlt"> <?php echo $categorie['config']['isWrapped'] == 1 ? '(Свернуть)' : '(Раскрыть)'; ?></div>
+                <?php } ?>
+            </a>
+            <?php if($categorie['is_dynamic'] == 1 || isset($categorie['pr_key']))  { ?>
+                <button class="btn btn-default btn-sm accordion-clone-btn" type="button">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="no-display pr-key"><?php echo $categorie['pr_key']; ?></span>
+                </button>
+            <?php } ?>
+        </div>
 <?php if(count($categorie['elements']) == 0 && ((isset($categorie['children']) && count($categorie['children']) == 0) || !isset($categorie['children']))) { ?>
-<div class="accordion-body collapse" id="collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>">
-<?php } else {
-?>
-<div class="accordion-body <?php echo isset($categorie['config']) && $categorie['config']['isWrapped'] == 1 ? 'in' : 'collapse'; ?>" id="collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>">
+        <div class="accordion-body collapse" id="collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>">
+<?php } else { ?>
+        <div class="accordion-body <?php echo isset($categorie['config']) && $categorie['config']['isWrapped'] == 1 ? 'in' : 'collapse'; ?>" id="collapse<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>">
 <?php } ?>
-<!--<div class="accordion-body collapse" id="collapse--><?php /* echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; */?><!--">-->
-<div class="accordion-inner">
+        <div class="accordion-inner">
 <?php // Подкатегории
 $nextWithNewRow = true;
 $counter = 0;
@@ -46,15 +38,9 @@ foreach($categorie['childrenElementsOrder'] as $item) {
             $templatePrefix
         );
     } else {
-
         $element = $categorie['elements'][$item['numberInArray']];
-
-        //var_dump($model);
-        //exit();
-
         // Выведем зависимости, если они есть
-        if(isset($element['dependences'])) {
-            ?>
+        if(isset($element['dependences'])) { ?>
             <script type="text/javascript">
                 globalVariables.elementsDependences.push({
                     'path' : '<?php echo $element['path']; ?>',
@@ -62,41 +48,26 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                     'elementId' : '<?php echo $element['id']; ?>'
                 });
             </script>
-        <?php }
-        // Выводим сам элемент
-        ?>
+        <?php }  // Выводим сам элемент ?>
         <?php if($nextWithNewRow) { ?>
             <div class="form-group col-xs-12">
-        <?php } ?>
-        <?php
-
-
+        <?php }
         // Заменяем пробелы на символ nbsp, чтобы они выводились
         $model->setAttributeLabels('f'.$element['undotted_path'].'_'.$element['id'],
-            str_replace(' ','&nbsp;',$model->attributeLabels['f'.$element['undotted_path'].'_'.$element['id']])
+            str_replace(' ', '&nbsp;',$model->attributeLabels['f'.$element['undotted_path'].'_'.$element['id']])
         );
 
         // Добавляем звёздочку к метке, если элемент обязателен для заполнения
-        if ($element["is_required"] == 1)
-        {
+        if ($element["is_required"] == 1) {
             $model->setAttributeLabels('f'.$element['undotted_path'].'_'.$element['id'],
                 $model->attributeLabels['f'.$element['undotted_path'].'_'.$element['id']].
-                " <span class=\"required\">*</span>");
+                "<span class=\"required\">*</span>");
         }
-        ?>
-        <?php
-
 
         echo $form->labelEx($model,'f'.$element['undotted_path'].'_'.$element['id'], array(
             'class' => 'control-label label-before '.(($element['type'] == 6) ? 'medcard-date' : '')
         )); ?>
         <?php
-        /*if (isset($element['element_id']))
-            if ($element['element_id']==95)
-            {
-                var_dump($element);
-                exit();
-            }*/
         if($element['type'] == 0) {
             if (isset($element['config']['showDynamic']) && $element['config']['showDynamic']) {
                 ?>
@@ -612,7 +583,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
             ?>
             </div>
         <?php } ?>
-    <?
+    <?php
     }
 }
 ?>

@@ -72,3 +72,30 @@ COMMENT ON COLUMN mis.role_action.employee_id IS 'Частное правило:
 
 ALTER TABLE mis.role_action ADD COLUMN mode integer;
 COMMENT ON COLUMN mis.role_action.mode IS 'Частное правило: режим правила. 0 - добавить к роли, 1 - исключить из роли';
+
+-- Column: not_printing_values
+
+-- ALTER TABLE mis.medcard_elements DROP COLUMN not_printing_values;
+
+ALTER TABLE mis.medcard_elements ADD COLUMN not_printing_values text;
+COMMENT ON COLUMN mis.medcard_elements.not_printing_values IS 'Значения справочников элементов, при выборе которых элемент не выводится на печать';
+
+-- Column: hide_label_before
+
+-- ALTER TABLE mis.medcard_elements DROP COLUMN hide_label_before;
+
+ALTER TABLE mis.medcard_elements ADD COLUMN hide_label_before integer;
+COMMENT ON COLUMN mis.medcard_elements.hide_label_before IS 'Скрывать ли метку до на печати';
+
+-- Column: not_printing_values
+
+-- ALTER TABLE mis.medcard_elements_patient DROP COLUMN not_printing_values;
+
+ALTER TABLE mis.medcard_elements_patient ADD COLUMN not_printing_values text;
+
+-- Column: hide_label_before
+
+-- ALTER TABLE mis.medcard_elements_patient DROP COLUMN hide_label_before;
+
+ALTER TABLE mis.medcard_elements_patient ADD COLUMN hide_label_before integer;
+COMMENT ON COLUMN mis.medcard_elements_patient.hide_label_before IS 'Скрывать ли метку до на печати';
