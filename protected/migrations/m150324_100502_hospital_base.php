@@ -18,19 +18,19 @@ class m150324_100502_hospital_base extends CDbMigration
             )
             WITH (
               OIDS=FALSE
-            );
-            ALTER TABLE hospital.hospitalization_queue
+            );"
+        )->execute();
+
+        $this->getDbConnection()->createCommand(
+            "ALTER TABLE hospital.hospitalization_queue
               OWNER TO postgres;
             COMMENT ON TABLE hospital.hospitalization_queue
               IS 'Очереди на госпитализацию';
             COMMENT ON COLUMN hospital.hospitalization_queue.type IS 'Тип очереди';
             COMMENT ON COLUMN hospital.hospitalization_queue.num_pre IS 'Кол-во по предв. записи';
             COMMENT ON COLUMN hospital.hospitalization_queue.num_queue IS 'Кол-во по живой очереди';
-            COMMENT ON COLUMN hospital.hospitalization_queue.comission_date IS 'Дата комисии';
-
-            "
+            COMMENT ON COLUMN hospital.hospitalization_queue.comission_date IS 'Дата комисии';"
         )->execute();
-
 
         $this->getDbConnection()->createCommand(
             "CREATE TABLE hospital.medical_directions
@@ -51,8 +51,11 @@ class m150324_100502_hospital_base extends CDbMigration
             )
             WITH (
               OIDS=FALSE
-            );
-            ALTER TABLE hospital.medical_directions
+            );"
+        )->execute();
+
+        $this->getDbConnection()->createCommand(
+            "ALTER TABLE hospital.medical_directions
               OWNER TO postgres;
             COMMENT ON TABLE hospital.medical_directions
               IS 'Направления от врачей';
@@ -82,8 +85,11 @@ class m150324_100502_hospital_base extends CDbMigration
             )
             WITH (
               OIDS=FALSE
-            );
-            ALTER TABLE hospital.patient
+            );"
+        )->execute();
+
+        $this->getDbConnection()->createCommand(
+           "ALTER TABLE hospital.patient
               OWNER TO postgres;
             COMMENT ON TABLE hospital.patient
               IS 'Сущность пациента';
