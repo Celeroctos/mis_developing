@@ -12,7 +12,11 @@
     var callback = null;
     $(document).on('click', '.showPatientGreetingLink',  function(e) {
         href = $(this).prop('href');
-        $('#noticeLeavePopup').modal({});
+        if($('.greetingContentCont').length > 0) {
+            $('#noticeLeavePopup').modal({});
+        } else {
+            $('#leaveYesSubmit').trigger('click');
+        }
         return false;
     });
 
@@ -38,7 +42,11 @@
     });
 
     $(document).on('click', '#change-date-form .day', function(e) {
-        $('#noticeLeavePopup').modal({});
+        if($('.greetingContentCont').length > 0) {
+            $('#noticeLeavePopup').modal({});
+        } else {
+            $('#leaveYesSubmit').trigger('click');
+        }
         e.preventDefault();
         return false;
     });
@@ -355,7 +363,11 @@
             $('#filterDate').val(e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate());
             $('#change-date-form').submit();
         }
-        $('#noticeLeavePopup').modal({});
+        if($('.greetingContentCont').length > 0) {
+            $('#noticeLeavePopup').modal({});
+        } else {
+            $('#leaveYesSubmit').trigger('click');
+        }
     });
 	
     $("#date-cont").trigger("refresh");
@@ -1524,7 +1536,11 @@ $('#nextHistoryPoint').on('click', function () {
 
 	// Смена врача
 	$('#change-doctor-form select').on('change', function(e) {
-        $('#noticeLeavePopup').modal({});
+        if($('.greetingContentCont').length > 0) {
+            $('#noticeLeavePopup').modal({});
+        } else {
+            $('#leaveYesSubmit').trigger('click');
+        }
         var choosedDoctor = $(this).val();
         $(this).val(globalVariables.doctorId);
         callback = function() {
