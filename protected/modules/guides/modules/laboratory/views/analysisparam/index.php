@@ -30,37 +30,37 @@ function() {
 EOT;
 ?>
 
-<?php 
+<?php
 $template = '';
-if (Yii::app()->user->checkAccess('guideEditAnalysisParam')) { 
+if (Yii::app()->user->checkAccess('guideEditAnalysisParam')) {
     $template = '{update} {delete}';
 
     $buttons = array(
-                'headerHtmlOptions' => array(
-                    'class' => 'col-md-1',
-                ),
-                'update' => array(
-                    'click' => $updateDialog,
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-primary btn-block btn-xs',
-                    ],
-                ),
-                'delete' => array(
-                    'imageUrl' => false,
-                    'options' => [
-                        'class' => 'btn btn-default btn-block btn-xs',
-                    ],
-                )
-        );
+        'headerHtmlOptions' => array(
+            'class' => 'col-md-1',
+        ),
+        'update' => array(
+            'click' => $updateDialog,
+            'imageUrl' => false,
+            'options' => [
+                'class' => 'btn btn-primary btn-block btn-xs',
+            ],
+        ),
+        'delete' => array(
+            'imageUrl' => false,
+            'options' => [
+                'class' => 'btn btn-default btn-block btn-xs',
+            ],
+        )
+    );
     ?>
-<?=
-CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
-        'url' => $this->createUrl('create'),
-        'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление параметра анализа").dialog("open"); return false;}',
-    ),
-]);
-?>
+    <?=
+    CHtml::link('Добавить', $this->createUrl('#'), [ 'class' => 'btn btn-primary', 'ajax' => array(
+            'url' => $this->createUrl('create'),
+            'success' => 'js:function(r){$("#DialogCRUDForm").html(r).dialog("option", "title", "Добавление параметра анализа").dialog("open"); return false;}',
+        ),
+    ]);
+    ?>
 <?php } ?>
 
 <?php
@@ -74,14 +74,14 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     ),
         )
 );
-        $this->endWidget();
+$this->endWidget();
 ?>
 
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'analysis-param-grid',
     'ajaxUpdate' => false,
-    'ajaxType'=>'POST',
+    'ajaxType' => 'POST',
     'dataProvider' => $model->search(),
 //	'filter'=>$model,
     'itemsCssClass' => 'table table-bordered',
@@ -96,15 +96,15 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns' => array(
 #		'id',
         [
-            'name'=>'name',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'name',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
         [
-            'name'=>'long_name',
-            'headerHtmlOptions'=>[
-                'class'=>'col-md-4',
+            'name' => 'long_name',
+            'headerHtmlOptions' => [
+                'class' => 'col-md-4',
             ],
         ],
 #		'comment',

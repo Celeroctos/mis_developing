@@ -1,10 +1,11 @@
 <?php
 
-class MachineController extends Controller
-{
-    public $layout = 'application.modules.guides.views.layouts.index';
+class MachineController extends Controller {
 
-    public function actionView($id) {
+    public $layout = 'application.modules.guides.views.layouts.index';
+    public $defaultAction = 'index';
+
+    public function actionView() {
         $this->actionIndex();
     }
 
@@ -24,11 +25,10 @@ class MachineController extends Controller
             }
         }
         $analyzertypeList = AnalyzerType::getAnalyzerTypeListData('insert');
-            $this->renderPartial('form', array(
+        $this->renderPartial('form', array(
             'model' => $model,
-            'analyzertypeList'=> $analyzertypeList,
-            ), 
-            false, true);
+            'analyzertypeList' => $analyzertypeList,
+                ), false, true);
     }
 
     public function actionUpdate($id) {
@@ -39,14 +39,14 @@ class MachineController extends Controller
             $model->scenario = 'machines.update';
             $model->attributes = $_POST['Machine'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array(
-                'model' => $model,
-                'analyzertypeList'=>AnalyzerType::getAnalyzerTypeListData('insert'),
-            ), false, true);
+        $this->renderPartial('form', array(
+            'model' => $model,
+            'analyzertypeList' => AnalyzerType::getAnalyzerTypeListData('insert'),
+                ), false, true);
     }
 
     public function actionDelete($id) {
@@ -74,7 +74,6 @@ class MachineController extends Controller
             'model' => $model,
         ));
     }
-
 
     public function loadModel($id) {
         $model = Machine::model()->findByPk($id);

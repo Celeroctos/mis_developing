@@ -1,34 +1,17 @@
-<!--<<div class="modal-dialog"><!--<
-    div class="form">-->
+<div class="form">
 
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'analyzer-type-form',
+        'id' => 'analysis-type-form',
         'enableAjaxValidation' => false,
     ));
     ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
-            <div class="row"> 
-                <div class="form-group">
-                    <?php
-                    echo $form->labelEx($model, 'type', array(
-                        'class' => 'col-xs-3 control-label'
-                    ));
-                    ?>
-                    <div class="col-xs-9">
-                        <?php
-                        echo $form->textField($model, 'type', array(
-                            'id' => 'type',
-                            'class' => 'form-control',
-                            'placeholder' => 'Тип анализатора'
-                        ));
-                        ?>
-                        <?php echo $form->error($model, 'type'); ?>
-                    </div>
-                </div>
-            </div>
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -41,30 +24,43 @@
                         echo $form->textField($model, 'name', array(
                             'id' => 'name',
                             'class' => 'form-control',
-                            'placeholder' => 'Название анализатора'
+                            'placeholder' => 'Наименование типа анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
                     <?php
-                    echo $form->labelEx($model, 'notes', array(
+                    echo $form->labelEx($model, 'short_name', array(
                         'class' => 'col-xs-3 control-label'
                     ));
                     ?>
                     <div class="col-xs-9">
-                        <?php echo $form->textArea($model, 'notes', array(
-                        'rows' => 6, 'cols' => 50,
-                            'id' => 'notes',
+                        <?php
+                        echo $form->textField($model, 'short_name', array(
+                            'id' => 'short_name',
                             'class' => 'form-control',
-                            'placeholder' => 'Пометки'
-                        )); ?>
-                        <?php echo $form->error($model, 'notes'); ?>
+                            'placeholder' => 'Краткое наименование типа анализа'
+                        ));
+                        ?>
                     </div>
-                </div> 
+                </div>
+            </div>
+            <div class="row"> 
+                <div class="form-group">
+                    <?php echo $form->labelEx($model, 'metodics'); ?>
+                    <!--                    <div class="col-xs-9">-->
+
+                    <?php
+                    echo $form->radioButtonList($model, 'metodics', array('Не определена', 'Автоматическая', 'Ручная'), array(
+                        'id' => 'metodics',
+#                            'class' => 'form-control',
+                        'separator' => '&nbsp',
+                    ));
+                    ?>
+                </div>
             </div> 
         </div> 
     </div> 
@@ -85,7 +81,7 @@
 					window.location.reload();
                                     }
                                     else{
-					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalyzerType").dialog("open"); return false;
+					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalysisType").dialog("open"); return false;
                                     }
 				}',
                 ),
@@ -109,6 +105,6 @@
         ?>
 
         <?php $this->endWidget(); ?>
-    </div> 
+    </div>
 
-    </div><!-- form -->
+</div><!-- form -->

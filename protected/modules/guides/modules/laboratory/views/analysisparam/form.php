@@ -1,27 +1,16 @@
 <div class="form">
-
     <?php
     $form = $this->beginWidget('CActiveForm', array(
-        'id' => 'analysis-type-form',
+        'id' => 'analysis-param-form',
         'enableAjaxValidation' => false,
     ));
     ?>
-<?php
-$updateDialog = <<<'EOT'
-function() {
-    var url = $(this).attr('href');
-    $.get(url, function(r){
-        $("#update").html(r).dialog("open");
-        $("#DialogCRUDForm").html(r).dialog("option", "title", "Редактирование типа анализа").dialog("open");
-    });
-    return false;
-}
-EOT;
-
-?>
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
                     <?php
@@ -34,52 +23,53 @@ EOT;
                         echo $form->textField($model, 'name', array(
                             'id' => 'name',
                             'class' => 'form-control',
-                            'placeholder' => 'Наименование типа анализа'
+                            'placeholder' => 'Краткое наименование параметра анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'name'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
                     <?php
-                    echo $form->labelEx($model, 'short_name', array(
+                    echo $form->labelEx($model, 'long_name', array(
                         'class' => 'col-xs-3 control-label'
                     ));
                     ?>
                     <div class="col-xs-9">
                         <?php
-                        echo $form->textField($model, 'short_name', array(
-                            'id' => 'short_name',
+                        echo $form->textField($model, 'long_name', array(
+                            'id' => 'long_name',
                             'class' => 'form-control',
-                            'placeholder' => 'Краткое наименование типа анализа'
+                            'placeholder' => 'Полное наименование параметра анализа'
                         ));
                         ?>
-                        <?php echo $form->error($model, 'short_name'); ?>
                     </div>
                 </div>
             </div>
             <div class="row"> 
                 <div class="form-group">
-                    <?php echo $form->labelEx($model, 'metodics'); ?>
-<!--                    <div class="col-xs-9">-->
-
                     <?php
-                    echo $form->radioButtonList($model, 'metodics', array('Не определена', 'Автоматическая', 'Ручная'), array(
-                        'id' => 'metodics',
-#                            'class' => 'form-control',
-                        'separator' => '&nbsp',
+                    echo $form->labelEx($model, 'comment', array(
+                        'class' => 'col-xs-3 control-label'
                     ));
                     ?>
-                    <?php echo $form->error($model, 'metodics'); ?>
-<!--                </div>-->
+                    <div class="col-xs-9">
+                        <?php
+                        echo $form->textArea($model, 'comment', array(
+                            'id' => 'comment',
+                            'class' => 'form-control',
+                            'placeholder' => 'Примечания'
+                        ));
+                        ?>
+                    </div>
+                </div>
             </div>
         </div> 
     </div> 
-    </div> 
 
-    <div class="modal-footer">
+
+    <div class="modal-footer"> 
         <?php
         $this->widget('zii.widgets.jui.CJuiButton', array(
             'name' => 'submit_' . rand(),
@@ -95,7 +85,7 @@ EOT;
 					window.location.reload();
                                     }
                                     else{
-					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalysisType").dialog("open"); return false;
+					$("#DialogCRUDForm").html(r).dialog("option", "title", "' . ($model->isNewRecord ? 'Create' : 'Update') . ' AnalysisParam").dialog("open"); return false;
                                     }
 				}',
                 ),
@@ -117,8 +107,6 @@ EOT;
             ),
         ));
         ?>
-
-    </div>
         <?php $this->endWidget(); ?>
-
-</div><!-- form -->
+    </div>
+</div>

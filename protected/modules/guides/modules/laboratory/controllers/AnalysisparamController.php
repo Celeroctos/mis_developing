@@ -1,41 +1,40 @@
 <?php
 
-class AnalyzerTypeController extends Controller
-{
+class AnalysisParamController extends Controller {
+
     public $layout = 'application.modules.guides.views.layouts.index';
 
-	public function actionView($id)
-	{
+    public function actionView($id) {
         $this->actionIndex();
-	}
+    }
 
     public function actionCreate() {
 
-        $model = new AnalyzerType('analyzertypes.create');
+        $model = new AnalysisParam('analysisparams.create');
 
-        if (isset($_POST['AnalyzerType'])) {
-            $model->attributes = $_POST['AnalyzerType'];
+        if (isset($_POST['AnalysisParam'])) {
+            $model->attributes = $_POST['AnalysisParam'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionUpdate($id) {
 
         $model = $this->loadModel($id);
 
-        if (isset($_POST['AnalyzerType'])) {
-            $model->scenario = 'analyzertypes.update';
-            $model->attributes = $_POST['AnalyzerType'];
+        if (isset($_POST['AnalysisParam'])) {
+            $model->scenario = 'analysisparams.update';
+            $model->attributes = $_POST['AnalysisParam'];
             if ($model->save()) {
-                    echo 'success';
-                    Yii::app()->end();
+                echo 'success';
+                Yii::app()->end();
             }
         }
-            $this->renderPartial('form', array('model' => $model), false, true);
+        $this->renderPartial('form', array('model' => $model), false, true);
     }
 
     public function actionDelete($id) {
@@ -54,19 +53,18 @@ class AnalyzerTypeController extends Controller
      * Lists all models.
      */
     public function actionIndex() {
-        $model = new AnalyzerType('search');
+        $model = new AnalysisParam('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AnalyzerType']))
-            $model->attributes = $_GET['AnalyzerType'];
+        if (isset($_GET['AnalysisParam']))
+            $model->attributes = $_GET['AnalysisParam'];
 
         $this->render('index', array(
             'model' => $model,
         ));
     }
 
-
     public function loadModel($id) {
-        $model = AnalyzerType::model()->findByPk($id);
+        $model = AnalysisParam::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;

@@ -1,46 +1,46 @@
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'analysis-type-template-form',
-	'enableAjaxValidation'=>false,
-)); ?>
-
-	<?php echo $form->errorSummary($model); ?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'analyser-type-analisis-form',
+        'enableAjaxValidation' => false,
+    ));
+    ?>
 
     <div class="modal-body">
         <div class="col-xs-12">
+        <?= $form->errorSummary($model, '', '', [
+            'class'=>'alert alert-warning',
+        ]); ?>
             <div class="row"> 
                 <div class="form-group">
-		<?php echo $form->labelEx($model,'analysis_type_id', array(
-                        'class' => 'col-xs-6 control-label'
-                    )); ?>
-<!--                    <div class="col-xs-4">-->
-        <?php $ddl = AnalysisType::getAnalysisTypeListData('insert');
-        echo $form->dropDownList($model,'analysis_type_id', 
-        AnalysisType::getAnalysisTypeListData('insert'),
-        [
-        'class'=>'form-control',
-        'class'=>"col-xs-6"
-        ]
-        );?>       
-		<?php echo $form->error($model,'analysis_type_id'); ?>
-<!--                    </div>-->
+                    <div class="row"> 
+                        <div class="form-group">
+                            <?php
+                            echo $form->labelEx($model, 'analyser_type_id', array(
+                                'class' => 'col-xs-8 control-label'
+                            ));
+                            ?>
+                            <div class="col-xs-4">
+                                <?php
+                                echo $form->dropDownList($model, 'analyser_type_id', AnalyzerType::getAnalyzerTypeListData('insert'), ['class' => 'form-control',  'disabled'=> true ]
+                                );
+                                ?>       
+                            </div>
+                        </div>
+                        <?php
+                        echo $form->labelEx($model, 'analysis_type_id', array(
+                            'class' => 'col-xs-8 control-label'
+                        ));
+                        ?>
+                        <div class="col-xs-4">
+                            <?php
+                            echo $form->dropDownList($model, 'analysis_type_id', AnalysisType::getAnalysisTypeListData('insert'), ['class' => 'form-control', /* 'disabled'=> true */]
+                            );
+                            ?>       
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row"> 
-                <div class="form-group">
-		<?php echo $form->labelEx($model,'analysis_sample_id', array(
-                        'class' => 'col-xs-6 control-label'
-                    )); ?>
-        <?php echo $form->dropDownList($model,'analysis_sample_id', 
-        AnalysisSampleType::getAnalysisSampleTypeListData('insert'),
-        [
-        'class'=>'form-control',
-        'class'=>"col-xs-6"
-        ]
-        );?>       
-		<?php echo $form->error($model,'analysis_sample_id'); ?>
-            </div>
             </div>
         </div> 
     </div> 
@@ -83,7 +83,7 @@
             ),
         ));
         ?>
-    <?php $this->endWidget(); ?>
-</div>
+        <?php $this->endWidget(); ?>
+    </div>
 
 </div><!-- form -->
