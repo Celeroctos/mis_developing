@@ -1,28 +1,29 @@
+<div id="helperIcon"></div>
 <div class="col-xs-12 row">
 	<ul class="nav nav-tabs" id="hospitalizationNavbar">
 	  <li role="navigation" class="active">
-		<a href="#queue" aria-controls="queue" role="tab" data-toggle="tab">Очередь</a>
+		<a href="#queue" aria-controls="queue" role="tab" data-toggle="tab" id="queueTab">Очередь</a>
 		<span class="tabmark" id="queueTabmark">
             <span class="roundedLabel"></span>
             <span class="roundedLabelText"></span>
         </span>
 	  </li>
 	  <li role="navigation">
-		<a href="#comission" aria-controls="comission" role="tab" data-toggle="tab">Комиссия на госпитализацию</a>
+		<a href="#comission" aria-controls="comission" role="tab" data-toggle="tab" id="comissionTab">Комиссия на госпитализацию</a>
         <span class="tabmark" id="comissionTabmark">
             <span class="roundedLabel"></span>
             <span class="roundedLabelText"></span>
         </span>
 	  </li>
 	  <li role="navigation">
-		<a href="#hospitalization" aria-controls="hospitalization" role="tab" data-toggle="tab">Госпитализация</a>
+		<a href="#hospitalization" aria-controls="hospitalization" role="tab" data-toggle="tab" id="hospitalizationTab">Госпитализация</a>
         <span class="tabmark" id="hospitalizationTabmark">
             <span class="roundedLabel"></span>
             <span class="roundedLabelText"></span>
         </span>
 	  </li>
 	  <li role="navigation">
-		<a href="#history" aria-controls="history" role="tab" data-toggle="tab">История приёмов</a>
+		<a href="#history" aria-controls="history" role="tab" data-toggle="tab" id="historyTab">История приёмов</a>
         <span class="tabmark" id="historyTabmark">
             <span class="roundedLabel"></span>
             <span class="roundedLabelText"></span>
@@ -90,7 +91,7 @@ $form = $this->beginWidget('CActiveForm', array(
                                 'language' => 'ru',
                                 'flat' => true,
                                 'htmlOptions' => array(
-                                    'id' => 'hospitalization_date_datepicker'
+                                    'id' => 'modal_hospitalization_date_datepicker'
                                 ),
                                 'options' => array(
                                     'showOn' => 'focus',
@@ -103,6 +104,37 @@ $form = $this->beginWidget('CActiveForm', array(
                                 )
                             )); ?>
                         </div>
+                    </div>
+                    <div class="form-group col-xs-12">
+                        <?=$form->labelEx($model,'write_type', array(
+                            'class' => 'col-xs-4'
+                        )); ?>
+                        <div class="col-xs-7">
+                            <?php echo $form->dropDownList($model, 'write_type', $writeTypes, array(
+                                'id' => 'writeType',
+                                'class' => 'form-control'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div id="refuseCommentContainer">
+                        <?php echo $form->textArea($model, 'refuse_comment', array(
+                            'class' => 'form-control',
+                            'id' => 'refuseComment'
+                        )); ?>
+                        <?php echo CHtml::ajaxSubmitButton(
+                            'Подтвердить',
+                             CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/hospital/hospitalization/dismisshospitalization'),
+                             array(
+                                 'success' => 'function(data, textStatus, jqXHR) {
+                                      var data = $.parseJSON(data);
+                                      $("#" + data.gridId).trigger("reload");
+                                  }',
+                                 'beforeSend' => 'function(jqXHR, settings) { }'
+                             ),
+                            array(
+                                'class' => 'btn btn-success default-margin-top'
+                            )
+                        ); ?>
                     </div>
                 </div>
             </div>
@@ -121,8 +153,55 @@ $form = $this->beginWidget('CActiveForm', array(
                         'class' => 'btn btn-success'
                     )
                 ); ?>
-                <?php echo CHtml::ajaxSubmitButton(
+                <?php echo CHtml::button(
                     'Отказ от госпитализации',
+                   /* CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/hospital/hospitalization/dismisshospitalization'),
+                    array(
+                        'success' => 'function(data, textStatus, jqXHR) {
+                             var data = $.parseJSON(data);
+                             $("#" + data.gridId).trigger("reload");
+                         }',
+                        'beforeSend' => 'function(jqXHR, settings) { }'
+                    ), */
+                    array(
+                        'class' => 'btn btn-danger',
+                        'id' => 'dismissHospitalizationBtn'
+                    )
+                ); ?>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $this->endWidget(); ?>
+<div class="modal fade error-popup" id="MedicalExamPopup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Осмотр пациента</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <?php echo CHtml::ajaxSubmitButton(
+                    'Закончить осмотр',
+                    CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/hospital/hospitalization/changehospitalizationdate'),
+                    array(
+                        'success' => 'function(data, textStatus, jqXHR) {
+                            var data = $.parseJSON(data);
+                            $("#" + data.gridId).trigger("reload");
+                        }',
+                        'beforeSend' => 'function(jqXHR, settings) { }'
+                    ),
+                    array(
+                        'class' => 'btn btn-success'
+                    )
+                ); ?>
+                <?php echo CHtml::ajaxSubmitButton(
+                    'Отказать в госпитализации',
                     CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/hospital/hospitalization/dismisshospitalization'),
                     array(
                         'success' => 'function(data, textStatus, jqXHR) {
@@ -140,4 +219,3 @@ $form = $this->beginWidget('CActiveForm', array(
         </div>
     </div>
 </div>
-<?php $this->endWidget(); ?>

@@ -5,14 +5,17 @@ misEngine.class('component.module.hospital', function() {
         historyGrid : null,
         hospitalizationGrid : null,
         comissionGridModal : null,
+        medicalExamModal : null,
+        currentDateTimepicker : null,
         tabmarks : [],
+        activeTab : null,
 		config : {
 			name : 'hospital'
 		},
 
 		displayDatetimepickers : function() {
-			var datetimepicker = misEngine.create('component.datetimepicker');
-			datetimepicker
+			this.currentDateTimepicker = misEngine.create('component.datetimepicker');
+			this.currentDateTimepicker
 				.setConfig({
 					widget : { // Property "widget" uses if component includes other component, in external libs
 						language: 'ru',
@@ -28,7 +31,8 @@ misEngine.class('component.module.hospital', function() {
 					}
 				})
 				.render()
-				.on();
+				.hide()
+                .on();
 		},
 
         displayTabmarks : function() {
@@ -38,25 +42,121 @@ misEngine.class('component.module.hospital', function() {
                     renderConfig : {
                         mode : 'ajax',
                         ajaxConf : {
-                            url : '/hospital/hospitalization/components/tabmark',
-                            error : function(jqXHR, status) { },
-                            success : function(jqXHR, status, errorThrown) { },
-                            data : { }
+                            url : '/hospital/components/tabmark',
+                            data : {
+                                serverModel : 'QueueGrid'
+                            },
+                            type : 'GET',
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+                                    if(data.num > 0) {
+                                        $('#queueTabmark .roundedLabelText')
+                                            .text(data.num)
+                                            .parent()
+                                            .css('display', 'inline')
+                                    } else {
+                                        $('#queueTabmark').hide();
+                                    }
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
                         }
                     }
                 }),
                 misEngine.create('component.tabmark', {
-                    selector : '#comissionTabmark'
+                    selector : '#comissionTabmark',
+                    renderConfig : {
+                        mode : 'ajax',
+                        ajaxConf : {
+                            url : '/hospital/components/tabmark',
+                            data : {
+                                serverModel : 'ComissionGrid'
+                            },
+                            type : 'GET',
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+                                    if(data.num > 0) {
+                                        $('#comissionTabmark .roundedLabelText')
+                                            .text(data.num)
+                                            .parent()
+                                            .css('display', 'inline');
+                                    } else {
+                                        $('#comissionTabmark').hide();
+                                    }
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
+                        }
+                    }
                 }),
                 misEngine.create('component.tabmark', {
-                    selector : '#hospitalizationTabmark'
+                    selector : '#hospitalizationTabmark',
+                    renderConfig : {
+                        mode : 'ajax',
+                        ajaxConf : {
+                            url : '/hospital/components/tabmark',
+                            data : {
+                                serverModel : 'HospitalizationGrid'
+                            },
+                            type : 'GET',
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+                                    if(data.num > 0) {
+                                        $('#hospitalizationTabmark .roundedLabelText')
+                                            .text(data.num)
+                                            .parent()
+                                            .css('display', 'inline');
+                                    } else {
+                                        $('#hospitalizationTabmark').hide();
+                                    }
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
+                        }
+                    }
                 }),
                 misEngine.create('component.tabmark', {
-                    selector : '#historyTabmark'
+                    selector : '#historyTabmark',
+                    renderConfig : {
+                        mode : 'ajax',
+                        ajaxConf : {
+                            url : '/hospital/components/tabmark',
+                            data : {
+                                serverModel : 'HistoryGrid'
+                            },
+                            type : 'GET',
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+                                    if(data.num > 0) {
+                                        $('#historyTabmark .roundedLabelText')
+                                            .text(data.num)
+                                            .parent()
+                                            .css('display', 'inline');
+                                    } else {
+                                        $('#historyTabmark').hide();
+                                    }
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
+                        }
+                    }
                 })
             ];
+
             $(this.tabmarks).each(function(index, element) {
-                $(element).trigger('show');
+                element.updateTabmark();
             });
         },
 		
@@ -252,11 +352,21 @@ misEngine.class('component.module.hospital', function() {
 
         renderModals : function() {
             this.getComissionModal();
+            this.getMedicalExamModal();
         },
 
         getComissionModal : function() {
             this.comissionGridModal = misEngine.create('component.modal').setConfig({
                 selector : '#changeHospitalizationDatePopup',
+                renderConfig : {
+                    mode : 'internal'
+                }
+            }).render().on();
+        },
+
+        getMedicalExamModal : function() {
+            this.medicalExamModal = misEngine.create('component.modal').setConfig({
+                selector : '#MedicalExamPopup',
                 renderConfig : {
                     mode : 'internal'
                 }
@@ -269,6 +379,10 @@ misEngine.class('component.module.hospital', function() {
             });
 
             this.changeComissionDateHandler();
+            this.openMedicalExamPopupHandler();
+            this.changeCurrentDateHandler();
+            this.changeTabHandler();
+            this.dismissHospitalizationBtnHandler();
             this.reloadGridsHandler();
             return this;
         },
@@ -276,6 +390,27 @@ misEngine.class('component.module.hospital', function() {
         /**
          * Handlers
          */
+        dismissHospitalizationBtnHandler : function() {
+            $('#dismissHospitalizationBtn').on('click', function(e) {
+                $(this).prop('disabled', true)
+                    .popover({
+                        animation: true,
+                        html: true,
+                        placement: 'auto',
+                        title: 'Причина отказа от госпитализации?',
+                        delay: {
+                            show: 300,
+                            hide: 300
+                        },
+                        container: $(this).parent(),
+                        content: $.proxy(function () {
+                            return $('#refuseCommentContainer').children().detach();
+                        }, this)
+                    });
+                $(this).popover('show');
+            });
+        },
+
         changeComissionDateHandler : function() {
             var selector = '.changeHospitalizationDate'
             var comissionGridModal = this.comissionGridModal;
@@ -302,25 +437,95 @@ misEngine.class('component.module.hospital', function() {
             });
         },
 
-        reloadGridsHandler : function() {
-            var comissionGrid = this.comissionGrid;
-            var queueGrid = this.queueGrid;
-            var gridModal = this.comissionGridModal;
-            $(document).on('reload', '#queueGrid, #comissionGrid', function(e) {
-                switch($(this).prop('id')) {
-                   case 'comissionGrid': comissionGrid.reloadGrid(); break;
-                   case 'queueGrid': queueGrid.reloadGrid(); break;
-                }
-                $(gridModal).trigger('hide');
+        openMedicalExamPopupHandler : function() {
+            var selector = '.showPatient'
+            var medicalExamModal = this.medicalExamModal;
+            $(document).on('click', selector, function(e) {
+                var directionId = $(this).prop('id').substr(2);
+                var gridId = $(this).parents('.grid-view').prop('id');
+                $(medicalExamModal).trigger('show');
             });
         },
 
-        init : function() {
-			this.displayDatetimepickers();
-			this.displayGrids();
+        reloadGridsHandler : function() {
+            var comissionGrid = this.comissionGrid;
+            var queueGrid = this.queueGrid;
+            var historyGrid = this.historyGrid;
+            var hospitalizationGird = this.hospitalizationGrid;
+
+            var gridModal = this.comissionGridModal;
+            $(document).on('reload', '#queueGrid, #comissionGrid, #hospitalizationGrid, #historyGrid', $.proxy(function(e) {
+                this.reloadTab();
+                $(gridModal).trigger('hide');
+            }, this));
+        },
+
+        changeCurrentDateHandler : function() {
+            this.currentDateTimepicker
+                .getWidget()
+                .on('changeDate', $.proxy(function(e) {
+                    var params = {
+                        filter : {
+                            hospitalization_date : e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate()
+                        }
+                    };
+                    this.reloadTab(params);
+                }, this));
+        },
+
+        changeTabHandler : function() {
+            $('#queueTab, #comissionTab, #hospitalizationTab, #historyTab').on('shown.bs.tab', $.proxy(function(e) {
+                this.activeTab = $(e.currentTarget).prop('id');
+                $('#sideCalendar').css({
+                    'display' : this.activeTab == 'queueTab' ? 'none' : 'block'
+                });
+                this.reloadTab();
+            }, this));
+        },
+
+
+        /* End of handlers */
+
+        reloadTab : function(params) {
+            switch(this.activeTab) {
+                case 'comissionTab' :
+                    this.comissionGrid.reloadGrid();
+                    this.tabmarks[0].updateTabmark();
+                break;
+                case 'queueTab' :
+                    this.queueGrid.reloadGrid();
+                    this.tabmarks[1].updateTabmark();
+                break;
+                case 'hospitalizationTab' :
+                    this.hospitalizationGrid.reloadGrid();
+                    this.tabmarks[2].updateTabmark();
+                break;
+                case 'historyTab' :
+                    this.historyGrid.reloadGrid();
+                    this.tabmarks[3].updateTabmark();
+                break;
+            }
+        },
+
+        renderHelpSystem : function() {
+            var helpSystem = misEngine.create('component.helper', {
+                file : '/js/engine/component/modules/helper/files/text/hospital.js',
+                iconContainer : '#helperIcon'
+            });
+        },
+
+        run : function() {
+            this.displayDatetimepickers();
+            this.displayGrids();
             this.displayTabmarks();
+            this.renderHelpSystem();
             this.renderModals();
-			this.bindHandlers();
+            this.bindHandlers();
+
+            this.activeTab = 'queueTab'; // First opened tab in window
+        },
+
+        init : function() {
 			return this;
 		}
 	};
