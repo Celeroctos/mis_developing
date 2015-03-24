@@ -13,7 +13,7 @@ class m150324_100502_hospital_base extends CDbMigration
 	}
 
 	// Use safeUp/safeDown to do migration with transaction
-	public function safeUp() {
+	public function up() {
         $this->getDbConnection()->createCommand(
             "CREATE SCHEMA hospital"
         );
@@ -136,7 +136,8 @@ class m150324_100502_hospital_base extends CDbMigration
               OWNER TO postgres;
             COMMENT ON VIEW hospital.comission_grid
               IS 'Таблица комиссии на госпитализацию'"
-        );
+        )->execute();
+
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.hospitalization_grid AS
              SELECT concat(t1.first_name, ' ', t1.last_name, ' ', t1.middle_name) AS fio,
@@ -165,7 +166,8 @@ class m150324_100502_hospital_base extends CDbMigration
               OWNER TO postgres;
             COMMENT ON VIEW hospital.hospitalization_grid
               IS 'Таблица комиссии на госпитализацию'"
-        );
+        )->execute();
+
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.queue_grid AS
              SELECT concat(t1.first_name, ' ', t1.last_name, ' ', t1.middle_name) AS fio,
@@ -196,10 +198,10 @@ class m150324_100502_hospital_base extends CDbMigration
               OWNER TO postgres;
             COMMENT ON VIEW hospital.queue_grid
               IS 'Таблица очереди на госпитализацию'"
-        );
+        )->execute();
 	}
 
-	public function safeDown() {
+	public function down() {
         $this->getDbConnection()->createCommand(
             "DROP VIEW hospital.comission_grid"
         )->execute();
