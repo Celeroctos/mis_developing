@@ -5,7 +5,7 @@ class m150324_100502_hospital_base extends CDbMigration
 	public function up() {
         $this->getDbConnection()->createCommand(
             "CREATE SCHEMA hospital"
-        );
+        )->execute();
 
         $this->getDbConnection()->createCommand(
             "CREATE TABLE hospital.hospitalization_queue
