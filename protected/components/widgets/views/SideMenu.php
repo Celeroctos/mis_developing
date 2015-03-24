@@ -29,13 +29,6 @@
                         </li>
                     <?php } ?>
                     <?php if (Yii::app()->user->checkAccess('menuPatientRewrite')) { ?>
-                        <?php
-                        //var_dump($controller == 'patient' && $module == 'reception' && $action == 'viewrewrite');
-                        /* var_dump($controller );
-                          var_dump($module );
-                          var_dump($action );
-                          exit(); */
-                        ?>
                         <li <?php echo $controller == 'patient' && $module == 'reception' && $action == 'viewrewrite' ? 'class="active"' : ''; ?>>
                             <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/write_patient.png" width="32" height="32" alt="" />Перезапись', array('/reception/patient/viewrewrite')) ?>
                         </li>
