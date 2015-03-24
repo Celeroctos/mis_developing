@@ -73,6 +73,7 @@ class m150324_100502_hospital_base extends CDbMigration
               OWNER TO postgres;"
         )->execute();
 
+        // Таблица комиссии на госпитализацию
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.comission_grid AS
              SELECT concat(t1.first_name, ' ', t1.last_name, ' ', t1.middle_name) AS fio,
@@ -103,11 +104,10 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
             "ALTER TABLE hospital.comission_grid
-              OWNER TO postgres;
-              COMMENT ON VIEW hospital.comission_grid
-              IS 'Таблица комиссии на госпитализацию'"
+              OWNER TO postgres;"
         )->execute();
 
+        //  -- Таблица госпитализации
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.hospitalization_grid AS
              SELECT concat(t1.first_name, ' ', t1.last_name, ' ', t1.middle_name) AS fio,
@@ -135,11 +135,10 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
             "ALTER TABLE hospital.hospitalization_grid
-              OWNER TO postgres;
-             COMMENT ON VIEW hospital.hospitalization_grid
-              IS 'Таблица госпитализации'"
+              OWNER TO postgres;"
         );
 
+        // Таблица очереди на госпитализацию
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.queue_grid AS
              SELECT concat(t1.first_name, ' ', t1.last_name, ' ', t1.middle_name) AS fio,
@@ -169,9 +168,7 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
             "ALTER TABLE hospital.queue_grid
-              OWNER TO postgres;
-            COMMENT ON VIEW hospital.queue_grid
-              IS 'Таблица очереди на госпитализацию'"
+              OWNER TO postgres"
         )->execute();
 	}
 
