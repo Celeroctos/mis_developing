@@ -2,17 +2,6 @@
 
 class m150324_100502_hospital_base extends CDbMigration
 {
-	public function up()
-	{
-	}
-
-	public function down()
-	{
-		echo "m150324_100502_hospital_base does not support migration down.\n";
-		return false;
-	}
-
-	// Use safeUp/safeDown to do migration with transaction
 	public function up() {
         $this->getDbConnection()->createCommand(
             "CREATE SCHEMA hospital"
