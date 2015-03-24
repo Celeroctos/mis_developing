@@ -8,7 +8,7 @@ class m150324_100502_hospital_base extends CDbMigration
         )->execute();
 
         $this->getDbConnection()->createCommand(
-            "CREATE TABLE hospital.hospitalization_queue
+            "CREATE TABLE hospital.hospitalization_queue -- Очереди на госпитализацию
             (
               id serial NOT NULL,
               type integer, -- Тип очереди
@@ -23,17 +23,11 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
             "ALTER TABLE hospital.hospitalization_queue
-              OWNER TO postgres;
-            COMMENT ON TABLE hospital.hospitalization_queue
-              IS 'Очереди на госпитализацию';
-            COMMENT ON COLUMN hospital.hospitalization_queue.type IS 'Тип очереди';
-            COMMENT ON COLUMN hospital.hospitalization_queue.num_pre IS 'Кол-во по предв. записи';
-            COMMENT ON COLUMN hospital.hospitalization_queue.num_queue IS 'Кол-во по живой очереди';
-            COMMENT ON COLUMN hospital.hospitalization_queue.comission_date IS 'Дата комисии';"
+              OWNER TO postgres;"
         )->execute();
 
         $this->getDbConnection()->createCommand(
-            "CREATE TABLE hospital.medical_directions
+            "CREATE TABLE hospital.medical_directions -- Направления от врачей
             (
               id serial NOT NULL,
               patient_id integer, -- ID пациента (таблица hospital.patients)
@@ -56,25 +50,11 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
             "ALTER TABLE hospital.medical_directions
-              OWNER TO postgres;
-            COMMENT ON TABLE hospital.medical_directions
-              IS 'Направления от врачей';
-            COMMENT ON COLUMN hospital.medical_directions.patient_id IS 'ID пациента (таблица hospital.patients)';
-            COMMENT ON COLUMN hospital.medical_directions.doctor_id IS 'ID доктора, кто выдал направление (hospital.doctor_id)';
-            COMMENT ON COLUMN hospital.medical_directions.is_pregnant IS 'Беременная пациентка на момент выписки направления или нет';
-            COMMENT ON COLUMN hospital.medical_directions.ward_id IS 'В какое отделение выдали направление (mis.wards)';
-            COMMENT ON COLUMN hospital.medical_directions.type IS 'Тип госпитализации (обычная (0) / срочная (1) )';
-            COMMENT ON COLUMN hospital.medical_directions.create_date IS 'Дата создания';
-            COMMENT ON COLUMN hospital.medical_directions.hospitalization_date IS 'Дата госпитализации';
-            COMMENT ON COLUMN hospital.medical_directions.card_number IS 'Номер карты, на которое выписано направление';
-            COMMENT ON COLUMN hospital.medical_directions.is_refused IS 'Отказ от госпитализации (в дальнейшем возможно использование для описания причины отказа)';
-            COMMENT ON COLUMN hospital.medical_directions.is_showed IS 'Осмотрена врачом или нет';
-            COMMENT ON COLUMN hospital.medical_directions.write_type IS 'Тип комиссии по госпитализации
-            (0 - по записи, 1 - живая очередь)';"
+              OWNER TO postgres;"
         )->execute();
 
         $this->getDbConnection()->createCommand(
-            "CREATE TABLE hospital.patient
+            "CREATE TABLE hospital.patient -- Сущность пациента
             (
               id serial NOT NULL,
               first_name character varying(50), -- Имя пациента
@@ -90,14 +70,7 @@ class m150324_100502_hospital_base extends CDbMigration
 
         $this->getDbConnection()->createCommand(
            "ALTER TABLE hospital.patient
-              OWNER TO postgres;
-            COMMENT ON TABLE hospital.patient
-              IS 'Сущность пациента';
-            COMMENT ON COLUMN hospital.patient.first_name IS 'Имя пациента';
-            COMMENT ON COLUMN hospital.patient.last_name IS 'Фамилия';
-            COMMENT ON COLUMN hospital.patient.middle_name IS 'Отчество';
-            COMMENT ON COLUMN hospital.patient.birthday IS 'Дата рождения';
-            COMMENT ON COLUMN hospital.patient.oms_id IS 'ID ОМСа';"
+              OWNER TO postgres;"
         )->execute();
 
         $this->getDbConnection()->createCommand(
