@@ -125,11 +125,13 @@ class m150324_100502_hospital_base extends CDbMigration
                FROM hospital.medical_directions t3
                LEFT JOIN mis.wards t2 ON t2.id = t3.ward_id
                JOIN hospital.patient t1 ON t1.id = t3.patient_id
-              WHERE t3.type = 0;
+              WHERE t3.type = 0;"
+        )->execute();
 
-            ALTER TABLE hospital.comission_grid
+        $this->getDbConnection()->createCommand(
+            "ALTER TABLE hospital.comission_grid
               OWNER TO postgres;
-            COMMENT ON VIEW hospital.comission_grid
+              COMMENT ON VIEW hospital.comission_grid
               IS 'Таблица комиссии на госпитализацию'"
         )->execute();
 
@@ -155,13 +157,15 @@ class m150324_100502_hospital_base extends CDbMigration
                FROM hospital.medical_directions t3
                LEFT JOIN mis.wards t2 ON t2.id = t3.ward_id
                JOIN hospital.patient t1 ON t1.id = t3.patient_id
-              WHERE t3.hospitalization_date IS NULL AND t3.type = 1 OR t3.hospitalization_date IS NOT NULL OR t3.is_refused = 1;
-
-            ALTER TABLE hospital.hospitalization_grid
-              OWNER TO postgres;
-            COMMENT ON VIEW hospital.hospitalization_grid
-              IS 'Таблица комиссии на госпитализацию'"
+              WHERE t3.hospitalization_date IS NULL AND t3.type = 1 OR t3.hospitalization_date IS NOT NULL OR t3.is_refused = 1;"
         )->execute();
+
+        $this->getDbConnection()->createCommand(
+            "ALTER TABLE hospital.hospitalization_grid
+              OWNER TO postgres;
+             COMMENT ON VIEW hospital.hospitalization_grid
+              IS 'Таблица госпитализации'"
+        );
 
         $this->getDbConnection()->createCommand(
             "CREATE OR REPLACE VIEW hospital.queue_grid AS
@@ -187,9 +191,11 @@ class m150324_100502_hospital_base extends CDbMigration
                FROM hospital.medical_directions t3
                LEFT JOIN mis.wards t2 ON t2.id = t3.ward_id
                JOIN hospital.patient t1 ON t1.id = t3.patient_id
-              WHERE t3.type = 0 AND t3.hospitalization_date IS NULL;
+              WHERE t3.type = 0 AND t3.hospitalization_date IS NULL;"
+        )->execute();
 
-            ALTER TABLE hospital.queue_grid
+        $this->getDbConnection()->createCommand(
+            "ALTER TABLE hospital.queue_grid
               OWNER TO postgres;
             COMMENT ON VIEW hospital.queue_grid
               IS 'Таблица очереди на госпитализацию'"
