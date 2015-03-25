@@ -1,6 +1,6 @@
 <?php
 class TasuController extends Controller {
-    public $layout = 'application.modules.admin.views.layouts.index';
+//    public $layout = 'application.modules.admin.views.layouts.index';
     public $answer = array();
     public $tableSchema = 'mis';
     public $version_end = '9223372036854775807';
@@ -643,7 +643,7 @@ class TasuController extends Controller {
 		$defaultPaymentType = false;
 		foreach($paymentsListDb as $value) {
 			// Дефолтный тип оплаты
-			if($value['is_default'] == 1) {
+			if(isset($value['is_default']) && $value['is_default'] == 1) {
 				$defaultPaymentType = $value['id'];
 			}
 			$paymentsList[(string)$value['id']] = $value['name'];

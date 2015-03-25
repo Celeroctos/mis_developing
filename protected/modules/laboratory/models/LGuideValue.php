@@ -1,6 +1,6 @@
 <?php
 
-class LGuideValue extends LModel {
+class GuideValue extends ActiveRecord {
 
 	public $id;
 	public $guide_row_id;
