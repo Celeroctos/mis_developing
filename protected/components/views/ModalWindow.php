@@ -14,18 +14,18 @@
  */
 ?>
 
-<div class="modal fade <? print $self->getErrorClass(); ?>" id="<? print $self->getModalID(); ?>">
-    <div class="modal-dialog" <? print $self->customWidth() != false ? "style=\"width:".$self->customWidth()."\"" : "" ?>>
+<div class="modal fade <?php print $self->getErrorClass(); ?>" id="<?php print $self->getModalID(); ?>">
+    <div class="modal-dialog" <?php print $self->customWidth() != false ? "style=\"width:".$self->customWidth()."\"" : "" ?>>
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
                 <h4 class="modal-title">
-                    <? print $self->getTitle(); ?>
+                    <?php print $self->getTitle(); ?>
                 </h4>
             </div>
-            <? $self->render($self->getView(), $this->getData()); ?>
+            <?php $self->render($self->getView(), $this->getData()); ?>
         </div>
     </div>
 </div>

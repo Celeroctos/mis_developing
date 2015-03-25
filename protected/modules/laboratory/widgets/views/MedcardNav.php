@@ -9,9 +9,9 @@
 ?>
 
 <ul class="nav nav-tabs">
-    <? foreach ($list as $key => $link): ?>
+    <?php foreach ($list as $key => $link): ?>
         <li role="presentation" class="<?= $link["module"] == $module && $link["controller"] == $controller && $link["action"] == $action ? "active" : "" ?>">
             <a href="<?= Yii::app()->getBaseUrl()."/{$link["module"]}/{$link["controller"]}/{$link["action"]}" ?>"><?= $key ?></a>
         </li>
-    <? endforeach; ?>
+    <?php endforeach; ?>
 </ul>

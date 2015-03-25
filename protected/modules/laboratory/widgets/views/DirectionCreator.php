@@ -20,4 +20,4 @@ $this->beginWidget("CActiveForm", [
 
 </div>
 
-<? $this->endWidget(); ?>
+<?php $this->endWidget(); ?>

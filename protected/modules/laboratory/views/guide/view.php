@@ -43,12 +43,12 @@ $this->widget("Modal", [
 
 <div class="col-xs-12">
     <div class="col-xs-4">
-        <? $this->beginWidget("Panel", [ "title" => "Справочники", "id" => "guide-panel" ]); $this->widget("GuideTable"); ?>
+        <?php $this->beginWidget("Panel", [ "title" => "Справочники", "id" => "guide-panel" ]); $this->widget("GuideTable"); ?>
         <hr>
         <button data-toggle="modal" data-target="#guide-register-modal" type="button" class="btn btn-primary btn-sm">
             Добавить справочник
         </button>
-        <? $this->endWidget(); ?>
+        <?php $this->endWidget(); ?>
     </div>
     <div class="col-xs-8">
         <div class="panel panel-default" id="guide-edit-panel">

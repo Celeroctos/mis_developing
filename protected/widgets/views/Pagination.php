@@ -13,22 +13,22 @@
 				<span aria-hidden="true">&laquo;</span>
 			</a>
 		</li>
-		<? if ($this->page > 1): ?>
+		<?php if ($this->page > 1): ?>
 			<li <?= $this->getClick(true, 1 - $this->page) ?>>
 				<a href="javascript:void(0)"><?= 1 ?>
 					<span class="sr-only"></span>
 				</a>
 			</li>
-			<? if ($this->page > 2): ?>
+			<?php if ($this->page > 2): ?>
 				<li <?= $this->getClick(false, 0) ?>>
 					<a href="javascript:void(0)">...
 						<span class="sr-only"></span>
 					</a>
 				</li>
-			<? endif; ?>
-		<? endif; ?>
-		<? for ($i = $this->page + $offset, $j = -1; $i <= $this->pages && $j < $this->limit; $i++, $j++): ?>
-			<? if ($i < 1 || $i > $this->pages) {
+			<?php endif; ?>
+		<?php endif; ?>
+		<?php for ($i = $this->page + $offset, $j = -1; $i <= $this->pages && $j < $this->limit; $i++, $j++): ?>
+			<?php if ($i < 1 || $i > $this->pages) {
 				continue;
 			} ?>
 			<li <?= $this->getClick(true, $i - $this->page) ?>>
@@ -36,8 +36,8 @@
 					<span class="sr-only"></span>
 				</a>
 			</li>
-		<? endfor; ?>
-		<? if ($offset == 0): ?>
+		<?php endfor; ?>
+		<?php if ($offset == 0): ?>
 			<li <?= $this->getClick(false, 0) ?>>
 				<a href="javascript:void(0)">...
 					<span class="sr-only"></span>
@@ -48,7 +48,7 @@
 					<span class="sr-only"></span>
 				</a>
 			</li>
-		<? endif; ?>
+		<?php endif; ?>
 		<li <?= $this->getClick($this->page != $this->pages, 1) ?>>
 			<a href="javascript:void(0)" aria-label="Следующая">
 				<span aria-hidden="true">&raquo;</span>

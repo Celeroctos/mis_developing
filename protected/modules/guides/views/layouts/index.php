@@ -1,4 +1,4 @@
-<? MainAsset::register() ?>
+<?php MainAsset::register() ?>
 <!DOCTYPE html>
 <html>
 <head>

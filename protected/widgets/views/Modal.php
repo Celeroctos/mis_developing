@@ -20,19 +20,19 @@
                 <table width="100%">
                 <tr>
                 <td align="left">
-					<? foreach ($this->buttons as $i => $button): ?>
-						<? if (isset($button["align"]) && $button["align"] == "left") : ?>
+					<?php foreach ($this->buttons as $i => $button): ?>
+						<?php if (isset($button["align"]) && $button["align"] == "left") : ?>
 							<button id="<?=$i?>" <?=isset($button["attributes"]) ? $button["attributes"] : ""?> type="<?=$button["type"]?>" class="<?=$button["class"]?>"><?=$button["text"]?></button>
-						<? endif ?>
-					<? endforeach; ?>
+						<?php endif ?>
+					<?php endforeach; ?>
                 </td>
                 <td>
                     <button type="button" class="btn btn-default" data-dismiss="modal"><?= "Закрыть" ?></button>
-                    <? foreach ($this->buttons as $i => $button): ?>
-						<? if (!isset($button["align"]) || $button["align"] != "left") : ?>
+                    <?php foreach ($this->buttons as $i => $button): ?>
+						<?php if (!isset($button["align"]) || $button["align"] != "left") : ?>
                         	<button id="<?=$i?>" <?=isset($button["attributes"]) ? $button["attributes"] : ""?> type="<?=$button["type"]?>" class="<?=$button["class"]?>"><?=$button["text"]?></button>
-						<? endif ?>
-                    <? endforeach; ?>
+						<?php endif ?>
+                    <?php endforeach; ?>
                 </td>
                 </tr>
                 </table>
