@@ -7,7 +7,7 @@ abstract class LController extends Controller {
      * api validation, than access won't be denied
      * @param $filterChain CFilterChain - Chain filter
      */
-    public function filterGetAccessHierarchy(CFilterChain $filterChain) {
+    public function filterGetAccessHierarchy($filterChain) {
 
         // Get access result
         $this->access = $this->checkAccess();
@@ -463,7 +463,7 @@ abstract class LController extends Controller {
 	 * @param $exception Exception - Exception
 	 * @throws Exception - It will be thrown for not ajax requests
 	 */
-    public function exception(Exception $exception) {
+    public function exception($exception) {
         $method = $exception->getTrace()[0];
 		if (!Yii::app()->getRequest()->getIsAjaxRequest()) {
 			throw $exception;
