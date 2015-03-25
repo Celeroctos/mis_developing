@@ -1,6 +1,6 @@
 <?php
 
-class LPhone extends LModel {
+class LPhone extends ActiveRecord {
 
 	public function tableName() {
 		return "lis.phone";

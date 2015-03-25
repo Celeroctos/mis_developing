@@ -118,7 +118,11 @@ class GuideController extends LController {
 			}
 			$table->guide_id = $guideId;
 			$table->save();
+			$p = 0;
 			foreach ($row as $c) {
+				if (!isset($c["position"]) || $c["position"] == "") {
+					$c["position"] = ++$p;
+				}
 				/** @var $column LGuideColumn */
 				$column = LGuideColumn::model()->find("guide_id = :guide_id and position = :position", [
 					":guide_id" => $guideId,
@@ -128,14 +132,14 @@ class GuideController extends LController {
 					throw new CException("Can't resolve column name for guide \"{$guideId}\" with position \"{$c["position"]}\"");
 				}
 				if (isset($c["id"])) {
-					$value = LGuideValue::model()->find("id = :id", [
+					$value = GuideValue::model()->find("id = :id", [
 						":id" => $c["id"]
 					]);
 					if (!$value) {
 						throw new CException("Can't resolve value from guide with \"{$c["id"]}\" identification number");
 					}
 				} else {
-					$value = new LGuideValue();
+					$value = new GuideValue();
 					$value->guide_column_id = $column->id;
 					$value->guide_row_id = $table->id;
 				}
@@ -194,7 +198,7 @@ class GuideController extends LController {
 
 	/**
 	 * Override that method to return controller's model
-	 * @return LModel - Controller's model instance
+	 * @return ActiveRecord - Controller's model instance
 	 */
 	public function getModel() {
 		return new LGuide();

@@ -1,6 +1,6 @@
 <?php
 class PatientController extends Controller {
-    public $layout = 'application.modules.reception.views.layouts.index';
+//    public $layout = 'application.modules.reception.views.layouts.index';
 	
     // Стартовая
     public function actionIndex() {

@@ -93,10 +93,9 @@ class Payment extends MisActiveRecord
             ->from('mis.payment_types p');
 
         if($filters !== false) {
-            $this->getSearchConditions($payments, $filters, array(
-            ), array(
-               'p' => array('id', 'name', 'tasu_string'),
-            ));
+            $this->getSearchConditions($payments, $filters, [], [
+               'p' => ['id', 'name', 'tasu_string'],
+			], []);
         }
 
         if($sidx !== false && $sord !== false) {

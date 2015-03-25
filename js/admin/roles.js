@@ -122,7 +122,7 @@ $(document).ready(function() {
         if(currentRow != null) {
             // Надо вынуть данные для редактирования
             $.ajax({
-                'url' : '/admin/roles/getone?id=' + currentRow,
+                'url' : globalVariables.baseUrl + '/admin/roles/getone?id=' + currentRow,
                 'cache' : false,
                 'dataType' : 'json',
                 'type' : 'GET',
@@ -175,7 +175,7 @@ $(document).ready(function() {
         if(currentRow != null) {
             // Надо вынуть данные для редактирования
             $.ajax({
-                'url' : '/admin/roles/delete?id=' + currentRow,
+                'url' : globalVariables.baseUrl + '/admin/roles/delete?id=' + currentRow,
                 'cache' : false,
                 'dataType' : 'json',
                 'type' : 'GET',
