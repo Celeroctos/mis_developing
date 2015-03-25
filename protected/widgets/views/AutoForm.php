@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var AutoForm $this - Form widget instance
  * @var CActiveForm $form - Form widget

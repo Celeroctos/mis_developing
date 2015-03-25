@@ -1,6 +1,6 @@
 <script type="text/javascript" src="<?= Yii::app()->getBaseUrl() ?>\js\chooser.js"></script>
 <script type="text/javascript" src="<?= Yii::app()->getBaseUrl() ?>\js\reception\searchAddPatient.js"></script>
-<?
+<?php
 
 /**
  * @var $this MedcardController
