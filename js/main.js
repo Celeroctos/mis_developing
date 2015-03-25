@@ -1,4 +1,7 @@
-﻿//
+﻿window.onbeforeunload = function () { 
+  return null;
+} 
+
 $(document).ready(function () {
     globalVariables.wrongPassword = false;
     globalVariables.wrongLogin = false;

@@ -76,7 +76,7 @@ class m150321_064532_laboratory_entry extends CDbMigration
 		  "ward_id" INT REFERENCES "mis"."wards"("id"), -- Подразделение
 		  "enterprise_id" INT REFERENCES "mis"."enterprise_params"("id"), -- Медицинское учреждение
 		  "is_repeated" INT DEFAULT 0 -- Является ли повторным
-		);
+		)
 SQL;
 		foreach (explode(";", $sql) as $s) {
 			$this->execute($s);
