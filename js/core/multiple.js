@@ -14,6 +14,10 @@ var Laboratory = Laboratory || {};
 		return $("<div>", {
 			class: "multiple"
 		}).append(this.selector().clone().data("lab", this).addClass("multiple-value")).append(
+            $("div", {
+                class: "multiple-control"
+            })
+        ).append(
 			$("<div>", {
 				class: "multiple-container form-control"
 			})
