@@ -1,4 +1,9 @@
-<? MainAsset::register() ?>
+<?php
+/**
+ * @var string $content
+ */
+MainAsset::register()
+?>
 <!DOCTYPE html>
 <html>
 <head>
