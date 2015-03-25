@@ -20,7 +20,7 @@ $form->hiddenField($model, 'cardNumber', [
 	'class' => 'form-control'
 ]);
 
-$this->widget('application.modules.reception.components.widgets.MedcardFormWidget', [
+$this->widget('application.modules.reception.components.widgets.medcardFormWidget', [
 	'form' => $form,
 	'model' => $model,
 	'privilegesList' => $privileges,
@@ -28,7 +28,7 @@ $this->widget('application.modules.reception.components.widgets.MedcardFormWidge
 	'template' => 'application.modules.reception.components.widgets.views.MedcardFormWidget'
 ]);
 
-$this->widget('application.modules.reception.components.widgets.MedcardFormWidget', [
+$this->widget('application.modules.reception.components.widgets.medcardFormWidget', [
     'form' => $form,
     'model' => $model,
     'privilegesList' => $privileges,
