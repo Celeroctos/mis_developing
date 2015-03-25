@@ -5,7 +5,7 @@ class m150321_064525_laboratory_guides extends CDbMigration
 	public function safeUp() {
 		$sql = <<< SQL
 
-		DROP SCHEMA IF EXISTS "lis";
+		-- DROP SCHEMA IF EXISTS "lis";
 		CREATE SCHEMA "lis";
 
 		CREATE TABLE "lis"."analysis_type" (
