@@ -66,7 +66,7 @@ abstract class LController extends Controller {
      * @param bool $return - Should widget return response or print to output stream
      * @return mixed|void
      */
-    public function widget($class, array $properties = [], $return = false) {
+    public function widget($class, $properties = [], $return = false) {
         if ($properties === true) {
             $return = true;
             $properties = [];
