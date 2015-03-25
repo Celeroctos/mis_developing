@@ -46,7 +46,7 @@
                 'class' => 'form-control'
             )); ?>
             <p>Данные медицинской карты:</p>
-            <?php $this->widget('application.modules.reception.components.widgets.medcardFormWidget', array(
+            <?php $this->widget('application.modules.reception.components.widgets.MedcardFormWidget', array(
                 'form' => $form,
                 'model' => $model,
                 'privilegesList' => $privilegesList,
@@ -129,7 +129,7 @@
         </div>
     </div>
 </div>
-<?php $this->widget('application.modules.reception.components.widgets.medcardFormWidget', array(
+<?php $this->widget('application.modules.reception.components.widgets.MedcardFormWidget', array(
     'form' => $form,
     'model' => $model,
     'privilegesList' => $privilegesList,
