@@ -5,19 +5,50 @@ var Laboratory = Laboratory || {};
 	"use strict";
 
 	var Multiple = function(properties, selector) {
-		Lab.Component.call(this, properties, {}, selector);
+		Lab.Component.call(this, properties, {
+            height: 150,
+            multiplier: 2
+        }, selector);
 	};
 
 	Lab.extend(Multiple, Lab.Component);
 
 	Multiple.prototype.render = function() {
-		return $("<div>", {
-			class: "multiple"
-		}).append(this.selector().clone().data("lab", this).addClass("multiple-value")).append(
-            $("div", {
-                class: "multiple-control"
+        var s = this.selector().clone().data("lab", this)
+            .addClass("multiple-value").css({
+                "min-height": this.property("height")
+            });
+        var g = $("<div>", {
+            class: "btn-group multiple-control",
+            role: "group"
+        }).append(
+            $("<button>", {
+                class: "btn btn-default multiple-collapse-button",
+                type: "button",
+                html: $("<span>", {
+                    html: "&nbsp;Развернуть / Свернуть"
+                })
             })
         ).append(
+            $("<button>", {
+                class: "btn btn-default multiple-down-button",
+                type: "button",
+                html: $("<span>", {
+                    class: "glyphicon glyphicon-arrow-down"
+                })
+            })
+        ).append(
+            $("<button>", {
+                class: "btn btn-default multiple-up-button",
+                type: "button",
+                html: $("<span>", {
+                    class: "glyphicon glyphicon-arrow-up"
+                })
+            })
+        );
+		return $("<div>", {
+			class: "multiple"
+		}).append(s).append(g).append(
 			$("<div>", {
 				class: "multiple-container form-control"
 			})
@@ -39,15 +70,35 @@ var Laboratory = Laboratory || {};
 				me.remove($(item).children("div"));
 			});
 		});
+        var heght = false;
+        var collapsed = false;
+        this.selector().find(".multiple-collapse-button").click(function() {
+            var value = me.selector().find(".multiple-value");
+            value.animate({
+                "min-height": collapsed ? me.property("height") :
+                    me.property("height") * me.property("multiplier")
+            }, "fast");
+            collapsed = !collapsed;
+        });
+        this.selector().find(".multiple-down-button").click(function() {
+            $(this).parents(".form-group").find("select.multiple-value").children("option").each(function(i, item) {
+                me.choose($(item).val());
+            });
+        });
+        this.selector().find(".multiple-up-button").click(function() {
+            $(this).parents(".form-group").find(".multiple-chosen").each(function(i, item) {
+                me.remove($(item).children("div"));
+            });
+        });
 	};
 
 	Multiple.prototype.remove = function(key) {
-		key.parents(".multiple").find("select.multiple-value").append(
-			$("<option>", {
-				value: key.data("key"),
-				text: key.text()
-			})
-		);
+        key.parents(".multiple").find("option[value='" + key.data("key") + "']").replaceWith(
+            $("<option>", {
+                value: key.data("key"),
+                text: key.text()
+            })
+        );
 		key.parent(".multiple-chosen").remove();
 	};
 
@@ -66,7 +117,7 @@ var Laboratory = Laboratory || {};
 			return void 0;
 		}
 		var name = multiple.find("select.multiple-value")
-			.find("option[value='" + key + "']").remove().text();
+			.find("option[value='" + key + "']").hide().text();
 		if (!name.length) {
 			return void 0;
 		}
