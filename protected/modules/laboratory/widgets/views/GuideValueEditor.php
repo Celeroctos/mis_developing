@@ -10,45 +10,45 @@
     <table class="table" width="100%">
         <thead>
         <tr>
-            <? foreach ($columns as $column): ?>
+            <?php foreach ($columns as $column): ?>
                 <td><b><?= $column->name ?></b></td>
-            <? endforeach; ?>
+            <?php endforeach; ?>
             <td></td>
         </tr>
         </thead>
         <tbody>
-        <? if (count($values) == 0): ?>
-            <? for ($i = 0; $i < GuideValueEditor::DEFAULT_COUNT; $i++): ?>
+        <?php if (count($values) == 0): ?>
+            <?php for ($i = 0; $i < GuideValueEditor::DEFAULT_COUNT; $i++): ?>
                 <tr>
-                    <? foreach ($columns as $column): ?>
+                    <?php foreach ($columns as $column): ?>
                         <td data-position="<?= $column->position ?>">
                             <?= $this->renderField($column->type, $column->name, $column->default_value,
 								$column->lis_guide_id, $column->display_id) ?>
                         </td>
-                    <? endforeach; ?>
+                    <?php endforeach; ?>
                     <td><span style="font-size: 15px; margin-top: 7px" class="glyphicon glyphicon-remove glyphicon-red remove"></span></td>
                 </tr>
-            <? endfor; ?>
-        <? else: ?>
-            <? foreach ($values as $value): ?>
+            <?php endfor; ?>
+        <?php else: ?>
+            <?php foreach ($values as $value): ?>
                 <tr data-id="<?= isset($value[0]) > 0 ? $value[0]["guide_row_id"] : "" ?>">
-                    <? foreach ($columns as $column): ?>
-                        <? if (isset($value[$column->position - 1])): ?>
+                    <?php foreach ($columns as $column): ?>
+                        <?php if (isset($value[$column->position - 1])): ?>
                             <td data-position="<?= $column->position ?>" data-id="<?= $value[$column->position - 1]["id"] ?>">
                                 <?= $this->renderField($column->type, $column->name, $value[$column->position - 1]["value"],
                                     $column->lis_guide_id, $column->display_id) ?>
                             </td>
-                        <? else: ?>
+                        <?php else: ?>
                             <td data-position="<?= $column->position ?>">
                                 <?= $this->renderField($column->type, $column->name, $column->default_value,
 									$column->lis_guide_id, $column->display_id) ?>
                             </td>
-                        <? endif; ?>
-                    <? endforeach; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                     <td><span style="font-size: 15px; margin-top: 7px" class="glyphicon glyphicon-remove glyphicon-red remove"></span></td>
                 </tr>
-            <? endforeach; ?>
-        <? endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
         </tbody>
     </table>
     <div style="width: 100%; text-align: right">

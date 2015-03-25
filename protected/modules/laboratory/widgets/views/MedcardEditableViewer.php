@@ -21,7 +21,7 @@ $this->beginWidget("CActiveForm", [
 		<div class="col-xs-12 text-center">
 			<b>Медицинская карта</b>
 			<br><br>
-			<? $this->widget("AutoForm", [
+			<?php $this->widget("AutoForm", [
 				"model" => new LMedcardForm("treatment.edit")
 			]) ?>
 		</div>
@@ -29,7 +29,7 @@ $this->beginWidget("CActiveForm", [
 		<div class="col-xs-12 text-center">
 			<b>Пациент</b>
 			<br><br>
-			<? $this->widget("AutoForm", [
+			<?php $this->widget("AutoForm", [
 				"model" => new LPatientForm("treatment.edit")
 			]) ?>
 		</div>
@@ -67,4 +67,4 @@ $this->beginWidget("CActiveForm", [
 <!--	</div>-->
 <!--</div>-->
 
-<? $this->endWidget() ?>
+<?php $this->endWidget() ?>

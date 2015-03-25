@@ -1,4 +1,5 @@
 <?php
+ini_set("short_open_tag", "On");
 ob_start();
 // change the following paths if necessary
 $yii1Path = '/../yii';

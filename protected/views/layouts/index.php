@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @var string $content
  */
