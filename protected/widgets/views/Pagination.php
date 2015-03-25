@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var Pagination $this - Self instance
  * @var int $offset - Start offset

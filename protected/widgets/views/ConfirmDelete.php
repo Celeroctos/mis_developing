@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var $this Modal - Modal widget component for laboratory module
  */

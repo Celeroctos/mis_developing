@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Panel $this - Widget's controller with render properties
  */
