@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var $this GuideValueEditor - Widget's instance
  * @var $columns Array - Array with guide columns

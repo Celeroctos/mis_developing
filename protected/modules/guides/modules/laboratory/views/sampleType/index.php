@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var $this SampleTypeController
  * @var $model SampleType
