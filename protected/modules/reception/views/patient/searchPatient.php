@@ -322,7 +322,7 @@ $form = $this->beginWidget('CActiveForm', array(
                     'class' => 'form-control'
                 )); ?>
                 <?php
-                    $this->widget('application.modules.reception.components.widgets.medcardFormWidget', array(
+                    $this->widget('application.modules.reception.components.widgets.MedcardFormWidget', array(
                         'form' => $form,
                         'model' => $modelMedcard,
                         'privilegesList' => $privilegesList,
@@ -403,7 +403,7 @@ $form = $this->beginWidget('CActiveForm', array(
 </div>
 <?php $this->endWidget(); ?>
 <?php
-$this->widget('application.modules.reception.components.widgets.medcardFormWidget', array(
+$this->widget('application.modules.reception.components.widgets.MedcardFormWidget', array(
     'form' => $form,
     'model' => $modelMedcard,
     'privilegesList' => $privilegesList,
