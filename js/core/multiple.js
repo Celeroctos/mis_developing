@@ -6,6 +6,14 @@ var Laboratory = Laboratory || {};
 
 	var Multiple = function(properties, selector) {
 		Lab.Component.call(this, properties, {
+            filter: [
+                "height",
+                "min-height",
+                "max-height",
+                "width",
+                "min-width",
+                "max-width"
+            ],
             height: 150,
             multiplier: 2
         }, selector);
@@ -20,13 +28,16 @@ var Laboratory = Laboratory || {};
             });
         var g = $("<div>", {
             class: "btn-group multiple-control",
-            role: "group"
+            role: "group",
+            style: {
+                width: this.selector().width()
+            }
         }).append(
             $("<button>", {
                 class: "btn btn-default multiple-collapse-button",
                 type: "button",
                 html: $("<span>", {
-                    html: "&nbsp;Развернуть / Свернуть"
+                    text: "Развернуть / Свернуть"
                 })
             })
         ).append(
@@ -116,8 +127,8 @@ var Laboratory = Laboratory || {};
 			}
 			return void 0;
 		}
-		var name = multiple.find("select.multiple-value")
-			.find("option[value='" + key + "']").hide().text();
+        var name = multiple.find("select.multiple-value")
+            .find("option[value='" + key + "']").fadeOut("normal").text();
 		if (!name.length) {
 			return void 0;
 		}
@@ -186,23 +197,40 @@ var Laboratory = Laboratory || {};
 		"createMultiple"
 	);
 
-	$(document).ready(function() {
-		$("select[multiple]").multiple();
-		$("select[multiple][value!='']").each(function() {
-			if ($(this).attr("value") != void 0) {
-				$(this).multiple("choose", $(this).attr("value"));
-			}
-			$(this).attr("value", false);
-		});
-	});
-	$(document).bind("ajaxSuccess", function() {
-		$("select[multiple]").multiple();
-		$("select[multiple][value!='']").each(function() {
-			if ($(this).attr("value") != void 0) {
-				$(this).multiple("choose", $(this).attr("value"));
-			}
-			$(this).attr("value", false);
-		});
-	});
+    Lab.ready(function() {
+        $("select[multiple]").multiple().bind("style", function() {
+            var filter = $(this).multiple("property", "filter");
+            var style = $(this).attr("style").split(";");
+            var css = {};
+            for (var i in style) {
+                var link = style[i].trim().split(":");
+                if (link.length != 2) {
+                    continue;
+                }
+                var key = link[0];
+                if (hasArray(filter, key)) {
+                    continue;
+                }
+                css[key] = link[1].trim();
+            }
+            $(this).parent(".multiple").css(css);
+        });
+        $("select[multiple][value!='']").each(function() {
+            if ($(this).attr("value") != void 0) {
+                $(this).multiple("choose", $(this).attr("value"));
+            }
+            $(this).attr("value", false);
+        });
+    });
+
+    (function() {
+        var ev = new $.Event('style'),
+            orig = $.fn.css;
+        $.fn.css = function() {
+            var result = orig.apply(this, arguments || []);
+            $(this).trigger(ev);
+            return result;
+        }
+    })();
 
 })(Laboratory);

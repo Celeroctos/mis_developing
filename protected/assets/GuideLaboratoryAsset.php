@@ -10,6 +10,6 @@ class GuideLaboratoryAsset extends AssetBundle {
 	];
 
 	public $dependencies = [
-		"CoreAsset"
+		"MainAsset"
 	];
 }
