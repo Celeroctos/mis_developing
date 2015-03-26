@@ -183,7 +183,7 @@ $(document).ready(function() {
             var daySplitted = data[i].patient_day.split('.');
             var iterateDate = new Date(parseInt(daySplitted[2]), parseInt(daySplitted[1]) - 1, parseInt(daySplitted[0]), parseInt(timeSplitted[0]), parseInt(timeSplitted[1]));
 
-            if(iterateDate.getTime() > (new Date()).getTime()) {
+            if(iterateDate.getTime() > (new Date()).getTime() || !data[i].patient_time) {
                 content += '<td>' +
                     '<a href="#' + data[i].id + '" class="cancelGreeting" title="Отписать пациента">' +
                         '<span class="glyphicon glyphicon-remove"></span>' +
