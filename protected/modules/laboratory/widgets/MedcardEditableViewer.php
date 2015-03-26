@@ -14,7 +14,7 @@ class MedcardEditableViewer extends Widget {
 	 */
 	public function run() {
 		if ($this->number == null) {
-			$generator = new CardNumberGenerator();
+			$generator = new CardnumberGenerator();
 			$rule = MedcardRule::model()->find("name = :name", [
 				":name" => "Лаборатория"
 			]);
