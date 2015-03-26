@@ -10,6 +10,12 @@ class MediatePatient extends MisActiveRecord  {
         return 'mis.mediate_patients';
     }
 
+    public function afterSave() {
+        parent::afterSave();
+        $this->id = Yii::app()->db->getLastInsertID('mis.mediate_patients_id_seq');
+        return true;
+    }
+
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
         $connection = Yii::app()->db;
         $mediate = $connection->createCommand()

@@ -99,3 +99,7 @@ ALTER TABLE mis.medcard_elements_patient ADD COLUMN not_printing_values text;
 
 ALTER TABLE mis.medcard_elements_patient ADD COLUMN hide_label_before integer;
 COMMENT ON COLUMN mis.medcard_elements_patient.hide_label_before IS 'Скрывать ли метку до на печати';
+
+INSERT INTO mis.access_actions ("name","group","accessKey") VALUES ('Может добавлять разделитель для медкарты', 1, 'guideAddMedcardSeparator');
+INSERT INTO mis.access_actions ("name","group","accessKey") VALUES ('Может редактировать разделить для медкарты', 1, 'guideEditMedcardSeparator');
+INSERT INTO mis.access_actions ("name","group","accessKey") VALUES ('Может удалять разделитель для медкарты', 1, 'guideDeleteMedcardSeparator');

@@ -305,6 +305,18 @@
                                 )); ?>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <?php echo $form->label($model,'greetingTimeLimit', array(
+                                'class' => 'col-xs-3 control-label text-left'
+                            )); ?>
+                            <div class="col-xs-9">
+                                <?php echo $form->textField($model,'greetingTimeLimit', array(
+                                    'id' => 'greetingTimeLimit',
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Лимит на время приёма (мин)'
+                                )); ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -578,6 +590,18 @@
 									)); ?>
 								</div>
 							</div>
+                            <div class="form-group">
+                                <?php echo $form->label($model,'greetingTimeLimit', array(
+                                    'class' => 'col-xs-3 control-label text-left'
+                                )); ?>
+                                <div class="col-xs-9">
+                                    <?php echo $form->textField($model,'greetingTimeLimit', array(
+                                        'id' => 'greetingTimeLimit',
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Лимит на время приёма (мин)'
+                                    )); ?>
+                                </div>
+                            </div>
 						</div>
 						<div id="accessEmployeeSettingsCont" class="no-display">
 							<h4>Права доступа:</h4>

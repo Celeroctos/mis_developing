@@ -26,53 +26,6 @@ class SheduleByDay extends MisActiveRecord {
         }
     }
 
-
-    /*
-	public function getGreetingsByIds(
- 		$filters,
- 		$idsString, 
- 		$sidx = false, 
- 		$sord = false, 
- 		$start = false, 
- 		$limit = false
- 		)
- 	{
- 		
- 		$connection = Yii::app()->db;
- 		$patients = $connection->createCommand()
- 			->select('dsbd.*, d.first_name,d.middle_name,d.last_name,
- 					CONCAT(o.last_name, \' \', o.first_name, \' \', o.middle_name ) as fio, 
- 					m.card_number AS card_number,
- 					SUBSTR(
- 						CAST(dsbd.patient_time AS text),
- 						0, 
- 						CHAR_LENGTH(CAST(dsbd.patient_time AS text)) - 2
- 					) AS patient_time,
- 					m.contact')
- 			->from('mis.doctor_shedule_by_day dsbd')
- 			->Join('mis.medcards m', 'dsbd.medcard_id = m.card_number')
- 			->Join('mis.oms o', 'm.policy_id = o.id')
-            ->leftJoin('mis.doctors d', 'dsbd.doctor_id = d.id')
- 			->where('dsbd.id in ('.$idsString.')
- 					'
- 				);
- 		
- 		
- 		
- 		if($sidx !== false && $sord !== false)
- 		{
- 			$patients->order($sidx.' '.$sord);
- 		}
- 		
- 		if ($start !== false && $limit !== false)
- 		{	
- 			$patients->limit($limit, $start);
- 		}
- 		
- 		return $patients->queryAll();
- 	}
-    */
-
     public function getGreetingsByIds(
         $filters,
         $idsString,

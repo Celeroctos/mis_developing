@@ -16,19 +16,23 @@ class FormEmployeeAdd extends FormMisDefault
     public $displayInCallcenter;
     public $id;
 	public $categorie;
+    public $greetingTimeLimit;
 
 
     public function rules()
     {
         return array(
             array(
-                'firstName, lastName, postId, dateBegin, wardCode, greetingType, displayInCallcenter', 'required'
+                'firstName, lastName, postId, dateBegin, wardCode, greetingType, displayInCallcenter, greetingTimeLimit', 'required'
             ),
             array(
                 'degreeId, titulId, tabelNumber, categorie', 'numerical'
             ),
             array(
                 'dateEnd, middleName', 'safe'
+            ),
+            array(
+                'greetingTimeLimit', 'numerical'
             )
         );
     }
@@ -49,7 +53,8 @@ class FormEmployeeAdd extends FormMisDefault
             'wardCode' => 'Отделение',
 			'greetingType' => 'Тип приёмов',
             'displayInCallcenter' => 'Отображать в колл-центре',
-			'categorie' => 'Категория врача'
+			'categorie' => 'Категория врача',
+            'greetingTimeLimit' => 'Лимит времени на приём (мин)'
         );
     }
 }

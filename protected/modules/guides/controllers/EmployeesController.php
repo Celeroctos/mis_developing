@@ -223,6 +223,17 @@ class EmployeesController extends Controller {
 		$employee->greeting_type = $model->greetingType;
 		$employee->categorie = $model->categorie;
         $employee->display_in_callcenter = $model->displayInCallcenter;
+        if($employee->greeting_time_limit != $model->greetingTimeLimit && $employee->id) {
+            // Выполнить отправку пациентов на перезапись
+            $greetings = SheduleByDay::model()->findAll('doctor_id = :doctor_id', array(':doctor_id' => $employee->id));
+            $sheduleAdminController = Yii::app()->createController('admin/shedule');
+            foreach($greetings as $greeting) {
+                SheduleByDay::model()->deleteByPk($greeting['id']);
+                $sheduleAdminController[0]->writeCancelledGreeting($greeting);
+            }
+
+        }
+        $employee->greeting_time_limit = $model->greetingTimeLimit;
 
         if(!isset($_POST['notDateEnd'])) {
             $employee->date_end = $model->dateEnd;

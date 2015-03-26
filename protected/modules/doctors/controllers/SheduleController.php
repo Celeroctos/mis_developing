@@ -1366,7 +1366,12 @@ class SheduleController extends Controller {
         if($onlyWaitingLine) {
             $increment = 1;
         } else {
-            $increment = $settings['timePerPatient'] * 60;
+            $doctor = Doctor::model()->findByPk($doctorId);
+            if($doctor && $doctor->greeting_time_limit) {
+                $increment = $doctor->greeting_time_limit * 60;
+            } else {
+                $increment = $settings['timePerPatient'] * 60;
+            }
         }
 
         // Ищем пациента для такого времени. Если он найден, значит время занято
@@ -1436,12 +1441,12 @@ class SheduleController extends Controller {
         $patients = $sheduleByDay->getRows($formatDate, $doctorId, $needMediate, 0, $onlyWaitingLine);
 
         $settings = $this->getSettings();
+        $doctor = Doctor::model()->findByPk($doctorId);
         // Выясняем время работы. Частные дни имеют приоритет по сравнению с обычными
         $choosedType = 0;
 
         $timestampBegin  = strtotime($timeBegin);
         $timestampEnd  = strtotime($timeEnd);
-
 
         $primaryGreetings = 0;
         $secondaryGreetings = 0;
@@ -1460,7 +1465,11 @@ class SheduleController extends Controller {
         } else {
             $beginValue = $timestampBegin;
             $endValue = $timestampEnd;
-            $increment = $settings['timePerPatient'] * 60;
+            if($doctor && $doctor->greeting_time_limit) {
+                $increment = $doctor->greeting_time_limit * 60;
+            } else {
+                $increment = $settings['timePerPatient'] * 60;
+            }
         }
 
         for($i = $beginValue; $i < $endValue; $i += $increment) {
@@ -1629,18 +1638,17 @@ class SheduleController extends Controller {
                 exit();
             }
             // Заполняем значениями форму опосредованного пациента
-
             $mediate->first_name = $mediateForm->firstName;
             $mediate->last_name = $mediateForm->lastName;
             $mediate->middle_name = $mediateForm->middleName;
             $mediate->phone = $mediateForm->phone;
             $sheduleElement->comment = $mediateForm->comment;
-
             if(!$mediate->save()) {
                 echo CJSON::encode(array('success' => 'false',
-                    'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
+                                         'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
                 exit();
             }
+
             $sheduleElement->mediate_id = $mediate->id;
         }
 

@@ -435,7 +435,7 @@ class SheduleController extends Controller {
         }
     }
 
-    private function writeCancelledGreeting($greeting)
+    public function writeCancelledGreeting($greeting)
     {
         //var_dump($greeting);
         //exit();

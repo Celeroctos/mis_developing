@@ -15,6 +15,7 @@ $(document).ready(function() {
                   'Дата начала действия',
                   'Дата окончания действия',
                   'Отделение',
+                  'Время на приём (мин)',
                   'Отображать в Call-центре',
                   '',
 				  '',
@@ -87,7 +88,7 @@ $(document).ready(function() {
 			{
                 name: 'categorie_desc',
                 index: 'categorie_desc',
-                width: 100,
+                width: 100
             },
             {
                 name: 'date_begin',
@@ -108,6 +109,11 @@ $(document).ready(function() {
                 name: 'ward',
                 index: 'ward',
                 width: 110
+            },
+            {
+                name: 'greeting_time_limit',
+                index: 'greeting_time_limit',
+                width: 160
             },
             {
                 name: 'display_in_callcenter_desc',
@@ -368,6 +374,10 @@ $(document).ready(function() {
 							{
                                 modelField: 'categorie',
                                 formField: 'categorie'
+                            },
+                            {
+                                modelField: 'greeting_time_limit',
+                                formField: 'greetingTimeLimit'
                             }
                         ];
                         for(var i = 0; i < fields.length; i++) {
