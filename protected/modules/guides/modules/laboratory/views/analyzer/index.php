@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @var $this AnalyzerController
  * @var $model GActiveRecord
