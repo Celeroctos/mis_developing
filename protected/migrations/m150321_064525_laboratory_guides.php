@@ -53,12 +53,12 @@ class m150321_064525_laboratory_guides extends CDbMigration
 			"name" VARCHAR(50) NOT NULL,
 			"notes" TEXT DEFAULT ''
 		);
-
+		
 		CREATE TABLE "lis"."analysis_type_to_sample_type" (
 		  "id" SERIAL PRIMARY KEY,
 		  "analysis_type_id" INT REFERENCES "lis"."analysis_type"("id") ON DELETE CASCADE,
 		  "sample_type_id" INT REFERENCES "lis"."sample_type"("id") ON DELETE CASCADE
-		);
+		)
 SQL;
 		foreach (explode(";", $sql) as $s) {
 			$this->execute($s);

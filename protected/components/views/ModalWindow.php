@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  *   That file looks silly, cuz it avoids yii basic architecture, but its the easiest and most suitable way
  * to declare ModalWindow's render template to avoid html generation via <code>echo/print</code>. That file

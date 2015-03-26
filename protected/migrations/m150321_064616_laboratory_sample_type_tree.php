@@ -11,7 +11,7 @@ class m150321_064616_laboratory_sample_type_tree extends CDbMigration
 				  FROM "lis"."sample_type" AS t1 WHERE "t1"."parent_id" IS NULL
 				UNION SELECT "t2"."id", "t2"."parent_id", "t2"."name", cast(tmp.PATH || '->' || "t2"."name" AS TEXT), LEVEL + 1
 				  FROM "lis"."sample_type" AS t2 INNER JOIN tmp ON tmp."id" = "t2".parent_id)
-			  SELECT * FROM tmp ORDER BY tmp."path";
+			  SELECT * FROM tmp ORDER BY tmp."path"
 SQL;
 		foreach (explode(";", $sql) as $s) {
 			$this->execute($s);
@@ -20,7 +20,7 @@ SQL;
 
 	public function safeDown() {
 		$sql = <<< SQL
-			DROP VIEW "lis"."sample_type_tree";
+			DROP VIEW "lis"."sample_type_tree"
 SQL;
 		foreach (explode(";", $sql) as $s) {
 			$this->execute($s);
