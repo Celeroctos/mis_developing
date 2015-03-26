@@ -223,14 +223,14 @@ var Laboratory = Laboratory || {};
         });
     });
 
-    //(function() {
-    //    var ev = new $.Event('style'),
-    //        orig = $.fn.css;
-    //    $.fn.css = function() {
-    //        var result = orig.apply(this, arguments || []);
-    //        $(this).trigger(ev);
-    //        return result;
-    //    }
-    //})();
+    (function() {
+        var ev = new $.Event('style'),
+            orig = $.fn.css;
+        $.fn.css = function() {
+            var result = orig.apply(this, arguments || []);
+            $(this).trigger(ev);
+            return result;
+        }
+    })();
 
 })(Laboratory);
