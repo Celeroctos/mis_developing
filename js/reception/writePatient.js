@@ -2,7 +2,7 @@
     
     $('#greetingDate').val((new Date).getFullYear() + '-' + ((new Date).getMonth() + 1) + '-' + (new Date).getDate());
     $('#greetingDate').trigger('change');
-    
+
     if($('#diagnosisDistribChooser').length > 0) {
         $.fn['diagnosisDistribChooser'].addExtraParam('medworkerid', -1); // Типа, флаг "все диагнозы"
     }
