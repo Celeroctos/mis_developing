@@ -576,6 +576,7 @@ class SheduleController extends Controller {
         }
 
         $patientsInCalendar = CJSON::encode($this->getDaysWithPatients($doctorId));
+
         echo CJSON::encode(array('success' => true,
             'data' =>  $patientsInCalendar
         ));
