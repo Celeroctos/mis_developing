@@ -1,6 +1,13 @@
 <?php
 
-class LMedcardSearchForm extends LFormModel {
+class LMedcardSearchForm extends FormModel {
+
+	public $card_number;
+	public $enterprise_id;
+	public $phone;
+	public $first_name;
+	public $middle_name;
+	public $last_name;
 
     /**
      * Override that method to return config. Config should return array associated with
@@ -8,7 +15,7 @@ class LMedcardSearchForm extends LFormModel {
      *  + label - Variable's label, will be displayed in the form
      *  + type - Input type (@see _LFormInternalRender#render())
      *  + rules - Basic form's Yii rules, such as 'required' or 'numeric' etc
-     * @return Array - Model's config
+     * @return Array - ActiveRecord's config
      */
     public function config() {
         return [
@@ -18,7 +25,12 @@ class LMedcardSearchForm extends LFormModel {
             ],
             "enterprise_id" => [
                 "label" => "Направитель",
-                "type" => "DropDown"
+                "type" => "DropDown",
+				"table" => [
+					"name" => "mis.enterprise_params",
+					"key" => "id",
+					"value" => "shortname"
+				]
             ],
             "phone" => [
                 "label" => "Телефон",
@@ -39,8 +51,4 @@ class LMedcardSearchForm extends LFormModel {
             ]
         ];
     }
-
-	public function getEnterpriseId() {
-		return CHtml::listData(Enterprise::model()->findAll(), "id", "shortname");
-	}
 }

@@ -264,4 +264,4 @@
         </div>
     </div>
 </div>
-<? $this->widget("application.modals.guides.DeleteMedworker"); ?>
+<?php $this->widget("application.modals.guides.DeleteMedworker"); ?>

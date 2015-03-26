@@ -1,4 +1,7 @@
-﻿//
+﻿window.onbeforeunload = function () { 
+  return null;
+} 
+
 $(document).ready(function () {
     globalVariables.wrongPassword = false;
     globalVariables.wrongLogin = false;
@@ -553,17 +556,51 @@ $('.buttonUpContainer').click(function () {
     );
 
     /* Двигающиеся модалки */
-    $('.modal:not([id="addFakePopup"])').draggable();
-
-    // По нажатию на кнопку "удалить" - спрашиваем подтверждение на удаление
-    $('button[id^=delete]').filter(
-		':not(#deleteMedworker, #deleteTemplate, #deleteWard)'
-	).on('click',function(e)
-    {
-        response = confirm ('Вы действительно хотите выполнить удаление?');
-        if (!response)
-            e.stopImmediatePropagation();
+    $('.modal').draggable({
+        handle: ".modal-header" // Only header please
+    }).bind('hidden.bs.modal', function () {
+        $("html").css("margin-right", "0px");
+    }).bind('show.bs.modal', function () {
+        $("html").css("margin-right", "-15px");
     });
+
+	var ConfirmDelete = {
+		ready: function() {
+			$(".confirm-delete").on("click", function(e) {
+				if (ConfirmDelete.lock) {
+					return void 0;
+				}
+				ConfirmDelete.item = $(e.target);
+				$("#confirm-delete-modal").modal();
+				e.stopImmediatePropagation();
+				return false;
+			});
+			$("#confirm-delete-button").click(function() {
+				ConfirmDelete.lock = true;
+				if (ConfirmDelete.item != null) {
+					ConfirmDelete.item.trigger("click");
+				}
+				setTimeout(function() {
+					ConfirmDelete.lock = false;
+				}, 250);
+			});
+		},
+		can: function() {
+			return $("#confirm-delete-modal").length != 0;
+		},
+		item: null,
+		lock: false
+	};
+
+	if (!ConfirmDelete.can()) {
+		$('button[id^=delete]').on('click',function(e)  {
+			if (!confirm('Вы действительно хотите выполнить удаление?')) {
+				e.stopImmediatePropagation();
+			}
+		});
+	} else {
+		ConfirmDelete.ready();
+	}
 
     // Дальше идёт треш по сообщениям о больным, которым плохо
     // ------------------------------->

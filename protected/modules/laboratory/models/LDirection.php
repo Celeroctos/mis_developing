@@ -1,6 +1,8 @@
 <?php
 
-class LDirection extends LModel {
+class LDirection extends ActiveRecord {
+
+	public $department_id;
 
 	/**
 	 * @return LDirection - Cached model instance
@@ -11,26 +13,38 @@ class LDirection extends LModel {
 
     /**
      * Override that method to return data for grid view
-     * @param CDbCriteria $criteria - Search criteria
      * @throws CDbException
      * @return array - Array with fetched rows
      */
-    public function getGridViewData(CDbCriteria $criteria = null) {
-        if (empty($criteria)) {
-            $criteria = new CDbCriteria();
-        }
+    public function getGridViewData() {
         $query = $this->getDbConnection()->createCommand()
-            ->select("d.*, at.name as analysis_type_id")
+            ->select("d.*, at.name as analysis_type_id, m.card_number")
             ->from("lis.direction as d")
-            ->leftJoin("lis.analysis_types as at", "at.id = d.analysis_type_id")
-            ->leftJoin("mis.medcards as m", "m.card_number = d.card_number")
-            ->where($criteria->condition, $criteria->params);
+            ->leftJoin("lis.analysis_type as at", "at.id = d.analysis_type_id")
+            ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
         $array = $query->queryAll();
         foreach ($array as &$value) {
-            $value["status"] = LDirectionStatusField::field()
-                ->getOption($value["status"]);
+            $value["status"] = DirectionStatusField::field()->getOption($value["status"]);
         }
         return $array;
+    }
+
+    /**
+     * Get count of repeated directions
+     * @return int - Count of repeats
+     * @throws CDbException
+     */
+    public function getCountOfRepeats() {
+        $row = $this->getDbConnection()->createCommand()
+            ->select("count(id) as count")
+            ->from("lis.direction")
+            ->where("is_repeated = 1")
+            ->queryRow();
+        if ($row) {
+            return $row["count"];
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -40,7 +54,7 @@ class LDirection extends LModel {
     public function getKeys() {
         return [
             "id" => "№",
-            "card_number" => "Номер карты",
+            "medcard_id" => "Номер карты",
             "status" => "Статус",
             "department_id" => "Направитель",
             "analysis_type_id" => "Тип анализа"

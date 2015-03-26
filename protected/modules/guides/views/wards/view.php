@@ -202,4 +202,4 @@
         </div>
     </div>
 </div>
-<? $this->widget("application.modals.guides.DeleteWard"); ?>
+<?php $this->widget("application.modals.guides.DeleteWard"); ?>

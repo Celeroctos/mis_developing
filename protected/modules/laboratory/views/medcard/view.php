@@ -1,14 +1,14 @@
 <script type="text/javascript" src="<?= Yii::app()->getBaseUrl() ?>\js\chooser.js"></script>
 <script type="text/javascript" src="<?= Yii::app()->getBaseUrl() ?>\js\reception\searchAddPatient.js"></script>
-<?
+<?php
 
 /**
  * @var $this MedcardController
  */
 
-$this->widget("LModal", [
+$this->widget("Modal", [
 	"title" => "Редактирование данных медкарты пациента",
-	"body" => $this->getWidget("LMedcardEditor"),
+	"body" => $this->getWidget("MedcardEditor"),
 	"buttons" => [
 		"save" => [
 			"text" => "Сохранить",
@@ -19,7 +19,9 @@ $this->widget("LModal", [
 	"id" => "patient-medcard-edit-modal"
 ]);
 
-$this->widget("LMedcardSearch");
+$this->widget("MedcardSearch", [
+	"mode" => "mis"
+]);
 
 ?>
 <hr>

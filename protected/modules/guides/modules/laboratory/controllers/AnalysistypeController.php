@@ -1,77 +1,72 @@
 <?php
 
-class AnalysisTypeController extends Controller {
+class AnalysisTypeController extends GController {
 
-    public $layout = 'application.modules.guides.views.layouts.index';
+	public function getModel() {
+		return new AnalysisType();
+	}
 
-    public function actionView($id) {
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-        ));
-    }
+	public function afterCreateOrUpdate(&$model) {
+		if (isset($_POST["FormModelAdapter"])) {
+			$post = Yii::app()->getRequest()->getPost("FormModelAdapter");
+			foreach ($post as $key => &$row) {
+				if (is_string($row)) {
+					$row = json_decode($row);
+				}
+			}
+		} else {
+			$post = [
+				"analysis_parameter_id" => [],
+				"sample_type_id" => []
+			];
+		}
+		if (!isset($post["analysis_parameter_id"])) {
+			$post["analysis_parameter_id"] = [];
+		}
+		if (!isset($post["sample_type_id"])) {
+			$post["sample_type_id"] = [];
+		}
+		/** @var AnalysisType $table */
+		$table = $model;
+		if (!isset($model->{"id"}) || empty($model->{"id"})) {
+			throw new CException("Model's identification can't be null after save");
+		}
+		$parameters = ActiveRecord::getIds($table->findAnalysisParameters($model->{"id"}));
+		$save = [];
+		foreach ($post["analysis_parameter_id"] as $id) {
+			if (!self::arrayInDrop([ "id" => $id ], $parameters)) {
+				$save[] = $id;
+			}
+		}
+		$table->saveAnalysisParameters($model->{"id"}, $save);
+		$table->dropAnalysisParameters($model->{"id"}, $parameters);
+		/** @var AnalysisType $table */
+		$table = $model;
+		$parameters = ActiveRecord::getIds($table->findSampleTypes($model->{"id"}));
+		$save = [];
+		foreach ($post["sample_type_id"] as $id) {
+			if (!self::arrayInDrop([ "id" => $id ], $parameters)) {
+				$save[] = $id;
+			}
+		}
+		$table->saveSampleTypes($model->{"id"}, $save);
+		$table->dropSampleTypes($model->{"id"}, $parameters);
+	}
 
-    public function actionCreate() {
+	public function afterLoad(&$model) {
+		$parameters = AnalysisType::model()->findAnalysisParameters($model["id"]);
+		$samples = AnalysisType::model()->findSampleTypes($model["id"]);
+		$model += [
+			"analysis_parameter_id" => json_encode(ActiveRecord::getIds($parameters)),
+			"sample_type_id" => json_encode(ActiveRecord::getIds($samples))
+		];
+	}
 
-        $model = new AnalysisType('analysistypes.create');
-
-        if (isset($_POST['AnalysisType'])) {
-            $model->attributes = $_POST['AnalysisType'];
-            $result = $_POST['AnalysisType'];
-            $model->attributes = $result;
-            if ($model->save()) {
-                echo 'success';
-                Yii::app()->end();
-            }
-        }
-        $this->renderPartial('form', array('model' => $model), false, true);
-    }
-
-    public function actionUpdate($id) {
-
-        $model = $this->loadModel($id);
-
-        if (isset($_POST['AnalysisType'])) {
-            $model->scenario = 'analysistypes.update';
-            $model->attributes = $_POST['AnalysisType'];
-            if ($model->save()) {
-                echo 'success';
-                Yii::app()->end();
-            }
-        }
-        $this->renderPartial('form', array('model' => $model), false, true);
-    }
-
-    public function actionDelete($id) {
-        if (Yii::app()->request->isPostRequest) {
-            // we only allow deletion via POST request
-            $this->loadModel($id)->delete();
-
-            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if (!isset($_GET['ajax']))
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
-        } else
-            throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
-    }
-
-    /**
-     * Lists all models.
-     */
-    public function actionIndex() {
-        $model = new AnalysisType('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AnalysisType']))
-            $model->attributes = $_GET['AnalysisType'];
-
-        $this->render('index', array(
-            'model' => $model,
-        ));
-    }
-
-    public function loadModel($id) {
-        $model = AnalysisType::model()->findByPk($id);
-        if ($model === null)
-            throw new CHttpException(404, 'The requested page does not exist.');
-        return $model;
-    }
-
+	public function after($action, &$model, $form) {
+		if ($action == "create" || $action == "update") {
+			$this->afterCreateOrUpdate($model);
+		} else if ($action == "load") {
+			$this->afterLoad($model);
+		}
+	}
 }

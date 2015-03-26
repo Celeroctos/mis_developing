@@ -10,7 +10,7 @@ class MedcardFormWidget extends CWidget {
     public function run() {
         if($this->template != null) {
 
-            // Протаскиваем параметры, которые были введены при поиске, чтобы их снова не вводить
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (isset($_GET['newSerie']))
                 $this->model['serie'] = $_GET['newSerie'];
             if (isset($_GET['newDocnumber']))
@@ -18,7 +18,7 @@ class MedcardFormWidget extends CWidget {
             if (isset($_GET['newSnils']))
                 $this->model['snils'] = $_GET['newSnils'];
 
-            // Вытаскиваем спискоту типов документов
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
             $this->documentsTypes = Doctype::getForSelect();
 

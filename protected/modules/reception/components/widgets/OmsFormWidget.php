@@ -7,7 +7,7 @@ class OmsFormWidget extends CWidget {
 
     public function run() {
 
-        // Протаскиваем параметры, которые были введены при поиске, чтобы их не вводить повторно
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (isset($_GET['newOmsNumber']))
             $this->model['policy'] = $_GET['newOmsNumber'];
         if (isset($_GET['newLastName']))
@@ -22,7 +22,7 @@ class OmsFormWidget extends CWidget {
         $this->typesOms = OmsType::getForSelect();
         $this->statusesOms = OmsStatus::getForSelect();
 
-        // Прочитать настройку "тип полиса по умолчанию"
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ"
         $omsTypeSetting = Setting::model()->find('name=\'defaultOmsType\'');
 
         if ($this->model['omsType']==NULL)

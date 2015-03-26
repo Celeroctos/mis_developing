@@ -1,6 +1,6 @@
 <?php
 class ReportsController extends Controller {
-    public $layout = 'application.views.layouts.index';
+//    public $layout = 'application.views.layouts.index';
 
     public function actionView() {
         $this->render('view', array());

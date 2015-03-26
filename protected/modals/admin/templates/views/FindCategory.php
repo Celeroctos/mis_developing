@@ -1,4 +1,4 @@
-<? $form = $this->beginWidget('CActiveForm', array(
+<?php $form = $this->beginWidget('CActiveForm', array(
 	'focus' => array($model,'name'),
 	'id' => 'guide-edit-form',
 	'enableAjaxValidation' => true,
@@ -36,4 +36,4 @@
 	<button type="button" class="btn btn-success">Клонировать</button>
 </div>
 
-<? $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
