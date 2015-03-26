@@ -11,6 +11,6 @@ class LaboratoryAsset extends AssetBundle {
     ];
 
     public $dependencies = [
-        "CoreAsset"
+        "MainAsset"
     ];
 } 

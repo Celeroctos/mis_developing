@@ -15,7 +15,5 @@ class CoreAsset extends AssetBundle {
 		"css/multiple.css"
 	];
 
-	public $dependencies = [
-		"MainAsset"
-	];
+	public $dependencies = [];
 }

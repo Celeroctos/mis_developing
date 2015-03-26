@@ -4,7 +4,12 @@ class Table extends Widget {
 
 	use TableTrait;
 
+    /**
+     * @var Widget - Sub-widget component with TableTrait element, which
+     *  extends Table widget, for example - MedcardTable
+     */
 	public $widget = null;
+
 	public $table = null;
 	public $header = null;
     public $pk = null;

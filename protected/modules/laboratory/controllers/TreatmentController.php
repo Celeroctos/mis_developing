@@ -7,7 +7,7 @@ class TreatmentController extends LController {
 	 */
 	public function actionView() {
 		$this->render("view", [
-			"directionRepeats" => 5
+			"directionRepeats" => LDirection::model()->getCountOfRepeats()
 		]);
 	}
 

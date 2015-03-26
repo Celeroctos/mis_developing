@@ -17,6 +17,7 @@ class MainAsset extends AssetBundle {
     ];
 
     public $dependencies = [
-        "DefaultAsset"
+        "DefaultAsset",
+        "CoreAsset"
     ];
 } 

@@ -30,6 +30,24 @@ class LDirection extends ActiveRecord {
     }
 
     /**
+     * Get count of repeated directions
+     * @return int - Count of repeats
+     * @throws CDbException
+     */
+    public function getCountOfRepeats() {
+        $row = $this->getDbConnection()->createCommand()
+            ->select("count(id) as count")
+            ->from("lis.direction")
+            ->where("is_repeated = 1")
+            ->queryRow();
+        if ($row) {
+            return $row["count"];
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Get array with keys for CGridView to display or order
      * @return array - Array with model data
      */
