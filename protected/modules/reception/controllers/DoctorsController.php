@@ -62,9 +62,7 @@ class DoctorsController extends Controller {
         }
         $start = $page * $rows - $rows;
 
-        //var_dump($filters);
-        //exit();
-        //$filters['rules'] = array();
+
         $doctors = $model->getRows($filters, $sidx, $sord, $start, $rows, $this->choosedDiagnosis, $this->greetingDate, $calendarTypeSetting, $isCallCenter);
 
         // Посмотрим на то, какой календарь мы показываем сейчас

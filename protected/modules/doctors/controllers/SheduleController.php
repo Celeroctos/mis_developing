@@ -1006,21 +1006,31 @@ class SheduleController extends Controller {
                     $resultArr[$i]['limits']['reception'] = $ruleToApply['limits'][2];
                     $resultArr[$i]['limits']['internet'] = $ruleToApply['limits'][3];
                 } else { // Это факт. Через него подвязываем тип и прочее
-                    $resultArr[$i]['worked'] = false;
-                    $resultArr[$i]['restDay'] = true;
-                    $resultArr[$i]['restDayType'] = $ruleToApply['type'];
-                    if(isset($ruleToApply['end']) && $ruleToApply['end'] == date('Y-m-d',$currentDate)) {
-                        $this->restDays[] = array(
-                            'doctor_id' => $doctorId,
-                            'type' => $ruleToApply['type'],
-                            'date' => date('Y-m-d',$currentDate)
-                        );
+                    if($onlyWaitingLine) {
+                        $resultArr[$i]['worked'] = true;
+                        $resultArr[$i]['restDay'] = false;
+                    } else {
+                        $resultArr[$i]['worked'] = false;
+                        $resultArr[$i]['restDay'] = true;
+                        $resultArr[$i]['restDayType'] = $ruleToApply['type'];
+                        if(isset($ruleToApply['end']) && $ruleToApply['end'] == date('Y-m-d',$currentDate)) {
+                            $this->restDays[] = array(
+                                'doctor_id' => $doctorId,
+                                'type' => $ruleToApply['type'],
+                                'date' => date('Y-m-d',$currentDate)
+                            );
+                        }
                     }
                 }
             } else {
                 // не найдено
-                $resultArr[$i]['worked'] = false;
-                $resultArr[$i]['restDay'] = true;
+                if($onlyWaitingLine) {
+                    $resultArr[$i]['worked'] = true;
+                    $resultArr[$i]['restDay'] = false;
+                } else {
+                    $resultArr[$i]['worked'] = false;
+                    $resultArr[$i]['restDay'] = true;
+                }
             }
 
             if ($resultArr[$i]['worked'] == true)  {
@@ -1304,10 +1314,12 @@ class SheduleController extends Controller {
         $ruleToApply = $this->checkByTimetable($shedule[0], $dateToFind);
         // 0 - считаем, что на одну дату приходится по одному графику
 
-        $result = $this->getPatientList($_GET['doctorid'], $this->currentYear.'-'.$this->currentMonth.'-'.$this->currentDay
-            ,$ruleToApply['greetingBegin'] ,$ruleToApply['greetingEnd'] , true, $onlyWaitingLine);
+        $result = $this->getPatientList($_GET['doctorid'], $this->currentYear.'-'.$this->currentMonth.'-'.$this->currentDay, $ruleToApply['greetingBegin'] ,$ruleToApply['greetingEnd'] , true, $onlyWaitingLine);
 
         $limits = $ruleToApply['limits'];
+        if(!$limits) {
+            $limits = [[],[],[]];
+        }
 
         echo CJSON::encode(array('success' => 'true',
             'data' => $result['result'],

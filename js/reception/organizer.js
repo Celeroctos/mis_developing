@@ -32,10 +32,6 @@
         $('#doctor-search-submit').trigger('click');
     });
 
-   /* $('.organizer').on('changeTriggerByLoad', function(e) {
-        triggeredByLoad = true;
-    }); */
-
     $('.organizer').on('writePatientWithCard', function(e, beginTime, year, month, day, li) {
         var params = {
             month : month + 1,
@@ -169,19 +165,12 @@
         });
 
         $(span).on('click', function(e) {
-            //$(li).popover('hide');
             $(li).popover('destroy');
             $('.organizer').trigger('resetClickedTime');
             $(li).removeClass('withPatient-pressed');
             e.stopPropagation();
         });
 
-        // Перед этим вызовом popover('show') надо вызвать destroy для всех предыдущих поповеров
-        // ------------------>
-        //$($('.popover').parents()[0]).popover('destroy');
-
-        //$($(li).parents('ul.patientList').find('.popover').parents()[0]).popover('destroy');
-        // ------------------>
         $(li).popover('show');
         $(li).find('.popover span.glyphicon').remove();
         $(li).find('.popover').css({
@@ -257,7 +246,6 @@
                 }
             }
 
-            //$(headerTd).html((isToday ? 'Cегодня<br/>' : rusDays[d.getDay()] + '<br/>') + ' ' + (parseInt(day) + i) + ' ' + globalVariables.months[d.getMonth()]);
             $(headerTd).html((isToday ? 'Cегодня<br/>' : rusDays[d.getDay()] + '<br/>') + ' ' + (d.getDate()) + ' ' + globalVariables.months[d.getMonth()]);
 
             for(var j = 0; j < data.restDays.length; j++) {
@@ -325,8 +313,8 @@
                 } else {
                     if(dayData.allowForWrite) {
                         // Рабочие дни
-                        var beginTime = dayData.beginTime.substr(0, dayData.beginTime.lastIndexOf(':'));
-                        var endTime = dayData.endTime.substr(0, dayData.endTime.lastIndexOf(':'));
+                        var beginTime = dayData.beginTime ? dayData.beginTime.substr(0, dayData.beginTime.lastIndexOf(':')) : ''; // Времени может не быть, если это живая очередь
+                        var endTime = dayData.endTime ? dayData.endTime.substr(0, dayData.endTime.lastIndexOf(':')) : '';
                         if(dayData.secondaryGreetings == null) { // Странный фикс: иногда возвращается null
                             dayData.secondaryGreetings = 0;
                         }
@@ -408,13 +396,8 @@
                                                     html: true,
                                                     placement: 'bottom',
                                                     title: title + 'врача ' + fio + ' на ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(),
-                                                    /*delay: {
-                                                        show: 300,
-                                                        hide: 300
-                                                    },*/
                                                     content: function() {
                                                         var ulInPopover = $('<ul>').addClass('patientList');
-                                                        console.log('dsfcxvfdfdsf');
                                                         for(var j = 0; j < data.data.length; j++) {
                                                             // Живая очередь обрабатывается иначе, чем обычная запись
                                                             if(globalVariables.hasOwnProperty('isWaitingLine') && globalVariables.isWaitingLine == 1) {
@@ -528,36 +511,11 @@
                                                             $(li).appendTo(ulInPopover);
                                                         }
 
-                                                        /*
-                                                        // Ограничение на кол-во приёмов колл-центра и регистратуры
-                                                        if(globalVariables.hasOwnProperty('isCallCenter') && globalVariables.isCallCenter == 1 && $(ulInPopover).find('li.withPatient').length >= callCenterGreetingsLimit) {
-// Логика неверна: здесь нужно считать количество записанных постфактум
-                                                            if (data.limits[0]['quantity']!=undefined)
-                                                            {
-                                                                if (  $(ulInPopover).find('li.withPatient').length >= data.limits[0]['quantity'] )
-                                                                {
-                                                                    $(ulInPopover).find('li:not(.withPatient)').addClass('not-aviable').off('click').css({'cursor' : 'default'}).prop('title', 'Превышение квоты записи через Call-Center');
-                                                                }
-                                                            }
-                                                        } else {
-                                                            // если поеределён limits[1][quantity]
-                                                            if (data.limits[1]['quantity']!=undefined)
-                                                            {
-                                                                if (  $(ulInPopover).find('li.withPatient').length >= data.limits[1]['quantity'] )
-                                                                {
-                                                                    $(ulInPopover).find('li:not(.withPatient)').addClass('not-aviable').off('click').css({'cursor' : 'default'}).prop('title', 'Превышение квоты записи через Регистратуру');
-                                                                }
-                                                            }
-                                                        }
-                                                        */
-
-                                                        if(globalVariables.hasOwnProperty('isCallCenter') && globalVariables.isCallCenter == 1)
-                                                        {
+                                                        if(globalVariables.hasOwnProperty('isCallCenter') && globalVariables.isCallCenter == 1) {
                                                             // Call-центр
                                                             // Есть ли
                                                             customQuantityLimit = false;
-                                                            if (data.limits[1]['quantity']!=undefined)
-                                                            {
+                                                            if (data.limits[1]['quantity']!=undefined) {
                                                                 if (  $(ulInPopover).find('li.withPatient').length >= data.limits[1]['quantity'] )
                                                                 {
                                                                     $(ulInPopover).find('li:not(.withPatient)').addClass('not-aviable').off('click').css({'cursor' : 'default'}).prop('title', 'Превышение квоты записи через Call-Центр');
@@ -583,9 +541,6 @@
                                                                 }
                                                             }
                                                         }
-
-
-
 
                                                         return ulInPopover;
                                                     },
@@ -754,7 +709,10 @@
         $('.organizer').trigger('resetClickedTime');
     });
 
-    function isPassedTime(time, date, isFull,limits) {
+    function isPassedTime(time, date, isFull, limits) {
+        if(globalVariables.isWaitingLine) {
+            return false;
+        }
         var now = new Date();
         var splitTime = time.split(':');
         if(now.getFullYear() == date.getFullYear() && now.getMonth() == date.getMonth() && now.getDate() == date.getDate()) {
@@ -763,13 +721,8 @@
             }
         }
 
-
-
         if(isFull) { // Полная проверка
-
-
             //======>
-
            definedCustomLimits = false;
             // Если определены limits - то прогоняем по ним
             if (limits!=undefined)
