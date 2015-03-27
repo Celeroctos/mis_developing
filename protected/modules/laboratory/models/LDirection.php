@@ -11,22 +11,17 @@ class LDirection extends ActiveRecord {
         return parent::model(__CLASS__);
     }
 
-    /**
-     * Override that method to return data for grid view
-     * @throws CDbException
-     * @return array - Array with fetched rows
-     */
-    public function getGridViewData() {
-        $query = $this->getDbConnection()->createCommand()
+	/**
+	 * Override that method to return data for grid view
+	 * @return CDbCommand - Command with query
+	 * @throws CDbException
+	 */
+    public function getGridViewQuery() {
+        return $this->getDbConnection()->createCommand()
             ->select("d.*, at.name as analysis_type_id, m.card_number")
             ->from("lis.direction as d")
             ->leftJoin("lis.analysis_type as at", "at.id = d.analysis_type_id")
             ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
-        $array = $query->queryAll();
-        foreach ($array as &$value) {
-            $value["status"] = DirectionStatusField::field()->getOption($value["status"]);
-        }
-        return $array;
     }
 
     /**

@@ -24,15 +24,14 @@ abstract class ActiveRecord extends CActiveRecord {
     }
 
     /**
-     * Override that method to return data for grid view
+     * Override that method to return data for grid view, main table
+	 * must have 't' alias
+	 * @return CDbCommand - Command with query
      * @throws CDbException
-     * @return array - Array with fetched rows
      */
-    public function getGridViewData() {
-        $query = $this->getDbConnection()->createCommand()
-            ->select("*")
-            ->from($this->tableName());
-        return $query->queryAll();
+    public function getGridViewQuery() {
+        return $this->getDbConnection()->createCommand()
+            ->select("*")->from($this->tableName() . " as t");
     }
 
     /**

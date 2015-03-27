@@ -64,14 +64,14 @@ abstract class GActiveRecord extends ActiveRecord {
 				$criteria->compare($key, $this->getAttribute($key));
 			}
 		}
-		return new CActiveDataProvider($this, [
+		return new ActiveDataProvider($this, [
 			"sort" => [
 				"defaultOrder" => "id asc"
 			],
 			"pagination" => [
 				"pageSize" => $this->getItemsPerPage()
 			],
-//			"form" => $this->form,
+			"form" => $this->form,
 		]);
 	}
 
