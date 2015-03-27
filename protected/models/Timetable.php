@@ -15,19 +15,23 @@ class Timetable extends MisActiveRecord {
         // return array('pk1', 'pk2');
     }
 
-    private function computeWeekNumber($dayToCount)
-    {
-
+    private function computeWeekNumber($dayToCount) {
         /*
-        НеделяМесяца = ( День(ЗаданнаяДата) +
-         НомерДняНедели( ПервыйДеньМесяца(ЗаданнаяДата) ) - 2 ) целочисленное_деление_на 7 + 1
-        */
+         * НеделяМесяца = ( День(ЗаданнаяДата) + НомерДняНедели( ПервыйДеньМесяца(ЗаданнаяДата) ) - 2 ) целочисленное_деление_на 7 + 1
+            Где
+            ЗаданнаяДата — дата, номер недели которой нужно определить
+            День() — день месяца. Например День("20.10.2006") = 20
+            НомерДняНедели() — порядковый номер дня недели, где Понедельник = 1, и т.д.
+            ПервыйДеньМесяца() — первое число заданного месяца. Например ПервыйДеньМесяца("20.10.2006") = "1.10.2006"
+         */
+        $firstDayWeekday = date("w", strtotime(date("m", strtotime($dayToCount))."/01/".date("Y", strtotime($dayToCount))));
+        $thisDayWeekday = date("w", strtotime($dayToCount));
+        $ret = (int) ((date("j", strtotime($dayToCount)) +  $firstDayWeekday - 2) / 7) + 1;
+        if($firstDayWeekday > $thisDayWeekday) {
+            $ret--;
+        }
 
-        return ((int) ((date("j", strtotime($dayToCount))+
-                date("w", strtotime(
-                    date("m", strtotime($dayToCount))
-                    . "/01/" .
-                    date("Y", strtotime($dayToCount))))-2)/7)) /*+ 1*/;
+        return $ret;
     }
 
     public function getRuleFromTimetable($timeTable, $dayDate, $returnFacts)
@@ -42,6 +46,7 @@ class Timetable extends MisActiveRecord {
         if ($weekDayOfDayDate == 0) {$weekDayOfDayDate = 7;}
         // Считаем номер недели длля дня
         $weekNumberOfDayDate = $this->computeWeekNumber($dayDate);
+
         $underFact = false;
 
         $ruleToApply = null;
@@ -59,6 +64,7 @@ class Timetable extends MisActiveRecord {
                 }
             }
         }
+
         // Если правило не нуль - то не проверяем дальше
         if ($ruleToApply!=null){
             return $ruleToApply;
@@ -95,7 +101,7 @@ class Timetable extends MisActiveRecord {
         foreach ($timeTableObject['rules'] as $oneRule) {
             // Переменные "есть дни" и "есть чётность", "совпадение по чётности", "совпадение по дням"
             // Механизм следующий: перебираем правила, смотрим - если не указана ни чётность ни дни - то не применяется правило
-            //     в противном случае - флаг совпадения по критерию должен быть равен флагу наличия данного критерия
+            //  в противном случае - флаг совпадения по критерию должен быть равен флагу наличия данного критерия
             $dayWeekCoidance = false;
             $oddanceCoidance = false;
             $issetDays = false;
@@ -110,19 +116,12 @@ class Timetable extends MisActiveRecord {
                     if (count($oneRule['days'][$weekDayOfDayDate ]) > 0) {
                         // Ищем в массиве значение, равное номеру недели
                         // если не нашли - сразу выходим
-                       // $wasDayFound = false;
                         for($i = 0; $i < count($oneRule['days'][$weekDayOfDayDate ]); $i++) {
                             if ($oneRule['days'][$weekDayOfDayDate ][$i]==$weekNumberOfDayDate) {
-                               // $wasDayFound = true;
                                 $dayWeekCoidance = true;
                             }
                         }
-                        /*if (!$wasDayFound)
-                        {
-                            $ruleToApply = null;
-                        }*/
                     } else {
-                       // $wasDayFound = true;
                         $dayWeekCoidance = true;
                     }
                 }
@@ -130,58 +129,39 @@ class Timetable extends MisActiveRecord {
 
             // 3. Смотрим - попадает ли дата в чётные/нечётные
             //     Если указана чётность, то надо проверить - подпадает ли день под чётный/нечетный
-            if (isset($oneRule['oddance']))
-            {
+            if (isset($oneRule['oddance'])) {
                 $oddanceCoidance = true;
                 $issetOddance = true;
-                if ($oneRule['oddance']==1)
-                {
+                if ($oneRule['oddance'] == 1) {
                     // Если день нечётный - то выходим
-                    if ($dayFromDate % 2 == 1)
-                    {
+                    if ($dayFromDate % 2 == 1) {
                         $oddanceCoidance = false;
                     }
-
-
                 }
-                if ($oneRule['oddance']==0)
-                {
+                if ($oneRule['oddance'] == 0) {
                     // Если день чётный - то выходим
-                    if ($dayFromDate % 2 == 0)
-                    {
+                    if ($dayFromDate % 2 == 0) {
                         $oddanceCoidance = false;
                     }
                 }
 
                 // Проверим - если указано поле "кроме" и день попадает в значение этого поля
                 //   - то смотрим следующее правило
-                if (isset($oneRule['except']))
-                {
-                    if ( in_array($weekDayOfDayDate,$oneRule['except']) )
-                    {
+                if(isset($oneRule['except'])) {
+                    if ( in_array($weekDayOfDayDate,$oneRule['except'])) {
                         // Досвидос - нельзя применять данное правило
                         $oddanceCoidance = false;
                     }
                 }
-
             }
 
             // Если мы не нашли правило - идём на начало
-            if (
-                ($dayWeekCoidance!=$issetDays )
-                ||
-                ($oddanceCoidance!=$issetOddance)
-                || (($issetDays==false) &&($issetOddance==false) )
-            )
-            {
+            if ($dayWeekCoidance != $issetDays  || $oddanceCoidance!=$issetOddance || (!$issetDays && !$issetOddance)) {
                 continue;
-            }
-            else
-            {
+            } else {
                 return $ruleToApply;
             }
         }
-
 
         return null;
     }
