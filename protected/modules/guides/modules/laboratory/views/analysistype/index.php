@@ -61,3 +61,4 @@ $this->widget("GGridView", [
 	<option value="3">3</option>
 	<option value="-3">...</option>
 </select>
+<br><br><br><br><br><br><br><br><br><br>
