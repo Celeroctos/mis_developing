@@ -392,15 +392,15 @@
     //    }
     //);
 
-    function onActivate(element) {
-        selectToExpand = element;
-        // Запускаем таймер
-        if(wasScroll) {
-            expandSelectTimer = setTimeout(expandSelect,250);
-        } else {
-            expandSelectTimer = setTimeout(expandSelect,3000);
-        }
-    }
+    //function onActivate(element) {
+    //    selectToExpand = element;
+    //    // Запускаем таймер
+    //    if(wasScroll) {
+    //        expandSelectTimer = setTimeout(expandSelect,250);
+    //    } else {
+    //        expandSelectTimer = setTimeout(expandSelect,3000);
+    //    }
+    //}
 
     //$(document).on('focus','form.template-edit-form select[multiple]',
     //    function(e){
@@ -408,15 +408,15 @@
     //    }
     //);
 
-    function expandSelect() {
-        clearTimeout(expandSelectTimer);
-        expandSelectTimer = null;
-        if (wasScroll)  {
-            expandSelectTimer = setTimeout(expandSelect,2000);
-        } else{
-            $(selectToExpand).attr("size", $(selectToExpand).find('option').length );
-        }
-    }
+    //function expandSelect() {
+    //    clearTimeout(expandSelectTimer);
+    //    expandSelectTimer = null;
+    //    if (wasScroll)  {
+    //        expandSelectTimer = setTimeout(expandSelect,2000);
+    //    } else{
+    //        $(selectToExpand).attr("size", $(selectToExpand).find('option').length );
+    //    }
+    //}
 
     $(document).on('blur','form.template-edit-form select[multiple]',
         function(e)

@@ -225,7 +225,7 @@ var Laboratory = Laboratory || {};
 	);
 
     Lab.ready(function() {
-        $("select[multiple]").multiple().bind("style", function() {
+        $("select[multiple]:not([data-ignore!='multiple'])").multiple().bind("style", function() {
             var filter = $(this).multiple("property", "filter");
             var style = $(this).attr("style").split(";");
             var css = {};
@@ -256,7 +256,7 @@ var Laboratory = Laboratory || {};
 				$(this).multiple("choose", result);
 			}
 		});
-        $("select[multiple][value!='']").each(function() {
+        $("select[multiple]:not([data-ignore!='multiple'])[value!='']").each(function() {
             if ($(this).attr("value") != void 0) {
                 $(this).multiple("choose", $(this).attr("value"));
             }
