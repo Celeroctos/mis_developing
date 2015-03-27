@@ -402,11 +402,11 @@
         }
     }
 
-    $(document).on('focus','form.template-edit-form select[multiple]',
-        function(e){
-           expandSelect();
-        }
-    );
+    //$(document).on('focus','form.template-edit-form select[multiple]',
+    //    function(e){
+    //       expandSelect();
+    //    }
+    //);
 
     function expandSelect() {
         clearTimeout(expandSelectTimer);
