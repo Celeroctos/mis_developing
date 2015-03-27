@@ -52,4 +52,12 @@ $this->widget("GGridView", [
 	"title" => "Типы анализов",
 	"content" => ob_get_clean(),
 	"model" => $model,
-]);
+]); ?>
+
+<label for="test-multiple"></label>
+<select id="test-multiple" multiple>
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="-3">...</option>
+</select>

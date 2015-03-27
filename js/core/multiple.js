@@ -25,9 +25,9 @@ var Laboratory = Laboratory || {};
         var s = this.selector().clone().data("lab", this)
             .addClass("multiple-value").css({
                 "min-height": this.property("height")
-            });
+            }).addClass("form-control");
         var g = $("<div>", {
-            class: "btn-group multiple-control",
+            class: "multiple-control",
             role: "group",
             style: {
                 width: this.selector().width()
@@ -38,7 +38,8 @@ var Laboratory = Laboratory || {};
                 type: "button",
                 html: $("<span>", {
                     text: "Развернуть / Свернуть"
-                })
+                }),
+				style: "margin-right: 2px"
             })
         ).append(
             $("<button>", {
@@ -46,7 +47,8 @@ var Laboratory = Laboratory || {};
                 type: "button",
                 html: $("<span>", {
                     class: "glyphicon glyphicon-arrow-down"
-                })
+                }),
+				style: "margin-right: 2px"
             })
         ).append(
             $("<button>", {
@@ -54,9 +56,18 @@ var Laboratory = Laboratory || {};
                 type: "button",
                 html: $("<span>", {
                     class: "glyphicon glyphicon-arrow-up"
-                })
+                }),
+				style: "margin-right: 2px"
             })
-        );
+        ).append(
+			$("<button>", {
+				class: "btn btn-default multiple-insert-button",
+				type: "button",
+				html: $("<span>", {
+					class: "glyphicon glyphicon-plus"
+				})
+			}).hide()
+		);
 		return $("<div>", {
 			class: "multiple"
 		}).append(s).append(g).append(
@@ -69,19 +80,8 @@ var Laboratory = Laboratory || {};
 	Multiple.prototype.activate = function() {
 		var me = this;
 		this.selector().find("select.multiple-value").change(function() {
-			me.choose($.valHooks["select"].get(this));
+			me.choose($.valHooks["select"].get(this), true);
 		});
-		this.selector().find(".form-down-button").click(function() {
-			$(this).parents(".form-group").find("select.multiple-value").children("option").each(function(i, item) {
-				me.choose($(item).val());
-			});
-		});
-		this.selector().find(".form-up-button").click(function() {
-			$(this).parents(".form-group").find(".multiple-chosen").each(function(i, item) {
-				me.remove($(item).children("div"));
-			});
-		});
-        var heght = false;
         var collapsed = false;
         this.selector().find(".multiple-collapse-button").click(function() {
             var value = me.selector().find(".multiple-value");
@@ -92,15 +92,25 @@ var Laboratory = Laboratory || {};
             collapsed = !collapsed;
         });
         this.selector().find(".multiple-down-button").click(function() {
-            $(this).parents(".form-group").find("select.multiple-value").children("option").each(function(i, item) {
-                me.choose($(item).val());
+			var array = [];
+            me.selector().find("select.multiple-value").children("option:not(:hidden)").each(function(i, item) {
+				array.push($(item).val());
             });
+			me.choose(array);
         });
         this.selector().find(".multiple-up-button").click(function() {
-            $(this).parents(".form-group").find(".multiple-chosen").each(function(i, item) {
+			me.selector().find(".multiple-chosen").each(function(i, item) {
                 me.remove($(item).children("div"));
             });
         });
+		var link = null;
+		this.selector().find(".multiple-value option[value='-3']").each(function(i, opt) {
+			(link = $(opt).addClass("multiple-really-not-visible")).parents(".multiple")
+				.find(".multiple-insert-button").show();
+		});
+		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
+			$(link).trigger("change");
+		});
 	};
 
 	Multiple.prototype.remove = function(key) {
@@ -113,22 +123,40 @@ var Laboratory = Laboratory || {};
 		key.parent(".multiple-chosen").remove();
 	};
 
-	Multiple.prototype.choose = function(key) {
+	Multiple.prototype.clear = function() {
+		var me = this;
+		this.selector().find(".multiple-chosen").each(function(i, w) {
+			me.remove($(w).children("div"));
+		});
+	};
+
+	Multiple.prototype.choose = function(key, slow) {
+		var me = this;
 		var multiple = this.selector();
 		if (typeof key == "string") {
-			key = $.parseJSON(key);
+			if (key.trim() !== "") {
+				key = $.parseJSON(key);
+			} else {
+				key = [];
+			}
 		}
 		if (Array.isArray(key)) {
 			for (var i in key) {
-				this.choose(key[i]);
+				this.choose(key[i], slow);
 			}
 			if (!key.length) {
-				multiple.find("div.multiple-container").empty();
+				me.clear();
 			}
 			return void 0;
 		}
-        var name = multiple.find("select.multiple-value")
-            .find("option[value='" + key + "']").fadeOut("normal").text();
+		var value = multiple.find("select.multiple-value")
+			.find("option[value='" + key + "']");
+		if (slow) {
+			value.fadeOut(250);
+		} else {
+			value.hide();
+		}
+        var name = value.text();
 		if (!name.length) {
 			return void 0;
 		}
@@ -139,7 +167,7 @@ var Laboratory = Laboratory || {};
 		}).append(
 			$("<div>", {
 				text: name,
-				style: "text-align: left; width: calc(100% - 15px); float: left"
+				style: "width: calc(100% - 15px); float: left"
 			}).data("key", key)
 		).append(
 			r = $("<span>", {
@@ -148,7 +176,6 @@ var Laboratory = Laboratory || {};
 			})
 		);
 		multiple.find("div.multiple-container").append(t);
-		var me = this;
 		r.click(function() {
 			me.remove($(this).parent("div").children("div"));
 		});
@@ -208,13 +235,27 @@ var Laboratory = Laboratory || {};
                     continue;
                 }
                 var key = link[0];
-                if (hasArray(filter, key)) {
-                    continue;
-                }
+				if ($.inArray(key, filter)) {
+					continue;
+				}
                 css[key] = link[1].trim();
             }
             $(this).parent(".multiple").css(css);
-        });
+        }).each(function() {
+			var result = [],
+				options = this && this.options,
+				opt;
+			for (var i = 0, j = options.length; i < j; i++) {
+				opt = options[i];
+				if (opt.selected) {
+					result.push(opt.value || opt.text);
+				}
+				opt.selected = false;
+			}
+			if (result.length > 0) {
+				$(this).multiple("choose", result);
+			}
+		});
         $("select[multiple][value!='']").each(function() {
             if ($(this).attr("value") != void 0) {
                 $(this).multiple("choose", $(this).attr("value"));

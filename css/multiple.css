@@ -1,9 +1,13 @@
 
 .multiple {
+    width: 300px;
 }
+
 
 .multiple .multiple-value {
     min-height: 150px;
+    overflow-x: auto;
+    width: 100%;
 }
 
 .multiple-container {
@@ -19,6 +23,11 @@
     padding: 2px;
 }
 
+.multiple-chosen div {
+    text-align: right;
+    padding-right: 5px;
+}
+
 .multiple-container .multiple-chosen:hover {
     background-color: #add8e6;
 }
@@ -30,4 +39,8 @@
 .multiple .multiple-control {
     width: 100%;
     margin-top: 5px;
+}
+
+.multiple-really-not-visible {
+    display: none;
 }

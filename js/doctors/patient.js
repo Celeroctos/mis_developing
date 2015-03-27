@@ -380,17 +380,17 @@
     expandSelectTimer = null;
     selectToExpand = null;
 
-    $('form.template-edit-form select[multiple]').mouseenter(
-        function(e) {
-            onActivate(this);
-        }
-    );
-
-    $('form.template-edit-form select[multiple]').mousemove(
-        function(e) {
-            onActivate(this);
-        }
-    );
+    //$('form.template-edit-form select[multiple]').mouseenter(
+    //    function(e) {
+    //        onActivate(this);
+    //    }
+    //);
+	//
+    //$('form.template-edit-form select[multiple]').mousemove(
+    //    function(e) {
+    //        onActivate(this);
+    //    }
+    //);
 
     function onActivate(element) {
         selectToExpand = element;

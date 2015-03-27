@@ -44,7 +44,8 @@ class LaboratoryTabMenu extends CWidget {
 				"clef" => [
 					"table" => "lis.enterprise_clef",
 					"key" => "enterprise_id"
-				]
+				],
+				"order" => "shortname"
 			]
 		]
 	];

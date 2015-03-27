@@ -246,21 +246,6 @@ var Laboratory = Laboratory || {};
 	};
 
     /**
-     * Check array's key entry, like [in_array] method
-     * @param {Array} array - Array with values
-     * @param {*} key - Value with any type
-     * @returns {boolean} - True on exists
-     */
-    window.hasArray = function(array, key) {
-        for (var i in array) {
-            if (array[i] === key) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    /**
      * Is string ends with some suffix
      * @param suffix {string} - String suffix
      * @returns {boolean} - True if string has suffix

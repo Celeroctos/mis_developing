@@ -57,6 +57,15 @@ var GuideGridView = {
 				$(me).parents(".modal").modal("hide");
 			}, "json");
 		});
+		$("[id^='clef-'][id$='-modal']").each(function(i, m) {
+			$(m).find("select[multiple]").each(function(i, s) {
+				$(s).data("clef-keys", $(s).val());
+			});
+		}).on("show.bs.modal", function() {
+			$(this).find("select[multiple]").each(function(i, s) {
+				$(s).multiple("clear").multiple("choose", $(s).data("clef-keys"));
+			});
+		});
 	},
 	create: function(model) {
 		var form = $("#register-guide-modal form");
