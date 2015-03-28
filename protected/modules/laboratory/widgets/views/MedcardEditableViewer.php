@@ -36,35 +36,4 @@ $this->beginWidget("CActiveForm", [
 	</div>
 </div>
 
-<!--<div class="row">-->
-<!--	<div class="col-xs-12">-->
-<!--		<div class="col-xs-6 text-center">-->
-<!--			<b>ОМС</b>-->
-<!--			<hr>-->
-<!--			--><?// $this->widget("Form", [
-//				"model" => new LPolicyForm("treatment.policy")
-//			]) ?>
-<!--		</div>-->
-<!--		<div class="col-xs-6 text-center">-->
-<!--			<b>Сведения о работе</b>-->
-<!--			<hr>-->
-<!--			--><?// $this->widget("Form", [
-//				"model" => new LMedcardForm2("treatment.show")
-//			]) ?>
-<!--		</div>-->
-<!--	</div>-->
-<!--</div>-->
-<!--<br>-->
-<!--<div class="row">-->
-<!--	<div class="col-xs-12 text-center">-->
-<!--		<b>Сведения о работе</b>-->
-<!--		<hr>-->
-<!--		<div class="col-xs-6 col-xs-offset-3 text-center">-->
-<!--			--><?// $this->widget("Form", [
-//				"model" => new LPolicyForm("treatment.patient")
-//			]) ?>
-<!--		</div>-->
-<!--	</div>-->
-<!--</div>-->
-
 <?php $this->endWidget() ?>

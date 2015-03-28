@@ -109,9 +109,7 @@ $this->widget("Modal", [
 		"model" => new LDirectionForm()
 	]),
 	"id" => "direction-register-modal"
-]);
-
-?>
+]); ?>
 
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
