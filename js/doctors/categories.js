@@ -103,7 +103,7 @@ $(document).ready(function() {
             if (  $(globalVariables.domElement).is('select') )
             {
                 $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
-                $(globalVariables.domElement).val(ajaxData.id);
+                //$(globalVariables.domElement).val(ajaxData.id);
             }
             else
             {
