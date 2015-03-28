@@ -115,17 +115,17 @@ var Laboratory = Laboratory || {};
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
 			var backup = me.selected(true);
 			var select = me.selector().find("select[multiple]");
-			select.find("option[value='-3']").get(0).selected = true;
+			select.find("option[value='-3']")[0].selected = true;
 			$(link).trigger("change");
 			for (var i in backup) {
-				select.find("option[value='" + i + "']").get(0).selected = true;
+				select.find("option[value='" + i + "']")[0].selected = true;
 			}
 		});
 	};
 
 	Multiple.prototype.selected = function(clear) {
 		var result = [],
-			options = this && this.options,
+			options = this.selector().find("select[multiple]")[0].options,
 			opt;
 		for (var i = 0, j = options.length; i < j; i++) {
 			opt = options[i];
@@ -273,7 +273,7 @@ var Laboratory = Laboratory || {};
             }
             $(this).removeAttr("value");
         });
-		$("select[multiple][data-ignore!='multiple']:not([value])").each(function() {
+		$("select[multiple][data-ignore!='multiple']").each(function() {
 			var result = [],
 				options = this && this.options,
 				opt;
