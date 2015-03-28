@@ -77,8 +77,7 @@
                             <div class="col-xs-9">
                                 <?php echo $form->dropDownList($model, 'roleId', $rolesList, array(
                                     'id' => 'roleId',
-                                    'class' => 'form-control roleChooseCombo',
-                                    'multiple' => 'multiple'
+                                    'class' => 'form-control roleChooseCombo'
                                 )); ?>
                                 <?php echo $form->error($model,'roleId'); ?>
                             </div>

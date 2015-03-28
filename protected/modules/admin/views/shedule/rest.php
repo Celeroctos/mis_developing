@@ -59,33 +59,23 @@ $("#restcalendar-shedule-form").trigger("success", [data, textStatus, jqXHR])
         <input type="radio" id="dayType" name="dayType" value = "4">Командировка<br>
     </div>
     <div class="twoColumnList col-xs-10" id="doctorsSelector" style="text-align: center; vertical-align: middle;">
-            <select multiple="multiple" class="twoColumnListFrom" style="width:300px">
-                <?php
-                foreach ($doctors as $oneDoctor)
-                {
-                    ?>
-                        <option value="<?php echo $oneDoctor['id']; ?>"><?php
-                            echo ($oneDoctor['last_name'].' '.$oneDoctor['first_name'].' '.$oneDoctor['middle_name']);
-
-                            ?></option>
-                    <?php
-                }
-                ?>
+            <select multiple="multiple" class="twoColumnListFrom" data-ignore="multiple" style="width:300px">
+                <?php foreach ($doctors as $oneDoctor) { ?>
+                        <option value="<?php echo $oneDoctor['id']; ?>">
+							<?php echo ($oneDoctor['last_name'].' '.$oneDoctor['first_name'].' '.$oneDoctor['middle_name']); ?>
+						</option>
+				<?php } ?>
             </select>
         <div class="TCLButtonsContainer" style="text-align: center;">
             <span class = "glyphicon glyphicon-forward twoColumnAddAllBtn"></span>
             <span class = "glyphicon glyphicon-backward twoColumnRemoveAllBtn"></span>
-
             <span class = "glyphicon glyphicon-arrow-right twoColumnAddBtn"></span>
             <span class = "glyphicon glyphicon-arrow-left twoColumnRemoveBtn"></span>
-
-
         </div>
-            <select multiple="multiple" class="twoColumnListTo"  style="width:300px">
+            <select multiple="multiple" class="twoColumnListTo" data-ignore="multiple" style="width:300px">
                 <!-- Здесь будут выбранные опции -->
-
             </select>
-        <input type="hidden" id="doctorsToChangeTimetable" class="twoColumnHidden"></input>
+        <input type="hidden" id="doctorsToChangeTimetable" class="twoColumnHidden">
     </div>
 </div>
 

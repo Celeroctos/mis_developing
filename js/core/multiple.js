@@ -80,7 +80,11 @@ var Laboratory = Laboratory || {};
 	Multiple.prototype.activate = function() {
 		var me = this;
 		this.selector().find("select.multiple-value").change(function() {
-			me.choose($.valHooks["select"].get(this), true);
+			var value = $.valHooks["select"].get(this);
+			for (var i in value) {
+				$(this).find("option[value='" + value[i] + "']").get(0).selected = false;
+			}
+			me.choose(value, true);
 		});
         var collapsed = false;
         this.selector().find(".multiple-collapse-button").click(function() {
@@ -163,11 +167,10 @@ var Laboratory = Laboratory || {};
 		var r, t;
 		t = $("<div>", {
 			style: "text-align: left; width: 100%",
-			class: "multiple-chosen disable-selection"
+			class: "multiple-chosen disable-selection row"
 		}).append(
 			$("<div>", {
-				text: name,
-				style: "width: calc(100% - 15px); float: left"
+				text: name
 			}).data("key", key)
 		).append(
 			r = $("<span>", {
@@ -241,7 +244,14 @@ var Laboratory = Laboratory || {};
                 css[key] = link[1].trim();
             }
             $(this).parent(".multiple").css(css);
-        }).each(function() {
+        });
+        $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
+            if ($(this).attr("value") != void 0) {
+                $(this).multiple("choose", $(this).attr("value"));
+            }
+            $(this).removeAttr("value");
+        });
+		$("select[multiple][data-ignore!='multiple']:not([value])").each(function() {
 			var result = [],
 				options = this && this.options,
 				opt;
@@ -250,18 +260,12 @@ var Laboratory = Laboratory || {};
 				if (opt.selected) {
 					result.push(opt.value || opt.text);
 				}
-				opt.selected = false;
+				options[i].selected = false;
 			}
 			if (result.length > 0) {
 				$(this).multiple("choose", result);
 			}
 		});
-        $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
-            if ($(this).attr("value") != void 0) {
-                $(this).multiple("choose", $(this).attr("value"));
-            }
-            $(this).attr("value", false);
-        });
     });
 
     (function() {

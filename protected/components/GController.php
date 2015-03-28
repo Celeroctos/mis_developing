@@ -82,8 +82,6 @@ abstract class GController extends LController {
 					"status" => false
 				]);
 			}
-			print_r($model);
-			die;
 			$this->after("create", $model, $form);
 			$this->leave([
 				"message" => "Данные были успешно сохранены"

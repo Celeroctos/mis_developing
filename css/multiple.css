@@ -1,8 +1,8 @@
 
 .multiple {
-    width: 300px;
+    min-width: 300px;
+    width: auto;
 }
-
 
 .multiple .multiple-value {
     min-height: 150px;
@@ -18,13 +18,17 @@
     margin-top: 5px;
 }
 
-.multiple-container .multiple-chosen {
+.multiple-chosen {
     border-radius: 2px;
     padding: 2px;
+    margin: 0;
 }
 
 .multiple-chosen div {
     text-align: right;
+    height: auto;
+    width: calc(100% - 15px);
+    float: left;
     padding-right: 5px;
 }
 
