@@ -98,7 +98,6 @@ class LaboratoryTabMenu extends CWidget {
 		]);
 		print CHtml::tag("h4", [], "Справочники лаборатории");
 		foreach ($this->list as $key => &$config) {
-			$key = strtolower($key);
 			if (!Yii::app()->user->checkAccess($config["privilege"])) {
 				continue;
 			}
