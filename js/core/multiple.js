@@ -113,12 +113,20 @@ var Laboratory = Laboratory || {};
 				.find(".multiple-insert-button").show();
 		});
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
-			var backup = me.selected(true);
-			var select = me.selector().find("select[multiple]");
+			var selector = me.selector(),
+				options = selector.find("select[multiple]")[0].options,
+				backup = me.selected(true),
+				select = selector.find("select[multiple]");
 			select.find("option[value='-3']")[0].selected = true;
 			$(link).trigger("change");
 			for (var i in backup) {
-				select.find("option[value='" + i + "']")[0].selected = true;
+				for (var j in options) {
+					if (options[j].value == i) {
+						options[j].selected = true;
+						break;
+					}
+				}
+				//select.find("option[value='" + i + "']")[0].selected = true;
 			}
 		});
 	};
