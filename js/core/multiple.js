@@ -113,9 +113,9 @@ var Laboratory = Laboratory || {};
 				.find(".multiple-insert-button").show();
 		});
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
-			link[0].selected = true;
+			me.selector().find(".multiple-value").val("-3");
 			$(link).trigger("change");
-			link[0].selected = false;
+			me.selector().find(".multiple-value").val("");
 		});
 	};
 
