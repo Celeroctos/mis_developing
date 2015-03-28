@@ -1,3 +1,21 @@
+var currentValue;
+
+var applySelectControlClick = function(select, opt) {
+	globalVariables.domElement = select;
+	var elementId;
+	if ($(opt).attr('id') != undefined) {
+		elementId =  $(opt).attr('id').substr($(opt).attr('id').lastIndexOf('_') + 1);
+	} else {
+		// Иначе берём в родителе input
+		var hiddenInput = $($(opt).parents()[0]).find('input[type=hidden]');
+		var elementIdRaw = $(hiddenInput).attr('id');
+		elementId = elementIdRaw.substr(elementIdRaw.lastIndexOf('_')+1);
+	}
+	$('#addGreetingComboValuePopup #controlId').val(elementId);
+	$('#addGreetingComboValuePopup').modal({});
+	$(select).val(currentValue);
+};
+
 $(document).ready(function() {
 
     $.fn['categories'] = {
@@ -137,24 +155,6 @@ $(document).ready(function() {
     $('.accordion-inner select').each(function(index,element){
         initSelectControlClick(element);
     });
-
-	var currentValue;
-
-	var applySelectControlClick = function(select, opt) {
-		globalVariables.domElement = select;
-		var elementId;
-		if ($(opt).attr('id') != undefined) {
-			elementId =  $(opt).attr('id').substr($(opt).attr('id').lastIndexOf('_') + 1);
-		} else {
-			// Иначе берём в родителе input
-			var hiddenInput = $($(opt).parents()[0]).find('input[type=hidden]');
-			var elementIdRaw = $(hiddenInput).attr('id');
-			elementId = elementIdRaw.substr(elementIdRaw.lastIndexOf('_')+1);
-		}
-		$('#addGreetingComboValuePopup #controlId').val(elementId);
-		$('#addGreetingComboValuePopup').modal({});
-		$(select).val(currentValue);
-	};
 
     function initSelectControlClick(element) {
         currentValue = $(element).val();
