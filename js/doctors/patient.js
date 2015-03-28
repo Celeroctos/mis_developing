@@ -452,39 +452,39 @@
         }
     );
 
-    expandingTimer = setInterval(onExpandTimerTick,250);
+    //expandingTimer = setInterval(onExpandTimerTick,250);
     isCursorInElement = false;
     elementUnderCursorOld = null;
     elementUnderCursor = null;
     ticksAfterCursor = 0;
 
-    function collapseCursorElement(){
-        if (  $(elementUnderCursor).is(elementUnderCursorOld)==false  ){
-            $('.expandedElement:not(:focus)').removeAttr("size")
-            $('.expandedElement:not(:focus)').removeClass('expandedElement');
-        }
-    }
+    //function collapseCursorElement(){
+    //    if (  $(elementUnderCursor).is(elementUnderCursorOld)==false  ){
+    //        $('.expandedElement:not(:focus)').removeAttr("size")
+    //        $('.expandedElement:not(:focus)').removeClass('expandedElement');
+    //    }
+    //}
 
-    function onExpandTimerTick() {
-        ticksAfterCursor--;
-        if (ticksAfterCursor>0) {
-            return;
-        }
-
-        if (isCursorInElement) {
-            // Смотрим - если старый элемент не соотносится с новым, то нужно спрятать раскрытые элементы
-            //    c классом expandedElement, кроме сфокусированного
-            collapseCursorElement();
-            if (elementUnderCursor!=null) {
-            // Раскрываем элемент, ставим ему класс
-                $(elementUnderCursor).attr("size", $(elementUnderCursor).find('option').length );
-                $(elementUnderCursor).addClass('expandedElement');
-            }
-        } else {
-            collapseCursorElement();
-        }
-        elementUnderCursorOld = elementUnderCursor;
-    }
+    //function onExpandTimerTick() {
+    //    ticksAfterCursor--;
+    //    if (ticksAfterCursor>0) {
+    //        return;
+    //    }
+	//
+    //    if (isCursorInElement) {
+    //        // Смотрим - если старый элемент не соотносится с новым, то нужно спрятать раскрытые элементы
+    //        //    c классом expandedElement, кроме сфокусированного
+    //        collapseCursorElement();
+    //        if (elementUnderCursor!=null) {
+    //        // Раскрываем элемент, ставим ему класс
+    //            $(elementUnderCursor).attr("size", $(elementUnderCursor).find('option').length );
+    //            $(elementUnderCursor).addClass('expandedElement');
+    //        }
+    //    } else {
+    //        collapseCursorElement();
+    //    }
+    //    elementUnderCursorOld = elementUnderCursor;
+    //}
 
     $(document).on('mouseenter','form.template-edit-form select[multiple]',
         function(e) {
