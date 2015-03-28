@@ -122,7 +122,7 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')||
     ($controller == 'analyzertypeanalysis')
     ) ? 'class="active"' : '';
     ?>>
-    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysistype')) ?>
+    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysisType')) ?>
         </li>
 <?php } ?>
 </ul>
