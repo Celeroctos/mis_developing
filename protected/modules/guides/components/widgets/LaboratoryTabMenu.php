@@ -111,7 +111,7 @@ class LaboratoryTabMenu extends CWidget {
 					])
 				);
 			} else {
-				print CHtml::tag("li", [ "class" => ($controller == $key ? "active" : null) ],
+				print CHtml::tag("li", [ "class" => ($controller == strtolower($key) ? "active" : null) ],
 					CHtml::link($config["label"], ["/guides/laboratory/$key"])
 				);
 			}
