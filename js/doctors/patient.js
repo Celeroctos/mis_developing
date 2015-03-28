@@ -418,28 +418,28 @@
     //    }
     //}
 
-    $(document).on('blur','form.template-edit-form select[multiple]',
-        function(e)
-        {
-            // Нужно удалить расширение
-          $(this).removeAttr("size");
-          clearTimeout(expandSelectTimer);
-            expandSelectTimer = null;
-        }
-    );
+    //$(document).on('blur','form.template-edit-form select[multiple]',
+    //    function(e)
+    //    {
+    //        // Нужно удалить расширение
+    //      $(this).removeAttr("size");
+    //      clearTimeout(expandSelectTimer);
+    //        expandSelectTimer = null;
+    //    }
+    //);
 
-    $('form.template-edit-form select[multiple]').mouseleave(
-        function(e)
-        {
-            clearTimeout(expandSelectTimer);
-            expandSelectTimer = null;
-            // Убираем расширение только если this не в фокусе
-            if ( ! $(e.currentTarget).is(':focus') )
-            {
-                $(e.currentTarget).removeAttr("size");
-            }
-        }
-    );
+    //$('form.template-edit-form select[multiple]').mouseleave(
+    //    function(e)
+    //    {
+    //        clearTimeout(expandSelectTimer);
+    //        expandSelectTimer = null;
+    //        // Убираем расширение только если this не в фокусе
+    //        if ( ! $(e.currentTarget).is(':focus') )
+    //        {
+    //            $(e.currentTarget).removeAttr("size");
+    //        }
+    //    }
+    //);
 
     wasScroll = false;
 
