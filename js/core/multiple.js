@@ -70,6 +70,8 @@ var Laboratory = Laboratory || {};
 		);
 		return $("<div>", {
 			class: "multiple"
+		}).css({
+			width: s.width()
 		}).append(s).append(g).append(
 			$("<div>", {
 				class: "multiple-container form-control"

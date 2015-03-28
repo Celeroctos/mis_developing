@@ -99,7 +99,7 @@ $(document).ready(function() {
         var ajaxData = $.parseJSON(ajaxData);
         if(ajaxData.success == 'true') { // Запрос прошёл удачно, закрываем окно для добавления нового предприятия, перезагружаем jqGrid
             $('#addGreetingComboValuePopup').modal('hide');
-            $("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
+            //$("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
             if (  $(globalVariables.domElement).is('select') )
             {
                 $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
