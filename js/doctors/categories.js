@@ -140,7 +140,7 @@ $(document).ready(function() {
         initSelectControlClick(element);
     });
 
-	applyInsertForSelect = function() {
+	applyInsertForSelect = function(element) {
 		globalVariables.domElement = element;
 		var elementId;
 		if ($(this).attr('id') != undefined) {
@@ -159,7 +159,7 @@ $(document).ready(function() {
         var currentValue = $(element).val();
         $(element).on('change', function(e) {
             if($(this).val() == '-3') {
-				applyInsertForSelect.call(this);
+				applyInsertForSelect.call(this, element);
                 $(element).val(currentValue);
                 return false;
             } else {

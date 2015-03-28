@@ -113,7 +113,8 @@ var Laboratory = Laboratory || {};
 				.find(".multiple-insert-button").show();
 		});
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
-			applyInsertForSelect.call(me.selector().find(".multiple-value").get(0));
+			var t;
+			applyInsertForSelect.call(t = me.selector().find(".multiple-value").get(0), t);
 		});
 	};
 
