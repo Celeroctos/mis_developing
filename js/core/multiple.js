@@ -126,7 +126,7 @@ var Laboratory = Laboratory || {};
 			opt;
 		for (var i = 0, j = options.length; i < j; i++) {
 			opt = options[i];
-			if (opt.selected && opt.value !== -3) {
+			if (opt.selected && opt.value != -3) {
 				result.push(opt.value || opt.text);
 			}
 			if (clear) {
