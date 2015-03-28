@@ -271,16 +271,7 @@ var Laboratory = Laboratory || {};
             $(this).removeAttr("value");
         });
 		$("select[multiple][data-ignore!='multiple']").each(function() {
-			var result = [],
-				options = this && this.options,
-				opt;
-			for (var i = 0, j = options.length; i < j; i++) {
-				opt = options[i];
-				if (opt.selected) {
-					result.push(opt.value || opt.text);
-				}
-				options[i].selected = false;
-			}
+			var result = $(this).multiple("selected", true);
 			if (result.length > 0) {
 				$(this).multiple("choose", result);
 			}
