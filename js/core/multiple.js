@@ -244,7 +244,7 @@ var Laboratory = Laboratory || {};
 		"createMultiple"
 	);
 
-    Lab.ready(function() {
+    $(document).ready(function() {
         $("select[multiple][data-ignore!='multiple']").multiple().bind("style", function() {
             var filter = $(this).multiple("property", "filter");
             var style = $(this).attr("style").split(";");
