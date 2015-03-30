@@ -77,7 +77,9 @@
                             <div class="col-xs-9">
                                 <?php echo $form->dropDownList($model, 'roleId', $rolesList, array(
                                     'id' => 'roleId',
-                                    'class' => 'form-control roleChooseCombo'
+                                    'class' => 'form-control roleChooseCombo',
+                                    'multiple' => 'multiple',
+                                    'data-ignore' => 'multiple'
                                 )); ?>
                                 <?php echo $form->error($model,'roleId'); ?>
                             </div>
@@ -90,7 +92,8 @@
                                 <?php echo $form->dropDownList($model, 'employeeId', $employeesList, array(
                                     'id' => 'employeeId',
                                     'class' => 'form-control',
-									'multiple' => 'multiple'
+                                    'multiple' => 'multiple',
+                                    'data-ignore' => 'multiple'
                                 )); ?>
                                 <?php echo $form->error($model,'employeeId'); ?>
                             </div>
@@ -178,7 +181,8 @@
                                 <?php echo $form->dropDownList($model, 'roleId', $rolesList, array(
                                     'id' => 'roleId',
                                     'class' => 'form-control roleChooseCombo',
-                                    'multiple' => 'multiple'
+                                    'multiple' => 'multiple',
+                                    'data-ignore' => 'multiple'
                                 )); ?>
                                 <?php echo $form->error($model,'roleId'); ?>
                             </div>
@@ -191,7 +195,8 @@
                                 <?php echo $form->dropDownList($model, 'employeeId', $employeesList, array(
                                     'id' => 'employeeId',
                                     'class' => 'form-control',
-									'multiple' => 'multiple'
+                                    'multiple' => 'multiple',
+                                    'data-ignore' => 'multiple'
                                 )); ?>
                                 <?php echo $form->error($model,'employeeId'); ?>
                             </div>
