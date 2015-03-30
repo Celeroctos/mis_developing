@@ -31,7 +31,13 @@ class ActiveDataProvider extends CActiveDataProvider {
         }
         $this->model->setDbCriteria($baseCriteria !== null ? clone $baseCriteria : null);
 		if ($this->model instanceof ActiveRecord) {
-			if (($data = $this->model->getGridViewData()) != null && isset($data[0]) && !($data[0] instanceof CActiveRecord)) {
+			$query = $this->model->getGridViewQuery()
+				->where($criteria->condition, $criteria->params);
+			if (!empty($criteria->order)) {
+				$query->order(preg_replace('/\\"/', "", $criteria->order));
+			}
+			if (($data = $query->queryAll()) != null && isset($data[0]) && !($data[0] instanceof CActiveRecord)
+			) {
 				$data = $this->model->populateRecords($data);
 			}
 			if ($this->form != null) {

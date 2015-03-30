@@ -18,11 +18,12 @@ class MedcardEditableViewer extends Widget {
 			$rule = MedcardRule::model()->find("name = :name", [
 				":name" => "Лаборатория"
 			]);
-			if ($rule == null) {
-				throw new CException("Can't resolve medcard rule for laboratory");
-			}
 			$generator->setPrevNumber("");
-			$number = $generator->generateNumber($rule["id"]);
+			if ($rule != null) {
+				$number = $generator->generateNumber($rule["id"]);
+			} else {
+//				throw new CException("Can't resolve medcard rule for laboratory");
+			}
 		} else {
 			$number = $this->number;
 		}

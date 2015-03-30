@@ -238,16 +238,27 @@ class UsersController extends Controller {
 
         // Теперь ставим роли
         RoleToUser::model()->deleteAll('user_id = :user_id', array(':user_id' => $user->id));
-        foreach($model->roleId as $role) {
-            $roleToUser = new RoleToUser();
-            $roleToUser->user_id = $user->id;
-            $roleToUser->role_id = $role;
-            if(!$roleToUser->save()) {
-                echo CJSON::encode(array('success' => false,
-                                         'error' => 'Не могу сохранить роль!'));
-                exit();
-            }
-        }
+		if (is_array($model->roleId)) {
+			foreach($model->roleId as $role) {
+				$roleToUser = new RoleToUser();
+				$roleToUser->user_id = $user->id;
+				$roleToUser->role_id = $role;
+				if(!$roleToUser->save()) {
+					echo CJSON::encode(array('success' => false,
+						'error' => 'Не могу сохранить роль!'));
+					exit();
+				}
+			}
+		} else {
+			$roleToUser = new RoleToUser();
+			$roleToUser->user_id = $user->id;
+			$roleToUser->role_id = $model->roleId;
+			if(!$roleToUser->save()) {
+				echo CJSON::encode(array('success' => false,
+					'error' => 'Не могу сохранить роль!'));
+				exit();
+			}
+		}
     }
 }
 

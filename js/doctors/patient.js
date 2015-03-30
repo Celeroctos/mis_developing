@@ -380,66 +380,66 @@
     expandSelectTimer = null;
     selectToExpand = null;
 
-    $('form.template-edit-form select[multiple]').mouseenter(
-        function(e) {
-            onActivate(this);
-        }
-    );
+    //$('form.template-edit-form select[multiple]').mouseenter(
+    //    function(e) {
+    //        onActivate(this);
+    //    }
+    //);
+	//
+    //$('form.template-edit-form select[multiple]').mousemove(
+    //    function(e) {
+    //        onActivate(this);
+    //    }
+    //);
 
-    $('form.template-edit-form select[multiple]').mousemove(
-        function(e) {
-            onActivate(this);
-        }
-    );
+    //function onActivate(element) {
+    //    selectToExpand = element;
+    //    // Запускаем таймер
+    //    if(wasScroll) {
+    //        expandSelectTimer = setTimeout(expandSelect,250);
+    //    } else {
+    //        expandSelectTimer = setTimeout(expandSelect,3000);
+    //    }
+    //}
 
-    function onActivate(element) {
-        selectToExpand = element;
-        // Запускаем таймер
-        if(wasScroll) {
-            expandSelectTimer = setTimeout(expandSelect,250);
-        } else {
-            expandSelectTimer = setTimeout(expandSelect,3000);
-        }
-    }
+    //$(document).on('focus','form.template-edit-form select[multiple]',
+    //    function(e){
+    //       expandSelect();
+    //    }
+    //);
 
-    $(document).on('focus','form.template-edit-form select[multiple]',
-        function(e){
-           expandSelect();
-        }
-    );
+    //function expandSelect() {
+    //    clearTimeout(expandSelectTimer);
+    //    expandSelectTimer = null;
+    //    if (wasScroll)  {
+    //        expandSelectTimer = setTimeout(expandSelect,2000);
+    //    } else{
+    //        $(selectToExpand).attr("size", $(selectToExpand).find('option').length );
+    //    }
+    //}
 
-    function expandSelect() {
-        clearTimeout(expandSelectTimer);
-        expandSelectTimer = null;
-        if (wasScroll)  {
-            expandSelectTimer = setTimeout(expandSelect,2000);
-        } else{
-            $(selectToExpand).attr("size", $(selectToExpand).find('option').length );
-        }
-    }
+    //$(document).on('blur','form.template-edit-form select[multiple]',
+    //    function(e)
+    //    {
+    //        // Нужно удалить расширение
+    //      $(this).removeAttr("size");
+    //      clearTimeout(expandSelectTimer);
+    //        expandSelectTimer = null;
+    //    }
+    //);
 
-    $(document).on('blur','form.template-edit-form select[multiple]',
-        function(e)
-        {
-            // Нужно удалить расширение
-          $(this).removeAttr("size");
-          clearTimeout(expandSelectTimer);
-            expandSelectTimer = null;
-        }
-    );
-
-    $('form.template-edit-form select[multiple]').mouseleave(
-        function(e)
-        {
-            clearTimeout(expandSelectTimer);
-            expandSelectTimer = null;
-            // Убираем расширение только если this не в фокусе
-            if ( ! $(e.currentTarget).is(':focus') )
-            {
-                $(e.currentTarget).removeAttr("size");
-            }
-        }
-    );
+    //$('form.template-edit-form select[multiple]').mouseleave(
+    //    function(e)
+    //    {
+    //        clearTimeout(expandSelectTimer);
+    //        expandSelectTimer = null;
+    //        // Убираем расширение только если this не в фокусе
+    //        if ( ! $(e.currentTarget).is(':focus') )
+    //        {
+    //            $(e.currentTarget).removeAttr("size");
+    //        }
+    //    }
+    //);
 
     wasScroll = false;
 
@@ -452,39 +452,39 @@
         }
     );
 
-    expandingTimer = setInterval(onExpandTimerTick,250);
+    //expandingTimer = setInterval(onExpandTimerTick,250);
     isCursorInElement = false;
     elementUnderCursorOld = null;
     elementUnderCursor = null;
     ticksAfterCursor = 0;
 
-    function collapseCursorElement(){
-        if (  $(elementUnderCursor).is(elementUnderCursorOld)==false  ){
-            $('.expandedElement:not(:focus)').removeAttr("size")
-            $('.expandedElement:not(:focus)').removeClass('expandedElement');
-        }
-    }
+    //function collapseCursorElement(){
+    //    if (  $(elementUnderCursor).is(elementUnderCursorOld)==false  ){
+    //        $('.expandedElement:not(:focus)').removeAttr("size")
+    //        $('.expandedElement:not(:focus)').removeClass('expandedElement');
+    //    }
+    //}
 
-    function onExpandTimerTick() {
-        ticksAfterCursor--;
-        if (ticksAfterCursor>0) {
-            return;
-        }
-
-        if (isCursorInElement) {
-            // Смотрим - если старый элемент не соотносится с новым, то нужно спрятать раскрытые элементы
-            //    c классом expandedElement, кроме сфокусированного
-            collapseCursorElement();
-            if (elementUnderCursor!=null) {
-            // Раскрываем элемент, ставим ему класс
-                $(elementUnderCursor).attr("size", $(elementUnderCursor).find('option').length );
-                $(elementUnderCursor).addClass('expandedElement');
-            }
-        } else {
-            collapseCursorElement();
-        }
-        elementUnderCursorOld = elementUnderCursor;
-    }
+    //function onExpandTimerTick() {
+    //    ticksAfterCursor--;
+    //    if (ticksAfterCursor>0) {
+    //        return;
+    //    }
+	//
+    //    if (isCursorInElement) {
+    //        // Смотрим - если старый элемент не соотносится с новым, то нужно спрятать раскрытые элементы
+    //        //    c классом expandedElement, кроме сфокусированного
+    //        collapseCursorElement();
+    //        if (elementUnderCursor!=null) {
+    //        // Раскрываем элемент, ставим ему класс
+    //            $(elementUnderCursor).attr("size", $(elementUnderCursor).find('option').length );
+    //            $(elementUnderCursor).addClass('expandedElement');
+    //        }
+    //    } else {
+    //        collapseCursorElement();
+    //    }
+    //    elementUnderCursorOld = elementUnderCursor;
+    //}
 
     $(document).on('mouseenter','form.template-edit-form select[multiple]',
         function(e) {
@@ -1542,17 +1542,19 @@ $('#nextHistoryPoint').on('click', function () {
             $('#leaveYesSubmit').trigger('click');
         }
         var choosedDoctor = $(this).val();
-        $(this).val(globalVariables.doctorId);
+        //$(this).val(globalVariables.doctorId);
         callback = function() {
             globalVariables.doctorId = choosedDoctor;
             $('#change-doctor-form select')
-                .val(choosedDoctor)
                 .prop('disabled', true);
             // Вставляем оверлей
             $('.overlayCont').prepend($('<div>').prop('class', 'overlay').css({'marginLeft' : '10px'}));
             $('.changeDate-cont').prepend($('<div>').prop('class', 'overlay'));
             $('#refreshPatientList').trigger('click');
-        }
+        };
+		if($('.greetingContentCont').length <= 0) {
+			callback();
+		}
         return false;
 	});
 	

@@ -44,7 +44,8 @@ class LaboratoryTabMenu extends CWidget {
 				"clef" => [
 					"table" => "lis.enterprise_clef",
 					"key" => "enterprise_id"
-				]
+				],
+				"order" => "shortname"
 			]
 		]
 	];
@@ -97,7 +98,6 @@ class LaboratoryTabMenu extends CWidget {
 		]);
 		print CHtml::tag("h4", [], "Справочники лаборатории");
 		foreach ($this->list as $key => &$config) {
-			$key = strtolower($key);
 			if (!Yii::app()->user->checkAccess($config["privilege"])) {
 				continue;
 			}
@@ -111,7 +111,7 @@ class LaboratoryTabMenu extends CWidget {
 					])
 				);
 			} else {
-				print CHtml::tag("li", [ "class" => ($controller == $key ? "active" : null) ],
+				print CHtml::tag("li", [ "class" => ($controller == strtolower($key) ? "active" : null) ],
 					CHtml::link($config["label"], ["/guides/laboratory/$key"])
 				);
 			}

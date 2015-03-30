@@ -14,7 +14,6 @@ class MultipleField extends Field {
             'id' => $this->getKey(),
             'class' => 'form-control',
             'value' => $this->getValue(),
-            'onchange' => "DropDown && DropDown.change && DropDown.change.call(this)",
             'options' => [ $this->getValue() => [ 'selected' => true ] ],
             'multiple' => true
         ]);

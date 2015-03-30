@@ -1,3 +1,5 @@
+var applyInsertForSelect;
+
 $(document).ready(function() {
 
     $.fn['categories'] = {
@@ -97,11 +99,11 @@ $(document).ready(function() {
         var ajaxData = $.parseJSON(ajaxData);
         if(ajaxData.success == 'true') { // Запрос прошёл удачно, закрываем окно для добавления нового предприятия, перезагружаем jqGrid
             $('#addGreetingComboValuePopup').modal('hide');
-            $("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
+            //$("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
             if (  $(globalVariables.domElement).is('select') )
             {
                 $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
-                $(globalVariables.domElement).val(ajaxData.id);
+                //$(globalVariables.domElement).val(ajaxData.id);
             }
             else
             {
@@ -137,25 +139,27 @@ $(document).ready(function() {
     $('.accordion-inner select').each(function(index,element){
         initSelectControlClick(element);
     });
+
+	applyInsertForSelect = function(element) {
+		globalVariables.domElement = element;
+		var elementId;
+		if ($(this).attr('id') != undefined) {
+			elementId =  $(this).attr('id').substr($(this).attr('id').lastIndexOf('_') + 1);
+		} else {
+			// Иначе берём в родителе input
+			hiddenInput = $($(this).parents()[0]).find('input[type=hidden]');
+			elementIdRaw = $(hiddenInput).attr('id');
+			elementId = elementIdRaw.substr(elementIdRaw.lastIndexOf('_') + 1);
+		}
+		$('#addGreetingComboValuePopup #controlId').val(elementId);
+		$('#addGreetingComboValuePopup').modal({});
+	};
+
     function initSelectControlClick(element) {
         var currentValue = $(element).val();
         $(element).on('change', function(e) {
             if($(this).val() == '-3') {
-                globalVariables.domElement = element;
-                var elementId = undefined;
-                if ($(this).attr('id')!=undefined)
-                {
-                    elementId =  $(this).attr('id').substr($(this).attr('id').lastIndexOf('_') + 1);
-                }
-                else
-                {
-                    // Иначе берём в родителе input
-                    hiddenInput = $($(this).parents()[0]).find('input[type=hidden]');
-                    elementIdRaw = $(hiddenInput).attr('id');
-                    elementId = elementIdRaw.substr(elementIdRaw.lastIndexOf('_')+1);
-                }
-                $('#addGreetingComboValuePopup #controlId').val(elementId);
-                $('#addGreetingComboValuePopup').modal({});
+				applyInsertForSelect.call(this, element);
                 $(element).val(currentValue);
                 return false;
             } else {
