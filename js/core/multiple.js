@@ -131,7 +131,7 @@ var Laboratory = Laboratory || {};
 		this.selector().find("select.multiple-value").change(function() {
 			var value = $.valHooks["select"].get(this);
 			for (var i in value) {
-				$(this).find("option[value='" + value[i] + "']").get(0).selected = false;
+				$(this).find("option[value='" + value[i] + "']").prop("disabled", true).get(0).selected = false;
 			}
 			me.choose(value, true);
 		});
@@ -323,20 +323,16 @@ var Laboratory = Laboratory || {};
 		 */
 		set: function(item, list) {
 			var multiple = $(item).parents(".multiple");
-			var instance = multiple.data("lab");
-			if (!instance) {
-				instance = $(item).data("lab");
-			}
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
 			}
 			if (!list.length || list == "[]") {
 				multiple.find(".multiple-chosen div").each(function(i, div) {
-					instance.remove($(div));
+					$(item).multiple("remove", $(div));
 				});
-				instance.choose([]);
+				$(item).multiple("choose", []);
 			} else {
-				instance.choose($.parseJSON(list));
+				$(item).multiple("choose", $.parseJSON(list));
 			}
 		},
 
@@ -397,7 +393,7 @@ var Laboratory = Laboratory || {};
                 css[key] = link[1].trim();
             }
             $(this).parent(".multiple").css(css);
-        });
+        }).trigger("style");
 		/* Обходим все элементы, которые уже имеют установленные значения в
 		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
 		добавляем в компонент, после чего удалем поле value */
