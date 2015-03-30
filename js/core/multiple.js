@@ -412,6 +412,11 @@ var Laboratory = Laboratory || {};
 				$(this).multiple("choose", result);
 			}
 		});
+		/* Обходим все множественный списки со стилями и применяем их для
+		нового родительского элемента */
+		$("select[multiple][data-ignore!='multiple'][style]").each(function() {
+			$(this).parents(".multiple").style($(this).style());
+		});
     });
 
     (function() {
