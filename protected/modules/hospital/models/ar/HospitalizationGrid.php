@@ -71,7 +71,10 @@ class HospitalizationGrid extends MisActiveRecord {
             array(
                 'type' => 'raw',
                 'value' => '%direction_id%',
-                'name' => 'direction_id'
+                'name' => 'direction_id',
+                'filter' => CHtml::activeTextField($this, 'direction_id', array(
+                    'style' => 'max-width: 100px;'
+                )),
             ),
             array(
                 'type' => 'raw',

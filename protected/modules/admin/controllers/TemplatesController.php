@@ -6,7 +6,8 @@ class TemplatesController extends Controller {
 
     private $pagesList = array( // Страницы
         'Основная медкарта',
-        'Раздел рекомендаций'
+        'Раздел рекомендаций',
+        'Осмотр лечащим врачом в стационаре'
     );
 
     public function getPagesList() {

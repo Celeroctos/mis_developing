@@ -183,6 +183,29 @@ $form = $this->beginWidget('CActiveForm', array(
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <?php
+                    $counter = 0;
+                    foreach ($templatesList as $key => $template) {
+                        ?>
+                        <div>
+                            <?php
+                            $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
+                                'currentPatient' => $currentPatient,
+                                'templateType' => 0,
+                                'templateId' => $template['id'],
+                                'withoutSave' => 0,
+                                'greetingId' => $currentSheduleId,
+                                'canEditMedcard' => $canEditMedcard,
+                                'medcard' => $medcard,
+                                'currentDate' => $currentDate,
+                                'templatePrefix' => 'a' . $template['id'],
+                                'medcardRecordId' => $medcardRecordId,
+                                'isActiveTemplate' => $counter == 0
+                            )); ?>
+                        </div>
+                        <?php
+                        $counter++;
+                    } ?>
                 </div>
             </div>
             <div class="modal-footer">

@@ -65,7 +65,7 @@
                                 <?php echo $form->passwordField($model,'password', array(
                                     'id' => 'password',
                                     'class' => 'form-control',
-                                    'placeholder' => 'Пароль'
+                                    'placeholder' => 'Пароль',
                                 )); ?>
                                 <?php echo $form->error($model,'password'); ?>
                             </div>
