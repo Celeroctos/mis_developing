@@ -499,7 +499,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                     }
 
                     ?>
-                    <select multiple="multiple" class="form-control twoColumnListFrom" style="width:<?php echo $sizeOfTwoColumnList; ?>px">
+                    <select multiple="multiple" data-ignore="multiple" class="form-control twoColumnListFrom" style="width:<?php echo $sizeOfTwoColumnList; ?>px">
                         <?php
                         /*  if (!isset($element['guide']))
                           {
@@ -523,7 +523,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                         <span class = "glyphicon glyphicon-arrow-right twoColumnAddBtn"></span>
                         <span class = "glyphicon glyphicon-arrow-left twoColumnRemoveBtn"></span>
                     </div>
-                    <select multiple="multiple" class="form-control twoColumnListTo" style="width:<?php echo $sizeOfTwoColumnList; ?>px">
+                    <select multiple="multiple" data-ignore="multiple" class="form-control twoColumnListTo" style="width:<?php echo $sizeOfTwoColumnList; ?>px">
                         <!-- Здесь будут выбранные опции -->
                         <?php
                         foreach ($element['guide'] as $optionId => $oneOption)
