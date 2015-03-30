@@ -741,3 +741,12 @@ $(document).ready(function() {
 	LogoutButton.construct();
 	MedcardSearchModal.construct();
 });
+
+$(document).ready(function() {
+	$("#hide-1").click(function() {
+		$("#test-select").css("display", "none");
+	});
+	$("#hide-2").click(function() {
+		$("#test-select").hide();
+	});
+});
