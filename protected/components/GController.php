@@ -82,6 +82,10 @@ abstract class GController extends LController {
 					"status" => false
 				]);
 			}
+			// Yii Bug: #2528, Hot! Hot! Hot!
+			$model->{"id"} = Yii::app()->getDb()->getLastInsertID(
+				$model->tableName() . "_id_seq"
+			);
 			$this->after("create", $model, $form);
 			$this->leave([
 				"message" => "Данные были успешно сохранены"
