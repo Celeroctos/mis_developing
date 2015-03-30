@@ -1542,17 +1542,19 @@ $('#nextHistoryPoint').on('click', function () {
             $('#leaveYesSubmit').trigger('click');
         }
         var choosedDoctor = $(this).val();
-        $(this).val(globalVariables.doctorId);
+        //$(this).val(globalVariables.doctorId);
         callback = function() {
             globalVariables.doctorId = choosedDoctor;
             $('#change-doctor-form select')
-                .val(choosedDoctor)
                 .prop('disabled', true);
             // Вставляем оверлей
             $('.overlayCont').prepend($('<div>').prop('class', 'overlay').css({'marginLeft' : '10px'}));
             $('.changeDate-cont').prepend($('<div>').prop('class', 'overlay'));
             $('#refreshPatientList').trigger('click');
-        }
+        };
+		if($('.greetingContentCont').length <= 0) {
+			callback();
+		}
         return false;
 	});
 	
