@@ -41,6 +41,9 @@ var GuideGridView = {
 			$(this).parents(".modal").find("form").each(function(i, f) {
 				str += $(f).serialize() + "&";
 			});
+			$(this).parents(".modal").find("select[multiple]").each(function(i, s) {
+				$(s).data("clef-keys", $(s).val());
+			});
 			var me = this;
 			$.post(url, str.replace(/&$/, ""), function(json) {
 				if (!json["status"]) {
