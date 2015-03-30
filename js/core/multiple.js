@@ -415,7 +415,7 @@ var Laboratory = Laboratory || {};
 		/* Обходим все множественный списки со стилями и применяем их для
 		нового родительского элемента */
 		$("select[multiple][data-ignore!='multiple'][style]").each(function() {
-			$(this).parents(".multiple").style($(this).style());
+			$(this).parents(".multiple").attr("style", $(this).attr("style"));
 		});
     });
 
