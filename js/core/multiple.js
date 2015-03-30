@@ -4,6 +4,29 @@ var Laboratory = Laboratory || {};
 
 	"use strict";
 
+	/**
+	 * Компонент - "ComboBox с множественным выбором", аналог select[multiple], позволяет
+	 * создавать графический элемент с полями и их значениями для совершения множественного
+	 * выбора из списка предсталвенных элементов
+	 *
+	 * Аттрибуты:
+	 *  + [filter] - массив со списком наименований CSS полей, которые
+	 *  	будут проигнорированы при обработе CSS-HOOK. Это сделано для
+	 *  	того, чтобы перехватывать события изменения стилей, которые
+	 *  	применяются для объекта select[multiple] и применять их для
+	 *  	глобального объекта (объекты из этого списка не будут учитываться)
+	 *  + [height] - Высота списка, а именно select[multiple], которая будет
+	 *  	испольоваться по умолчанию
+	 *  + [multiplier] - объект имеет кнопку "Развернуть/Свернуть", при нажатии
+	 *  	на которую увеличивается или умеьншается размер элемент select[multiple],
+	 *  	этот коэффициент умножается на height для получения второй высоты
+	 *
+	 * @param {{}} properties - Аттрибуты компонента, который устанавливаются после
+	 * 		вызова метода $("select[multiple]").multiple({});
+	 * @param {jQuery|Boolean} selector - Селектор компонента, который
+	 * 		используется по умолчанию (в данном случае это select[multiple])
+	 * @constructor
+	 */
 	var Multiple = function(properties, selector) {
 		Lab.Component.call(this, properties, {
             filter: [
@@ -21,6 +44,22 @@ var Laboratory = Laboratory || {};
 
 	Lab.extend(Multiple, Lab.Component);
 
+	/**
+	 * Рендерим компонент Multiple вместе с базовым списком элементов,
+	 * панелью управления и панелью с выбранными элементами
+	 *
+	 * Структура:
+	 *  + div.multiple
+	 *  + + select[multiple]
+	 *  + + div.multiple-control
+	 *  + + + button.multiple-collapse-button
+	 *  + + + button.multiple-down-button
+	 *  + + + button.multiple-up-button
+	 *  + + + button.multiple-insert-button
+	 *  + + div.multiple-container
+	 *
+	 * @returns {jQuery}
+	 */
 	Multiple.prototype.render = function() {
         var s = this.selector().clone().data("lab", this)
             .addClass("multiple-value").css({
@@ -79,15 +118,25 @@ var Laboratory = Laboratory || {};
 		);
 	};
 
+	/**
+	 * Данный метод отвечает за активацию компонента, т.е
+	 * вешает на него обработчики событий
+	 */
 	Multiple.prototype.activate = function() {
 		var me = this;
+		/* Обработка события на выбор элемента из списка
+		элементов для выбора (select[multiple]). Для получения
+		списка элементов используется нативный метод для
+		обычного выпадающего списка */
 		this.selector().find("select.multiple-value").change(function() {
 			var value = $.valHooks["select"].get(this);
 			for (var i in value) {
-				$(this).find("option[value='" + value[i] + "']").get(0).selected = false;
+				$(this).find("option[value='" + value[i] + "']").prop("disabled", true).get(0).selected = false;
 			}
 			me.choose(value, true);
 		});
+		/* Обработка события на нажатие клавиши "Развернуть/Свернуть", которая
+		разворачивает или сворачивает список элементов через метод $.animate */
         var collapsed = false;
         this.selector().find(".multiple-collapse-button").click(function() {
             var value = me.selector().find(".multiple-value");
@@ -97,6 +146,8 @@ var Laboratory = Laboratory || {};
             }, "fast");
             collapsed = !collapsed;
         });
+		/* Обработка события на выборо всех элементов из списка. Осуществляется
+		обход всех видимых элементов и строится массив из значений полей */
         this.selector().find(".multiple-down-button").click(function() {
 			var array = [];
             me.selector().find("select.multiple-value").children("option:not(:hidden)").each(function(i, item) {
@@ -104,22 +155,39 @@ var Laboratory = Laboratory || {};
             });
 			me.choose(array);
         });
+		/* Действие аналогично вышеописанному, но все элементы
+		отмечаются как невыбранные */
         this.selector().find(".multiple-up-button").click(function() {
 			me.selector().find(".multiple-chosen").each(function(i, item) {
                 me.remove($(item).children("div"));
             });
         });
-		var link = null;
+		/* Достаточно кривой фикс для элемента с значением -3, потому что в приеме
+		врача оно означает добавление нового элемента в справочник, поэтому, если
+		мы встречаем этот элемент, то мы должны спрятать его (уже можно удалить) и
+		делаем видимой клавишу для добавления элемента в справочник
+		 */
 		this.selector().find(".multiple-value option[value='-3']").each(function(i, opt) {
-			(link = $(opt).addClass("multiple-really-not-visible")).parents(".multiple")
+			$(opt).addClass("multiple-really-not-visible").parents(".multiple")
 				.find(".multiple-insert-button").show();
 		});
+		/* Событие обрабатывает действие при добавлении нового элемента в справочник,
+		она находит опцию со значением -3 и вызывает событие для обработки
+		 */
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
-			var t;
-			applyInsertForSelect.call(t = me.selector().find(".multiple-value").get(0), t);
+			var t; applyInsertForSelect.call(t = me.selector().find(".multiple-value").get(0), t);
 		});
 	};
 
+	/**
+	 * Возвращает массив с выбранными элементами, именно с теми
+	 * выбранными, которые были отмечаны так, как для старого select[multiple]
+	 * через зажатую клавишу Ctrl, вызывается через $("#id").multiple("selected")
+	 *
+	 * @param {Boolean} [clear] - Если true, то после генерации списка все
+	 * 		жэлементы будут сброшены (снова станут неотмеченными)
+	 * @returns {Array} - Массив с выбранными элементами
+	 */
 	Multiple.prototype.selected = function(clear) {
 		var result = [],
 			options = this.selector().find("select[multiple]")[0].options,
@@ -136,16 +204,30 @@ var Laboratory = Laboratory || {};
 		return result;
 	};
 
+	/**
+	 * Удалить элемент из списка, но не просто элемент, а именно
+	 * контейнер div с информацией об элементе, поэтому ручной
+	 * вызов этого метода не имеет смысла
+	 *
+	 * @param {jQuery} key - Контейнер с выбранным элементом
+	 */
 	Multiple.prototype.remove = function(key) {
+		/* Заменяем старый элемент option на новый, потому что
+		элемент уже является отмеченным и будет иметь флаг selected */
         key.parents(".multiple").find("option[value='" + key.data("key") + "']").replaceWith(
             $("<option>", {
                 value: key.data("key"),
                 text: key.text()
             })
         );
+		/* Удаляем элемент из списка выбранных */
 		key.parent(".multiple-chosen").remove();
 	};
 
+	/**
+	 * Очистить все выбранные элементы. Можно также вызывать
+	 * через плагин jQuery - $("#id").multiple("clear")
+	 */
 	Multiple.prototype.clear = function() {
 		var me = this;
 		this.selector().find(".multiple-chosen").each(function(i, w) {
@@ -153,6 +235,20 @@ var Laboratory = Laboratory || {};
 		});
 	};
 
+	/**
+	 * Выбирает элемент или массив с элементами, принимает одно
+	 * значение, массив значений или JSON строк с массивом значений
+	 *
+	 * Внимание! Если массив пустой или строка будет пустой, то
+	 * будут удалены все выбранные элементы! Так было сделано, не
+	 * помню для чего, но что-то такое было
+	 *
+	 * @param {Array|String} key - Значение для добавления или массив
+	 * 		с значениями
+	 * @param {Boolean} [slow] - Прятать элемент быстро или
+	 * 		медленно. Используется для выбора, чтобы избежать
+	 * 		двойное нажатие на один и тот же элемент
+	 */
 	Multiple.prototype.choose = function(key, slow) {
 		var me = this;
 		var multiple = this.selector();
@@ -204,27 +300,49 @@ var Laboratory = Laboratory || {};
 	};
 
 	$.valHooks["select-multiple"] = {
+
+		/**
+		 * Возвращает контейнер с элементами для некоторого
+		 * потомка класса multiple
+		 *
+		 * @param {jQuery|HTMLElement} item - Дочерний элемент, от
+		 * 		котрого будет начинаться поиск
+		 * @returns {jQuery} - Элемент jQuery с контейнером
+		 */
 		container: function(item) {
 			return $(item).parent(".multiple").children(".multiple-container");
 		},
+
+		/**
+		 * Устанавливает список значений для некоторого
+		 * элемента select[multiple]
+		 *
+		 * @param {HTMLElement} item - Объект select[multiple]
+		 * @param {Array|String} list - Значение, которое нужно
+		 * 		установить или массив значений
+		 */
 		set: function(item, list) {
 			var multiple = $(item).parents(".multiple");
-			var instance = multiple.data("lab");
-			if (!instance) {
-				instance = $(item).data("lab");
-			}
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
 			}
 			if (!list.length || list == "[]") {
 				multiple.find(".multiple-chosen div").each(function(i, div) {
-					instance.remove($(div));
+					$(item).multiple("remove", $(div));
 				});
-				instance.choose([]);
+				$(item).multiple("choose", []);
 			} else {
-				instance.choose($.parseJSON(list));
+				$(item).multiple("choose", $.parseJSON(list));
 			}
 		},
+
+		/**
+		 * Возвращает массив значений для некоторого
+		 * элемента select[multiple]
+		 *
+		 * @param {HTMLElement} item - Элемент select[multiple]
+		 * @returns {Array} - Массив выбранных элементов (значений)
+		 */
 		get: function(item) {
 			var list = [];
 			this.container(item).find(".multiple-chosen div").each(function(i, c) {
@@ -234,6 +352,15 @@ var Laboratory = Laboratory || {};
 		}
 	};
 
+	/**
+	 * Базовый метод, который используется для всех компонентов
+	 * базового ядра системы. Создает сущность Multiple для
+	 * объект select[multiple], если такой еще не имеется
+	 *
+	 * @param {HTMLElement} selector - Объект с select[multiple]
+	 * @param {{}} properties - Атрибуты для создания компонента
+	 * @returns {Multiple} - Объект Multiple
+	 */
 	Lab.createMultiple = function(selector, properties) {
 		if (!$(selector).hasClass("multiple-value")) {
 			return Lab.create(new Multiple(properties, $(selector)), selector, true);
@@ -247,6 +374,9 @@ var Laboratory = Laboratory || {};
 	);
 
     $(document).ready(function() {
+		/* Создаем событие на обработку изменения стиля элемента
+		select[multiple], которые потом парсим и применяем родительскому
+		элементу с классом multiple */
         $("select[multiple][data-ignore!='multiple']").multiple().bind("style", function() {
             var filter = $(this).multiple("property", "filter");
             var style = $(this).attr("style").split(";");
@@ -263,13 +393,19 @@ var Laboratory = Laboratory || {};
                 css[key] = link[1].trim();
             }
             $(this).parent(".multiple").css(css);
-        });
+        }).trigger("style");
+		/* Обходим все элементы, которые уже имеют установленные значения в
+		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
+		добавляем в компонент, после чего удалем поле value */
         $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
             if ($(this).attr("value") != void 0) {
                 $(this).multiple("choose", $(this).attr("value"));
             }
             $(this).removeAttr("value");
         });
+		/* Обходим все элементы, которые имеют отмеченные поля через зажатую
+		клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
+		что если массив пустой, то все поля будут удалены */
 		$("select[multiple][data-ignore!='multiple']").each(function() {
 			var result = $(this).multiple("selected", true);
 			if (result.length > 0) {
