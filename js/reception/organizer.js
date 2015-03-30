@@ -398,6 +398,7 @@
                                                     title: title + 'врача ' + fio + ' на ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear(),
                                                     content: function() {
                                                         var ulInPopover = $('<ul>').addClass('patientList');
+                                                        var numWithPatients = 0;
                                                         for(var j = 0; j < data.data.length; j++) {
                                                             // Живая очередь обрабатывается иначе, чем обычная запись
                                                             if(globalVariables.hasOwnProperty('isWaitingLine') && globalVariables.isWaitingLine == 1) {
@@ -409,7 +410,7 @@
 
                                                             } else {
                                                                 // Проверка настроек и текущего времени: нельзя записать на прошлое время
-                                                                if(!isPassedTime(data.data[j].timeBegin, date, true,data.limits)) {
+                                                                if(!isPassedTime(data.data[j].timeBegin, date, true, data.limits)) {
                                                                     continue;
                                                                 }
 
@@ -722,99 +723,54 @@
         }
 
         if(isFull) { // Полная проверка
-            //======>
            definedCustomLimits = false;
             // Если определены limits - то прогоняем по ним
-            if (limits!=undefined)
-            {
+            if (limits != undefined) {
+                startTime = null;
+                endTime = null;
+                currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(splitTime[0]), parseInt(splitTime[1]));
 
-                if(globalVariables.hasOwnProperty('isCallCenter') && globalVariables.isCallCenter == 1)
-                {
+                if(globalVariables.hasOwnProperty('isCallCenter') && globalVariables.isCallCenter == 1) {
                     // Проверяем call-центр
-                    startTime = null;
-                    endTime = null;
-                    currentTime = null;
-
-
-                    if (limits['1']['begin']!=undefined)
-                    {
-                  //      definedCustomLimits = true;
+                    if (limits['1']['begin']!=undefined){
                         startTimeSplittedCC = (limits['1']['begin']).split(':');
                         startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(startTimeSplittedCC[0]), parseInt(startTimeSplittedCC[1]));
                     }
 
-                    if (limits['1']['end']!=undefined)
-                    {
+                    if (limits['1']['end'] != undefined){
                         definedCustomLimits = true;
                         endTimeSplittedCC = (limits['1']['end']).split(':');
                         endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(endTimeSplittedCC[0]), parseInt(endTimeSplittedCC[1]));
                     }
-                    currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(splitTime[0]), parseInt(splitTime[1]));
-
-                    if (startTime!=null)
-                    {
-                        if (currentTime.getTime()<  startTime.getTime())
-                        {
-                            return false;
-                        }
-                    }
-                    if (endTime !=null)
-                    {
-                        if (currentTime.getTime() >=  endTime.getTime())
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
+                } else {
                     // Проверяем регистратуру
-                    startTime = null;
-                    endTime = null;
-                    currentTime = null;
-
-
-                    if (limits['2']['begin']!=undefined)
-                    {
-                    //    definedCustomLimits = true;
+                    if (limits['2']['begin']!=undefined) {
                         startTimeSplittedReg = (limits['2']['begin']).split(':');
                         startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(startTimeSplittedReg[0]), parseInt(startTimeSplittedReg[1]));
                     }
 
-                    if (limits['2']['end']!=undefined)
-                    {
+                    if (limits['2']['end']!=undefined) {
                         definedCustomLimits = true;
                         endTimeSplittedReg = (limits['2']['end']).split(':');
                         endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(endTimeSplittedReg[0]), parseInt(endTimeSplittedReg[1]));
                     }
-                    currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(splitTime[0]), parseInt(splitTime[1]));
+                }
 
-                    if (startTime!=null)
-                    {
-                        if (currentTime.getTime()<  startTime.getTime())
-                        {
-                            return false;
-                        }
+                if (startTime!=null){
+                    if (currentTime.getTime()<  startTime.getTime()) {
+                        return false;
                     }
-                    if (endTime !=null)
-                    {
-                        if (currentTime.getTime() >=  endTime.getTime())
-                        {
-                            return false;
-                        }
+                }
+                if (endTime !=null) {
+                    if (currentTime.getTime() >=  endTime.getTime()) {
+                        return false;
                     }
                 }
             }
 
-
-            if (definedCustomLimits)
-            {
+            if (definedCustomLimits) {
                 return true;
             }
-
-
-            //<=======
-
 
             // Теперь смотрим на выбранные фильтры..
             if($('#greetingType').val() == 0) { // Первичный приём
@@ -835,10 +791,8 @@
                     }
                 }
             }
-
-
-
         }
+
         return true;
     }
 });

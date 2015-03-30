@@ -203,8 +203,6 @@ class Timetable extends MisActiveRecord {
             $oneTableId['date_end'] = $timetableBody['date_end'];
             $oneTableId['json_data'] = $timetableBody['timetable_rules'];
             $oneTableId['wardsWithDoctors'] = $timeTableDoctorsObject->getDoctorsWardsByShedule($oneTableId['id']);
-
-
         }
 
         return $timeTablesIds;
