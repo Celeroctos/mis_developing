@@ -17,6 +17,7 @@ class DoctorScheduleAsset extends AssetBundle {
 	];
 
 	public $dependencies = [
-		"MainAsset"
+		"MainAsset",
+		"CoreAsset"
 	];
 }
