@@ -1,10 +1,22 @@
 <?php 
 class HospitalizationController extends Controller {
-//	public $layout = 'application.modules.hospital.views.layouts.index';
+	public $layout = 'application.modules.hospital.views.layouts.index';
 	public function actionView() {
+        $templatesList = MedcardTemplate::model()->findAll('page_id = :page_id', array(':page_id' => 2));
+        usort($templatesList, function($template1, $template2) {
+            if($template1->index > $template2->index) {
+                return 1;
+            } elseif($template1->index < $template2->index) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
 		$this->render('index', array(
             'model' => new FormHospitalizationDateChange('view'),
-            'writeTypes' => array('По записи', 'Живая очередь')
+            'writeTypes' => array('По записи', 'Живая очередь'),
+            'templatesList' => $templatesList
         ));
 	}
 

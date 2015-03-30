@@ -29,13 +29,6 @@
                             </li>
                         <?php } ?>
                         <?php if (Yii::app()->user->checkAccess('menuPatientRewrite')) { ?>
-                            <?php
-                            //var_dump($controller == 'patient' && $module == 'reception' && $action == 'viewrewrite');
-                            /* var_dump($controller );
-                              var_dump($module );
-                              var_dump($action );
-                              exit(); */
-                            ?>
                             <li <?php echo $controller == 'patient' && $module == 'reception' && $action == 'viewrewrite' ? 'class="active"' : ''; ?>>
                                 <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/write_patient.png" width="32" height="32" alt="" />Перезапись', array('/reception/patient/viewrewrite')) ?>
                             </li>
@@ -61,7 +54,6 @@
 
                             </li>
                         <?php } ?>
-
                     </ul>
                 </li>
             <?php } ?>
@@ -101,22 +93,19 @@
                                 <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/view_medcard.png" width="32" height="32" alt="" />Архив приёмов', array('/doctors/patient/viewsearch')) ?>
                             </li>
                         <?php } ?>
-            <!--li <?php echo $controller == 'patient' && $module == 'doctors' && $action == 'viewmonitoring' ? 'class="active"' : ''; ?>>
-                        <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/view_medcard.png" width="32" height="32" alt="" />Мониторинг', array('/doctors/patient/viewmonitoring')) ?>
-            </li-->
                     </ul>
                 </li>
-            <?php } ?>
-            <!--
+            <?php }  if (Yii::app()->user->checkAccess('hospitalMenu')) { ?>
             <li <?php echo $module == 'hospital' ? 'class="active"' : ''; ?>>
-            <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
-                    <ul class="nav">
-                            <li <?php echo $controller == 'monitoring' && $module == 'hospital' ? 'class="active"' : ''; ?>>
-            <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/greeting_patient.png" width="32" height="32" alt="" />Мониторинг', array('/hospital/monitoring/view')) ?>
-                            </li>
-                    </ul>
+            <li <?php echo $module == 'doctors' ? 'class="active"' : ''; ?>>
+                <?php echo CHtml::link('<img src="/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
+                <ul class="nav">
+                    <li>
+                        <?php echo CHtml::link('<img src="/images/icons/greeting_patient.png" width="32" height="32" alt="" />Госпитализация', array('/hospital/hospitalization/view')) ?>
+                    </li>
+                </ul>
             </li>
-            -->
+            <?php } ?>
 		<?php if (Yii::app()->user->checkAccess('menuAdmin')) { ?>
 			<li <?php echo ($module == 'laboratory' && $controller == 'treatment' && $action == 'view') ? 'class="active"' : ''; ?>>
 				<?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/treatment.png" width="32" height="32" alt="" />Процедурная', array('/laboratory/treatment/view')) ?>

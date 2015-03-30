@@ -37,6 +37,9 @@
         'ajaxUpdate' => true,
 		'columns' => $columns,
         'filter' => $model,
+        'htmlOptions' => array(
+
+        ),
         'beforeAjaxUpdate' => 'function(id, xhr) {
             xhr.url += "returnAsJson=1&serverModel='.$serverModel.'&id='.$gridId.'&container='.$container.'";
         }',

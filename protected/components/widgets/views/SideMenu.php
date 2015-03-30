@@ -99,6 +99,16 @@
                 </ul>
             </li>
         <?php } ?>
+        <?php if (Yii::app()->user->checkAccess('hospitalMenu')) { ?>
+        <li <?php echo $module == 'doctors' ? 'class="active"' : ''; ?>>
+            <?php echo CHtml::link('<img src="/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
+            <ul class="nav">
+                <li>
+                    <?php echo CHtml::link('<img src="/images/icons/greeting_patient.png" width="32" height="32" alt="" />Госпитализация', array('/hospital/hospitalization/view')) ?>
+                </li>
+            </ul>
+        </li>
+        <?php } ?>
         <li <?php echo $module == 'doctors' ? 'class="active"' : ''; ?>>
             <?php echo CHtml::link('<img src="/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
             <ul class="nav">

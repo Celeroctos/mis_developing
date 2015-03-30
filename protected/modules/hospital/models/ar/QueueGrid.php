@@ -81,7 +81,10 @@ class QueueGrid extends MisActiveRecord {
             array(
                 'type' => 'raw',
                 'value' => '%direction_id%',
-                'name' => 'direction_id'
+                'name' => 'direction_id',
+                'filter' => CHtml::activeTextField($this, 'direction_id', array(
+                    'style' => 'max-width: 100px;'
+                )),
             ),
             array(
                 'type' => 'raw',
@@ -91,7 +94,10 @@ class QueueGrid extends MisActiveRecord {
             array(
                 'type' => 'raw',
                 'value' => '%card_number%',
-                'name' => 'card_number'
+                'name' => 'card_number',
+                'filter' => CHtml::activeTextField($this, 'card_number', array(
+                    'style' => 'max-width: 100px;'
+                )),
             ),
             array(
                 'type' => 'raw',
@@ -102,17 +108,26 @@ class QueueGrid extends MisActiveRecord {
             array(
                 'type' => 'raw',
                 'value' => '%age%',
-                'name' => 'age'
+                'name' => 'age',
+                'filter' => CHtml::activeTextField($this, 'age', array(
+                    'style' => 'max-width: 100px;'
+                ))
             ),
             array(
                 'type' => 'raw',
                 'value' => '{{%pregnant_term%|int}}." недель"',
-                'name' => 'pregnant_term'
+                'name' => 'pregnant_term',
+                'filter' => CHtml::activeTextField($this, 'pregnant_term', array(
+                    'style' => 'max-width: 100px;'
+                )),
             ),
             array(
                 'type' => 'raw',
                 'value' => '%hospitalization_date%',
-                'name' => 'hospitalization_date'
+                'name' => 'hospitalization_date',
+                'filter' => CHtml::activeTextField($this, 'hospitalization_date', array(
+                    'style' => 'max-width: 100px;'
+                )),
             ),
            /* array(
                 'class'=>'CButtonColumn',
