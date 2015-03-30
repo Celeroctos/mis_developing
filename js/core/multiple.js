@@ -378,7 +378,10 @@ var Laboratory = Laboratory || {};
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
 		var f;
-        $("select[multiple][data-ignore!='multiple']").multiple().on("style", f = function() {
+        $("select[multiple][data-ignore!='multiple']").multiple().on("style", f = function(e) {
+			if (e.target.tagName !== "SELECT") {
+				return void 0;
+			}
             var filter = $(this).multiple("property", "filter");
 			var style;
 			if ($(this).attr("style")) {
@@ -399,10 +402,14 @@ var Laboratory = Laboratory || {};
                 css[key] = link[1].trim();
             }
             $(this).parent(".multiple").css(css);
-        }).on("hide", function() {
-			$(this).parents(".multiple").hide();
-		}).on("show", function() {
-			$(this).parents(".multiple").show();
+        }).on("hide", function(e) {
+			if (e.target.tagName === "SELECT") {
+				$(this).parents(".multiple").hide();
+			}
+		}).on("show", function(e) {
+			if (e.target.tagName === "SELECT") {
+				$(this).parents(".multiple").show();
+			}
 		}).trigger("style");
 		/* Обходим все элементы, которые уже имеют установленные значения в
 		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
@@ -422,14 +429,20 @@ var Laboratory = Laboratory || {};
 				$(this).multiple("choose", result);
 			}
 			// #13553 - Hot! Hot! Hot!
-			this.onhide = function() {
-				$(this).parents(".multiple").hide();
+			this.onhide = function(e) {
+				if (e.target.tagName === "SELECT") {
+					$(this).parents(".multiple").hide();
+				}
 			};
-			this.onshow = function() {
-				$(this).parents(".multiple").show();
+			this.onshow = function(e) {
+				if (e.target.tagName === "SELECT") {
+					$(this).parents(".multiple").show();
+				}
 			};
-			this.onstyle = function() {
-				f.apply(this, arguments);
+			this.onstyle = function(e) {
+				if (e.target.tagName === "SELECT") {
+					f.call(this, e);
+				}
 			};
 		});
 		/* Обходим все множественный списки со стилями и применяем их для
