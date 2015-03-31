@@ -890,6 +890,7 @@ $('#editElementDependences').on('click', function () {
                         }).text(data.controls[i].label);
                         $('#controlDependencesList').append(option);
                     }
+
                     $('#controlValues').trigger('change');
                     // Ставим список действий
                     if ($('#controlActions option').length == 0) {
@@ -904,6 +905,8 @@ $('#editElementDependences').on('click', function () {
                             $('#controlActions').append(option);
                         }
                     }
+
+
                     // По событию shown - вызов функции, которая спрячет запрещённые для данного элемента направления
                     $('#editDependencesPopup').on('shown.bs.modal', function (e) {
                         testDirection();
@@ -923,6 +926,7 @@ $('#editElementDependences').on('click', function () {
 		} else {
 			$('#controlDependencesPanel').addClass('no-display');
 		}
+
 		// Для выбора непечатаемого значения проверяем отдельно
 		if ($(this).val() != null && $(this).val().length == 1) {
 			$('.notPrintIfThisValueContainer').removeClass('no-display');
@@ -931,10 +935,11 @@ $('#editElementDependences').on('click', function () {
 		} else {
 			$('.notPrintIfThisValueContainer').addClass('no-display');
 		}
+
 		$('#controlDependencesPanel').find('h5:eq(1), .row:eq(1)').addClass('no-display');
 		$('#saveDependencesBtn').addClass('no-display');
-		$('#controlDependencesList').val([]);
-		$('#controlActions').val([]);
+		$('#controlDependencesList').removeAttr('value');
+		$('#controlActions').removeAttr('value');
 	});
 
     $('#notPrintIfThisValue').on('change',function(e){
