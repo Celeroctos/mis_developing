@@ -322,6 +322,9 @@ var Laboratory = Laboratory || {};
 		 * 		установить или массив значений
 		 */
 		set: function(item, list) {
+			if ($(item).data("lab") == void 0) {
+				return $.valHooks["select"].set(list);
+			}
 			var multiple = $(item).parents(".multiple");
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
@@ -345,6 +348,9 @@ var Laboratory = Laboratory || {};
 		 */
 		get: function(item) {
 			var list = [];
+			if ($(item).data("lab") == void 0) {
+				return $.valHooks["select"].get(item);
+			}
 			this.container(item).find(".multiple-chosen div").each(function(i, c) {
 				list.push("" + $(c).data("key"));
 			});
