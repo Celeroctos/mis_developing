@@ -4,7 +4,7 @@
         <div class="col-xs-5" id="controlValuesPanel">
             <h5>Значения выбранного списка</h5>
             <div class="row">
-                <select id="controlValues" multiple="multiple" class="form-control">
+                <select id="controlValues" multiple="multiple" class="form-control" data-ignore="multiple">
                 </select>
                 <span class="notPrintIfThisValueContainer no-display">
                     <input type="checkbox" id="notPrintIfThisValue">Не печатать при выборе данного значения
@@ -15,7 +15,7 @@
         <div class="col-xs-5 no-display" id="controlDependencesPanel">
             <h5>Список элементов управления</h5>
             <div class="row">
-                <select id="controlDependencesList" multiple="multiple" class="form-control">
+                <select id="controlDependencesList" multiple="multiple" class="form-control" data-ignore="multiple">
                 </select>
             </div>
             <h5 class="no-display">Действие</h5>

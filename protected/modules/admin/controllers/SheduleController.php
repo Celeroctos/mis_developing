@@ -157,22 +157,6 @@ class SheduleController extends Controller {
 
     public function actionGetShedule()
     {
-        //var_dump($_GET);
-        //var_dump($_POST);
-        //exit();
-
-        /*if (in_array('-1',$_GET['wards']))
-        {
-            echo("Нашёл Все отделения");
-        }
-
-        if (in_array('-2',$_GET['wards']))
-        {
-            echo("Нашёл Без отделения");
-        }*/
-        //var_dump($_GET);
-        //exit();
-
         // Прокачиваем параметры списка
         if (!isset($_GET['rows']))
         {
@@ -251,52 +235,13 @@ class SheduleController extends Controller {
             }
         }
 
-       /* var_dump('Доктора=');
-        var_dump($doctors);
-
-        var_dump('Отделения=');
-        var_dump($wards);
-
-        var_dump($withoutWard);
-
-        exit();
-*/
-
-
-
         // Теперь, имеем данные для обращения к базе данных
         // Сконструируем специальный массив, хранящий данные для запроса
         $filterParameters = array(
             'doctorsIds' => $doctors,
             'wardsIds' => $wards,
             'woWardFlag' => $withoutWard
-
         );
-
-        // =======> Test
-        /*$filterParameters = array(
-            'doctorsIds' => array('30','35'),
-            'wardsIds' => null,
-            'woWardFlag' => false
-
-        );*/
-
-        /*$filterParameters = array(
-            'doctorsIds' => null,
-            'wardsIds' => array('8'),
-            'woWardFlag' => false
-
-        );
-        */
-
-        /*$filterParameters = array(
-            'doctorsIds' => null,
-            'wardsIds' => null,
-            'woWardFlag' => true
-
-        );*/
-
-        //<==========
 
         // Считаем предварительные данные для спискоты
         $timeTableObject = new Timetable();
@@ -311,30 +256,10 @@ class SheduleController extends Controller {
             $totalPages = 0;
         }
 
-        /*$doctors = null;
-        // Смотрим - если не выбрано докторов - выбираем всех врачей по отделениям.
-        if (isset($_GET['doctors']))
-        {
-            $doctors = $_GET['doctors'];
-        }
-        else
-        {
-            // Большая печалька(( потому что надо выбрать по отделениям всех докторов из этих отделений
-            // Но если выбрано "все отделения", то это очень хорошо :) в этом случае не нужно ограничение на доктора
-            //  А вот если
-        }
-        */
         echo CJSON::encode(
             array(
                 'success'=> true,
-                //'shedules'=> array( )
-                 //'shedules'=> array( 1,2,3,4)
-
-
-
                 'rows' => $items,
-              //  'rows' => array( ),
-
                 'total' => $totalPages,
                 'records' => count($num)
             )

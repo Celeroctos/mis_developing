@@ -192,11 +192,11 @@ $(document).ready(function() {
                             },
                             {
                                 modelField: 'role_id',
-                                formField: 'roleId'
+                                formField: 'roleIdEdit'
                             },
                             {
                                 modelField: 'employee_id',
-                                formField: 'employeeId'
+                                formField: 'employeeIdEdit'
                             },
                         ];
                         var user = data.data.user;

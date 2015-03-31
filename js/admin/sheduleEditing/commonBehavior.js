@@ -104,12 +104,7 @@ $(document).ready(function () {
 
 
     lastSavedDoctorsSelected = null;
-    $('#wardSelect, #doctorsSelect').on(
-        'change',
-        function()
-        {
-
-
+    $('#wardSelect, #doctorsSelect').on('change', function() {
             // Смотрим - открыт ли редактор
             if ( ! $('#edititngSheduleArea').hasClass('no-display') && (!editorOpenFlag) )
             {
@@ -141,20 +136,8 @@ $(document).ready(function () {
 
             }
 
-
-
-            //
             if ($(this).is('#doctorsSelect')  )
             {
-
-
-
-               /* if ( $(this).find('option[value=-1]').is(':selected') )
-                {
-                    // Снять выделение с "Все врачи", выделить всех остальных
-                    $('#doctorsSelect').find('option[value=-1]').prop('selected',false);
-                    $('#doctorsSelect').find('option:not([value=-1])').prop('selected', true);
-                }*/
                 selectedValues = $('#doctorsSelect').find('option:selected');
 
                 // Перебираем элементы  снимаем выделение со всех, кроме первого опшиона
@@ -193,16 +176,6 @@ $(document).ready(function () {
         console.log(selectedWards);
         console.log(selectedDoctors);
         // Если selectedDoctors или selectedWards равен нулю - то надо подать массив из одного элемента -1
-        /*if (selectedWards ==null)
-        {
-            selectedWards = $.toJSON( [-1] );
-        }
-
-        if (selectedDoctors ==null)
-        {
-            selectedDoctors = $.toJSON( [-1] );
-        }*/
-        // Отправляем запрос
         params = {};
 
         if (selectedDoctors!=null)

@@ -179,7 +179,7 @@
                             )); ?>
                             <div class="col-xs-9">
                                 <?php echo $form->dropDownList($model, 'roleId', $rolesList, array(
-                                    'id' => 'roleId',
+                                    'id' => 'roleIdEdit',
                                     'class' => 'form-control roleChooseCombo',
                                     'multiple' => 'multiple',
                                     'data-ignore' => 'multiple'
@@ -193,7 +193,7 @@
                             )); ?>
                             <div class="col-xs-9">
                                 <?php echo $form->dropDownList($model, 'employeeId', $employeesList, array(
-                                    'id' => 'employeeId',
+                                    'id' => 'employeeIdEdit',
                                     'class' => 'form-control',
                                     'multiple' => 'multiple',
                                     'data-ignore' => 'multiple'

@@ -29,7 +29,7 @@
             <!-- Список отделений -->
             <div class="form-group">
                 <div class="col-xs-12">
-                    <select class="form-control" id="wardSelect" multiple="multiple">
+                    <select class="form-control" id="wardSelect" multiple="multiple" data-ignore="multiple">
                         <?php foreach($wardsList as $id => $name) { ?>
                             <option value="<?php echo $id; ?>" <?php  echo (  ($id==-1)?'selected':''   ); ?>><?php echo $name; ?></option>
                         <?php } ?>
@@ -45,7 +45,7 @@
             <!-- Спискота всех сотрудников -->
             <div class="form-group">
                 <div class="col-xs-12">
-                    <select class="form-control" id="doctorsSelect" multiple="multiple">
+                    <select class="form-control" id="doctorsSelect" multiple="multiple" data-ignore="multiple">
                         <?php foreach($doctorList as $oneDoctor) { ?>
                             <option value="<?php echo $oneDoctor['id']; ?>"><?php echo $oneDoctor['fio']; ?></option>
                         <?php } ?>
