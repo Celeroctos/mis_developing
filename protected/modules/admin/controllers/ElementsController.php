@@ -287,8 +287,7 @@ class ElementsController extends Controller {
 			
 			$config += $params;
 		}
-var_dump($config);
-        exit();
+
 		$element->config = CJSON::encode($config);
 
         // Теперь посчитаем путь до элемента. Посмотрим на категорию, выберем иерархию категорий и прибавим введённую позицию
