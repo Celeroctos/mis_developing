@@ -691,6 +691,7 @@ function editElement() {
 					} else {
 					   $('#editElementPopup #showDynamic').prop('disabled', false);
 					}
+
 					for (var i = 0; i < fields.length; i++) {
 						// Подгрузка значений справочника для дефолтного значения
 						if (fields[i].formField == 'defaultValue' && (data.data['type'] == 2 || data.data['type'] == 3)) {
@@ -741,6 +742,7 @@ function editElement() {
 								$('#editElementPopup #dateFieldMaxValue').trigger('change');
 								$('#editElementPopup #dateFieldMinValue').trigger('change');
 							}
+                            $('#editElementPopup #config').val($.toJSON(config));
 						}
 					}
 					// Теперь нужно проверить - если взведён флаг "есть зависимость" - нужно выключить некоторые опции в

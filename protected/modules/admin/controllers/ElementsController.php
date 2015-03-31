@@ -227,7 +227,9 @@ class ElementsController extends Controller {
 		}
 
         if($model->type == 4) {
+          //  var_dump($config);
             $config += CJSON::decode($model->config);
+           // var_dump($model->config);
         }
 		if($model->type == 5) {
 			if(isset($model->numberFieldMaxValue) && isset($model->numberFieldMinValue) && $model->numberFieldMaxValue < $model->numberFieldMinValue) {
@@ -285,8 +287,9 @@ class ElementsController extends Controller {
 			
 			$config += $params;
 		}
-
-		$element->config = CJSON::encode($config); 
+var_dump($config);
+        exit();
+		$element->config = CJSON::encode($config);
 
         // Теперь посчитаем путь до элемента. Посмотрим на категорию, выберем иерархию категорий и прибавим введённую позицию
         $partOfPath = $this->getElementPath($element->categorie_id);
