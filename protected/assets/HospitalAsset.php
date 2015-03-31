@@ -11,6 +11,6 @@ class HospitalAsset extends AssetBundle {
     ];
 
     public $dependencies = [
-        "DefaultAsset"
+        "MainAsset"
     ];
 } 
