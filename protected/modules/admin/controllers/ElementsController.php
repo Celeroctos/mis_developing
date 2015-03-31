@@ -225,9 +225,9 @@ class ElementsController extends Controller {
 		if(isset($model->directLink)) {
 			$config['directLink'] = $model->directLink;
 		}
-		
+
         if($model->type == 4) {
-            $config += $model->config;
+            $config += CJSON::decode($model->config);
         }
 		if($model->type == 5) {
 			if(isset($model->numberFieldMaxValue) && isset($model->numberFieldMinValue) && $model->numberFieldMaxValue < $model->numberFieldMinValue) {
