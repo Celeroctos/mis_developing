@@ -1,4 +1,5 @@
-<?php if(isset($categorie['id'])) { ?>
+<?php if(isset($categorie['id'])) {
+    ?>
 <div id="accordion<?php echo '_'.$templatePrefix.'_'.$prefix.'_'.$categorie['undotted_path'].'_'.$categorie['id']; ?>" class="accordion medcard-accordion">
     <div class="accordion-group">
         <div class="accordion-heading">
@@ -263,10 +264,6 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                             <td></td>
                         <?php
                         }
-                        // Пробегаем по всей ширине таблицы.
-                        //for($i = 0; $i < count($element['config']['cols']); $i++) {
-                        //var_dump($element['config']['cols']);
-
                         for($i = 0; $i < $element['config']['numCols']; $i++) {
                             // Если i>=длины массива cols - выводим пустую ячейку
                             //   Иначе выводим содержимое массива cols из i-той ячейки
