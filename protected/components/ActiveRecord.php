@@ -14,7 +14,20 @@ abstract class ActiveRecord extends CActiveRecord {
 		return parent::model($className);
 	}
 
-    /**
+	/**
+	 * This method is invoked after saving a record successfully.
+	 * The default implementation raises the {@link onAfterSave} event.
+	 * You may override this method to do postprocessing after record saving.
+	 * Make sure you call the parent implementation so that the event is raised properly.
+	 */
+	protected function afterSave() {
+		parent::afterSave();
+		$this->{$this->primaryKey[0]} = Yii::app()->getDb()->getLastInsertID(
+			$this->tableName()."_id_seq"
+		);
+	}
+
+	/**
      * Override that method to return list with table
      * keys for GridView widget
      * @return array - Array with keys names

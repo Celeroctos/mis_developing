@@ -13,6 +13,19 @@ class MisActiveRecord extends CActiveRecord {
     }
 
 	/**
+	 * This method is invoked after saving a record successfully.
+	 * The default implementation raises the {@link onAfterSave} event.
+	 * You may override this method to do postprocessing after record saving.
+	 * Make sure you call the parent implementation so that the event is raised properly.
+	 */
+	protected function afterSave() {
+		parent::afterSave();
+		$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+			$this->tableName()."_id_seq"
+		);
+	}
+
+	/**
 	 * @param $conn
 	 * @param $filters
 	 * @param $multipleFields - массив, раскрывающий значение "сборных" полей в интерфейсе. Например, поле ФИО, являющееся Именем + Фамилией + Отчеством. Формат:
