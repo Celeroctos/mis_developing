@@ -27,6 +27,7 @@ class MisActiveRecord extends CActiveRecord {
 				);
 			}
 		} catch (Exception $ignored) {
+			/* We can't be sure, that we've just inserted new row in db */
 		}
 	}
 
