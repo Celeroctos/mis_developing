@@ -1,4 +1,5 @@
 <?php
+
 class AdminUsersTabMenu extends CWidget {
     public function run() {
         $this->render('application.widgets.views.AdminUsersTabMenu', array(
@@ -8,5 +9,3 @@ class AdminUsersTabMenu extends CWidget {
         ));
     }
 }
-
-?>

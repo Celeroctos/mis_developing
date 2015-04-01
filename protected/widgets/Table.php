@@ -7,6 +7,7 @@ class Table extends Widget {
     /**
      * @var Widget - Sub-widget component with TableTrait element, which
      *  extends Table widget, for example - MedcardTable
+	 * @see MedcardTable
      */
 	public $widget = null;
 
@@ -21,6 +22,18 @@ class Table extends Widget {
 	public $disablePagination = false;
 	public $click = null;
 
+	/**
+	 * @var bool - Should table be empty after first page load, set
+	 * 	it to true if your table contains big amount of rows and
+	 * 	it's initial render will be slow all render processes
+	 */
+	public $empty = false;
+
+	/**
+	 * Run widget and return just rendered content
+	 * @return string - Just rendered content
+	 * @throws CException
+	 */
 	public function run() {
 
 		// Check table instance
@@ -55,28 +68,25 @@ class Table extends Widget {
 		}
 
 		// Get total rows
-		$total = $this->table->getTableCount($this->criteria);
-
-		// Get command for current table
-		$command = $this->table->getTable()->order(
-			$this->sort.($this->desc ? " desc" : "")
-		)->andWhere($this->condition, $this->parameters);
-
-		// Attach criteria condition to query
-		if ($this->criteria) {
-			$command->andWhere($this->criteria->condition, $this->criteria->params);
+		if ($this->empty == false) {
+			$total = $this->table->getTableCount($this->criteria);
+			$command = $this->table->getTable()->order(
+				$this->sort.($this->desc ? " desc" : "")
+			)->andWhere($this->condition, $this->parameters);
+			if ($this->criteria) {
+				$command->andWhere($this->criteria->condition, $this->criteria->params);
+			}
+			$this->pages = intval($total / $this->limit + ($total / $this->limit * $this->limit != $total ? 1 : 0));
+			if (!$this->pages) {
+				$this->pages = 1;
+			}
+			$command->limit($this->limit);
+			$command->offset($this->limit * ($this->page - 1));
+			$data = $command->queryAll();
+		} else {
+			$this->disablePagination = true;
+			$data = [];
 		}
-
-		// Calculate offset
-		$this->pages = intval($total / $this->limit + ($total / $this->limit * $this->limit != $total ? 1 : 0));
-
-		if (!$this->pages) {
-			$this->pages = 1;
-		}
-
-		// Set limit
-		$command->limit($this->limit);
-		$command->offset($this->limit * ($this->page - 1));
 
 		// Prevent array offset errors
 		foreach ($this->header as $key => &$value) {
@@ -97,8 +107,8 @@ class Table extends Widget {
         }
 
 		// Render widget
-		return $this->render(__CLASS__, [
-			"data" => $command->queryAll(),
+		return $this->render("application.widgets.views.Table", [
+			"data" => $data,
 			"parent" => get_class($this->widget)
 		]);
 	}

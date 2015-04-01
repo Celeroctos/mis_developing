@@ -52,7 +52,7 @@ class LMedcardForm extends FormModel {
 				"label" => "Врач направитель",
 				"type" => "DropDown",
 				"table" => [
-					"name" => "mis.doctors",
+					"name" => "lis.doctor",
 					"key" => "id",
 					"value" => "last_name, first_name",
 					"format" => "%{last_name} %{first_name}"

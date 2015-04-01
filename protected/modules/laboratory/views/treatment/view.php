@@ -100,7 +100,8 @@ $this->widget("Modal", [
 			"type" => "button",
 			"align" => "left"
 		]
-	]
+	],
+	"class" => "modal-lg"
 ]);
 
 $this->widget("Modal", [
@@ -138,15 +139,9 @@ $this->widget("Modal", [
 			</button>
 		</div>
 		<div class="col-xs-4 no-padding">
-			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="dropdown" aria-expanded="false">
+			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="modal" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
 				<span>Создать направление</span>
-				<span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" role="menu">
-				<li><a data-toggle="modal" data-target="#mis-medcard-search-modal">Для пациента из МИС</a></li>
-				<li><a data-toggle="modal" data-target="#lis-medcard-search-modal">Для пациента из ЛИС</a></li>
-				<li><a data-toggle="modal" data-target="#medcard-editable-viewer-modal">Для нового пациента</a></li>
-			</ul>
 		</div>
 	</div>
 	<div class="treatment-table-wrapper treatment-header-rounded">
