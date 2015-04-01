@@ -33,7 +33,7 @@ $this->beginWidget("CActiveForm", [
 	<b>Направление</b>
 	<br><br>
 	<?php $this->widget("AutoForm", [
-		"model" => new LMedcardForm("treatment.edit")
+		"model" => new LDirectionForm("treatment.edit")
 	]) ?>
 </div>
 

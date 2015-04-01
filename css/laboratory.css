@@ -204,7 +204,7 @@
 }
 
 /* Medcard editable view modal window */
-#medcard-editable-viewer-form .text-center b {
+.modal .text-center b {
     font-size: 15px;
 }
 

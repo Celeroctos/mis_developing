@@ -101,7 +101,7 @@ $this->widget("Modal", [
 			"align" => "left"
 		]
 	],
-	"class" => "modal-lg"
+	"class" => "modal-90"
 ]);
 
 $this->widget("Modal", [
