@@ -2368,8 +2368,8 @@ var TemplateEngine = TemplateEngine || {};
 						CategoryPatcher.put(prevPath, ref);
 						c.append(ref);
 					}
-					++offset;
 				}
+				++offset;
 			}
 			c.append(item);
 		}
