@@ -20,9 +20,13 @@ class MisActiveRecord extends CActiveRecord {
 	 */
 	protected function afterSave() {
 		parent::afterSave();
-		$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
-			$this->tableName()."_id_seq"
-		);
+		try {
+			$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+				$this->tableName()."_id_seq"
+			);
+		} catch (Exception $ignored) {
+			/* We can't be sure, that we've just inserted new row in db */
+		}
 	}
 
 	/**
