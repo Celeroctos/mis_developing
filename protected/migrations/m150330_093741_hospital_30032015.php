@@ -7,7 +7,7 @@ class m150330_093741_hospital_30032015 extends CDbMigration {
         )->execute();
 
         $this->getDbConnection()->createCommand(
-            'INSERT INTO mis.access_actions ("name", "group", "accessKey") VALUES("Видимость модуля в меню", 9, "hospitalMenu")'
+            "INSERT INTO mis.access_actions (\"name\", \"group\", \"accessKey\") VALUES('Видимость модуля в меню', 9, 'hospitalMenu')"
         )->execute();
 	}
 
