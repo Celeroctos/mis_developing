@@ -19,9 +19,9 @@ class MedworkersController extends Controller
 		if(isset($_POST['Medpersonal']))
 		{
 			$modelMedpersonal->attributes=Yii::app()->request->getPost('Medpersonal');
-		//	$transaction=Yii::app()->db->beginTransaction();
-		//	try
-		//	{
+			$transaction=Yii::app()->db->beginTransaction();
+			try
+			{
 				if($modelMedpersonal->save())
 				{
 					is_array($modelMedpersonal->medcard_templates) ? : $modelMedpersonal->medcard_templates=array();
@@ -32,16 +32,16 @@ class MedworkersController extends Controller
 						$modelMedpersonal_templates->id_template=$value;
 						$modelMedpersonal_templates->save(); //валидация уникальности
 					}
-				//	$transaction->commit();
+					$transaction->commit();
 					Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Вы успешно добавили должность!');
 					$this->redirect(['medworkers/view']);
 				}
-		//	} 
-		//	catch (Exception $e) 
-		//	{
-		//		$transaction->rollback(); //откат транзакции.
-		//		Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Ошибка в запросе к БД');
-		//	}
+			} 
+			catch (Exception $e) 
+			{
+				$transaction->rollback(); //откат транзакции.
+				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Ошибка в запросе к БД');
+			}
 		}
 		
 		$this->render('create', [
@@ -78,8 +78,8 @@ class MedworkersController extends Controller
 				if($recordMedpersonal->save())
 				{ //обновляем 
 					$criteria=new CDbCriteria;
-					$criteria->condition='id_medpersonal='.$recordMedpersonal->id;
-				//	$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
+					$criteria->condition='id_medpersonal=:id_medpersonal';
+					$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
 					Medpersonal_templates::model()->deleteAll($criteria); //удаляем старые шаблоны
 
 					is_array($recordMedpersonal->medcard_templates) ? : $recordMedpersonal->medcard_templates=array();
