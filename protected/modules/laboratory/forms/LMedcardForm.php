@@ -33,7 +33,8 @@ class LMedcardForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "hidden",
+				"rules" => "numerical"
 			],
 			"card_number" => [
 				"label" => "Номер карты",
@@ -52,10 +53,11 @@ class LMedcardForm extends FormModel {
 				"label" => "Врач направитель",
 				"type" => "DropDown",
 				"table" => [
-					"name" => "lis.doctor",
+					"name" => "mis.doctors",
 					"key" => "id",
 					"value" => "last_name, first_name",
-					"format" => "%{last_name} %{first_name}"
+					"format" => "%{last_name} %{first_name}",
+					"order" => "last_name, first_name"
 				],
 				"rules" => "required"
 			],

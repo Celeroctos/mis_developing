@@ -47,8 +47,8 @@ class LDirectionForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number",
-				"hidden" => "true"
+				"type" => "hidden",
+				"rules" => "numerical"
 			],
 			"barcode" => [
 				"label" => "Штрих-код",
@@ -119,10 +119,11 @@ class LDirectionForm extends FormModel {
 				"type" => "DropDown",
 				"rules" => "required",
                 "table" => [
-                    "format" => "%{first_name} %{middle_name} %{last_name}",
+                    "format" => "%{first_name} %{middle_name}",
                     "name" => "mis.doctors",
                     "key" => "id",
-                    "value" => "first_name, middle_name, last_name"
+                    "value" => "first_name, middle_name",
+					"order" => "last_name, first_name"
                 ]
 			],
 			"laboratory_employee_id" => [
@@ -130,10 +131,11 @@ class LDirectionForm extends FormModel {
 				"type" => "DropDown",
 				"rules" => "required",
                 "table" => [
-                    "format" => "%{first_name} %{middle_name} %{last_name}",
+                    "format" => "%{first_name} %{middle_name}",
                     "name" => "mis.doctors",
                     "key" => "id",
-                    "value" => "first_name, middle_name, last_name"
+                    "value" => "first_name, middle_name",
+					"order" => "last_name, first_name"
                 ]
 			]
 		];
