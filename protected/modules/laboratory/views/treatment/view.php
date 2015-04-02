@@ -131,11 +131,9 @@ $this->widget("Modal", [
 		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<?php if ($directionRepeats > 0): ?>
-					<span class="badge">
-						<?= $directionRepeats ?>
-					</span>
-				<?php endif ?>
+				<span class="badge">
+					<?= $directionRepeats ?>
+				</span>
 			</button>
 		</div>
 		<div class="col-xs-4 no-padding">
