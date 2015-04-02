@@ -78,8 +78,8 @@ class MedworkersController extends Controller
 				if($recordMedpersonal->save())
 				{ //обновляем 
 					$criteria=new CDbCriteria;
-					$criteria->condition='id_medpersonal=:id_medpersonal';
-					$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
+					$criteria->condition='id_medpersonal='.$recordMedpersonal->id;
+				//	$criteria->params=[':id_medpersonal'=>$recordMedpersonal->id];
 					Medpersonal_templates::model()->deleteAll($criteria); //удаляем старые шаблоны
 
 					is_array($recordMedpersonal->medcard_templates) ? : $recordMedpersonal->medcard_templates=array();
