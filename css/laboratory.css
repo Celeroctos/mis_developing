@@ -204,7 +204,7 @@
 }
 
 /* Medcard editable view modal window */
-#medcard-editable-viewer-form .text-center b {
+.modal .text-center b {
     font-size: 15px;
 }
 
@@ -234,3 +234,17 @@
     border: 1px solid #d3d3d3;
     border-radius: 0;
 }
+
+#treatment-direction-creator {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/*#medcard-editable-viewer-modal {*/
+    /*z-index: 1100;*/
+/*}*/
+/**/
+/*#lis-medcard-search-modal,*/
+/*#mis-medcard-search-modal {*/
+    /*z-index: 1200;*/
+/*}*/

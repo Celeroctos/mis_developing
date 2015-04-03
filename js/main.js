@@ -556,9 +556,11 @@ $('.buttonUpContainer').click(function () {
     );
 
     /* Двигающиеся модалки */
-    $('.modal').draggable({
+	$(".modal:not([data-draggable]), .modal[data-draggable='true']").draggable({
         handle: ".modal-header" // Only header please
-    }).bind('hidden.bs.modal', function () {
+    });
+
+	$('.modal').bind('hidden.bs.modal', function () {
         $("html").css("margin-right", "0px");
     }).bind('show.bs.modal', function () {
         $("html").css("margin-right", "-15px");
@@ -962,7 +964,7 @@ $('.buttonUpContainer').click(function () {
 		'type' : 'GET',
 		'success' : function(data, textStatus, jqXHR) {
 			if(data.success) {
-				var data = data.data;
+				data = data.data;
 				for(var i = 0; i < data.length; i++) {
 					systemFuncs[data[i].func].call(systemFuncs, data[i].value);
 				}
@@ -973,7 +975,16 @@ $('.buttonUpContainer').click(function () {
 			}
 		}
 	});
-	
-	
-});
 
+	// fix for modal window backdrop
+	$(document).on('show.bs.modal', '.modal', function(e) {
+		if (!$(e.target).hasClass("modal")) {
+			return void 0;
+		}
+		var depth = 1140 + (10 * $('.modal:visible').length);
+		$(this).css('z-index', depth);
+		setTimeout(function() {
+			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
+		}, 0);
+	});
+});

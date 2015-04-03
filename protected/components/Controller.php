@@ -1,5 +1,6 @@
 <?php
 class Controller extends CController {
+
 	protected $sessionActiveActions = array(
 		array(
 			'module' => 'admin',
@@ -22,6 +23,7 @@ class Controller extends CController {
 			'action' => 'syncinsurances'
 		)
 	);
+
     /* Неправильное использование, но пока непонятно, как переопределить конструктор */
     // Фильтр для выполнения запроса по поводу прав доступа
     public function filterGetAccessHierarchy($filterChain) {

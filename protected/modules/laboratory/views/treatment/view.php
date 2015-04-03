@@ -99,14 +99,35 @@ $this->widget("Modal", [
 			"class" => "btn btn-warning",
 			"type" => "button",
 			"align" => "left"
+		],
+		"mis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент МИС",
+			"class" => "btn btn-default",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#mis-medcard-search-modal"
+			],
+			"align" => "center"
+		],
+		"lis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент ЛИС",
+			"class" => "btn btn-success",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#lis-medcard-search-modal"
+			],
+			"align" => "center"
 		]
-	]
+	],
+	"class" => "modal-90"
 ]);
 
 $this->widget("Modal", [
-	"title" => "Новое направление",
+	"title" => "Регистрация направления",
 	"body" => $this->getWidget("AutoForm", [
-		"model" => new LDirectionForm()
+		"model" => new LDirectionForm("treatment.edit")
 	]),
 	"id" => "direction-register-modal"
 ]); ?>
@@ -130,29 +151,22 @@ $this->widget("Modal", [
 		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<?php if ($directionRepeats > 0): ?>
-					<span class="badge">
-						<?= $directionRepeats ?>
-					</span>
-				<?php endif ?>
+				<span class="badge">
+					<?= $directionRepeats ?>
+				</span>
 			</button>
 		</div>
 		<div class="col-xs-4 no-padding">
-			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="dropdown" aria-expanded="false">
+			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="modal" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
 				<span>Создать направление</span>
-				<span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu" role="menu">
-				<li><a data-toggle="modal" data-target="#mis-medcard-search-modal">Для пациента из МИС</a></li>
-				<li><a data-toggle="modal" data-target="#lis-medcard-search-modal">Для пациента из ЛИС</a></li>
-				<li><a data-toggle="modal" data-target="#medcard-editable-viewer-modal">Для нового пациента</a></li>
-			</ul>
 		</div>
 	</div>
 	<div class="treatment-table-wrapper treatment-header-rounded">
 		<div id="treatment-direction-grid-wrapper">
 			<?= $this->getWidget("Table", [
 				"table" => new LDirection("grid.direction"),
+				"criteria" => DbCriteria::createWhere("status <> 3"),
 				"header" => [
 					"id" => [
 						"label" => "#",
@@ -183,7 +197,7 @@ $this->widget("Modal", [
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
             <?= $this->getWidget("Table", [
                 "table" => new LDirection("grid.direction"),
-                "criteria" => DbCriteria::createWithWhere("is_repeated = 1"),
+                "criteria" => DbCriteria::createWhere("status = 3"),
                 "header" => [
                     "id" => [
                         "label" => "#",

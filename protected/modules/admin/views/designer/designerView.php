@@ -5,31 +5,7 @@
 <?php $this->widget('DoctorCardTabMenu') ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/admin/template-engine.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/admin/nestable.js"></script>
-<div class="template-engine-widget">
-    <div s 	tyle="text-align: center; float: left; padding: 5px;">
-        <span>Название шаблона</span><br>
-        <label>
-            <input type="text"/>
-        </label>
-    </div>
-    <div style="text-align: center; float: left; padding: 5px;">
-        <span>Тип шаблона</span><br>
-        <label>
-            <select style="width: 200px;">
-                <option>Volvo</option>
-                <option>Saab</option>
-                <option>Mercedes</option>
-                <option>Audi</option>
-            </select>
-        </label>
-    </div>
-    <div style="text-align: center; float: left; padding: 5px;">
-        <span>Порядковый номер</span><br>
-        <label>
-            <input type="number" style="width: 75px;"/>
-        </label>
-    </div>
-</div>
+<div class="template-engine-widget"></div>
 <div class="btn-group default-margin-top">
     <button type="button" class="btn btn-default" id="saveTemplate">Сохранить шаблон</button>
 </div>

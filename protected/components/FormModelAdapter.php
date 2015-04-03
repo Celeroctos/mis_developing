@@ -21,6 +21,7 @@ class FormModelAdapter extends FormModel {
 	 * Set attribute
 	 * @param string $name - Name of attribute
 	 * @param mixed $value - Attribute value
+	 * @return mixed|void
 	 */
 	public function __set($name, $value) {
 		$this->_attr[$name] = $value;

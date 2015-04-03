@@ -99,7 +99,7 @@ class MedworkersController extends Controller
 			catch (Exception $e) 
 			{
 				$transaction->rollback(); //откат транзакции.
-				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Ошибка в запросе к БД');
+				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, $e->getMessage());
 			}
 		}
 		

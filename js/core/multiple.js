@@ -28,6 +28,7 @@ var Laboratory = Laboratory || {};
 	 * @constructor
 	 */
 	var Multiple = function(properties, selector) {
+		/* Инициализация родительского компонента */
 		Lab.Component.call(this, properties, {
             filter: [
                 "height",
@@ -40,6 +41,9 @@ var Laboratory = Laboratory || {};
             height: 150,
             multiplier: 2
         }, selector);
+		/* Клонируем старый элемент и сохраняем со всеми
+		установленными данными и текщуими событиями */
+		this.native = selector.clone(true);
 	};
 
 	Lab.extend(Multiple, Lab.Component);
@@ -116,6 +120,14 @@ var Laboratory = Laboratory || {};
 				class: "multiple-container form-control"
 			})
 		);
+	};
+
+	/**
+	 * Данный метод уничтожает компонент и возвращает
+	 * его в первоначальному состоянию, пример [$("select[multiple]").multiple("destroy")]
+	 */
+	Multiple.prototype.destroy = function() {
+		this.selector().replaceWith(this.native);
 	};
 
 	/**
@@ -323,11 +335,13 @@ var Laboratory = Laboratory || {};
 		 */
 		set: function(item, list) {
 			if ($(item).data("lab") == void 0) {
-				return $.valHooks["select"].set(list);
+				return $.valHooks["select"].set(item, list);
 			}
 			var multiple = $(item).parents(".multiple");
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
+			} else if (list == null) {
+				list = "[]";
 			}
 			if (!list.length || list == "[]") {
 				multiple.find(".multiple-chosen div").each(function(i, div) {
@@ -354,7 +368,7 @@ var Laboratory = Laboratory || {};
 			this.container(item).find(".multiple-chosen div").each(function(i, c) {
 				list.push("" + $(c).data("key"));
 			});
-			return (list);
+			return list.length > 0 ? list : null;
 		}
 	};
 

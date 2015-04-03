@@ -63,6 +63,11 @@ class Modal extends Widget {
      */
     public $closeClass = "btn btn-default";
 
+	/**
+	 * @var bool - Should modal be draggable?
+	 */
+	public $draggable = false;
+
     /**
      * Initialize widget
      */
@@ -115,7 +120,8 @@ class Modal extends Widget {
     public function renderModal() {
         print CHtml::openTag("div", [
             "class" => "modal" . ($this->fade ? " fade" : ""),
-            "id" => $this->id
+            "id" => $this->id,
+			"data-draggable" => $this->draggable ? "true" : "false"
         ]);
         print CHtml::openTag("div", [
             "class" => "modal-dialog" . ($this->class ? " " . $this->class : "")
@@ -185,6 +191,15 @@ class Modal extends Widget {
             }
         }
         print CHtml::closeTag("td");
+		print CHtml::openTag("td", [
+			"align" => "middle"
+		]);
+		foreach ($this->buttons as $button) {
+			if ($button["align"] == "center") {
+				print CHtml::tag("button", $button["attributes"], $button["text"]);
+			}
+		}
+		print CHtml::closeTag("td");
         print CHtml::openTag("td", [
             "align" => "right"
         ]);

@@ -2,14 +2,51 @@
 
 class Table extends Widget {
 
-	use TableTrait;
+	/**
+	 * @var string - Default order table column name
+	 */
+	public $sort;
+
+	/**
+	 * @var bool - Order direction
+	 */
+	public $desc = false;
+
+	/**
+	 * @var int - Maximum displayed rows per page
+	 */
+	public $limit = 10;
+
+	/**
+	 * @var int - Current displayed page
+	 */
+	public $page = 1;
+
+	/**
+	 * @var CDbCriteria|string - Search criteria
+	 */
+	public $criteria = null;
+
+	/**
+	 * @var string - CDbCriteria condition
+	 */
+	public $condition = null;
+
+	/**
+	 * @var array - CDbCriteria parameters
+	 */
+	public $params = null;
 
     /**
      * @var Widget - Sub-widget component with TableTrait element, which
      *  extends Table widget, for example - MedcardTable
+	 * @see MedcardTable
      */
 	public $widget = null;
 
+	/**
+	 * @var ActiveRecord - Table's active record instance
+	 */
 	public $table = null;
 	public $header = null;
     public $pk = null;
@@ -21,10 +58,22 @@ class Table extends Widget {
 	public $disablePagination = false;
 	public $click = null;
 
+	/**
+	 * @var bool - Should table be empty after first page load, set
+	 * 	it to true if your table contains big amount of rows and
+	 * 	it's initial render will slow down all render processes
+	 */
+	public $empty = false;
+
+	/**
+	 * Run widget and return just rendered content
+	 * @return string - Just rendered content
+	 * @throws CException
+	 */
 	public function run() {
 
 		// Check table instance
-		if (!($this->table instanceof ActiveRecord)) {
+		if (!$this->table instanceof ActiveRecord) {
 			throw new CException("Table's model must extends ActiveRecord");
 		}
 
@@ -55,28 +104,25 @@ class Table extends Widget {
 		}
 
 		// Get total rows
-		$total = $this->table->getTableCount($this->criteria);
-
-		// Get command for current table
-		$command = $this->table->getTable()->order(
-			$this->sort.($this->desc ? " desc" : "")
-		)->andWhere($this->condition, $this->parameters);
-
-		// Attach criteria condition to query
-		if ($this->criteria) {
-			$command->andWhere($this->criteria->condition, $this->criteria->params);
+		if ($this->empty == false) {
+			$total = $this->table->getTableCount($this->criteria);
+			$command = $this->table->getTable()->order(
+				$this->sort.($this->desc ? " desc" : "")
+			)->andWhere($this->condition, $this->parameters);
+			if ($this->criteria) {
+				$command->andWhere($this->criteria->condition, $this->criteria->params);
+			}
+			$this->pages = intval($total / $this->limit + ($total / $this->limit * $this->limit != $total ? 1 : 0));
+			if (!$this->pages) {
+				$this->pages = 1;
+			}
+			$command->limit($this->limit);
+			$command->offset($this->limit * ($this->page - 1));
+			$data = $command->queryAll();
+		} else {
+			$this->disablePagination = true;
+			$data = [];
 		}
-
-		// Calculate offset
-		$this->pages = intval($total / $this->limit + ($total / $this->limit * $this->limit != $total ? 1 : 0));
-
-		if (!$this->pages) {
-			$this->pages = 1;
-		}
-
-		// Set limit
-		$command->limit($this->limit);
-		$command->offset($this->limit * ($this->page - 1));
 
 		// Prevent array offset errors
 		foreach ($this->header as $key => &$value) {
@@ -96,10 +142,10 @@ class Table extends Widget {
             $this->pk = "id";
         }
 
-		// Render widget
-		return $this->render(__CLASS__, [
-			"data" => $command->queryAll(),
-			"parent" => get_class($this->widget)
+		// Render widget (absolute path for sub-modules widgets, which extends current)
+		return $this->render("application.widgets.views.Table", [
+			"data" => $data,
+			"parent" => get_class($this)
 		]);
 	}
 }

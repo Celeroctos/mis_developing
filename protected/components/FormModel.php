@@ -80,7 +80,7 @@ abstract class FormModel extends CFormModel {
 	/**
 	 * Create filter for specific scenario to set fields
 	 * without hidden property
-	 * @param string $scenario - Name of scenario
+	 * @param string|array $scenario - Name of scenario or array with scenarios
 	 * @param array $allowed - Array with visible fields
 	 * @return array - Row for backward method
 	 * @see FormModel::backward
@@ -202,12 +202,12 @@ abstract class FormModel extends CFormModel {
 	private function checkScenario($scenario) {
 		if (is_array($scenario)) {
 			foreach ($scenario as $s) {
-				if (!strcasecmp($s, $this->getScenario())) {
+				if (!strcasecmp($s, $this->scenario)) {
 					return true;
 				}
 			}
 		} else {
-			return !strcasecmp($scenario, $this->getScenario());
+			return !strcasecmp($scenario, $this->scenario);
 		}
 		return false;
 	}

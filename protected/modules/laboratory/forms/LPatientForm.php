@@ -36,8 +36,8 @@ class LPatientForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number",
-				"rules" => "safe, numerical"
+				"type" => "hidden",
+				"rules" => "numerical"
 			],
 			"surname" => [
 				"label" => "Фамилия",

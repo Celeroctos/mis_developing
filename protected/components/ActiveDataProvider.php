@@ -36,8 +36,7 @@ class ActiveDataProvider extends CActiveDataProvider {
 			if (!empty($criteria->order)) {
 				$query->order(preg_replace('/\\"/', "", $criteria->order));
 			}
-			if (($data = $query->queryAll()) != null && isset($data[0]) && !($data[0] instanceof CActiveRecord)
-			) {
+			if (($data = $query->queryAll()) != null && isset($data[0]) && !($data[0] instanceof CActiveRecord)) {
 				$data = $this->model->populateRecords($data);
 			}
 			if ($this->form != null) {

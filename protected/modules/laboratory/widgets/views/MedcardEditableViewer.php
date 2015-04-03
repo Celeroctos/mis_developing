@@ -16,24 +16,25 @@ $this->beginWidget("CActiveForm", [
 	]
 ]); ?>
 
-<div class="row">
-	<div class="col-xs-12">
-		<div class="col-xs-12 text-center">
-			<b>Медицинская карта</b>
-			<br><br>
-			<?php $this->widget("AutoForm", [
-				"model" => new LMedcardForm("treatment.edit")
-			]) ?>
-		</div>
-		<hr>
-		<div class="col-xs-12 text-center">
-			<b>Пациент</b>
-			<br><br>
-			<?php $this->widget("AutoForm", [
-				"model" => new LPatientForm("treatment.edit")
-			]) ?>
-		</div>
-	</div>
+<div class="col-xs-6 text-center">
+	<b>Медицинская карта</b>
+	<br><br>
+	<?php $this->widget("AutoForm", [
+		"model" => new LMedcardForm("treatment.edit")
+	]) ?>
+	<hr>
+	<b>Пациент</b>
+	<br><br>
+	<?php $this->widget("AutoForm", [
+		"model" => new LPatientForm("treatment.edit")
+	]) ?>
+</div>
+<div class="col-xs-6 text-center">
+	<b>Направление</b>
+	<br><br>
+	<?php $this->widget("AutoForm", [
+		"model" => new LDirectionForm("treatment.edit")
+	]) ?>
 </div>
 
 <?php $this->endWidget() ?>

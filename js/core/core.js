@@ -97,7 +97,7 @@ var Laboratory = Laboratory || {};
      * it will simply remove selector
      */
     Lab.Component.prototype.destroy = function() {
-        this.selector().remove();
+        throw new Error("That component doesn't support downgrade");
     };
 
     /**
@@ -255,15 +255,6 @@ var Laboratory = Laboratory || {};
     };
 
     /**
-     * Is string starts with some prefix
-     * @param prefix {string} - String prefix
-     * @returns {boolean} - True if string has prefix
-     */
-    String.prototype.startsWidth = function(prefix) {
-        return this.indexOf(prefix, 0) !== -1;
-    };
-
-    /**
      * Generate url based on Yii's base url
      * @param url {string} - Relative url
      * @returns {string} - Absolute url
@@ -287,8 +278,12 @@ var Laboratory = Laboratory || {};
 	};
 	$.each(['show', 'hide'], function (i, ev) {
 		var el = $.fn[ev];
-		$.fn[ev] = function () {
-			this.trigger(ev);
+		$.fn[ev] = function() {
+			for (var i = 0; i < this.length; i++) {
+				if (this[i].tagName == "SELECT") {
+					this[i].trigger(ev);
+				}
+			}
 			return el.apply(this, arguments);
 		};
 	});

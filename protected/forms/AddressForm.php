@@ -2,6 +2,14 @@
 
 class AddressForm extends FormModel {
 
+	public $id;
+	public $street_name;
+	public $house_number;
+	public $flat_number;
+	public $post_index;
+	public $region_name;
+	public $district_name;
+
 	/**
 	 * Override that method to return additional rule configuration, like
 	 * scenario conditions or others
@@ -9,9 +17,8 @@ class AddressForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			[ "street_name", "length", "max" => 200 ],
-			[ [ "house_number", "flag_number" ], "length", "max" => 10 ],
-			[ "city", "length", "max" => 50 ]
+			[ [ "region_name", "district_name", "street_name" ], "length", "max" => 100 ],
+			[ [ "house_number", "flat_number" ], "length", "max" => 10 ],
 		];
 	}
 
@@ -28,37 +35,31 @@ class AddressForm extends FormModel {
 			"id" => [
 				"label" => "Идентификатор",
 				"type" => "number",
-				"rules" => "safe, numerical"
+				"rules" => "numerical"
 			],
 			"region_name" => [
 				"label" => "Регион",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			],
 			"district_name" => [
 				"label" => "Район",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			],
 			"street_name" => [
 				"label" => "Название улицы",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			],
 			"house_number" => [
 				"label" => "Номер дома",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			],
 			"flat_number" => [
 				"label" => "Номер квартиры",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			],
 			"post_index" => [
 				"label" => "Почтовый индекс",
-				"type" => "text",
-				"rules" => "safe"
+				"type" => "text"
 			]
 		];
 	}
