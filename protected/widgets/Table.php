@@ -2,7 +2,40 @@
 
 class Table extends Widget {
 
-	use TableTrait;
+	/**
+	 * @var string - Default order table column name
+	 */
+	public $sort;
+
+	/**
+	 * @var bool - Order direction
+	 */
+	public $desc = false;
+
+	/**
+	 * @var int - Maximum displayed rows per page
+	 */
+	public $limit = 10;
+
+	/**
+	 * @var int - Current displayed page
+	 */
+	public $page = 1;
+
+	/**
+	 * @var CDbCriteria|string - Search criteria
+	 */
+	public $criteria = null;
+
+	/**
+	 * @var string - CDbCriteria condition
+	 */
+	public $condition = null;
+
+	/**
+	 * @var array - CDbCriteria parameters
+	 */
+	public $params = null;
 
     /**
      * @var Widget - Sub-widget component with TableTrait element, which
@@ -11,6 +44,9 @@ class Table extends Widget {
      */
 	public $widget = null;
 
+	/**
+	 * @var ActiveRecord - Table's active record instance
+	 */
 	public $table = null;
 	public $header = null;
     public $pk = null;
@@ -25,7 +61,7 @@ class Table extends Widget {
 	/**
 	 * @var bool - Should table be empty after first page load, set
 	 * 	it to true if your table contains big amount of rows and
-	 * 	it's initial render will be slow all render processes
+	 * 	it's initial render will slow down all render processes
 	 */
 	public $empty = false;
 
@@ -37,7 +73,7 @@ class Table extends Widget {
 	public function run() {
 
 		// Check table instance
-		if (!($this->table instanceof ActiveRecord)) {
+		if (!$this->table instanceof ActiveRecord) {
 			throw new CException("Table's model must extends ActiveRecord");
 		}
 
@@ -106,10 +142,10 @@ class Table extends Widget {
             $this->pk = "id";
         }
 
-		// Render widget
+		// Render widget (absolute path for sub-modules widgets, which extends current)
 		return $this->render("application.widgets.views.Table", [
 			"data" => $data,
-			"parent" => get_class($this->widget)
+			"parent" => get_class($this)
 		]);
 	}
 }

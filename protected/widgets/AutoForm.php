@@ -2,11 +2,21 @@
 
 class AutoForm extends Widget {
 
+	/**
+	 * @var string - Client form's unique key
+	 */
     public $id = null;
+
+	/**
+	 * @var string - Absolute url to controller's action
+	 */
     public $url = null;
 
     /**
-     * @var FormModel - Form's model
+     * @var FormModel|string|array - Form's model, it's class name
+	 *	or array with classes (it will compile all it's fields to
+	 * 	one [FormModelAdapter] instance)
+	 * @see FormModelAdapter
      */
     public $model = null;
 
@@ -47,8 +57,11 @@ class AutoForm extends Widget {
      * @return bool - True if everything ok
      * @throws CException
      */
-    private function test($model) {
-        if (!$model || !($model instanceof FormModel)) {
+    private function test(&$model) {
+		if (is_string($model)) {
+			$model = new $model();
+		}
+		if (!$model || !($model instanceof FormModel)) {
             throw new CException("Unresolved model field or form model isn't instance of FormModel ".(int)$model);
         }
         return true;
@@ -211,7 +224,7 @@ class AutoForm extends Widget {
 	 * @return bool - True if field must be hidden
 	 */
 	public function getForm($key) {
-		$config = $this->model->getConfig()[$key];
+		$config = $this->model->getConfig($key);
 		if (!isset($config["form"])) {
 			return false;
 		}
@@ -224,10 +237,8 @@ class AutoForm extends Widget {
      * @return bool - True if field must be hidden
      */
     public function isHidden($key) {
-        $config = $this->model->getConfig()[$key];
-        if (!isset($config["hidden"])) {
-            return false;
-        }
-        return $config["hidden"];
+        $config = $this->model->getConfig($key);
+		return isset($config["hidden"]) && $config["hidden"] == "true" ||
+			isset($config["type"]) && $config["type"] == "hidden";
     }
 } 

@@ -9,7 +9,7 @@ class DbCriteria extends CDbCriteria {
 	 * @param string $order - Order string
 	 * @return static
 	 */
-    public static function createWithWhere($condition, $params = [], $order = "") {
+    public static function createWhere($condition, $params = [], $order = "") {
         $criteria = new static();
         $criteria->condition = $condition;
         $criteria->params = $params;

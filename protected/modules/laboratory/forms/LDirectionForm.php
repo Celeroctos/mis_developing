@@ -24,15 +24,22 @@ class LDirectionForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-
-			// don't require identification number on update or search
-			[ "id", "required", "on" => [ "update", "search" ] ],
-
-			// set maximum length of card number
-			[ "card_number", "length", "max" => 50 ],
-
-			[ "sender_id", "default", "value" => LUserIdentity::get("doctorId") ]
+			$this->createFilter("treatment.edit", [
+				"comment",
+				"analysis_type",
+				"treatment_room_employee_id",
+				"laboratory_employee_id",
+				"history",
+				"ward_id"
+			])
 		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function init() {
+		$this->sender_id = LUserIdentity::get("doctorId");
 	}
 
 	/**
@@ -60,6 +67,10 @@ class LDirectionForm extends FormModel {
                 "type" => "DirectionStatus",
                 "rules" => "required"
             ],
+			"comment" => [
+				"label" => "Комментарий",
+				"type" => "TextArea"
+			],
 			"analysis_type_id" => [
 				"label" => "Тип анализа",
 				"type" => "DropDown",
@@ -73,31 +84,47 @@ class LDirectionForm extends FormModel {
 			"medcard_id" => [
 				"label" => "Медкарта",
 				"type" => "number",
+				"rules" => "required",
+				"hidden" => "true"
+			],
+			"sender_id" => [
+				"label" => "Врач направитель",
+				"type" => "number",
+				"rules" => "required",
+				"hidden" => "true"
+			],
+			"sending_date" => [
+				"label" => "Дата направления",
+				"type" => "date",
 				"rules" => "required"
+			],
+			"treatment_room_employee_id" => [
+				"label" => "Сотрудник процедурного кабинета",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"format" => "%{last_name} %{first_name}",
+					"name" => "mis.doctors",
+					"key" => "id",
+					"value" => "first_name, last_name",
+					"order" => "last_name, first_name"
+				]
+			],
+			"laboratory_employee_id" => [
+				"label" => "Сотрудник лаборатории",
+				"type" => "DropDown",
+				"rules" => "required",
+				"table" => [
+					"format" => "%{last_name} %{first_name}",
+					"name" => "mis.doctors",
+					"key" => "id",
+					"value" => "first_name, last_name",
+					"order" => "last_name, first_name"
+				]
 			],
             "history" => [
                 "label" => "Медикаментозный анамнез",
                 "type" => "TextArea"
-            ],
-			"comment" => [
-				"label" => "Комментарий",
-				"type" => "TextArea"
-			],
-			"sender_id" => [
-				"label" => "Врач",
-				"type" => "number",
-				"rules" => "required",
-                "hidden" => "true"
-			],
-            "enterprise_id" => [
-                "label" => "Направитель",
-                "type" => "DropDown",
-                "rules" => "required",
-                "table" => [
-                    "name" => "lis.enterprise",
-                    "key" => "id",
-                    "value" => "shortname"
-                ]
             ],
 			"ward_id" => [
 				"label" => "Отдел",
@@ -109,35 +136,16 @@ class LDirectionForm extends FormModel {
                     "value" => "name"
                 ]
 			],
-			"sending_date" => [
-				"label" => "Дата направления",
-				"type" => "date",
-				"rules" => "required"
-			],
-			"treatment_room_employee_id" => [
-				"label" => "Сотрудник процедурного кабинета",
+			"enterprise_id" => [
+				"label" => "Направитель",
 				"type" => "DropDown",
 				"rules" => "required",
-                "table" => [
-                    "format" => "%{first_name} %{middle_name}",
-                    "name" => "mis.doctors",
-                    "key" => "id",
-                    "value" => "first_name, middle_name",
-					"order" => "last_name, first_name"
-                ]
+				"table" => [
+					"name" => "lis.enterprise",
+					"key" => "id",
+					"value" => "shortname"
+				]
 			],
-			"laboratory_employee_id" => [
-				"label" => "Сотрудник лаборатории",
-				"type" => "DropDown",
-				"rules" => "required",
-                "table" => [
-                    "format" => "%{first_name} %{middle_name}",
-                    "name" => "mis.doctors",
-                    "key" => "id",
-                    "value" => "first_name, middle_name",
-					"order" => "last_name, first_name"
-                ]
-			]
 		];
 	}
 }

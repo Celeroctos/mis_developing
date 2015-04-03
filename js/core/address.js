@@ -15,12 +15,12 @@ var Laboratory = Laboratory || {};
 				"street_name": {
 					"label": "Улица",
 					"prefix": "ул",
-					"style": "width: 50%"
+					"style": "width: 100%"
 				},
 				"district_name": {
 					"label": "Район",
 					"prefix": "р",
-					"style": "width: 50%"
+					"style": "width: 100%"
 				},
 				"house_number": {
 					"label": "Дом",
@@ -94,7 +94,7 @@ var Laboratory = Laboratory || {};
 			$("<input>", {
 				placeholder: list[i]["label"],
 				type: "text",
-				class: "form-control col-xs-6 text-center",
+				class: "form-control col-xs-6",
 				id: i,
 				name: "AddressForm[" + i + "]",
 				style: list[i]["style"]

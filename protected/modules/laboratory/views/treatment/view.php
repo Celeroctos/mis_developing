@@ -99,15 +99,35 @@ $this->widget("Modal", [
 			"class" => "btn btn-warning",
 			"type" => "button",
 			"align" => "left"
+		],
+		"mis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент МИС",
+			"class" => "btn btn-default",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#mis-medcard-search-modal"
+			],
+			"align" => "center"
+		],
+		"lis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент ЛИС",
+			"class" => "btn btn-success",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#lis-medcard-search-modal"
+			],
+			"align" => "center"
 		]
 	],
 	"class" => "modal-90"
 ]);
 
 $this->widget("Modal", [
-	"title" => "Новое направление",
+	"title" => "Регистрация направления",
 	"body" => $this->getWidget("AutoForm", [
-		"model" => new LDirectionForm()
+		"model" => new LDirectionForm("treatment.edit")
 	]),
 	"id" => "direction-register-modal"
 ]); ?>
@@ -146,6 +166,7 @@ $this->widget("Modal", [
 		<div id="treatment-direction-grid-wrapper">
 			<?= $this->getWidget("Table", [
 				"table" => new LDirection("grid.direction"),
+				"criteria" => DbCriteria::createWhere("status <> 3"),
 				"header" => [
 					"id" => [
 						"label" => "#",
@@ -176,7 +197,7 @@ $this->widget("Modal", [
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
             <?= $this->getWidget("Table", [
                 "table" => new LDirection("grid.direction"),
-                "criteria" => DbCriteria::createWithWhere("is_repeated = 1"),
+                "criteria" => DbCriteria::createWhere("status = 3"),
                 "header" => [
                     "id" => [
                         "label" => "#",

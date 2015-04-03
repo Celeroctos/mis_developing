@@ -21,11 +21,9 @@ $form = $this->beginWidget('CActiveForm', [
 <?php foreach ($model->getConfig() as $key => $value): ?>
     <div class="form-group <?= $this->isHidden($key) ? "hidden" : "" ?>">
 		<?php if ($this->labels == true): ?>
-			<?php if (!$this->checkType($key, "Hidden")) {
-				echo $form->labelEx($model, $key, array(
+			<?= $form->labelEx($model, $key, array(
 					'class' => 'col-xs-4 control-label'
-				));
-			} ?>
+				)); ?>
 			<div class="col-xs-7">
 				<?= $this->renderField($form, $key); ?>
 			</div>

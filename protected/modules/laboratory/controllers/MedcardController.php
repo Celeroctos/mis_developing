@@ -57,14 +57,15 @@ class MedcardController extends LController {
 			$compare = [];
 			foreach ($this->getFormModel("model", "post") as $model) {
 				foreach ($model->attributes as $key => $value) {
-					if (!empty($value)) {
-						if ($model->isDropDown($key)) {
-							if ($value != -1) {
-								$compare[$key] = $value;
-							}
-						} else {
-							$like[$key] = $value;
+					if (empty($value) || $value == "") {
+						continue;
+					}
+					if ($model->isDropDown($key)) {
+						if ($value != -1) {
+							$compare[$key] = $value;
 						}
+					} else {
+						$like[$key] = $value;
 					}
 				}
 			}

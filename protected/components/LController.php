@@ -301,7 +301,7 @@ abstract class LController extends Controller {
                 throw new CException("Can't update widget which don't extends Widget component");
             }
 
-            if ($form != null && $widget instanceof Form && is_array($form)) {
+            if ($form != null && $widget instanceof AutoForm && is_array($form)) {
                 foreach ($form as $key => $value) {
                     $widget->model->$key = $value;
                 }
@@ -465,7 +465,7 @@ abstract class LController extends Controller {
 	 */
     public function exception($exception) {
         $method = $exception->getTrace()[0];
-		if (!Yii::app()->getRequest()->getIsAjaxRequest()) {
+		if (!Yii::app()->getRequest()->getIsAjaxRequest() || true) {
 			throw $exception;
 		}
         $this->leave([
