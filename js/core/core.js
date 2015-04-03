@@ -281,7 +281,7 @@ var Laboratory = Laboratory || {};
 		$.fn[ev] = function() {
 			for (var i = 0; i < this.length; i++) {
 				if (this[i].tagName == "SELECT") {
-					this[i].trigger(ev);
+					$(this[i]).trigger(ev);
 				}
 			}
 			return el.apply(this, arguments);
