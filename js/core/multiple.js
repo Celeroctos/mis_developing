@@ -340,6 +340,8 @@ var Laboratory = Laboratory || {};
 			var multiple = $(item).parents(".multiple");
 			if (typeof list !== "string") {
 				list = JSON.stringify(list);
+			} else if (list == null) {
+				list = "[]";
 			}
 			if (!list.length || list == "[]") {
 				multiple.find(".multiple-chosen div").each(function(i, div) {
