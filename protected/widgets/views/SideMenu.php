@@ -97,11 +97,13 @@
                 </li>
             <?php }  if (Yii::app()->user->checkAccess('hospitalMenu')) { ?>
             <li <?php echo $module == 'hospital' ? 'class="active"' : ''; ?>>
-            <li <?php echo $module == 'doctors' ? 'class="active"' : ''; ?>>
                 <?php echo CHtml::link('<img src="/images/icons/doctors_cabinet.png" width="32" height="32" alt="" />Стационар', array('#')) ?>
                 <ul class="nav">
-                    <li>
+                    <li <?php echo $controller == 'hospitalization' && $module == 'hospital' ? 'class="active"' : ''; ?>>
                         <?php echo CHtml::link('<img src="/images/icons/greeting_patient.png" width="32" height="32" alt="" />Госпитализация', array('/hospital/hospitalization/view')) ?>
+                    </li>
+                    <li <?php echo $controller == 'bedsstock' && $module == 'hospital' ? 'class="active"' : ''; ?>>
+                        <?php echo CHtml::link('<img src="/images/icons/greeting_patient.png" width="32" height="32" alt="" />Коечный фонд', array('/hospital/bedsstock/view')) ?>
                     </li>
                 </ul>
             </li>

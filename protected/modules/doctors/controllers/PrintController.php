@@ -282,37 +282,16 @@ class PrintController extends Controller {
             $changedElements = MedcardElementForPatient::model()->findGreetingTemplate($greetingId,$templateId);
         }
 
-       // echo '<pre>';
-        //var_dump($changedElements );
-        //exit();
-        // =====>
-        //  foreach ($changedElements as $oneEl)
-        //   {
-        //        var_dump($oneEl['value'] .' '.$oneEl['element_id']);
-        //      }
-//exit();
-
         $indexToDelete = array();
         // Вот в этой точке надо "почистить" массив от невыводимых элементов
-        for($i=0;$i<count($changedElements );$i++)
-        {
-            if ($changedElements[$i]['not_printing_values']!=NULL &&  $changedElements[$i]['not_printing_values']!='')
-            {
-                //var_dump('sdvsdfv3zdc');
-                //exit();
+        for($i=0;$i<count($changedElements );$i++) {
+            if ($changedElements[$i]['not_printing_values']!=NULL &&  $changedElements[$i]['not_printing_values']!='') {
                 // Раскодируем массив значений
                 $arrayValues = CJSON::decode(  $changedElements[$i]['not_printing_values'] );
-
-                //var_dump($arrayValues);
-                //exit();
-
-                if ($arrayValues!=null)
-                {
-
+                if ($arrayValues!=null) {
                     // Вот тут надо выполнить саму проверку
                     $elementValue = CJSON::decode($changedElements[$i]['value']);
-                    if ($elementValue==null)
-                    {
+                    if ($elementValue==null) {
                         // Значит берём значение напрямую из элемента без декодирования
                         $elementValue = $changedElements[$i]['value'];
                     }
@@ -320,37 +299,21 @@ class PrintController extends Controller {
                     // Теперь имеем следующую ситуацию
                     // Есть значение элемента. Оно является либо массивом, либо одиночным значением
                     //   Т.О. его надо либо перебрать как массив, либо взять и найти поиском в массиве значений
-                    if (is_array($elementValue))
-                    {
+                    if (is_array($elementValue)) {
                         // Перебираем elementValue
                         $wasFoundNotPrint = false;
-
-                        foreach ($elementValue as $oneElementValue)
-                        {
-                            if(in_array($oneElementValue,$arrayValues))
-                            {
+                        foreach ($elementValue as $oneElementValue) {
+                            if(in_array($oneElementValue,$arrayValues)) {
                                 $wasFoundNotPrint=true;
                                 break;
                             }
                         }
 
-                        if ($wasFoundNotPrint==true)
-                        {
+                        if ($wasFoundNotPrint==true) {
                             array_push($indexToDelete,$i);
                         }
-                    }
-                    else
-                    {
-
-                        //var_dump($element);
-                        //var_dump($elementValue);
-                        //var_dump($arrayValues);
-                        //exit();
-
-                        if (in_array($elementValue,$arrayValues))
-                        {
-                            //var_dump('sdfsdder3rdfc');
-                            //exit();
+                    } else {
+                        if (in_array($elementValue,$arrayValues)) {
                             array_push($indexToDelete,$i);
                             continue;
                         }
@@ -359,25 +322,14 @@ class PrintController extends Controller {
             }
         }
 
-        //var_dump($indexToDelete);
-        //exit();
-
         // Идём в обратную сторону по массиву ненужных элементов и удаляем их массива изменённых элементов
-        for ($i=count($indexToDelete)-1;$i>=0;$i--)
-        {
+        for ($i=count($indexToDelete)-1;$i>=0;$i--){
             array_splice($changedElements, $indexToDelete[$i],1);
         }
-        //echo "<pre>";
-        //var_dump($changedElements);
-        //exit();
-
 
         if(count($changedElements) == 0) {
             // Единичная печать
             if($greetingIn === false) {
-                //var_dump($changedElements);
-                //exit();
-
                 exit('Во время этого приёма не было произведено никаких изменений!');
             } else {
                 return array();
@@ -399,7 +351,6 @@ class PrintController extends Controller {
         $sortedElements = $categorieWidget->dividedCats;
 
         // Вытащим диагнозы
-        //=======>
 
         $pd = PatientDiagnosis::model()->findDiagnosis($greetingId, 0);
         $sd = PatientDiagnosis::model()->findDiagnosis($greetingId, 1);
@@ -420,43 +371,37 @@ class PrintController extends Controller {
         if($greetingIn === false) {
             if(!$returnResult) {
                 $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L');
+                $mPDF->SetDisplayMode('fullpage');
+                $mPDF->list_indent_first_level = 0;
 
-                if ($printRecom)
-                {
+                if ($printRecom){
                     $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0,'',8,8,8,8,8,8);
                 }
                 $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot.css').'/paper.less');
                 $mPDF->WriteHTML($stylesheet, 1);
 
-               $htmlForPdf = '';
+                $htmlForPdf = '';
 			   
                 // Если печатаем рекомендации - печатаем их по-другому, в другой совершенно форме:
-                if ($printRecom)
-                {
-                    $htmlForPdf =
-                        $this->render('recommendationPdf', array(
-                            'templates' => $sortedElements,
-                            'greeting' => $greetingInfo,
-                            'diagnosises' => $diagnosises,
-                            'enterprise' => $enterprise
-                        ), true);
+                if ($printRecom){
+                    $htmlForPdf = $this->render('recommendationPdf', array(
+                        'templates' => $sortedElements,
+                        'greeting' => $greetingInfo,
+                        'diagnosises' => $diagnosises,
+                        'enterprise' => $enterprise
+                    ), true);
+                } else {
+                    $htmlForPdf = $this->render('greeting', array(
+                        'templates' => $sortedElements,
+                        'greeting' => $greetingInfo,
+                        'diagnosises' => $diagnosises
+                    ), true);
                 }
-                else
-                {
-                    $htmlForPdf =
-                        $this->render('greeting', array(
-                            'templates' => $sortedElements,
-                            'greeting' => $greetingInfo,
-                            'diagnosises' => $diagnosises
-                        ), true);
-                }
-
 
                 $mPDF->WriteHTML(
                     $htmlForPdf
                 );
 
-                ob_end_clean();
                 $this->render('greetingpdf', array(
                     'pdfContent' => $mPDF->Output()
                 ));

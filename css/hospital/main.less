@@ -1,4 +1,4 @@
-#hospitalizationNavbar {
+#hospitalizationNavbar, #bedsstockNavbar {
 	li {
 		width: 25%;
 		text-align: center;
@@ -10,7 +10,7 @@
 			position: absolute;
 			border: 1px solid #000000;
 			border-radius: 10px;
-			padding: 10px;	
+			padding: 10px;
 			top: -5px;
 			left: 96%;
 			z-index: 99;
@@ -75,4 +75,122 @@
   position: fixed;
   top: 60px;
   left: 90%;
+}
+.bedsstockExpanderBody {
+  display: none;
+}
+
+.bedsstockExpanderBody, .expander {
+  td {
+    overflow: hidden;
+  }
+  .cont {
+    background: #ffffff !important;
+    padding-bottom: 10px;
+  }
+  .wrap {
+    width: 200%;
+  }
+  .left, .right {
+    width: 50%;
+    max-width: 50%;
+  }
+  .left {
+    float: left;
+  }
+  .right {
+    float: right;
+    position: relative;
+    .back {
+      position: absolute;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      top: 10px;
+      left: 10px;
+      span {
+        position: relative;
+        top: -3px;
+      }
+    }
+    .reserveBed {
+      font-size: 13px;
+      margin-left: 10px;
+    }
+    .reserveForm {
+      display: none;
+      width: 70%;
+      margin-left: 10px;
+      position: relative;
+      top: -5px;
+      .form-group {
+        min-width: 40%;
+      }
+      .form-group + .form-group {
+        min-width: 25%;
+      }
+      button {
+        position: relative;
+        top: 10px;
+      }
+    }
+  }
+
+  td {
+    padding: 0 !important;
+  }
+  ul.filter {
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: bold;
+    li {
+      float: left;
+      list-style: none;
+      margin-right: 10px;
+      ul {
+        font-weight: normal;
+        padding: 0;
+        li {
+          float: none;
+        }
+      }
+      input[type="checkbox"] {
+        margin-right: 10px;
+        margin-left: -5px;
+      }
+    }
+    #wardType {
+      min-width: 100px;
+    }
+  }
+  ul.wardsList {
+    li {
+      display: inline-block;
+      width: 150px;
+      height: 150px;
+      list-style: none;
+      text-align: center;
+      padding: 0 5px 5px 0;
+      margin-right: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .3), -23px 0 20px -23px rgba(0, 0, 0, .8), 23px 0 20px -23px rgba(0, 0, 0, .8), 0 0 40px rgba(0, 0, 0, .1) inset;
+      cursor: pointer;
+      .wardType, .paidType, .numFree {
+        display: block;
+      }
+    }
+    .numFree {
+      margin-top: 50px;
+    }
+  }
+  ul.bedsList {
+    margin: 10px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
 }

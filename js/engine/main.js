@@ -27,7 +27,11 @@ misEngine = (function() {
                  'script' : null,
                  'modules' : [{
                      'name' : 'hospital',
-                     'script' : null
+                     'script' : null,
+                     'modules' : [{
+                         'name' : 'bedsstock',
+                         'script' : null
+                     }]
                  }]
             }, {
                 'name' : 'helper',

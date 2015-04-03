@@ -2,13 +2,10 @@
 foreach($category as $key => $child) 
 {	
 	if (!isset ($child['element'])) continue;
-	//var_dump($child);
-	//exit();
-	//var_dump("!");
-	//exit();	
+
 	if ($child['element']['element_id']==-1)
 	{
-		$this->drawPrintCategorie($child);			
+		$this->drawPrintCategorie($child);
 	}
 	else
 	{	
@@ -98,12 +95,7 @@ foreach($category as $key => $child)
 						<?php
 					}
 					?>
-					<!--<div class="field inline-element">-->
-					<!--<div class="inline-element">-->
 					<strong><?php echo $element['info']['label']; ?></strong> <?php echo $element['element']['value']; ?>
-					
-					<!--</div>-->
-					
 					<?php
 				}
 			}

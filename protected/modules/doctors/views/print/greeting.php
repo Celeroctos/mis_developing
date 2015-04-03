@@ -13,16 +13,13 @@
         // Сначала печатаем шаблоны, у которых template_page_id = 0
         // Потом выводим диагнозы
         // Потом выводим шаблоны, у которых template_page_id = 1
-        foreach ($templates as $oneTemplate)
-        {
-            // Если у шаблона empty = true, то переходим на следующую итерацию цикла
-            // var_dump($oneTemplate['empty']);
-            if ($oneTemplate['empty']==true)
+        foreach ($templates as $oneTemplate) {
+            if ($oneTemplate['empty'] == true) {
                 continue;
+            }
 
             // Если шаблон не основной (а рекомендации)
-            if ($oneTemplate['template_page_id']!=0)
-            {
+            if ($oneTemplate['template_page_id']!=0) {
                 continue;
             }
             // Печатаем название шаблона
@@ -34,7 +31,6 @@
                     <strong style="text-decoration: underline"><?php echo $categorie['element']['name']; ?></strong>
                     <p class ="print-elements">
                         <?php
-
                         // Вызываем виджет категории
                         $printCategorieWidget = $this->createWidget('application.modules.doctors.components.widgets.printCategory', array(
                             'categoryToPrint' => $categorie
@@ -47,6 +43,7 @@
 
             }
         }
+
         // Выводим диагнозы
         if ((count($diagnosises['clinicalSecondary'])>0) || (strlen($diagnosises['noteGreeting'])>0) )
         {
