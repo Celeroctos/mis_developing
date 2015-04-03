@@ -26,7 +26,7 @@ var Laboratory = Laboratory || {};
 	 * @param {jQuery|Boolean} selector - Селектор компонента, который
 	 * 		используется по умолчанию (в данном случае это select[multiple])
 	 * @constructor
-	 */ 
+	 */
 	var Multiple = function(properties, selector) {
 		/* Инициализация родительского компонента */
 		Lab.Component.call(this, properties, {
