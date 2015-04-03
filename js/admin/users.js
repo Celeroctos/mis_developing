@@ -1,4 +1,4 @@
-$(document).ready(function() {
+	$(document).ready(function() {
     $("#users").jqGrid({
         url: globalVariables.baseUrl + '/admin/users/get',
         datatype: "json",

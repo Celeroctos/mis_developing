@@ -97,7 +97,7 @@ var Laboratory = Laboratory || {};
      * it will simply remove selector
      */
     Lab.Component.prototype.destroy = function() {
-        this.selector().remove();
+        throw new Error("That component doesn't support downgrade");
     };
 
     /**
@@ -252,15 +252,6 @@ var Laboratory = Laboratory || {};
      */
     String.prototype.endsWith = function(suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
-
-    /**
-     * Is string starts with some prefix
-     * @param prefix {string} - String prefix
-     * @returns {boolean} - True if string has prefix
-     */
-    String.prototype.startsWidth = function(prefix) {
-        return this.indexOf(prefix, 0) !== -1;
     };
 
     /**
