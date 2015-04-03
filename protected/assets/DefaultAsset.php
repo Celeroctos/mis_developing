@@ -4,7 +4,6 @@ class DefaultAsset extends AssetBundle {
 
     public $js = [
         "assets/libs/less-1.4.1.min.js",
-		"assets/libs/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js",
         "assets/libs/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js",
         "assets/libs/bootstrap-3.0.0/dist/js/bootstrap.min.js",
         "assets/libs/bootstrap-datetimepicker.js",

@@ -72,7 +72,7 @@ class MedworkersController extends Controller
 			$recordMedpersonal->scenario='medworkers.update';
 			$recordMedpersonal->attributes=Yii::app()->request->getPost('Medpersonal');
 			
-			$transaction=Yii::app()->db->beginTransaction();
+			//$transaction=Yii::app()->db->beginTransaction();
 			try
 			{
 				if($recordMedpersonal->save())
@@ -91,7 +91,7 @@ class MedworkersController extends Controller
 						$modelMedpersonal_templates->id_template=$value;
 						$modelMedpersonal_templates->save(); //валидация уникальности
 					}
-					$transaction->commit();
+					//$transaction->commit();
 					Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, 'Вы успешно обновили должность с #ID ' . $recordMedpersonal->id . '!');
 					$this->redirect(['medworkers/view']);
 				}
