@@ -269,13 +269,13 @@ var Laboratory = Laboratory || {};
 })(Laboratory);
 
 (function($) {
-	var ev = new $.Event('style'),
-		orig = $.fn.css;
-	$.fn.css = function() {
-		var result = orig.apply(this, arguments || []);
-		$(this).trigger(ev);
-		return result;
-	};
+	//var ev = new $.Event('style'),
+	//	orig = $.fn.css;
+	//$.fn.css = function() {
+	//	var result = orig.apply(this, arguments || []);
+	//	$(this).trigger(ev);
+	//	return result;
+	//};
 	$.each(['show', 'hide'], function (i, ev) {
 		var el = $.fn[ev];
 		$.fn[ev] = function() {
