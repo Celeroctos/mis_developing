@@ -166,6 +166,8 @@ var Laboratory = Laboratory || {};
 				array.push($(item).val());
             });
 			me.choose(array);
+			/* Fix #13590 - 9 */
+			me.selector().find("select[multiple]").trigger("change");
         });
 		/* Действие аналогично вышеописанному, но все элементы
 		отмечаются как невыбранные */
