@@ -397,83 +397,83 @@ var Laboratory = Laboratory || {};
 		"createMultiple"
 	);
 
-    //$(document).ready(function() {
-		///* Создаем событие на обработку изменения стиля элемента
-		//select[multiple], которые потом парсим и применяем родительскому
-		//элементу с классом multiple */
-		//var f;
-    //    $("select[multiple][data-ignore!='multiple']").multiple().on("style", f = function(e) {
-		//	if (e.target.tagName !== "SELECT") {
-		//		return void 0;
-		//	}
-    //        var filter = $(this).multiple("property", "filter");
-		//	var style;
-		//	if ($(this).attr("style")) {
-		//		style = $(this).attr("style").split(";");
-		//	} else {
-		//		style = [];
-		//	}
-    //        var css = {};
-    //        for (var i in style) {
-    //            var link = style[i].trim().split(":");
-    //            if (link.length != 2) {
-    //                continue;
-    //            }
-    //            var key = link[0];
-		//		if ($.inArray(key, filter) !== -1) {
-		//			continue;
-		//		}
-    //            css[key] = link[1].trim();
-    //        }
-    //        $(this).parent(".multiple").css(css);
-    //    }).on("hide", function(e) {
-		//	if (e.target.tagName === "SELECT") {
-		//		$(this).parents(".multiple").hide();
-		//	}
-		//}).on("show", function(e) {
-		//	if (e.target.tagName === "SELECT") {
-		//		$(this).parents(".multiple").show();
-		//	}
-		//}).trigger("style");
-		///* Обходим все элементы, которые уже имеют установленные значения в
-		//атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
-		//добавляем в компонент, после чего удалем поле value */
-    //    $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
-    //        if ($(this).attr("value") != void 0) {
-    //            $(this).multiple("choose", $(this).attr("value"));
-    //        }
-    //        $(this).removeAttr("value");
-    //    });
-		///* Обходим все элементы, которые имеют отмеченные поля через зажатую
-		//клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
-		//что если массив пустой, то все поля будут удалены */
-		//$("select[multiple][data-ignore!='multiple']").each(function() {
-		//	var result = $(this).multiple("selected", true);
-		//	if (result.length > 0) {
-		//		$(this).multiple("choose", result);
-		//	}
-		//	// #13553 - Hot! Hot! Hot!
-		//	this.onhide = function(e) {
-		//		if (e.target.tagName === "SELECT") {
-		//			$(this).parents(".multiple").hide();
-		//		}
-		//	};
-		//	this.onshow = function(e) {
-		//		if (e.target.tagName === "SELECT") {
-		//			$(this).parents(".multiple").show();
-		//		}
-		//	};
-		//	this.onstyle = function(e) {
-		//		if (e.target.tagName === "SELECT") {
-		//			f.call(this, e);
-		//		}
-		//	};
-		//});
-		///* Обходим все множественный списки со стилями и применяем их для
-		//нового родительского элемента */
-		//$("select[multiple][data-ignore!='multiple'][style]").each(function() {
-		//	$(this).parents(".multiple").attr("style", $(this).attr("style"));
-		//});
-    //});
+    $(document).ready(function() {
+		/* Создаем событие на обработку изменения стиля элемента
+		select[multiple], которые потом парсим и применяем родительскому
+		элементу с классом multiple */
+		var f;
+        $("select[multiple][data-ignore!='multiple']").multiple().on("style", f = function(e) {
+			if (e.target.tagName !== "SELECT") {
+				return void 0;
+			}
+            var filter = $(this).multiple("property", "filter");
+			var style;
+			if ($(this).attr("style")) {
+				style = $(this).attr("style").split(";");
+			} else {
+				style = [];
+			}
+            var css = {};
+            for (var i in style) {
+                var link = style[i].trim().split(":");
+                if (link.length != 2) {
+                    continue;
+                }
+                var key = link[0];
+				if ($.inArray(key, filter) !== -1) {
+					continue;
+				}
+                css[key] = link[1].trim();
+            }
+            $(this).parent(".multiple").css(css);
+        }).on("hide", function(e) {
+			if (e.target.tagName === "SELECT") {
+				$(this).parents(".multiple").hide();
+			}
+		}).on("show", function(e) {
+			if (e.target.tagName === "SELECT") {
+				$(this).parents(".multiple").show();
+			}
+		}).trigger("style");
+		/* Обходим все элементы, которые уже имеют установленные значения в
+		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
+		добавляем в компонент, после чего удалем поле value */
+        $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
+            if ($(this).attr("value") != void 0) {
+                $(this).multiple("choose", $(this).attr("value"));
+            }
+            $(this).removeAttr("value");
+        });
+		/* Обходим все элементы, которые имеют отмеченные поля через зажатую
+		клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
+		что если массив пустой, то все поля будут удалены */
+		$("select[multiple][data-ignore!='multiple']").each(function() {
+			var result = $(this).multiple("selected", true);
+			if (result.length > 0) {
+				$(this).multiple("choose", result);
+			}
+			// #13553 - Hot! Hot! Hot!
+			this.onhide = function(e) {
+				if (e.target.tagName === "SELECT") {
+					$(this).parents(".multiple").hide();
+				}
+			};
+			this.onshow = function(e) {
+				if (e.target.tagName === "SELECT") {
+					$(this).parents(".multiple").show();
+				}
+			};
+			this.onstyle = function(e) {
+				if (e.target.tagName === "SELECT") {
+					f.call(this, e);
+				}
+			};
+		});
+		/* Обходим все множественный списки со стилями и применяем их для
+		нового родительского элемента */
+		$("select[multiple][data-ignore!='multiple'][style]").each(function() {
+			$(this).parents(".multiple").attr("style", $(this).attr("style"));
+		});
+    });
 
 })(Laboratory);
