@@ -975,16 +975,4 @@ $('.buttonUpContainer').click(function () {
 			}
 		}
 	});
-
-	// fix for modal window backdrop
-	$(document).on('show.bs.modal', '.modal', function(e) {
-		if (!$(e.target).hasClass("modal")) {
-			return void 0;
-		}
-		var depth = 1140 + (10 * $('.modal:visible').length);
-		$(this).css('z-index', depth);
-		setTimeout(function() {
-			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
-		}, 0);
-	});
 });
