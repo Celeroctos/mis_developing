@@ -625,7 +625,7 @@ class SheduleController extends Controller {
                 'text' => 'Ошибка запроса.'));
         }
 
-        $transaction = Yii::app()->db->beginTransaction();
+//        $transaction = Yii::app()->db->beginTransaction();
 
         // Ищем recordId
         $recordId = MedcardElementForPatient::getMaxRecordId(
@@ -719,7 +719,7 @@ class SheduleController extends Controller {
             if(is_array($value)) {
                 $value = CJSON::encode($value);
             }
-
+			/** @var $historyCategorieElement MedcardElementForPatient */
             $historyCategorieElement = $historyElementsPaths[$pathsToFields[$field]];
             $this->stepToNextState($historyCategorieElement, $value, $recordId );
             $answerCurrentDate = true;
@@ -745,7 +745,7 @@ class SheduleController extends Controller {
             $recordRow->save();
         }
         //}
-        $transaction->commit();
+//        $transaction->commit();
         // exit();
         $response = array(
             'success' => true,
