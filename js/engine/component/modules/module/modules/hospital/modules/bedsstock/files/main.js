@@ -1,12 +1,15 @@
 misEngine.class('component.module.hospital.bedsstock', function() {
     return {
         patientsGrid : null,
+        relocationsGrid : null,
+        activeTab : null,
         config: {
             name: 'bedsstock'
         },
 
         displayGrids : function() {
             this.displayPatientsGrid();
+            this.displayRelocationsGrid();
         },
 
         displayPatientsGrid : function() {
@@ -20,6 +23,7 @@ misEngine.class('component.module.hospital.bedsstock', function() {
 
             this.patientsGrid
                 .setConfig({
+                    id : 'patientsGrid',
                     renderConfig : {
                         mode : 'ajax',
                         ajaxConf : {
@@ -44,31 +48,55 @@ misEngine.class('component.module.hospital.bedsstock', function() {
                 .render()
                 .on();
 
-            this.addRowExpander(this.patientsGrid);
+            var expander = misEngine.create('component.expander', {
+                grid : this.patientsGrid,
+                renderConfig : {
+                    template : '.bedsstockExpanderBody'
+                }
+            });
         },
 
-        addRowExpander : function(grid) {
-            $(document).on('click', '.bedssotckTablesCont tbody tr', function(e) {
-                if($(this).hasClass('expander')) {
-                    return false;
+        displayRelocationsGrid : function() {
+            this.relocationsGrid = misEngine.create('component.grid');
+            var relocationsGridRequestData = {
+                returnAsJson : true,
+                id : 'relocationsGrid',
+                serverModel : 'PatientsGrid',
+                container : '#relocations'
+            };
+
+            this.relocationsGrid
+                .setConfig({
+                    id : 'relocationsGrid',
+                    renderConfig : {
+                        mode : 'ajax',
+                        ajaxConf : {
+                            url : '/hospital/components/grid',
+                            data : relocationsGridRequestData,
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+                                    $(relocationsGridRequestData.container)
+                                        .css({
+                                            'textAlign' : 'left'
+                                        })
+                                        .html(data.data);
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
+                        }
+                    }
+                })
+                .render()
+                .on();
+
+            var expander = misEngine.create('component.expander', {
+                grid : this.relocationsGrid,
+                renderConfig : {
+                    template : '.relocationExpanderBody'
                 }
-                var previos = $('.expander');
-
-                $(this).after(
-                   $('<tr>').append(
-                      $('<td>').prop({
-                         'colspan' : $(this).find('td').length,
-                      }).html(
-                          $('.bedsstockExpanderBody').html()
-                      )
-                   ).prop({
-                      'class' : 'expander'
-                   })
-                );
-
-                previos.fadeOut(300, function() {
-                    previos.remove();
-                });
             });
         },
 
@@ -78,6 +106,7 @@ misEngine.class('component.module.hospital.bedsstock', function() {
                     'marginLeft' : '-100%'
                 }, 500)
             });
+
             $(document).on('click', '.expander .back', function() {
                 $(this).parents('.wrap').animate({
                     'marginLeft' : '0%'
@@ -89,11 +118,27 @@ misEngine.class('component.module.hospital.bedsstock', function() {
                 $(this).parents('li').find('.reserveForm').css('display', 'inline-block').show(400);
                 return false;
             });
+
+            this.changeTabHandler();
+        },
+
+        changeTabHandler : function() {
+            $('#bedsstockPatientsTab, #bedsstockPatientsTab, #bedsstockRelocationsTab, #bedsstockWardsTab').on('shown.bs.tab', $.proxy(function(e) {
+                this.activeTab = $(e.currentTarget).prop('id');
+                this.reloadTab();
+            }, this));
+        },
+
+        initWidgets : function() {
+            var widget = misEngine.create('component.widget.wards').run();
         },
 
         run : function() {
             this.displayGrids();
             this.bindHandlers();
+            this.initWidgets();
+
+            this.activeTab = 'bedsstockPatientsTab'; // First opened tab in window
         },
 
         init : function() {

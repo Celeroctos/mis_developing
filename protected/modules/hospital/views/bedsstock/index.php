@@ -2,28 +2,28 @@
 <div class="col-xs-12 row">
     <ul class="nav nav-tabs" id="bedsstockNavbar">
         <li role="navigation" class="active">
-            <a href="#bedsstockPatients" aria-controls="bedsstockPatients" role="tab" data-toggle="tab" id="bedsstockPatientsTab">Поступающие пациенты</a>
+            <a href="#patients" aria-controls="patients" role="tab" data-toggle="tab" id="bedsstockPatientsTab">Поступающие пациенты</a>
             <span class="tabmark" id="bedsstockPatientsTabmark">
                 <span class="roundedLabel"></span>
                 <span class="roundedLabelText"></span>
             </span>
         </li>
         <li role="navigation">
-            <a href="#bedsstockExtracts" aria-controls="bedsstockExtracts" role="tab" data-toggle="tab" id="bedsstockExtractsTab">Выписка</a>
+            <a href="#extracts" aria-controls="extracts" role="tab" data-toggle="tab" id="bedsstockExtractsTab">Выписка</a>
             <span class="tabmark" id="bedsstockExtractsTabmark">
                 <span class="roundedLabel"></span>
                 <span class="roundedLabelText"></span>
             </span>
         </li>
         <li role="navigation">
-            <a href="#bedsstockRelocations" aria-controls="bedsstockRelocations" role="tab" data-toggle="tab" id="bedsstockRelocationsTab">Перевод</a>
+            <a href="#relocations" aria-controls="relocations" role="tab" data-toggle="tab" id="bedsstockRelocationsTab">Перевод</a>
             <span class="tabmark" id="bedsstockRelocationsTabmark">
                 <span class="roundedLabel"></span>
                 <span class="roundedLabelText"></span>
             </span>
         </li>
         <li role="navigation">
-            <a href="#bedsstockWards" aria-controls="bedsstockWards" role="tab" data-toggle="tab" id="bedsstockWardsTab">Палаты</a>
+            <a href="#wards" aria-controls="wards" role="tab" data-toggle="tab" id="bedsstockWardsTab">Палаты</a>
             <span class="tabmark" id="bedsstockWardsTabmark">
                 <span class="roundedLabel"></span>
                 <span class="roundedLabelText"></span>
@@ -44,7 +44,9 @@
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
             </div>
             <div role="tabpanel" class="tab-pane" id="wards">
-                <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
+                <?php $this->widget('application.modules.hospital.components.widgets.Wards', array(
+                    'showSettingsIcon' => true
+                )); ?>
             </div>
         </div>
     </div>
@@ -52,117 +54,9 @@
 <div class="bedsstockExpanderBody">
     <div class="wrap">
         <div class="cont left">
-            <ul class="filter">
-                <li>Палаты
-                    <ul>
-                        <li>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" id="paidWard">Платные
-                            </label>
-                        </li>
-                        <li>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" id="notPaidWard">Бесплатные
-                            </label>
-                        </li>
-                    </ul>
-                </li>
-                <li>Койки
-                    <ul>
-                        <li>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" id="paidBeds">Платные
-                            </label>
-                        </li>
-                        <li>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" id="notPaidBeds">Бесплатные
-                            </label>
-                        </li>
-                    </ul>
-                </li>
-                <li>Тип палаты
-                    <select class="form-control col-xs-3" id="wardType">
-                        <option>%any type%</option>
-                    </select>
-                </li>
-            </ul>
-            <ul class="wardsList">
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree"><strong class="text-danger">Карантин</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree"><strong class="text-danger">Занята</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-                <li>
-                    <h4>Палата №1</h4>
-                    <span class="wardType">Обычная</span>
-                    <span class="paidType">Платная</span>
-                    <span class="numFree">Свободно: <strong>3</strong></span>
-                </li>
-            </ul>
+            <?php $this->widget('application.modules.hospital.components.widgets.Wards'); ?>
         </div>
-        <div class="cont right">
+        <div class="cont left">
             <span class="glyphicon glyphicon-chevron-left back" aria-hidden="true"><span>Назад</span></span>
             <h3>Психиатрическое отделение, палата №6 (обычная палата)</h3>
             <ul class="list-group bedsList">
@@ -226,4 +120,22 @@
             </ul>
         </div>
     </div>
+</div>
+<div class="relocationExpanderBody">
+    <form class="form-inline relocationForm">
+        <div class="form-group">
+            <label for="wardId">Выберите отделение для перевода</label>
+            <select class="form-control col-xs-3" id="wardId">
+                <option>%any doctor%</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success" type="button">Подтвердить</button>
+        </div>
+    </form>
+</div>
+<div class="settingsForm">
+    <form>
+        1
+    </form>
 </div>

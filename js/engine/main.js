@@ -36,6 +36,16 @@ misEngine = (function() {
             }, {
                 'name' : 'helper',
                 'script' : null
+            }, {
+                'name' : 'expander',
+                'script' : null
+            }, {
+                'name' : 'widget',
+                'script' : null,
+                'modules' : [{
+                    'name' : 'wards',
+                    'script' : null
+                }]
             }]
         }],
 		getConfig : function(key) {
