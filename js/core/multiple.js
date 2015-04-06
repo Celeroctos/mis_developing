@@ -234,6 +234,8 @@ var Laboratory = Laboratory || {};
         );
 		/* Удаляем элемент из списка выбранных */
 		key.parent(".multiple-chosen").remove();
+		/* Fix #13590 - 9 */
+		this.selector().find("select[multiple]").trigger("change");
 	};
 
 	/**
