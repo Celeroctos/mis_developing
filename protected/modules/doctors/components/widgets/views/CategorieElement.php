@@ -243,12 +243,12 @@ foreach($categorie['childrenElementsOrder'] as $item) {
             }
             if($element['allow_add'] && $canEditMedcard) {
                 ?>
-                <button type="button" id="ba<?php
+                <!--<button type="button" id="ba<?php
                 //echo '_'.$prefix.'_'.$element['guide_id'];
                 echo '_'.$prefix.'_'.$element['id'];
                 ?>" class="btnAddValue btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-plus"></span>
-                </button>
+                </button>-->
             <?php
             }
         } elseif($element['type'] == 4) {
@@ -265,8 +265,6 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                         <?php
                         }
                         for($i = 0; $i < $element['config']['numCols']; $i++) {
-                            // Если i>=длины массива cols - выводим пустую ячейку
-                            //   Иначе выводим содержимое массива cols из i-той ячейки
                             if ( $i>=count($element['config']['cols']) )
                             {
                                 ?><td></td><?php
@@ -288,15 +286,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                     ?>
                     <tr>
                         <?php
-                        //if(isset($element['config']['rows'][$i])) {
                         if((isset($element['config']['rows'])) && ( count($element['config']['rows']) > 0  )) {
-                            // Проверим - если счётчик меньше длины rows - выводим знаение из массива rows
-                            //   Иначе - выведем пустую клеточку в таблице
-                            //var_dump($element['config']['rows']);
-                            //var_dump($element['config']['numRows']);
-                            //var_dump('______');
-                            //exit();
-
                             if ($i<count($element['config']['rows']))
                             {
                                 ?>

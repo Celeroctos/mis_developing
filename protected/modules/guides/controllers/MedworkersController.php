@@ -98,7 +98,7 @@ class MedworkersController extends Controller
 			}
 			catch (Exception $e) 
 			{
-				$transaction->rollback(); //откат транзакции.
+				//$transaction->rollback(); //откат транзакции.
 				Yii::app()->user->addFlashMessage(WebUser::MSG_SUCCESS, $e->getMessage());
 			}
 		}
