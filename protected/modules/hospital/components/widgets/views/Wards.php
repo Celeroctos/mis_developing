@@ -1,0 +1,112 @@
+<div class="wardsWidget">
+    <ul class="filter">
+        <li>Палаты
+            <ul>
+                <li>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="paidWard">Платные
+                    </label>
+                </li>
+                <li>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="notPaidWard">Бесплатные
+                    </label>
+                </li>
+            </ul>
+        </li>
+        <li>Койки
+            <ul>
+                <li>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="paidBeds">Платные
+                    </label>
+                </li>
+                <li>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="notPaidBeds">Бесплатные
+                    </label>
+                </li>
+            </ul>
+        </li>
+        <li>Тип палаты
+            <select class="form-control col-xs-3" id="wardType">
+                <option>%any type%</option>
+            </select>
+        </li>
+    </ul>
+    <ul class="wardsList">
+        <li>
+            <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree"><strong class="text-danger">Карантин</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree"><strong class="text-danger">Занята</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+    </ul>
+</div>

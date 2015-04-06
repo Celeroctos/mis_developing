@@ -82,6 +82,13 @@ misEngine.class('component', function() {
             return this;
         },
 
+        getId : function() {
+            if(this.config.id) {
+               return this.config.id;
+            }
+            return null;
+        },
+
         init: function () {
 
         }

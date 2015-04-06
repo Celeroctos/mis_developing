@@ -76,11 +76,11 @@
   top: 60px;
   left: 90%;
 }
-.bedsstockExpanderBody {
+.bedsstockExpanderBody, .relocationExpanderBody, .settingsForm {
   display: none;
 }
 
-.bedsstockExpanderBody, .expander {
+.bedsstockExpanderBody, .expander, .wardsWidget {
   td {
     overflow: hidden;
   }
@@ -100,6 +100,8 @@
   }
   .right {
     float: right;
+  }
+  .left, .right {
     position: relative;
     .back {
       position: absolute;
@@ -133,6 +135,14 @@
         position: relative;
         top: 10px;
       }
+    }
+  }
+
+  .relocationForm {
+    padding: 10px;
+    button {
+      position: relative;
+      top: 10px;
     }
   }
 
@@ -192,5 +202,35 @@
     font-weight: bold;
     text-align: center;
     margin-top: 10px;
+  }
+}
+
+.expander {
+  td {
+    position: relative;
+  }
+  .expander-arrow {
+    width: 0;
+    height: 0;
+    left: 20%;
+    border: 20px solid transparent;
+    position: absolute;
+    border-bottom: 0;
+  }
+
+  .cont {
+    padding-top: 30px;
+  }
+}
+
+.wardsWidget {
+  ul.wardsList {
+    li {
+      position: relative;
+      .settings {
+        position: absolute;
+        left: 130px;
+      }
+    }
   }
 }

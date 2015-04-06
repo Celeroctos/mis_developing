@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dmitry
- * Date: 2014-11-19
- * Time: 14:39
- */
 
 /**
  * Class ModalWindow - Abstract component for modal windows, it

@@ -1,6 +1,6 @@
 <?php
 
-class FormModelAdapter extends FormModel {
+class FormModelAdapter extends FormModel implements Adapter {
 
 	/**
 	 * Constructor.

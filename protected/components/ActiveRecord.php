@@ -237,4 +237,12 @@ abstract class ActiveRecord extends CActiveRecord {
 		}
 		return $query->queryAll();
 	}
+
+	/**
+	 * Get instance of default table provider for current table
+	 * @return TableProvider - Default table provider
+	 */
+	public function getDefaultTableProvider() {
+		return new TableProvider($this);
+	}
 }

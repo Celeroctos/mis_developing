@@ -1,0 +1,4 @@
+<?php
+
+interface Adapter {
+}

@@ -10,7 +10,8 @@ misEngine.class('component.grid', function() {
                     success : function(jqXHR, status, errorThrown) { },
                     data : { }
                 }
-            }
+            },
+            id : null
         },
 
         setConfig : function(config) {
