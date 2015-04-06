@@ -48,45 +48,41 @@ class MedcardController extends LController {
 	 */
 	public function actionSearch() {
 		try {
-			if (isset($_POST["mode"])) {
-				$mode = $_POST["mode"];
-			} else {
-				$mode = "mis";
+			if (!($medcard = Yii::app()->getRequest()->getPost("LMedcardSearchForm"))) {
+				throw new CException("Can't resolve search form for medcard \"LMedcardSearchForm\"");
 			}
-			$like = [];
-			$compare = [];
-			foreach ($this->getFormModel("model", "post") as $model) {
-				foreach ($model->attributes as $key => $value) {
-					if (empty($value) || $value == "") {
-						continue;
-					}
-					if ($model->isDropDown($key)) {
-						if ($value != -1) {
-							$compare[$key] = $value;
-						}
-					} else {
-						$like[$key] = $value;
-					}
-				}
+			if (!($analysis = Yii::app()->getRequest()->getPost("LSearchRangeForm"))) {
+				throw new CException("Can't resolve search form for analysis \"LSearchRangeForm\"");
 			}
 			$criteria = new CDbCriteria();
-			if (isset($like["begin_date"]) && isset($like["end_date"])) {
-				$criteria->addBetweenCondition("registration_date", $like["begin_date"], $like["end_date"]);
+			if (isset($analysis["begin_date"]) && isset($analysis["end_date"])) {
+				$criteria->addBetweenCondition("registration_date", $analysis["begin_date"], $analysis["end_date"]);
 			}
-			unset($like["begin_date"]);
-			unset($like["end_date"]);
-			foreach ($compare as $key => $value) {
-				$criteria->addColumnCondition([
-					$key => $value
-				]);
+			$like = [
+				"card_number",
+				"phone",
+				"first_name",
+				"middle_name",
+				"last_name"
+			];
+			$compare = [];
+			foreach ($medcard as $key => $value) {
+				if ($value == -1 || empty($value)) {
+					continue;
+				}
+				if (in_array($key, $like)) {
+					$criteria->addSearchCondition($key, $value);
+				} else {
+					$compare[$key] = $value;
+				}
 			}
-			foreach ($like as $key => $value) {
-				$criteria->addSearchCondition($key, $value);
+			if (count($compare) > 0) {
+				$criteria->addColumnCondition($compare);
 			}
 			$this->leave([
 				"component" => $this->getWidget("MedcardTable", [
 					"criteria" => $criteria,
-					"mode" => $mode,
+					"mode" => "mis",
 				])
 			]);
 		} catch (Exception $e) {

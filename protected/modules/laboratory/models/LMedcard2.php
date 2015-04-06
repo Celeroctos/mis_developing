@@ -235,9 +235,8 @@ class LMedcard2 extends ActiveRecord {
 	public function getTableCount(CDbCriteria $criteria = null) {
 		$query = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")
-			->from("mis.medcards as m")
-			->join("mis.oms as o", "m.policy_id = o.id")
-			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number");
+			->from("mis.medcards as m");
+//			->join("mis.oms as o", "m.policy_id = o.id");
 		if ($criteria != null && $criteria instanceof CDbCriteria) {
 			$query->andWhere($criteria->condition, $criteria->params);
 		}
