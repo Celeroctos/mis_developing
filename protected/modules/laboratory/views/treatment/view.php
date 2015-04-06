@@ -134,15 +134,15 @@ $this->widget("Modal", [
 
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
-		<div class="treatment-header-rounded">
-			<div class="row col-xs-12">
-				<span class="col-xs-10">
-					<b>Процедурный кабинет</b><br>
-					<span><?= Yii::app()->user->getState("fio") ?></span>
-				</span>
-				<button class="btn btn-default col-xs-2 logout-button">Выйти</button>
-			</div>
-		</div>
+<!--		<div class="treatment-header-rounded">-->
+<!--			<div class="row col-xs-12">-->
+<!--				<span class="col-xs-10">-->
+<!--					<b>Процедурный кабинет</b><br>-->
+<!--					<span>--><?//= Yii::app()->user->getState("fio") ?><!--</span>-->
+<!--				</span>-->
+<!--				<button class="btn btn-default col-xs-2 logout-button">Выйти</button>-->
+<!--			</div>-->
+<!--		</div>-->
 		<div class="col-xs-4 no-padding">
 			<button class="btn btn-default btn-block treatment-header-rounded active" data-tab="#treatment-direction-grid-wrapper" type="button">
 				<span>Направления</span>

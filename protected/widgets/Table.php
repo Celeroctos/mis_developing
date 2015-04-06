@@ -45,7 +45,7 @@ class Table extends Widget {
 	public $widget = null;
 
 	/**
-	 * @var ActiveRecord - Table's active record instance
+	 * @var ActiveRecord|string - Table's active record instance
 	 */
 	public $table = null;
 	public $header = null;
@@ -73,6 +73,9 @@ class Table extends Widget {
 	public function run() {
 
 		// Check table instance
+		if (is_string($this->table)) {
+			$this->table = new $this->table();
+		}
 		if (!$this->table instanceof ActiveRecord) {
 			throw new CException("Table's model must extends ActiveRecord");
 		}
