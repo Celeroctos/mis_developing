@@ -41,7 +41,7 @@ class ActiveDataProvider extends CActiveDataProvider {
 			}
 			if ($this->form != null) {
 				foreach ($data as &$row) {
-					$this->fetchExtraData($row);
+					$this->fetchExtraData($this->form, $row);
 				}
 			}
 		} else {
@@ -53,11 +53,12 @@ class ActiveDataProvider extends CActiveDataProvider {
 
 	/**
 	 * Fetch extra data from rows and database by model's form
+	 * @param FormModel $form - Database table's form model instance
 	 * @param mixed $row - Array with fetched data
 	 * @throws CException
 	 */
-	private function fetchExtraData(&$row) {
-		foreach ($this->form->getConfig() as $key => $config) {
+	public static function fetchExtraData($form, &$row) {
+		foreach ($form->getConfig() as $key => $config) {
 			if ($config["type"] != "DropDown" || !isset($config["table"])) {
 				$field = FieldCollection::getCollection()->find($config["type"], false);
 				if ($field != null && $field instanceof DropDown) {

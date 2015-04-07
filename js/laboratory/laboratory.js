@@ -221,13 +221,9 @@ var MedcardSearch = {
 	},
 	search: function() {
 		$("#medcard-search-button").button("loading");
-		$.post(url("/laboratory/medcard/search"), {
-			model: [
-				$("#medcard-search-form").serialize(),
-				$("#medcard-range-form").serialize()
-			]
-		}, function(json) {
-			$("#medcard-search-button").button("reset");
+		var data = $("#medcard-search-form").serialize() + "&" +
+			$("#medcard-range-form").serialize();
+		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;
 			}
@@ -240,7 +236,9 @@ var MedcardSearch = {
 				type: "success",
 				delay: 2000
 			});
-		}, "json");
+		}, "json").always(function() {
+			$("#medcard-search-button").button("reset");
+		});
 	},
 	click: function(tr, id) {
 		this.active && this.active.removeClass("medcard-table-active");
