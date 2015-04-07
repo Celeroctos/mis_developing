@@ -138,7 +138,7 @@ $this->widget("Modal", [
 <!--			<div class="row col-xs-12">-->
 <!--				<span class="col-xs-10">-->
 <!--					<b>Процедурный кабинет</b><br>-->
-<!--					<span>--><?//= Yii::app()->user->getState("fio") ?><!--</span>-->
+<!--					<span>--><!--</span>-->
 <!--				</span>-->
 <!--				<button class="btn btn-default col-xs-2 logout-button">Выйти</button>-->
 <!--			</div>-->
