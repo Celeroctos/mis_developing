@@ -236,7 +236,6 @@ class LMedcard2 extends ActiveRecord {
 		$query = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")
 			->from("mis.medcards as m");
-//			->join("mis.oms as o", "m.policy_id = o.id");
 		if ($criteria != null && $criteria instanceof CDbCriteria) {
 			$query->andWhere($criteria->condition, $criteria->params);
 		}
@@ -261,6 +260,29 @@ class LMedcard2 extends ActiveRecord {
 			->join("mis.oms as o", "m.policy_id = o.id")
 			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
+	}
+
+	/**
+	 * Get instance of default table provider for current table
+	 * @return TableProvider - Default table provider
+	 */
+	public function getDefaultTableProvider() {
+		$fetchQuery = $this->getDbConnection()->createCommand()
+			->select("
+                m.card_number as number,
+                m.contact as phone,
+                o.last_name || ' ' || o.first_name || ' ' || o.middle_name as fio,
+                o.birthday as birthday,
+                e.shortname as enterprise,
+                cast(a.registration_date as date) as registration_date")
+			->from("mis.medcards as m")
+			->join("mis.oms as o", "m.policy_id = o.id")
+			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
+			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
+		$countQuery = $this->getDbConnection()->createCommand()
+			->select("count(1) as count")
+			->from("mis.medcards as m");
+		return new TableProvider($this, $fetchQuery, $countQuery);
 	}
 
 	/**

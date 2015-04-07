@@ -164,66 +164,17 @@ $this->widget("Modal", [
 	</div>
 	<div class="treatment-table-wrapper treatment-header-rounded">
 		<div id="treatment-direction-grid-wrapper">
-			<?= $this->getWidget("Table", [
-				"table" => new LDirection("grid.direction"),
-				"criteria" => DbCriteria::createWhere("status <> 3"),
-				"header" => [
-					"id" => [
-						"label" => "#",
-						"style" => "width: 15%"
-					],
-					"card_number" => [
-						"label" => "Номер карты",
-						"style" => "width: 25%"
-					],
-					"status" => [
-						"label" => "Статус",
-						"style" => "width: 20%"
-					],
-					"sender_id" => [
-						"label" => "Направитель",
-						"style" => "width: 15%"
-					],
-					"analysis_type_id" => [
-						"label" => "Тип анализа"
-					]
-				],
-				"pk" => "id",
-				"sort" => "id",
-				"id" => "direction-table",
-				"limit" => 25
+			<?php $this->widget("DirectionTable", [
+				"where" => "status <> 3"
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-            <?= $this->getWidget("Table", [
-                "table" => new LDirection("grid.direction"),
-                "criteria" => DbCriteria::createWhere("status = 3"),
-                "header" => [
-                    "id" => [
-                        "label" => "#",
-                        "style" => "width: 15%"
-                    ],
-                    "card_number" => [
-                        "label" => "Номер карты",
-                        "style" => "width: 25%"
-                    ],
-                    "status" => [
-                        "label" => "Статус",
-                        "style" => "width: 20%"
-                    ],
-                    "sender_id" => [
-                        "label" => "Направитель",
-                        "style" => "width: 15%"
-                    ],
-                    "analysis_type_id" => [
-                        "label" => "Тип анализа"
-                    ]
-                ],
-                "pk" => "id",
-                "sort" => "id",
-                "id" => "direction-table",
-                "limit" => 25
-            ]) ?>
+			<?php $this->widget("DirectionTable", [
+				"where" => "status = 3"
+			]) ?>
 		</div>
 	</div>
 </div>
+<br>
+<br>
+<?php $this->widget("DoctorTable") ?>

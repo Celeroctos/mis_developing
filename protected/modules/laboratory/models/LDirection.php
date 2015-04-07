@@ -42,6 +42,20 @@ class LDirection extends ActiveRecord {
         }
     }
 
+	/**
+	 * Get table provider table widget
+	 * @return TableProvider - Table provider instance
+	 * @throws CDbException
+	 */
+	public function getTableProvider() {
+		return new TableProvider($this,
+			$this->getDbConnection()->createCommand()
+				->select("d.*, m.card_number as card_number")
+				->from("lis.direction as d")
+				->join("lis.medcard as m", "d.medcard_id = m.id")
+		);
+	}
+
     /**
      * Get array with keys for CGridView to display or order
      * @return array - Array with model data

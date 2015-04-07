@@ -1,6 +1,6 @@
 <?php
 
-class DbCriteria extends CDbCriteria {
+class CriteriaAdapter extends CDbCriteria implements Adapter {
 
 	/**
 	 * Create database criteria with 'where' cause
@@ -16,4 +16,15 @@ class DbCriteria extends CDbCriteria {
 		$criteria->order = $order;
         return $criteria;
     }
+
+	/**
+	 * Create database criteria with 'order by' cause
+	 * @param string $order - Order string
+	 * @return static
+	 */
+	public static function createOrderBy($order = "") {
+		$criteria = new static();
+		$criteria->order = $order;
+		return $criteria;
+	}
 } 
