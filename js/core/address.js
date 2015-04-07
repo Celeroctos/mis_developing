@@ -15,12 +15,12 @@ var Laboratory = Laboratory || {};
 				"street_name": {
 					"label": "Улица",
 					"prefix": "ул",
-					"style": "width: 100%"
+					"style": "width: 50%"
 				},
 				"district_name": {
 					"label": "Район",
 					"prefix": "р",
-					"style": "width: 100%"
+					"style": "width: 50%"
 				},
 				"house_number": {
 					"label": "Дом",
@@ -91,14 +91,15 @@ var Laboratory = Laboratory || {};
 		}));
 		var list = this.property("list");
 		for (var i in list) {
-			$("<input>", {
+			var input = $("<input>", {
 				placeholder: list[i]["label"],
 				type: "text",
 				class: "form-control col-xs-6",
 				id: i,
 				name: "AddressForm[" + i + "]",
 				style: list[i]["style"]
-			}).appendTo(c);
+			});
+			c.append(input);
 		}
 		return c;
 	};
