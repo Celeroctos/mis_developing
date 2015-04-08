@@ -139,7 +139,7 @@ class SideMenu extends CWidget {
 			"privilege" => "menuAdmin",
 			"items" => [
 				"treatment" => [
-					"label" => "Процедурная",
+					"label" => "Процедурный кабинет",
 					"image" => "treatment.png",
 					"href" => "/laboratory/treatment/view"
 				]

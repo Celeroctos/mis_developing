@@ -23,7 +23,7 @@ class m150321_064525_laboratory_guides extends CDbMigration
 
 		CREATE TABLE "lis"."analysis_type_to_analysis_type_parameter" (
 		  "id" SERIAL PRIMARY KEY,
-		  "analysis_type_parameter" INT REFERENCES "lis"."analysis_type_parameter"("id")  ON DELETE CASCADE,
+		  "analysis_type_parameter" INT REFERENCES "lis"."analysis_type_parameter"("id") ON DELETE CASCADE,
 		  "analysis_type" INT REFERENCES "lis"."analysis_type"("id") ON DELETE CASCADE
 		);
 

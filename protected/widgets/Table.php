@@ -143,7 +143,7 @@ class Table extends Widget {
 	 * @see renderFooter
 	 */
 	public $availableLimits = [
-		10, 25, 50, 100, 500
+		10, 25, 50, 75
 	];
 
 	/**

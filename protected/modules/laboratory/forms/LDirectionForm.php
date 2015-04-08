@@ -42,6 +42,10 @@ class LDirectionForm extends FormModel {
 		$this->sender_id = LUserIdentity::get("doctorId");
 	}
 
+	protected function beforeValidate() {
+		return parent::beforeValidate();
+	}
+
 	/**
 	 * Override that method to return config. Config should return array associated with
 	 * model's variables. Every field must contains 3 parameters:
@@ -60,6 +64,9 @@ class LDirectionForm extends FormModel {
 			"barcode" => [
 				"label" => "Штрих-код",
 				"type" => "number",
+				"options" => [
+					"readonly" => "true"
+				],
 				"rules" => "required"
 			],
             "status" => [

@@ -110,10 +110,10 @@ class MedcardController extends LController {
 	 */
 	public function actionRegister() {
 		try {
-			$model = $this->getFormModel("model", "post");
-			
-			$attributes = [];
-			LMedcard::model()->insert();
+			print "<pre>";
+			print_r($_POST);
+			print "</pre>";
+			$model = Yii::app()->getRequest()->getPost("AddressForm");
 			$this->leave([
 				"message" => "Данные медкарты были успешно сохранены"
 			]);

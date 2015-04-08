@@ -1,11 +1,25 @@
 <?php
 
-class ConfirmDelete extends Widget {
+class ConfirmDelete extends Modal {
 
 	public $title = "Подтвердите удаление";
+
 	public $id = "confirm-delete-modal";
 
-	public function run() {
-		$this->render(__CLASS__, null);
-	}
+	public $body = "";
+
+	public $buttons = [
+		"confirm-delete-button" => [
+			"text" => "Удалить",
+			"class" => "btn btn-danger",
+			"options" => [
+				"data-dismiss" => "modal"
+			],
+			"type" => "button"
+		]
+	];
+
+	public $class = "modal-sm";
+
+	public $fade = false;
 }

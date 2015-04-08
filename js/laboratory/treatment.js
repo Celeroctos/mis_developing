@@ -86,9 +86,7 @@ var MedcardEditableViewerModal = {
 				forms.push($(f).serialize());
 			});
 			Laboratory.resetFormErrors(modal);
-			$.post(url("laboratory/medcard/register"), {
-				model: forms
-			}, function(json) {
+			$.post(url("laboratory/medcard/register"), forms.join("&"), function(json) {
 				if (json["errors"]) {
 					Laboratory.postFormErrors(modal, json);
 				} else if (!Message.display(json)) {

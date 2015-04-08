@@ -39,6 +39,9 @@ class LMedcardForm extends FormModel {
 			"card_number" => [
 				"label" => "Номер карты",
 				"type" => "text",
+				"options" => [
+					"readonly" => "true"
+				],
 				"rules" => "required"
 			],
 			"mis_medcard" => [
