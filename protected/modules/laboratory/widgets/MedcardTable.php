@@ -53,6 +53,6 @@ class MedcardTable extends Table {
 	public $click = "MedcardSearch.click";
 
 	public function init() {
-		$this->provider = LMedcard::model()->getDefaultTableProvider();
+		$this->provider = LMedcard::model()->getMedcardSearchTableProvider();
 	}
 } 

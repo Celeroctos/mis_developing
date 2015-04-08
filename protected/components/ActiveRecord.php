@@ -5,7 +5,7 @@ abstract class ActiveRecord extends CActiveRecord {
 	/**
 	 * Get model's instance from cache
 	 * @param string $className - Class's name
-	 * @return ActiveRecord - Cached model instance
+	 * @return static - Cached model instance
 	 */
 	public static function model($className = null) {
 		if ($className == null) {
