@@ -1,6 +1,6 @@
 <?php
 
-class LSearchRangeForm extends FormModel {
+class LAnalysisSearchForm extends FormModel {
 
 	public $begin_date;
 	public $end_date;

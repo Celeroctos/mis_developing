@@ -4,9 +4,15 @@ class TableProvider extends CComponent {
 
 	/**
 	 * @var CActiveRecord|string - Database active
-	 * 	record instance or class name
+	 * 	record instance or it's class name
 	 */
 	public $activeRecord = null;
+
+	/**
+	 * @var TablePagination|false - Table pagination
+	 *	instance, set it to false to disable pagination
+	 */
+	public $pagination = null;
 
 	/**
 	 * @var CDbCommand - Query to fetch data from
@@ -53,14 +59,17 @@ class TableProvider extends CComponent {
 		} else {
 			$this->countQuery = $countQuery;
 		}
+		if ($this->pagination !== false) {
+			$this->pagination = $this->getPagination();
+		}
 	}
 
 	/**
 	 * Create static adapter for active record database model
-	 * @param ActiveRecord $activeRecord - Active record instance
+	 * @param CActiveRecord $activeRecord - Active record instance
 	 * @return TableProvider - Just adapted table provider
 	 */
-	public static function createActiveRecordAdapter(ActiveRecord $activeRecord) {
+	public static function createActiveRecordAdapter(CActiveRecord $activeRecord) {
 		return new TableProvider($activeRecord->tableName());
 	}
 

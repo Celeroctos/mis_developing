@@ -170,7 +170,7 @@ var Laboratory = Laboratory || {};
     };
 
     Laboratory.createForm = function(selector, properties) {
-        return Laboratory.create(new Form(properties, $(selector)), selector, false);
+        return Laboratory.createObject(new Form(properties, $(selector)), selector, false);
     };
 
 	$.fn.form = Laboratory.createPlugin(

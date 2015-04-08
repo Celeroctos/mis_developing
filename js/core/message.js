@@ -1,6 +1,6 @@
 var Laboratory = Laboratory || {};
 
-(function(Laboratory) {
+(function(Core) {
 
 	"use strict";
 
@@ -18,7 +18,7 @@ var Laboratory = Laboratory || {};
 	 * @constructor
 	 */
 	var Message = function(properties) {
-		Laboratory.Component.call(this, properties, {
+		Core.Component.call(this, properties, {
 			type: "danger",
 			message: "Not-Initialized",
 			sign: "info",
@@ -26,7 +26,7 @@ var Laboratory = Laboratory || {};
 		});
 	};
 
-	Laboratory.extend(Message, Laboratory.Component);
+	Core.extend(Message, Core.Component);
 
 	/**
 	 * Render message component
@@ -34,7 +34,7 @@ var Laboratory = Laboratory || {};
 	 */
 	Message.prototype.render = function() {
 		return $("<div></div>", {
-			class: "alert " + ("alert-" + this.property("type")) + " jaw-message-wrapper",
+			class: "alert " + ("alert-" + this.property("type")) + " message-wrapper",
 			role: "alert"
 		}).append(
 			$("<span></span>", {
@@ -43,7 +43,7 @@ var Laboratory = Laboratory || {};
 			})
 		).append(
 			$("<span></span>", {
-				class: "jaw-message",
+				class: "message",
 				html: this.property("message")
 			})
 		);
@@ -111,7 +111,7 @@ var Laboratory = Laboratory || {};
 	 */
 	Message.prototype.destroy = function() {
 		this.close(function(me) {
-			Laboratory.Component.prototype.destroy.call(me);
+			Core.Component.prototype.destroy.call(me);
 		});
 	};
 
@@ -123,7 +123,7 @@ var Laboratory = Laboratory || {};
 	var Collection = {
 		create: function(properties) {
 			var message = new Message(properties);
-			Laboratory.create(message, document.body);
+			Core.createObject(message, document.body);
 			message.selector().css("top", parseInt(message.selector().css("top")) + "px");
 			for (var i in this._components) {
 				this._components[i].selector().animate({
@@ -159,11 +159,11 @@ var Laboratory = Laboratory || {};
 	 * Create new message instance with some properties
 	 * @param properties {{}} - Message component's properties
 	 */
-	Laboratory.createMessage = function(properties) {
+	Core.createMessage = function(properties) {
 		Collection.create(properties);
 	};
 
-	$.message = $.fn.message = Laboratory.createPlugin(
+	$.message = $.fn.message = Core.createPlugin(
 		"createMessage"
 	);
 

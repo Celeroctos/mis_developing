@@ -1,6 +1,6 @@
 var Laboratory = Laboratory || {};
 
-(function(Lab) {
+(function(Core) {
 
 	"use strict";
 
@@ -27,26 +27,24 @@ var Laboratory = Laboratory || {};
 	 * 		используется по умолчанию (в данном случае это select[multiple])
 	 * @constructor
 	 */
-	var Multiple = function(properties, selector) {
+	var Multiple = Core.createComponent(function(properties, selector) {
 		/* Инициализация родительского компонента */
-		Lab.Component.call(this, properties, {
-            filter: [
-                "height",
-                "min-height",
-                "max-height",
-                "width",
-                "min-width",
-                "max-width"
-            ],
-            height: 150,
-            multiplier: 2
-        }, selector);
+		Core.Component.call(this, properties, {
+			filter: [
+				"height",
+				"min-height",
+				"max-height",
+				"width",
+				"min-width",
+				"max-width"
+			],
+			height: 150,
+			multiplier: 2
+		}, selector);
 		/* Клонируем старый элемент и сохраняем со всеми
-		установленными данными и текщуими событиями */
+		 установленными данными и текщуими событиями */
 		this.native = selector.clone(true);
-	};
-
-	Lab.extend(Multiple, Lab.Component);
+	});
 
 	/**
 	 * Рендерим компонент Multiple вместе с базовым списком элементов,
@@ -385,15 +383,15 @@ var Laboratory = Laboratory || {};
 	 * @param {{}} properties - Атрибуты для создания компонента
 	 * @returns {Multiple} - Объект Multiple
 	 */
-	Lab.createMultiple = function(selector, properties) {
+	Core.createMultiple = function(selector, properties) {
 		if (!$(selector).hasClass("multiple-value")) {
-			return Lab.create(new Multiple(properties, $(selector)), selector, true);
+			return Core.createObject(new Multiple(properties, $(selector)), selector, true);
 		} else {
 			return void 0;
 		}
 	};
 
-	$.fn.multiple = Lab.createPlugin(
+	$.fn.multiple = Core.createPlugin(
 		"createMultiple"
 	);
 

@@ -1,6 +1,5 @@
 
-/* Message component */
-.jaw-message-wrapper {
+.message-wrapper {
     position: fixed;
     left: 5px;
     top: 5px;
@@ -8,6 +7,6 @@
     max-width: calc(100% - 10px);
 }
 
-.jaw-message-wrapper li {
+.message-wrapper li {
     margin-left: 10px;
 }
