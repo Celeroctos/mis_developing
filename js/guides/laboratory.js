@@ -9,7 +9,7 @@ var GuideGridView = {
 		};
 		$("#register-guide-modal").on("show.bs.modal", function() {
 			Laboratory.resetFormErrors($(this));
-			Laboratory.getCommon().cleanup($(this));
+			Laboratory.Common.cleanup($(this));
 		});
 		var me = this;
 		$("#register-guide-modal #register-button").click(function() {

@@ -72,7 +72,7 @@ var Laboratory = Laboratory || {};
 				throw new Error("Selector must be an instance of jQuery object");
 			}
             if (!selector.data("lab")) {
-                selector.data("laboratory", this);
+                selector.data("lab", this);
             }
             this._selector = selector;
         }
