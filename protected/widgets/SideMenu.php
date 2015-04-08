@@ -1,4 +1,5 @@
 <?php
+
 class SideMenu extends CWidget {
     public function run() {
         $this->render('application.widgets.views.SideMenu', array(
@@ -8,5 +9,3 @@ class SideMenu extends CWidget {
         ));
     }
 }
-
-?>
