@@ -1,5 +1,5 @@
 <?php
-class TasuGreetingsBufferHistory extends MisActiveRecord {
+class TasuMedcardsBufferHistory extends MisActiveRecord {
     public static function model($className=__CLASS__)
     {
         return parent::model($className);
@@ -7,19 +7,15 @@ class TasuGreetingsBufferHistory extends MisActiveRecord {
 
     public function tableName()
     {
-        return 'mis.tasu_greetings_buffer_history';
-    }
-
-    public function primaryKey() {
-        return 'id';
+        return 'mis.tasu_medcards_buffer_history';
     }
 
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false) {
         try {
             $connection = Yii::app()->db;
             $bufferHistory = $connection->createCommand()
-                ->select('tgbh.*')
-                ->from(TasuGreetingsBufferHistory::model()->tableName().' tgbh');
+                ->select('tmbh.*')
+                ->from(TasuMedcardsBufferHistory::model()->tableName().' tmbh');
 
             if($filters !== false) {
                 $this->getSearchConditions($bufferHistory, $filters, array(
