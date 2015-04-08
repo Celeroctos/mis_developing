@@ -23,7 +23,7 @@ class FormEmployeeAdd extends FormMisDefault
     {
         return array(
             array(
-                'firstName, lastName, postId, dateBegin, wardCode, greetingType, displayInCallcenter, greetingTimeLimit', 'required'
+                'firstName, lastName, postId, dateBegin, wardCode, greetingType, displayInCallcenter', 'required'
             ),
             array(
                 'degreeId, titulId, tabelNumber, categorie', 'numerical'

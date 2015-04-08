@@ -136,6 +136,42 @@
 </div>
 <div class="settingsForm">
     <form>
-        1
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-2 control-label">№ палаты</label>
+                <div class="col-xs-10">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+        </div>
     </form>
 </div>
