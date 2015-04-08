@@ -31,7 +31,7 @@ class LDirection extends ActiveRecord {
      */
     public function getCountOfRepeats() {
         $row = $this->getDbConnection()->createCommand()
-            ->select("count(id) as count")
+            ->select("count(1) as count")
             ->from("lis.direction")
             ->where("status = 3")
             ->queryRow();

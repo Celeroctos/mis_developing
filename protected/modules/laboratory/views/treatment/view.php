@@ -26,7 +26,7 @@ $this->widget("Modal", [
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
 	], $this->getWidget("MedcardSearch", [
-		"mode" => "mis"
+		"tableWidget" => "MedcardTable2"
 	])),
 	"id" => "mis-medcard-search-modal",
 	"buttons" => [
@@ -47,7 +47,7 @@ $this->widget("Modal", [
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
 	], $this->getWidget("MedcardSearch", [
-		"mode" => "lis"
+		"tableWidget" => "MedcardTable"
 	])),
 	"id" => "lis-medcard-search-modal",
 	"buttons" => [

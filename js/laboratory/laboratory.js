@@ -223,9 +223,10 @@ var MedcardSearch = {
 		}, "json");
 	},
 	search: function() {
-		$("#medcard-search-button").button("loading");
+		var table = $("#medcard-search-button").button("loading")
+			.parents(".modal").find("table[data-class]");
 		var data = $("#medcard-search-form").serialize() + "&" +
-			$("#medcard-range-form").serialize();
+			$("#medcard-range-form").serialize() + "&widget=" + table.data("class");
 		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;

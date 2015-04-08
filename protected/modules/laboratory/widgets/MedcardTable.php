@@ -3,12 +3,6 @@
 class MedcardTable extends Table {
 
 	/**
-	 * @var string - Default search mode, set it to "lis" if you
-	 * 	want fetch rows from laboratory medcards
-	 */
-	public $mode = "mis";
-
-	/**
 	 * @inheritdoc
 	 */
 	public $header = [
@@ -59,15 +53,6 @@ class MedcardTable extends Table {
 	public $click = "MedcardSearch.click";
 
 	public function init() {
-		if ($this->mode == "lis") {
-			$model = new LMedcard();
-		} else {
-			$model = new LMedcard2();
-		}
-		if (!$model instanceof ActiveRecord) {
-			throw new CException("Medcard model must be an instance of ActiveRecord class");
-		}
-		$this->provider = $model->getDefaultTableProvider();
-		$this->provider->getPagination()->pageLimit = 10;
+		$this->provider = LMedcard::model()->getDefaultTableProvider();
 	}
 } 

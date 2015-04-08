@@ -236,13 +236,18 @@ class Table extends Widget {
 	 */
 	public function renderExtra() {
 		$options = [
-			"data-class" => get_class($this)
+			"data-class" => get_class($this),
+			"data-url" => $this->createUrl()
 		];
 		if (!empty($this->criteria->condition)) {
 			$options["data-condition"] = $this->criteria->condition;
 		}
 		if (!empty($this->provider->getPagination()->pageLimit)) {
-			$options["data-limit"] = $this->provider->getPagination()->pageLimit;
+			if ($this->pageLimit !== null) {
+				$options["data-limit"] = $this->pageLimit;
+			} else {
+				$options["data-limit"] = $this->provider->getPagination()->pageLimit;
+			}
 		}
 		if (!empty($this->criteria->params)) {
 			$options["data-parameters"] = urlencode(serialize($this->criteria->params));

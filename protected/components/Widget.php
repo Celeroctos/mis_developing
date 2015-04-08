@@ -19,6 +19,15 @@ class Widget extends CWidget {
     }
 
 	/**
+	 * Create url for widget's update for current module and controller
+	 * @param array $query - Additional query GET parameters
+	 * @return string - Url for widget update
+	 */
+	public function createUrl($query = []) {
+		return preg_replace("/\\/[a-z0-9]*$/i", "/getWidget", $this->getController()->createUrl("", $query));
+	}
+
+	/**
 	 * Executes the widget.
 	 * This method is called by {@link CBaseController::endWidget}.
 	 */
@@ -47,20 +56,4 @@ class Widget extends CWidget {
     public function getWidget($class, $properties = []) {
         return $this->widget($class, $properties, true);
     }
-
-    /**
-     * @param array $model - Array with form's default values
-     */
-    public function setModel($model) {
-        $this->_model = $model;
-    }
-
-    /**
-     * @return array - Array with form's default values
-     */
-    public function getModel() {
-        return $this->_model;
-    }
-
-    private $_model = null;
 } 

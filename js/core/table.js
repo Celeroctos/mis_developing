@@ -18,7 +18,8 @@ var Laboratory = Laboratory || {};
 			pageLimit: this.property("limit")
 		}, parameters);
 		this.before();
-		$.get(url("/laboratory/medcard/getWidget"), $.extend({
+		$.get(this.selector().data("url"), $.extend({
+
 			class: table.data("class"),
 			condition: table.data("condition"),
 			params: table.data("parameters"),
@@ -69,13 +70,13 @@ var Laboratory = Laboratory || {};
 
 	Table.prototype.page = function(page) {
 		this.fetch({
-			page: page
+			page: +page
 		});
 	};
 
 	Table.prototype.limit = function(limit) {
 		this.fetch({
-			limit: limit
+			limit: +limit
 		});
 	};
 

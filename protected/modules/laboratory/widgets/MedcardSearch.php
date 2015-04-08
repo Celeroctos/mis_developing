@@ -3,12 +3,17 @@
 class MedcardSearch extends Widget {
 
 	/**
-	 * @var string - Search mode (lis or mis)
-	 * @see LMedcardTable::mode
+	 * @var string - Medcard table widget, like
+	 * 	MedcardTable or MedcardTable2
+	 * @see MedcardTable, MedcardTable2
 	 */
-	public $mode = "mis";
+	public $tableWidget = "MedcardTable";
 
+	/**
+	 * Run widget to return just rendered content
+	 * @throws CException
+	 */
     public function run() {
-        $this->render(__CLASS__);
+        return $this->render(__CLASS__);
     }
 } 

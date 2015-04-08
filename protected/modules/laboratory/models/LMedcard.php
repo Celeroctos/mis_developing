@@ -10,30 +10,11 @@ class LMedcard extends ActiveRecord {
 	public $enterprise_id;
 
 	/**
-	 * Override that method to return count of rows in table
-	 * @param CDbCriteria $criteria - Search criteria
-	 * @return int - Count of rows in current table
-	 * @throws CDbException
+	 * Get instance of default table provider for current table
+	 * @return TableProvider - Default table provider
 	 */
-	public function getTableCount(CDbCriteria $criteria = null) {
-		$query = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
-			->from("lis.medcard as m")
-			->join("lis.patient as p", "p.id = m.patient_id")
-			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number");
-		if ($criteria != null && $criteria instanceof CDbCriteria) {
-			$query->andWhere($criteria->condition, $criteria->params);
-		}
-		return $query->queryRow()["count"];
-	}
-
-	/**
-	 * Override that method to return command for table widget
-	 * @return CDbCommand - Command with selection query
-	 * @throws CDbException
-	 */
-	public function getTable() {
-		return $this->getDbConnection()->createCommand()
+	public function getDefaultTableProvider() {
+		$fetchQuery = $this->getDbConnection()->createCommand()
 			->select("
                 m.card_number as number,
                 p.sex as phone,
@@ -47,6 +28,11 @@ class LMedcard extends ActiveRecord {
 			->join("lis.patient as p", "p.id = m.patient_id")
 			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
+		$countQuery = $this->getDbConnection()->createCommand()
+			->select("count(1) as count")
+			->from("lis.medcard as m")
+			->join("lis.patient as p", "p.id = m.patient_id");
+		return new TableProvider($this, $fetchQuery, $countQuery);
 	}
 
 	/**

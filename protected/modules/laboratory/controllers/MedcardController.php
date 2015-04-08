@@ -80,9 +80,8 @@ class MedcardController extends LController {
 				$criteria->addColumnCondition($compare);
 			}
 			$this->leave([
-				"component" => $this->getWidget("MedcardTable", [
-					"criteria" => $criteria,
-					"mode" => "mis",
+				"component" => $this->getWidget(Yii::app()->getRequest()->getPost("widget"), [
+					"criteria" => $criteria
 				])
 			]);
 		} catch (Exception $e) {

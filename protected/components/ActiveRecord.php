@@ -183,61 +183,6 @@ abstract class ActiveRecord extends CActiveRecord {
         ]);
     }
 
-    /**
-	 * Override that method to return command for jqGrid
-	 * @return CDbCommand - Command with query
-	 * @throws CDbException
-	 */
-	public function getJqGrid() {
-		return $this->getDbConnection()->createCommand()
-			->select("*")
-			->from($this->tableName());
-	}
-
-	/**
-	 * Override that method to return command for table widget
-	 * @return CDbCommand - Command with selection query
-	 * @throws CDbException
-	 */
-	public function getTable() {
-		return $this->getDbConnection()->createCommand()
-			->select("*")
-			->from($this->tableName());
-	}
-
-	/**
-	 * Override that method to return count of rows in table
-	 * @param CDbCriteria $criteria - Search criteria
-	 * @return int - Count of rows in current table
-	 * @throws CDbException
-	 */
-	public function getTableCount(CDbCriteria $criteria = null) {
-		$query = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
-			->from($this->tableName());
-		if ($criteria != null && $criteria instanceof CDbCriteria) {
-			$query->andWhere($criteria->condition, $criteria->params);
-		}
-		return $query->queryRow()["count"];
-	}
-
-	/**
-	 * That method will return rows for jqGrid table
-	 * @param bool $sidx - Sort index
-	 * @param bool $sord - Sort order
-	 * @param bool $start - Start index position
-	 * @param bool $limit - Offset from start position
-	 * @return array - Array with rows for jqGrid
-	 */
-	public function getRows($sidx = false, $sord = false, $start = false, $limit = false) {
-		$query = $this->getJqGrid();
-		if($sidx !== false && $sord !== false && $start !== false && $limit !== false) {
-			$query->order($sidx.' '.$sord);
-			$query->limit($limit, $start);
-		}
-		return $query->queryAll();
-	}
-
 	/**
 	 * Get instance of default table provider for current table
 	 * @return TableProvider - Default table provider
