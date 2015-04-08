@@ -1,10 +1,10 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/sidemenu.js"></script>
 <style>
-    #mainSideMenu li li {
-        font-size: <?php echo isset(Yii::app()->user->fontSize) ? Yii::app()->user->fontSize - 1 : 11; ?>px !important;
-    }
+    /*#mainSideMenu li li {*/
+/*        font-size: */<?php //echo isset(Yii::app()->user->fontSize) ? Yii::app()->user->fontSize - 1 : 11; ?>/*px !important;*/
+    /*}*/
 </style>
-<div role="complementary" class="bs-sidebar hidden-print" >
+<div role="complementary" class="bs-sidebar hidden-print">
     <ul class="nav bs-sidenav" id="mainSideMenu">
     <!--<li <?php echo $controller == 'index' && $module == null ? 'class="active"' : ''; ?>>
         <?php echo CHtml::link('<img src="' . Yii::app()->getBaseUrl() . '/images/icons/icon_sample.png" width="32" height="32" alt="" />Главная', array('/')) ?>
