@@ -35,11 +35,6 @@ class DirectionTable extends Table {
 	];
 
 	/**
-	 * @var string - Default primary key
-	 */
-	public $pk = "id";
-
-	/**
 	 * @var string - Default table order
 	 */
 	public $sort = "id";

@@ -8,11 +8,13 @@ class CoreAsset extends AssetBundle {
 		"js/core/multiple.js",
 		"js/core/message.js",
 		"js/core/address.js",
+		"js/core/table.js",
 	];
 
 	public $css = [
 		"css/message.css",
-		"css/multiple.css"
+		"css/multiple.css",
+		"css/table.css",
 	];
 
 	public $dependencies = [];
