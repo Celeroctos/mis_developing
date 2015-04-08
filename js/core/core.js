@@ -1,6 +1,6 @@
 var Laboratory = Laboratory || {};
 
-(function(Lab) {
+(function(Core) {
 
     "use strict";
 
@@ -10,7 +10,7 @@ var Laboratory = Laboratory || {};
      * @param parent {function} - Parent class
      * @returns {function} - Child class
      */
-    Lab.extend = function(child, parent) {
+    Core.extend = function(child, parent) {
         var F = function() {};
         F.prototype = parent.prototype;
         child.prototype = new F();
@@ -26,7 +26,7 @@ var Laboratory = Laboratory || {};
      * @param [selector] {jQuery|null|undefined} - Component's selector or nothing
      * @constructor
      */
-    Lab.Component = function(properties, defaults, selector) {
+    var Component = function(properties, defaults, selector) {
         this._properties = $.extend(
             defaults || {}, properties || {}
         );
@@ -36,28 +36,28 @@ var Laboratory = Laboratory || {};
     /**
      * Override that method to return jquery item
      */
-    Lab.Component.prototype.render = function() {
+    Component.prototype.render = function() {
         throw new Error("Component/render() : Not-Implemented");
     };
 
     /**
      * Override that method to activate just created jquery item
      */
-    Lab.Component.prototype.activate = function() {
+    Component.prototype.activate = function() {
         /* Ignored */
     };
 
     /**
      * Override that method to provide some actions before update
      */
-    Lab.Component.prototype.before = function() {
+    Component.prototype.before = function() {
         /* Ignored */
     };
 
     /**
      * Override that method to provide some actions after update
      */
-    Lab.Component.prototype.after = function() {
+    Component.prototype.after = function() {
         /* Ignored */
     };
 
@@ -66,7 +66,7 @@ var Laboratory = Laboratory || {};
      * @param [selector] {jQuery} - New jquery to set
      * @returns {jQuery} - Component's jquery
      */
-    Lab.Component.prototype.selector = function(selector) {
+    Component.prototype.selector = function(selector) {
         if (arguments.length > 0) {
 			if (!(selector instanceof jQuery)) {
 				throw new Error("Selector must be an instance of jQuery object");
@@ -85,7 +85,7 @@ var Laboratory = Laboratory || {};
      * @param value  {*} - Property value
      * @returns {*} - New or old property's value
      */
-    Lab.Component.prototype.property = function(key, value) {
+    Component.prototype.property = function(key, value) {
         if (arguments.length > 1) {
             this._properties[key] = value;
         }
@@ -96,7 +96,7 @@ var Laboratory = Laboratory || {};
      * Override that method to destroy you component or
      * it will simply remove selector
      */
-    Lab.Component.prototype.destroy = function() {
+    Component.prototype.destroy = function() {
         throw new Error("That component doesn't support downgrade");
     };
 
@@ -104,7 +104,7 @@ var Laboratory = Laboratory || {};
      * Update method, will remove all selector, render
      * new, activate it and append to previous parent
      */
-    Lab.Component.prototype.update = function() {
+    Component.prototype.update = function() {
         this.before();
         this.selector().replaceWith(
             this.selector(this.render())
@@ -120,14 +120,14 @@ var Laboratory = Laboratory || {};
      * @param [selector] {jQuery} - jQuery's selector or null
      * @constructor
      */
-    Lab.Sub = function(component, selector) {
+    var SubComponent = function(component, selector) {
         this.component = function() {
             return component;
         };
-        Lab.Component.call(this, {}, {}, selector || true);
+        Component.call(this, {}, {}, selector || true);
     };
 
-    Lab.extend(Lab.Sub, Lab.Component);
+    Core.extend(SubComponent, Component);
 
     /**
      * That method will fetch properties values from
@@ -135,33 +135,62 @@ var Laboratory = Laboratory || {};
      * @param key {String} - Property name
      * @param value {*} - Property value
      */
-    Lab.Sub.prototype.property = function(key, value) {
+    SubComponent.prototype.property = function(key, value) {
         return this.component().property.apply(this.component(), arguments);
     };
 
 	/**
-	 * @static
-	 * @returns {{cleanup: Function}}
+	 * Common class with static helper methods
+	 * @constructor
 	 */
-	Lab.getCommon = function() {
-		return {
-			cleanup: function(component) {
-				$(component).find("input, textarea").val("");
-				$(component).find("select:not([multiple])").each(function(i, item) {
-					$(item).val($(item).find("option:eq(0)").val());
-				});
-				$(component).find("select[multiple]").val("");
-			}
-		};
+	var Common = function() {
+	};
+
+	/**
+	 * Cleanup component's value and all errors or warnings
+	 * @static
+	 * @param component
+	 */
+	Common.cleanup = function(component) {
+		$(component).find(".form-group").removeClass("has-error")
+			.removeClass("has-warning").removeClass("has-success");
+		$(component).find("select:not([multiple])").each(function(i, item) {
+			$(item).val($(item).find("option:eq(0)").val());
+		});
+		$(component).find("input, textarea, select[multiple]").val("");
+	};
+
+	Core.Component = Component;
+	Core.SubComponent = SubComponent;
+	Core.Common = Common;
+
+	/**
+	 * Create new component, which extends basic
+	 * Component class
+	 * @param component {Function} - New component class
+	 * @returns {Function} - Same component instance
+	 */
+	Core.createComponent = function(component) {
+		return Core.extend(component, Component);
+	};
+
+	/**
+	 * Create new sub-component, which extends basic
+	 * SubComponent class
+	 * @param component {Function} - New component class
+	 * @returns {Function} - Same component instance
+	 */
+	Core.createSubComponent = function(component) {
+		return Core.extend(component, SubComponent);
 	};
 
     /**
      * Create new component's instance and render to DOM
-     * @param component {Laboratory.Component|Object} - Component's instance
+     * @param component {Component|Object} - Component's instance
      * @param selector {HTMLElement|string} - Parent's selector
      * @param [update] {Boolean} - Update component or not (default yes)
      */
-    Lab.create = function(component, selector, update) {
+    Core.createObject = function(component, selector, update) {
         $(selector).data("lab", component).append(
             component.selector()
         );
@@ -178,7 +207,7 @@ var Laboratory = Laboratory || {};
 	 * @param func {String} - Name of create function, for example 'createMessage'
 	 * @static
 	 */
-	Lab.createPlugin = function(func) {
+	Core.createPlugin = function(func) {
 		var register = function(me, options, args, ret) {
 			var r;
 			var a = [];
@@ -195,6 +224,9 @@ var Laboratory = Laboratory || {};
 					}
 					me.data("lab", c);
 				}
+				if (c[options] == void 0) {
+					throw new Error("That component don't resolve method \"" + options + "\"");
+				}
 				if ((r = c[options].apply(c, a)) !== void 0) {
 					return r;
 				}
@@ -203,9 +235,9 @@ var Laboratory = Laboratory || {};
 					return void 0;
 				}
 				if (typeof me != "function") {
-					r = Lab[func](me[0], options);
+					r = Core[func](me[0], options);
 				} else {
-					r = Lab[func](options);
+					r = Core[func](options);
 				}
 				if (ret) {
 					return r;
@@ -240,7 +272,7 @@ var Laboratory = Laboratory || {};
 	 * after DOM load and any success ajax request
 	 * @param func {Function} - Function to execute
 	 */
-	Lab.ready = function(func) {
+	Core.ready = function(func) {
 		$(document).ready(func);
 		$(document).bind("ajaxSuccess", func);
 	};

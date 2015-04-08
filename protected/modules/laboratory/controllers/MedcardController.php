@@ -36,7 +36,7 @@ class MedcardController extends LController {
 
 	/**
 	 * Search action, which accepts array with search serialized form
-	 * models (LMedcardSearchForm + LSearchRangeForm). That action will
+	 * models (LMedcardSearchForm + LAnalysisSearchForm). That action will
 	 * fetch form's values and build search condition form form model
 	 * and return Table widget with medcards
 	 *
@@ -51,8 +51,8 @@ class MedcardController extends LController {
 			if (!($medcard = Yii::app()->getRequest()->getPost("LMedcardSearchForm"))) {
 				throw new CException("Can't resolve search form for medcard \"LMedcardSearchForm\"");
 			}
-			if (!($analysis = Yii::app()->getRequest()->getPost("LSearchRangeForm"))) {
-				throw new CException("Can't resolve search form for analysis \"LSearchRangeForm\"");
+			if (!($analysis = Yii::app()->getRequest()->getPost("LAnalysisSearchForm"))) {
+				throw new CException("Can't resolve search form for analysis \"LAnalysisSearchForm\"");
 			}
 			$criteria = new CDbCriteria();
 			if (isset($analysis["begin_date"]) && isset($analysis["end_date"])) {

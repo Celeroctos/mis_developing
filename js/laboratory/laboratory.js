@@ -72,20 +72,23 @@ var Table = {
 	},
 	order: function(row) {
 		var parameters = {};
-		if ($(this).find(".glyphicon-chevron-down").length) {
-			parameters["desc"] = true;
+		if ($(this).find(".glyphicon-chevron-up").length) {
+			parameters["orderBy"] = row + " desc";
+		} else {
+			parameters["orderBy"] = row;
 		}
-		parameters["sort"] = row;
 		Table.fetch(this, parameters);
 	},
 	page: function(page) {
 		var td = $(this).parents(".table[data-class]").find("tr:first-child td .glyphicon").parents("td");
-		var parameters = {};
+		var parameters = {
+			page: page
+		};
 		if (td.find(".glyphicon-chevron-up").length) {
-			parameters["desc"] = true;
+			parameters["orderBy"] = td.data("key") + " desc";
+		} else {
+			parameters["orderBy"] = td.data("key");
 		}
-		parameters["sort"] = td.data("key");
-		parameters["page"] = page;
 		Table.fetch(this, parameters);
 	}
 };

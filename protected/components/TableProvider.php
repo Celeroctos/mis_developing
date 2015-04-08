@@ -9,6 +9,12 @@ class TableProvider extends CComponent {
 	public $activeRecord = null;
 
 	/**
+	 * @var TablePagination|false - Table pagination
+	 *	instance, set it to false to disable pagination
+	 */
+	public $pagination = null;
+
+	/**
 	 * @var CDbCommand - Query to fetch data from
 	 * 	database table for current provider
 	 */
@@ -52,6 +58,9 @@ class TableProvider extends CComponent {
 			$this->countQuery = $this->getCountQuery();
 		} else {
 			$this->countQuery = $countQuery;
+		}
+		if ($this->pagination !== false) {
+			$this->pagination = $this->getPagination();
 		}
 	}
 

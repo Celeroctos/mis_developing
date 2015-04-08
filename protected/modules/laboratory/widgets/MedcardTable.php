@@ -36,7 +36,7 @@ class MedcardTable extends Table {
 	/**
 	 * @inheritdoc
 	 */
-	public $pk = "number";
+	public $primaryKey = "number";
 
 	/**
 	 * @inheritdoc
@@ -59,20 +59,15 @@ class MedcardTable extends Table {
 	public $click = "MedcardSearch.click";
 
 	public function init() {
-		if (!isset(self::$models[$this->mode])) {
-			throw new CException("Unresolved search mode \"{$this->mode}\"");
-		}
 		if ($this->mode == "lis") {
 			$model = new LMedcard();
 		} else {
 			$model = new LMedcard2();
 		}
+		if (!$model instanceof ActiveRecord) {
+			throw new CException("Medcard model must be an instance of ActiveRecord class");
+		}
 		$this->provider = $model->getDefaultTableProvider();
 		$this->provider->getPagination()->pageLimit = 10;
 	}
-
-	private static $models = [
-		"mis" => "LMedcard2",
-		"lis" => "LMedcard"
-	];
 } 

@@ -1,0 +1,15 @@
+
+.core-table {
+}
+
+.core-table-header td[data-key] {
+    cursor: pointer;
+}
+
+.core-table-header td[data-key]:hover {
+    background-color: #f5f5f5;
+}
+
+.core-table-footer .pagination {
+    margin: 0 0 -5px;
+}

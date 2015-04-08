@@ -4,7 +4,7 @@ var Laboratory = Laboratory || {};
 
 	"use strict";
 
-	var Address = function(properties, selector) {
+	var Address = Lab.createComponent(function(properties, selector) {
 		Lab.Component.call(this, properties, {
 			list: {
 				"region_name": {
@@ -39,9 +39,7 @@ var Laboratory = Laboratory || {};
 				}
 			}
 		}, selector);
-	};
-
-	Lab.extend(Address, Lab.Component);
+	});
 
 	Address.prototype.render = function() {
 		var p;
@@ -161,7 +159,7 @@ var Laboratory = Laboratory || {};
 			return void 0;
 		}
 		++count;
-		return Lab.create(new Address(properties, $(selector)), selector, true);
+		return Lab.createObject(new Address(properties, $(selector)), selector, true);
 	};
 
 	$.fn.address = Lab.createPlugin(
