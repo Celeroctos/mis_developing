@@ -96,7 +96,7 @@ class SheduleSetted extends MisActiveRecord {
             $doctors = $connection->createCommand()
                 ->selectDistinct('ss.employee_id')
                 ->from(SheduleSetted::model()->tableName().' ss')
-                ->where('weekday = :weekday AND NOT EXISTS(SELECT ss2.* FROM '.SheduleSetted::model()->tableName().' ss2 WHERE weekday IS NULL AND day = :date)', array(':weekday' => $weekday, ':date' => $date));
+                ->where('weekday = :weekday AND NOT EXISTS(SELECT ss2.* FROM '.SheduleSetted::model()->tableName().' ss2 WHERE weekday IS NULL AND day = :date) AND ss.employee_id IS NOT NULL', array(':weekday' => $weekday, ':date' => $date));
             return $doctors->queryAll();
         } catch(Exception $e) {
             echo $e->getMessage();
@@ -237,7 +237,7 @@ class SheduleSetted extends MisActiveRecord {
             $doctors = $connection->createCommand()
                 ->selectDistinct('ss.employee_id')
                 ->from(SheduleSetted::model()->tableName().' ss')
-                ->where('NOT EXISTS(SELECT ss2.* FROM '.SheduleSetted::model()->tableName().' ss2 WHERE weekday IS NULL AND day = :date)', array(':date' => $date));
+                ->where('NOT EXISTS(SELECT ss2.* FROM '.SheduleSetted::model()->tableName().' ss2 WHERE weekday IS NULL AND day = :date) AND ss.employee_id IS NOT NULL', array(':date' => $date));
             return $doctors->queryAll();
         } catch(Exception $e) {
             echo $e->getMessage();

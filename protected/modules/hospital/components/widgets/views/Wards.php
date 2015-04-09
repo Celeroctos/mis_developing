@@ -43,6 +43,7 @@
             <span class="numFree"><strong class="text-danger">Карантин</strong></span>
         </li>
         <li>
+            <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
             <h4>Палата №1</h4>
             <span class="wardType">Обычная</span>
             <span class="paidType">Платная</span>
