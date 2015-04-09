@@ -23,10 +23,10 @@ class LMedcard extends ActiveRecord {
                 p.patronymic as patronymic,
                 p.birthday as birthday,
                 e.shortname as enterprise,
-                cast(a.registration_date as date) as registration_date")
+                cast(a.registration_time as date) as registration_date")
 			->from("lis.medcard as m")
 			->join("lis.patient as p", "p.id = m.patient_id")
-			->leftJoin("lis.direction as d", "d.patient_id = p.id")
+			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
 			->leftJoin("lis.analysis as a", "a.direction_id = d.id")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
 		$countQuery = $this->getDbConnection()->createCommand()

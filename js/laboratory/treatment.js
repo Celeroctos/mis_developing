@@ -17,7 +17,7 @@ var TreatmentViewHeader = {
 				.trigger("change");
 		});
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
-			Common.cleanup(this);
+			Laboratory.Common.cleanup(this);
 		});
 	},
 	active: null
@@ -32,9 +32,10 @@ var MedcardEditableViewerModal = {
 		}
 	},
 	construct: function() {
-		var me = this;
-		var modal = $("#medcard-editable-viewer-modal");
+		var me = this, modal = $("#medcard-editable-viewer-modal"), v;
 		modal.on("show.bs.modal", function() {
+			modal.find("input#card_number").val(v = $("#laboratory-medcard-number").val());
+			modal.find("span#card_number").text(v);
 			me.check();
 		});
 		modal.find("#copy-button").click(function() {
@@ -72,7 +73,7 @@ var MedcardEditableViewerModal = {
 			});
 		});
 		modal.find("#clear-button").click(function() {
-			Common.cleanup(modal);
+			Laboratory.Common.cleanup(modal);
 			me.check();
 			Laboratory.createMessage({
 				message: "Данные очищены",
@@ -86,7 +87,7 @@ var MedcardEditableViewerModal = {
 				forms.push($(f).serialize());
 			});
 			Laboratory.resetFormErrors(modal);
-			$.post(url("laboratory/medcard/register"), forms.join("&"), function(json) {
+			$.post(url("laboratory/direction/register"), forms.join("&"), function(json) {
 				if (json["errors"]) {
 					Laboratory.postFormErrors(modal, json);
 				} else if (!Message.display(json)) {
@@ -98,7 +99,11 @@ var MedcardEditableViewerModal = {
 	},
 	load: function(model) {
 		var modal = $("#medcard-editable-viewer-modal");
+		Laboratory.Common.cleanup(modal);
 		var put = function(from, key, value) {
+			if (key == "card_number") {
+				return void 0;
+			}
 			var offset = 0, chances = [
 				value, -1, 0, 1
 			];
@@ -111,19 +116,24 @@ var MedcardEditableViewerModal = {
 				} while ($(item).val() === null);
 			});
 		};
+		var forms = {
+			medcard_id: "form[data-form='LMedcardForm']",
+			patient_id: "form[data-form='LPatientForm']"
+		};
 		for (var i in model) {
 			var m = model[i], f, base;
-			if ((f = modal.find("#" + i)).length > 0 && f.data("form")) {
+			if (i in forms && (f = modal.find(forms[i])).length) {
+				base = f;
+			} else if ((f = modal.find("#" + i)).length > 0 && f.data("form")) {
 				base = $("#" + f.data("form"));
 			} else {
-				base = modal
+				base = modal.find(".modal-body");
 			}
 			for (var j in m) {
 				put(base, j, m[j]);
 			}
 		}
 		modal.find("input[data-laboratory='address']").address("calculate");
-		modal.find("span[id='card_number']").text(model["medcard"]["card_number"]);
 	},
 	copied: false
 };

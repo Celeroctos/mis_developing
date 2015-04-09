@@ -15,6 +15,27 @@ abstract class ActiveRecord extends CActiveRecord {
 	}
 
 	/**
+	 * Load model from form model instance and return it
+	 * @param FormModel $formModel - Form model instance with
+	 *    attributes that should be copied to model
+	 * @param array $data - Extra form fields
+	 * @return static - New just created instance with
+	 *    form model attributes
+	 */
+	public static function loadFromModel(FormModel $formModel, $data = []) {
+		$self = new static();
+		if ($formModel !== null) {
+			foreach ($formModel->getAttributes() as $key => $value) {
+				$self->$key = $value;
+			}
+		}
+		foreach ($data as $key => $value) {
+			$self->$key = $value;
+		}
+		return $self;
+	}
+
+	/**
 	 * This method is invoked after saving a record successfully.
 	 * The default implementation raises the {@link onAfterSave} event.
 	 * You may override this method to do postprocessing after record saving.
@@ -23,7 +44,7 @@ abstract class ActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+			$this->{$this->tableSchema->primaryKey} = Yii::app()->getDb()->getLastInsertID(
 				$this->tableName()."_id_seq"
 			);
 		} catch (Exception $ignored) {

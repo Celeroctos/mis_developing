@@ -52,12 +52,4 @@ class LGuideColumn extends ActiveRecord {
 			->order("position");
 		return $query->queryAll();
 	}
-
-	/**
-	 * Get model's instance from cache
-	 * @return LGuideColumn - Cached model instance
-	 */
-	public static function model() {
-		return parent::model(__CLASS__);
-	}
 }

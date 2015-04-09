@@ -152,12 +152,18 @@ var Laboratory = Laboratory || {};
 	 * @param component
 	 */
 	Common.cleanup = function(component) {
-		$(component).find(".form-group").removeClass("has-error")
-			.removeClass("has-warning").removeClass("has-success");
-		$(component).find("select:not([multiple])").each(function(i, item) {
+		$(component).find(".form-group")
+			.removeClass("has-error")
+			.removeClass("has-warning")
+			.removeClass("has-success");
+		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
-		$(component).find("input, textarea, select[multiple]").val("");
+		var list = [ "input", "textarea", "select[multiple]" ];
+		for (var i in list) {
+			list[i] += "[data-cleanup!='false']";
+		}
+		$(component).find(list.join(",")).val("");
 	};
 
 	Core.Component = Component;

@@ -102,14 +102,14 @@ class LMedcard2 extends ActiveRecord {
 			return null;
 		}
 		$result = [
-			"medcard" => [
+			"medcard_id" => [
 				"mis_medcard" => $this->read($model, "card_number"),
 				"enterprise_id" => $this->read($model, "enterprise_id"),
 				"card_number" => null,
 				"sender_id" => null,
 				"patient_id" => null
 			],
-			"patient" => [
+			"patient_id" => [
 				"surname" => $this->read($model, "last_name"),
 				"name" => $this->read($model, "first_name"),
 				"patronymic" => $this->read($model, "middle_name"),

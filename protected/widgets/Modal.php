@@ -68,6 +68,11 @@ class Modal extends Widget {
 	 */
 	public $draggable = false;
 
+	/**
+	 * @var string - Default body class wrapper
+	 */
+	public $bodyClass = "col-xs-12";
+
     /**
      * Initialize widget
      */
@@ -106,6 +111,7 @@ class Modal extends Widget {
      * @throws CException
      */
     public function run() {
+		print CHtml::closeTag("div");
         print CHtml::closeTag("div");
         print CHtml::closeTag("div");
         $this->renderFooter();
@@ -166,6 +172,9 @@ class Modal extends Widget {
         print CHtml::openTag("div", [
             "class" => "row"
         ]);
+		print CHtml::openTag("div", [
+			"class" => $this->bodyClass
+		]);
         if ($this->body != null) {
             print $this->body;
         }

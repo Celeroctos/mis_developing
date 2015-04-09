@@ -13,9 +13,9 @@ class AnalysisTypeTechniqueField extends DropDown {
 	 */
 	public function data() {
 		return [
-			-1 => "Не определена",
-			 1 => "Автоматическая",
-			 2 => "Ручная"
+			0 => "Не определена",
+			1 => "Автоматическая",
+			2 => "Ручная"
 		];
 	}
 
