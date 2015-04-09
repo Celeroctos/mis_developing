@@ -28,10 +28,9 @@ misEngine.class('component.widget.wards', function() {
                     hide: 300
                 },
                 template : $('<div>').prop({
-                    'class' : 'popover',
+                    'class' : 'popover popover-wardedit',
                     'role' : 'tooltip'
-                }).append($('<div>').addClass('arrow'), $('<h3>').addClass('popover-title'), $('<div>').addClass('popo')),
-                </div><div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>
+                }).append($('<div>').addClass('arrow'), $('<h3>').addClass('popover-title'), $('<div>').addClass('popover-content')),
                 container: $(li),
                 content: $.proxy(function () {
                     return $('.settingsForm').html();

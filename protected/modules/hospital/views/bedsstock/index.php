@@ -135,28 +135,43 @@
     </form>
 </div>
 <div class="settingsForm">
-    <form>
+    <form class="col-xs-12">
         <div class="col-xs-6">
             <div class="form-group">
-                <label class="col-xs-2 control-label">№ палаты</label>
-                <div class="col-xs-10">
+                <label class="col-xs-4 control-label">№ палаты</label>
+                <div class="col-xs-8">
                     <input type="text" class="form-control">
                 </div>
             </div>
             <div class="form-group">
-
+                <label class="col-xs-4 control-label">№ палаты</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control">
+                </div>
             </div>
             <div class="form-group">
-
+                <label class="col-xs-4 control-label">Тип палаты</label>
+                <div class="col-xs-8">
+                    <select class="form-control"></select>
+                </div>
             </div>
             <div class="form-group">
-
+                <label class="col-xs-4 control-label">Пол</label>
+                <div class="col-xs-8">
+                    <select class="form-control"></select>
+                </div>
             </div>
             <div class="form-group">
-
+                <label class="col-xs-4 control-label">Кол-во коек</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control">
+                </div>
             </div>
             <div class="form-group">
-
+                <label class="col-xs-4 control-label">Платных</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control">
+                </div>
             </div>
         </div>
         <div class="col-xs-6">

@@ -557,15 +557,20 @@
 
     $('#checkAll').on('change', function(e) {
        $('#chooseMedcardsTable input[id^=r]').prop('checked', $(this).prop('checked'));
+        showAddBtn();
     });
 
     $(document).on('change', '#chooseMedcardsTable input[id^=r]', function(e) {
+        showAddBtn();
+    });
+
+    function showAddBtn() {
         if($('#chooseMedcardsTable input[id^=r]:checked').length > 0) {
             $('#addChoosedMedcardsBtn').removeClass('no-display');
         } else {
             $('#addChoosedMedcardsBtn').addClass('no-display');
         }
-    });
+    }
 
     $('#addChoosedMedcardsBtn').on('click', function(e) {
         var medcards = [];
