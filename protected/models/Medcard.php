@@ -60,9 +60,9 @@ class Medcard extends MisActiveRecord
 	 */
 	protected function afterSave() {
 		parent::afterSave();
-		$this->{"card_number"} = Yii::app()->getDb()->getLastInsertID(
+		/*$this->{"card_number"} = Yii::app()->getDb()->getLastInsertID(
 			$this->tableName()."_id_seq"
-		);
+		);*/
 	}
 	
 	/**
