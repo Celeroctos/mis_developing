@@ -102,14 +102,14 @@ class LMedcard2 extends ActiveRecord {
 			return null;
 		}
 		$result = [
-			"medcard" => [
+			"medcard_id" => [
 				"mis_medcard" => $this->read($model, "card_number"),
 				"enterprise_id" => $this->read($model, "enterprise_id"),
 				"card_number" => null,
 				"sender_id" => null,
 				"patient_id" => null
 			],
-			"patient" => [
+			"patient_id" => [
 				"surname" => $this->read($model, "last_name"),
 				"name" => $this->read($model, "first_name"),
 				"patronymic" => $this->read($model, "middle_name"),
@@ -227,57 +227,19 @@ class LMedcard2 extends ActiveRecord {
 	}
 
 	/**
-	 * Override that method to return count of rows in table
-	 * @param CDbCriteria $criteria - Search criteria
-	 * @return int - Count of rows in current table
-	 * @throws CDbException
-	 */
-	public function getTableCount(CDbCriteria $criteria = null) {
-		$query = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
-			->from("mis.medcards as m");
-		if ($criteria != null && $criteria instanceof CDbCriteria) {
-			$query->andWhere($criteria->condition, $criteria->params);
-		}
-		return $query->queryRow()["count"];
-	}
-
-	/**
-	 * Override that method to return command for table widget
-	 * @return CDbCommand - Command with selection query
-	 * @throws CDbException
-	 */
-	public function getTable() {
-		return $this->getDbConnection()->createCommand()
-			->select("
-                m.card_number as number,
-                m.contact as phone,
-                o.last_name || ' ' || o.first_name || ' ' || o.middle_name as fio,
-                o.birthday as birthday,
-                e.shortname as enterprise,
-                cast(a.registration_date as date) as registration_date")
-			->from("mis.medcards as m")
-			->join("mis.oms as o", "m.policy_id = o.id")
-			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
-			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
-	}
-
-	/**
 	 * Get instance of default table provider for current table
 	 * @return TableProvider - Default table provider
 	 */
-	public function getDefaultTableProvider() {
+	public function getMedcardSearchTableProvider() {
 		$fetchQuery = $this->getDbConnection()->createCommand()
 			->select("
                 m.card_number as number,
                 m.contact as phone,
-                o.last_name || ' ' || o.first_name || ' ' || o.middle_name as fio,
+                concat(o.last_name, ' ', o.first_name, ' ', o.middle_name) as fio,
                 o.birthday as birthday,
-                e.shortname as enterprise,
-                cast(a.registration_date as date) as registration_date")
+                e.shortname as enterprise")
 			->from("mis.medcards as m")
 			->join("mis.oms as o", "m.policy_id = o.id")
-			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
 		$countQuery = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")

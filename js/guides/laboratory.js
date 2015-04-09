@@ -1,3 +1,4 @@
+
 var GuideGridView = {
 	ready: function() {
 		var grid = $(".grid-view");

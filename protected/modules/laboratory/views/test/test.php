@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var $this LController
+ * @var $this Controller2
  */
 
 $this->widget("Modal", [

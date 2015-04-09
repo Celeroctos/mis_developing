@@ -1,6 +1,6 @@
 <?php
 
-class LAnalysisType extends ActiveRecord {
+class LAddress extends ActiveRecord {
 
 	/**
 	 * Returns the name of the associated database table.
@@ -9,6 +9,6 @@ class LAnalysisType extends ActiveRecord {
 	 * @return string the table name
 	 */
 	public function tableName() {
-		return "lis.analysis_types";
+		return "lis.address";
 	}
 }

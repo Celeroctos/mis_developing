@@ -15,7 +15,6 @@ class LDirectionForm extends FormModel {
 	public $history;
 	public $ward_id;
 	public $enterprise_id;
-	public $is_repeated;
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -26,20 +25,13 @@ class LDirectionForm extends FormModel {
 		return [
 			$this->createFilter("treatment.edit", [
 				"comment",
-				"analysis_type",
+				"analysis_type_id",
 				"treatment_room_employee_id",
 				"laboratory_employee_id",
 				"history",
 				"ward_id"
 			])
 		];
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function init() {
-		$this->sender_id = LUserIdentity::get("doctorId");
 	}
 
 	/**
@@ -60,6 +52,9 @@ class LDirectionForm extends FormModel {
 			"barcode" => [
 				"label" => "Штрих-код",
 				"type" => "number",
+				"options" => [
+					"readonly" => "true"
+				],
 				"rules" => "required"
 			],
             "status" => [
@@ -74,12 +69,12 @@ class LDirectionForm extends FormModel {
 			"analysis_type_id" => [
 				"label" => "Тип анализа",
 				"type" => "DropDown",
-				"rules" => "required",
                 "table" => [
                     "name" => "lis.analysis_type",
                     "key" => "id",
                     "value" => "name"
-                ]
+                ],
+				"rules" => "required",
 			],
 			"medcard_id" => [
 				"label" => "Медкарта",

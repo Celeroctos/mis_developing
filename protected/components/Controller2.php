@@ -1,6 +1,6 @@
 <?php
 
-abstract class LController extends Controller {
+abstract class Controller2 extends Controller {
 
     /**
      * Override that method to add your chains, if path will be
@@ -195,11 +195,7 @@ abstract class LController extends Controller {
 		$form->attributes = $array;
         if (!$form->validate()) {
             if ($error) {
-                $this->leave([
-                    "message" => "Произошли ошибки во время валидации формы",
-                    "errors" => $form->getErrors(),
-                    "status" => false
-                ]);
+				$this->postValidationError($form->getErrors());
             } else {
                 $this->errors += $form->getErrors();
             }
@@ -213,12 +209,61 @@ abstract class LController extends Controller {
 	 */
 	public function validateForm($form) {
 		if (!$form->validate()) {
-			$this->leave([
-				"message" => "Произошли ошибки во время валидации формы",
-				"errors" => $form->getErrors(),
-				"status" => false
-			]);
+			$this->postValidationError($form->getErrors());
 		}
+	}
+
+	/**
+	 * Does current controller have any validation errors
+	 * @return bool - Has validation errors
+	 */
+	public function hasValidationErrors() {
+		return !empty($this->errors);
+	}
+
+	/**
+	 * Post validation errors and terminate script execution
+	 * @param array $errors - Array with validation errors
+	 */
+	public function postValidationError($errors = null) {
+		if ($errors === null) {
+			$errors = $this->errors;
+		}
+		if (!count($errors)) {
+			return ;
+		}
+		$this->leave([
+			"message" => "Произошли ошибки во время валидации формы",
+			"errors" => $errors,
+			"status" => false
+		]);
+	}
+
+	/**
+	 * Check for model existence and return it
+	 *
+	 * @param string $class - Name of model's form class instance, it
+	 *    loads loads and validates with [attributes] parameters
+	 * @param array|null|string $regexp - Some forms may contains prefixes or postfixes, so
+	 *    use that field to cleanup form's class name
+	 * @param array|null $attributes - Attributes to validate
+	 * @param string $scenario - Model's scenario usage
+	 * @return FormModel - An form model instance
+	 * @throws CException
+	 */
+	public function requireModel($class, $attributes = null, $regexp = null, $scenario = "") {
+		if (!($model = Yii::app()->getRequest()->getPost($class))) {
+			throw new CException("Can't resolve \"{$class}\" form model");
+		}
+		if ($regexp !== null) {
+			$class = preg_replace($regexp, "", $class);
+		}
+		/** @var $form FormModel */
+		$form = new $class($scenario, $model);
+		if (!$form->validate($attributes)) {
+			$this->errors = CMap::mergeArray($this->errors, $form->getErrors());
+		}
+		return $form;
 	}
 
     /**
@@ -239,11 +284,7 @@ abstract class LController extends Controller {
             $array[] = $this->getUrlForm($f, false);
         }
         if (count($this->errors) > 0) {
-            $this->leave([
-                "message" => "Произошли ошибки во время валидации формы",
-                "errors" => $this->errors,
-                "status" => false
-            ]);
+			$this->postValidationError($this->errors);
         }
         return $array;
     }
@@ -321,7 +362,7 @@ abstract class LController extends Controller {
 	 * Register some form's values in database, it will automatically
 	 * fetch model from $_POST["model"], decode it, build it's FormModel
 	 * object and save into database. But you must override
-	 * LController::getModel and return instance of controller's model else
+	 * Controller2::getModel and return instance of controller's model else
 	 * it will throw an exception
 	 *
 	 * @in (POST):
@@ -343,7 +384,7 @@ abstract class LController extends Controller {
 				throw new CException("Forms to register mustn't be array");
 			}
 			if (($table = $this->getModel()) == null) {
-				throw new CException("Your controller must override LController::getModel method");
+				throw new CException("Your controller must override Controller2::getModel method");
 			}
 			$attributes = $model->getConfig();
 			if (isset($attributes)) {
@@ -455,7 +496,10 @@ abstract class LController extends Controller {
         if (!isset($parameters["status"])) {
             $parameters["status"] = true;
         }
-        die(json_encode($parameters));
+		ob_start();
+		Yii::app()->end(0, false);
+		ob_end_clean();
+		exit(json_encode($parameters));
     }
 
 	/**

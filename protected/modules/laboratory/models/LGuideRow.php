@@ -1,6 +1,6 @@
 <?php
 
-class LGuideRow extends LModel {
+class LGuideRow extends ActiveRecord {
 
 	public $id;
 	public $guide_id;
@@ -77,13 +77,5 @@ class LGuideRow extends LModel {
 			":row_id" => $rowId,
 			":display" => $display
 		]);
-	}
-
-	/**
-	 * Get model's instance from cache
-	 * @return LGuideRow - Cached model instance
-	 */
-	public static function model() {
-		return parent::model(__CLASS__);
 	}
 }

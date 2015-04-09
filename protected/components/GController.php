@@ -1,6 +1,6 @@
 <?php
 
-abstract class GController extends LController {
+abstract class GController extends Controller2 {
 
 	/**
 	 * @var string - Guide default layout

@@ -13,8 +13,8 @@ class SexField extends DropDown {
 	 */
 	public function data() {
 		return [
-			0 => "Мужской",
-			1 => "Женский"
+			1 => "Мужской",
+			2 => "Женский"
 		];
 	}
 

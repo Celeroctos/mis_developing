@@ -19,7 +19,6 @@ var Laboratory = Laboratory || {};
 		}, parameters);
 		this.before();
 		$.get(this.selector().data("url"), $.extend({
-
 			class: table.data("class"),
 			condition: table.data("condition"),
 			params: table.data("parameters"),

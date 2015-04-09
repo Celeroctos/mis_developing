@@ -22,6 +22,13 @@ class LMedcardForm extends FormModel {
 	}
 
 	/**
+	 * Initialize form model
+	 */
+	public function init() {
+		$this->sender_id = Yii::app()->{"user"}->{"getState"}("doctorId");
+	}
+
+	/**
 	 * Override that method to return config. Config should return array associated with
 	 * model's variables. Every field must contains 3 parameters:
 	 *  + label - Variable's label, will be displayed in the form
@@ -39,6 +46,10 @@ class LMedcardForm extends FormModel {
 			"card_number" => [
 				"label" => "Номер карты",
 				"type" => "text",
+				"options" => [
+					"data-cleanup" => "false",
+					"readonly" => "true",
+				],
 				"rules" => "required"
 			],
 			"mis_medcard" => [
@@ -51,20 +62,25 @@ class LMedcardForm extends FormModel {
 			],
 			"sender_id" => [
 				"label" => "Врач направитель",
-				"type" => "DropDown",
-				"table" => [
-					"name" => "mis.doctors",
-					"key" => "id",
-					"value" => "last_name, first_name",
-					"format" => "%{last_name} %{first_name}",
-					"order" => "last_name, first_name"
+				"type" => "hidden",
+				"options" => [
+					"data-cleanup" => "false"
 				],
 				"rules" => "required"
 			],
 			"patient_id" => [
 				"label" => "Идентификатор пациента",
-				"type" => "number",
-				"rules" => "safe"
+				"type" => "number"
+			],
+			"enterprise_id" => [
+				"label" => "Подразделение",
+				"type" => "DropDown",
+				"table" => [
+					"name" => "lis.enterprise",
+					"key" => "id",
+					"value" => "shortname"
+				],
+				"rules" => "required"
 			]
 		];
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class MedcardController extends LController {
+class MedcardController extends Controller2 {
 
 	/**
 	 * Render page with medcards
@@ -90,10 +90,31 @@ class MedcardController extends LController {
 	}
 
 	/**
+	 * That action will generate card number for laboratory
+	 *
+	 * @out (JSON):
+	 *  + [number] - Just generated card number for laboratory
+	 *  + status - Response status, true or false
+	 *  + [message] - Message with response
+	 *
+	 * @throws Exception
+	 */
+	public function actionGenerateCardNumber() {
+		try {
+			$this->leave([
+				"message" => "Номер карты был успешно сгенерирован",
+				"number" => LCardNumberGenerator::getGenerator()->generate()
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	/**
 	 * Register some form's values in database, it will automatically
 	 * fetch model from $_POST["model"], decode it, build it's FormModel
 	 * object and save into database. But you must override
-	 * LController::getModel and return instance of controller's model else
+	 * Controller2::getModel and return instance of controller's model else
 	 * it will throw an exception
 	 *
 	 * @in (POST):
@@ -110,13 +131,7 @@ class MedcardController extends LController {
 	 */
 	public function actionRegister() {
 		try {
-			$model = $this->getFormModel("model", "post");
-			
-			$attributes = [];
-			LMedcard::model()->insert();
-			$this->leave([
-				"message" => "Данные медкарты были успешно сохранены"
-			]);
+
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

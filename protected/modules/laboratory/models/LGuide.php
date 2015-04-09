@@ -93,12 +93,4 @@ class LGuide extends ActiveRecord {
 		}
 		return $values;
 	}
-
-	/**
-	 * Get model's instance from cache
-	 * @return LGuide - Cached model instance
-	 */
-	public static function model() {
-		return parent::model(__CLASS__);
-	}
 }
