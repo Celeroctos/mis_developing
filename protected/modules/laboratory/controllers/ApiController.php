@@ -1,6 +1,6 @@
 <?php
 
-class ApiController extends LController {
+class ApiController extends Controller2 {
 
     /**
      * Override that method to add your chains, if path will be

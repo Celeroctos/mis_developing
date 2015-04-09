@@ -15,7 +15,7 @@ class TablePagination extends CComponent {
 	/**
 	 * @var int - Maximum page limit per page
 	 */
-	public $pageLimit = 25;
+	public $pageLimit = 10;
 
 	/**
 	 * Construct table pagination with count of rows

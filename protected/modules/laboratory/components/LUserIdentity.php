@@ -8,7 +8,7 @@ class LUserIdentity extends CUserIdentity {
 	 * @return mixed - Value associated with key
 	 */
 	public static function get($key) {
-		return Yii::app()->user->getState($key);
+		return Yii::app()->{"user"}->{"getState"}($key);
 	}
 
     public function authenticate() {

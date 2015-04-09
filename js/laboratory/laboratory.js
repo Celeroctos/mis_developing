@@ -23,17 +23,6 @@ var ConfirmDelete = {
     lock: false
 };
 
-var Common = {
-	cleanup: function(component) {
-		$(component).find("input, textarea").val("");
-		$(component).find("select:not([multiple])").each(function(i, item) {
-			$(item).val($(item).find("option:eq(0)").val());
-		});
-		$(component).find("select[multiple]").val("");
-		$(component).find(".form-group").removeClass("has-error");
-	}
-};
-
 var Panel = {
     construct: function() {
         $(document).on("click", ".collapse-button", function() {
@@ -192,7 +181,7 @@ var Message = {
 var MedcardSearch = {
 	construct: function() {
 		$("[id='medcard-search-button']").click(function() {
-			MedcardSearch.search();
+			MedcardSearch.search($(this).parents(".modal:eq(0)"));
 		});
 		$("#medcard-edit-button").click(function() {
 			MedcardSearch.edit();
@@ -222,18 +211,16 @@ var MedcardSearch = {
 			}
 		}, "json");
 	},
-	search: function() {
-		var table = $("#medcard-search-button").button("loading")
-			.parents(".modal").find("table[data-class]");
+	search: function(modal) {
+		var table = modal.find("#medcard-search-button").button("loading")
+			.parents(".modal:eq(0)").find("table[data-class]");
 		var data = $("#medcard-search-form").serialize() + "&" +
 			$("#medcard-range-form").serialize() + "&widget=" + table.data("class");
 		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;
 			}
-			$("#medcard-table").replaceWith(
-				$(json["component"])
-			);
+			table.replaceWith($(json["component"]));
 			Laboratory.createMessage({
 				message: "Таблица обновлена",
 				sign: "ok",
@@ -241,7 +228,7 @@ var MedcardSearch = {
 				delay: 2000
 			});
 		}, "json").always(function() {
-			$("#medcard-search-button").button("reset");
+			modal.find("#medcard-search-button").button("reset");
 		});
 	},
 	click: function(tr, id) {

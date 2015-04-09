@@ -4,7 +4,7 @@
  */
 ?>
 
-<div class="modal fade" tabindex="10" role="dialog" aria-hidden="true" id="<?=$this->id?>">
+<div class="modal" tabindex="10" role="dialog" aria-hidden="true" id="<?=$this->id?>">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

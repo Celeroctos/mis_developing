@@ -1,6 +1,6 @@
 <?php
 
-class LaboratoryController extends LController {
+class LaboratoryController extends Controller2 {
 
 	public function actionRegister() {
 		print json_encode([

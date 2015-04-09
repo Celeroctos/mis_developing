@@ -13,20 +13,21 @@ class LMedcard extends ActiveRecord {
 	 * Get instance of default table provider for current table
 	 * @return TableProvider - Default table provider
 	 */
-	public function getDefaultTableProvider() {
+	public function getMedcardSearchTableProvider() {
 		$fetchQuery = $this->getDbConnection()->createCommand()
 			->select("
                 m.card_number as number,
                 p.sex as phone,
-                p.surname || ' ' || p.name || ' ' || p.patronymic as fio,
+                concat(p.surname, ' ', p.name, ' ', p.patronymic) as fio,
                 p.name as name,
                 p.patronymic as patronymic,
                 p.birthday as birthday,
                 e.shortname as enterprise,
-                cast(a.registration_date as date) as registration_date")
+                cast(a.registration_time as date) as registration_date")
 			->from("lis.medcard as m")
 			->join("lis.patient as p", "p.id = m.patient_id")
-			->leftJoin("lis.analysis as a", "a.medcard_number = m.card_number")
+			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
+			->leftJoin("lis.analysis as a", "a.direction_id = d.id")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
 		$countQuery = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")

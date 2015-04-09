@@ -5,13 +5,34 @@ abstract class ActiveRecord extends CActiveRecord {
 	/**
 	 * Get model's instance from cache
 	 * @param string $className - Class's name
-	 * @return ActiveRecord - Cached model instance
+	 * @return static - Cached model instance
 	 */
 	public static function model($className = null) {
 		if ($className == null) {
 			$className = get_called_class();
 		}
 		return parent::model($className);
+	}
+
+	/**
+	 * Load model from form model instance and return it
+	 * @param FormModel $formModel - Form model instance with
+	 *    attributes that should be copied to model
+	 * @param array $data - Extra form fields
+	 * @return static - New just created instance with
+	 *    form model attributes
+	 */
+	public static function loadFromModel(FormModel $formModel, $data = []) {
+		$self = new static();
+		if ($formModel !== null) {
+			foreach ($formModel->getAttributes() as $key => $value) {
+				$self->$key = $value;
+			}
+		}
+		foreach ($data as $key => $value) {
+			$self->$key = $value;
+		}
+		return $self;
 	}
 
 	/**
@@ -23,7 +44,7 @@ abstract class ActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+			$this->{$this->tableSchema->primaryKey} = Yii::app()->getDb()->getLastInsertID(
 				$this->tableName()."_id_seq"
 			);
 		} catch (Exception $ignored) {

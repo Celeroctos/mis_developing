@@ -2,15 +2,6 @@
 
 class LDirection extends ActiveRecord {
 
-	public $department_id;
-
-	/**
-	 * @return LDirection - Cached model instance
-	 */
-    public static function model() {
-        return parent::model(__CLASS__);
-    }
-
 	/**
 	 * Override that method to return data for grid view
 	 * @return CDbCommand - Command with query
@@ -54,6 +45,13 @@ class LDirection extends ActiveRecord {
 				->from("lis.direction as d")
 				->join("lis.medcard as m", "d.medcard_id = m.id")
 		);
+	}
+
+	public function applyDefaultValues() {
+		$this->setAttributes([
+			"barcode" => BarcodeGenerator::getGenerator()->generate(),
+			"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId")
+		]);
 	}
 
     /**

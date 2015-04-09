@@ -1,26 +1,18 @@
 <?php
-
 /**
  * @var MedcardEditableViewer $this - Self widget instance
  * @var string $number - Generated card number
  */
+?>
 
-$this->beginWidget("CActiveForm", [
-	"id" => "medcard-editable-viewer-form",
-	"enableClientValidation" => true,
-	"enableAjaxValidation" => true,
-	"action" => Yii::app()->getBaseUrl() . "/laboratory/medcard/register",
-	"htmlOptions" => [
-		"class" => "form-horizontal col-xs-12",
-		"role" => 'form'
-	]
-]); ?>
-
+<input id="laboratory-medcard-number" type="hidden" value="<?= $number ?>" data-cleanup="false">
 <div class="col-xs-6 text-center">
 	<b>Медицинская карта</b>
 	<br><br>
 	<?php $this->widget("AutoForm", [
-		"model" => new LMedcardForm("treatment.edit")
+		"model" => new LMedcardForm("treatment.edit", [
+			"card_number" => $number
+		])
 	]) ?>
 	<hr>
 	<b>Пациент</b>
@@ -36,5 +28,3 @@ $this->beginWidget("CActiveForm", [
 		"model" => new LDirectionForm("treatment.edit")
 	]) ?>
 </div>
-
-<?php $this->endWidget() ?>
