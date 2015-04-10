@@ -60,9 +60,9 @@ class Medcard extends MisActiveRecord
 	 */
 	protected function afterSave() {
 		parent::afterSave();
-		$this->{"card_number"} = Yii::app()->getDb()->getLastInsertID(
+		/*$this->{"card_number"} = Yii::app()->getDb()->getLastInsertID(
 			$this->tableName()."_id_seq"
-		);
+		);*/
 	}
 	
 	/**
@@ -204,6 +204,39 @@ class Medcard extends MisActiveRecord
                     ':birthday' => is_array($oms) ? $oms['birthday'] :  $oms->birthday
                 )
             );
+
+        return $medcards->queryAll();
+    }
+
+
+    public function getMedcardsByRegDate($filters, $notBuffered = false) {
+        $result = array();
+        $connection = Yii::app()->db;
+        $medcards = $connection->createCommand()
+            ->selectDistinct("o.*, m.*, CONCAT(m.serie, ' ', m.docnumber) as docdata, i.name as insurance_name, os.name as status")
+            ->from(Oms::model()->tableName().' o')
+            ->leftJoin(Medcard::model()->tableName().' m', 'o.id = m.policy_id')
+            ->leftJoin(Insurance::model()->tableName().' i', 'i.id = o.insurance')
+            ->leftJoin(OmsStatus::model()->tableName().' os', 'os.id = o.status');
+
+        if($notBuffered) {
+            $medcards->andWhere('NOT EXISTS(
+                                    SELECT tmb.*
+                                    FROM '.TasuMedcardsBuffer::model()->tableName().' tmb
+                                    WHERE tmb.medcard = m.card_number)');
+        }
+
+        if($filters !== false) {
+            $this->getSearchConditions($medcards, $filters, array(
+            ), array(
+                'm' => array('date_from', 'date_to'),
+            ), array(
+                'date_from' => 'reg_date',
+                'date_to' => 'reg_date'
+            ));
+        }
+
+        $medcards->order('m.card_number');
 
         return $medcards->queryAll();
     }

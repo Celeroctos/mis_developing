@@ -126,7 +126,7 @@
 			}
 			print $element['label'];
 			?> <strong><span class="elementValuePrinting"><?php echo $element['value']; ?></span></strong><?php
-			print $element['label'].$element['label_after']; ?>
+			print $element['label_after']; ?>
 		<?php
 		} ?>
 	<?php } ?>

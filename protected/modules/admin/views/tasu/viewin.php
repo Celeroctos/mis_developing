@@ -1,6 +1,7 @@
 ﻿<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/chooser.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/admin/tasuimport.js"></script>
+<?php $this->widget('application.modules.admin.components.widgets.TasuInTabMenu') ?>
 <h4>Импорт приёмов врачей в ТАСУ</h4>
 <div class="row">
     <?php
@@ -350,7 +351,7 @@
                 <h4 class="modal-title">Состав выгрузки</h4>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row col-xs-12">
 					<table id="historyGreetings"></table>
 					<div id="historyGreetingsPager"></div>
                 </div>
