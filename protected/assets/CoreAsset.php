@@ -13,6 +13,7 @@ class CoreAsset extends AssetBundle {
 
 	public $css = [
 		"css/message.css",
+		"css/panel.css",
 		"css/multiple.css",
 		"css/table.css",
 	];

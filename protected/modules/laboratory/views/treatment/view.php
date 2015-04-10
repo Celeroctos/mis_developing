@@ -166,3 +166,10 @@ $this->widget("Modal", [
 		</div>
 	</div>
 </div>
+<br>
+<br>
+
+<?php $this->widget("Panel", [
+	"title" => "Hello, World",
+	"body" => "<h1>Hello, World</h1>"
+]) ?>

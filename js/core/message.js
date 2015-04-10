@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -167,4 +167,4 @@ var Laboratory = Laboratory || {};
 		"createMessage"
 	);
 
-})(Laboratory);
+})(Core);

@@ -21,7 +21,7 @@ class MisActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+			$this->{$this->tableSchema->primaryKey} = Yii::app()->getDb()->getLastInsertID(
 				$this->tableName()."_id_seq"
 			);
 		} catch (Exception $ignored) {

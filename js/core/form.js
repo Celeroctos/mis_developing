@@ -1,11 +1,11 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
-(function(Laboratory) {
+(function(Core) {
 
 	"use strict";
 
     var Form = function(properties, selector) {
-        Laboratory.Component.call(this, properties, {
+        Core.Component.call(this, properties, {
             opacity: 0.4,
             animation: 100,
             url: null,
@@ -14,7 +14,7 @@ var Laboratory = Laboratory || {};
         }, selector);
     };
 
-    Laboratory.extend(Form, Laboratory.Component);
+    Core.extend(Form, Core.Component);
 
     Form.prototype.render = function() {
         this.update();
@@ -49,7 +49,7 @@ var Laboratory = Laboratory || {};
         var me = this;
         var form = this.selector();
         if (!this.property("url")) {
-            return Laboratory.createMessage({
+            return Core.createMessage({
                 message: "Missed 'url' property for AutoForm component"
             });
         }
@@ -67,7 +67,7 @@ var Laboratory = Laboratory || {};
             if (!json.status) {
                 me.after();
                 me.activate();
-                return Laboratory.createMessage({
+                return Core.createMessage({
                     message: json.message
                 });
             }
@@ -104,7 +104,7 @@ var Laboratory = Laboratory || {};
 	 * @returns {*}
 	 * @static
 	 */
-    Laboratory.postFormErrors = function(where, json) {
+    Core.postFormErrors = function(where, json) {
         var html = $("<ul>");
         for (var i in json["errors"] || []) {
             where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
@@ -114,7 +114,7 @@ var Laboratory = Laboratory || {};
                 }).appendTo(html);
             }
         }
-        return Laboratory.createMessage({
+        return Core.createMessage({
             message: json["message"] + html.html(),
             delay: 10000
         });
@@ -125,7 +125,7 @@ var Laboratory = Laboratory || {};
 	 * @param where
 	 * @static
 	 */
-	Laboratory.resetFormErrors = function(where) {
+	Core.resetFormErrors = function(where) {
 		$(where).find(".form-group").removeClass("has-error");
 	};
 
@@ -136,7 +136,7 @@ var Laboratory = Laboratory || {};
         this.selector().find(".form-group").removeClass("has-error");
         var form = this.selector();
         if (!this.property("url")) {
-            return Laboratory.createMessage({
+            return Core.createMessage({
                 message: "Missed 'url' property for AutoForm component"
             });
         }
@@ -147,7 +147,7 @@ var Laboratory = Laboratory || {};
             me.after();
             if (!json["status"]) {
                 after && after(me, false);
-				return Laboratory.postFormErrors(me.selector(), json);
+				return Core.postFormErrors(me.selector(), json);
             } else {
                 if (me.property("success")) {
                     me.property("success").call(me, json);
@@ -155,7 +155,7 @@ var Laboratory = Laboratory || {};
                 after && after(me, true);
             }
             if (json["message"]) {
-                Laboratory.createMessage({
+                Core.createMessage({
                     type: "success",
                     sign: "ok",
                     message: json["message"]
@@ -169,11 +169,11 @@ var Laboratory = Laboratory || {};
         return true;
     };
 
-    Laboratory.createForm = function(selector, properties) {
-        return Laboratory.createObject(new Form(properties, $(selector)), selector, false);
+    Core.createForm = function(selector, properties) {
+        return Core.createObject(new Form(properties, $(selector)), selector, false);
     };
 
-	$.fn.form = Laboratory.createPlugin(
+	$.fn.form = Core.createPlugin(
 		"createForm"
 	);
 
@@ -182,7 +182,7 @@ var Laboratory = Laboratory || {};
             if (!$(item).find("form").length) {
                 return void 0;
             }
-            var f = Laboratory.createForm($(item).find("form")[0], {
+            var f = Core.createForm($(item).find("form")[0], {
                 url: $(item).find("form").attr("action"),
                 parent: $(item)
             });
@@ -193,7 +193,7 @@ var Laboratory = Laboratory || {};
                     if (status) {
                         $(item).modal("hide");
                     } else if (msg) {
-						Laboratory.createMessage({
+						Core.createMessage({
 							message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
 						});
 					}
@@ -215,4 +215,4 @@ var Laboratory = Laboratory || {};
         //});
     });
 
-})(Laboratory);
+})(Core);

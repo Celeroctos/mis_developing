@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -304,7 +304,7 @@ var Laboratory = Laboratory || {};
         return window["globalVariables"]["baseUrl"] + url;
     };
 
-})(Laboratory);
+})(Core);
 
 (function($) {
 	//var ev = new $.Event('style'),

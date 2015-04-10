@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -93,4 +93,4 @@ var Laboratory = Laboratory || {};
 
 	$.fn.table = Core.createPlugin("createTable");
 
-})(Laboratory);
+})(Core);

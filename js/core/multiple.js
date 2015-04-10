@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -474,4 +474,4 @@ var Laboratory = Laboratory || {};
 		});
     });
 
-})(Laboratory);
+})(Core);

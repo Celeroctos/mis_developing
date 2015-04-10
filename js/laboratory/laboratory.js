@@ -149,7 +149,7 @@ var DropDown = {
         var f;
         var form = $(select.parents("form")[0]);
         if (!form.data("lab")) {
-            f = Laboratory.createForm(form[0], {
+            f = Core.createForm(form[0], {
                 url: url("/laboratory/guide/getWidget")
             });
         } else {
@@ -163,12 +163,12 @@ var DropDown = {
 var Message = {
     display: function(json) {
         if (!json["status"]) {
-			Laboratory.createMessage({
+			Core.createMessage({
 				message: json["message"]
 			});
             return false
         } else if (json["message"]) {
-            Laboratory.createMessage({
+            Core.createMessage({
                 type: "success",
                 sign: "ok",
                 message: json["message"]
@@ -221,7 +221,7 @@ var MedcardSearch = {
 				return void 0;
 			}
 			table.replaceWith($(json["component"]));
-			Laboratory.createMessage({
+			Core.createMessage({
 				message: "Таблица обновлена",
 				sign: "ok",
 				type: "success",
@@ -288,7 +288,7 @@ var MedcardSearchModal = {
 				.always(function() {
 					btn.button("reset").text(text);
 				}).fail(function() {
-					Laboratory.createMessage({
+					Core.createMessage({
 						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
 					});
 				})

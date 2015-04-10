@@ -19,12 +19,22 @@ class Widget extends CWidget {
     }
 
 	/**
+	 * Create widget for current instance by it's static
+	 * context
+	 * @param string $config - Widget's configuration
+	 */
+	public static function runWidget($config) {
+		self::createWidget(get_called_class(), $config)->run();
+	}
+
+	/**
 	 * Create url for widget's update for current module and controller
 	 * @param array $query - Additional query GET parameters
+	 * @param string $action - Action for new URL
 	 * @return string - Url for widget update
 	 */
-	public function createUrl($query = []) {
-		return preg_replace("/\\/[a-z0-9]*$/i", "/getWidget", $this->getController()->createUrl("", $query));
+	public function createUrl($query = [], $action = "getWidget") {
+		return preg_replace("/\\/[a-z0-9]*$/i", "/$action", $this->getController()->createUrl("", $query));
 	}
 
 	/**
@@ -32,19 +42,7 @@ class Widget extends CWidget {
 	 * This method is called by {@link CBaseController::endWidget}.
 	 */
     public function run() {
-        $this->render(__CLASS__, null, false);
-    }
-
-    /**
-     * Try to get default value for some field
-     * @param string $key - Value's key
-     * @return mixed - Default value or null
-     */
-    public function getDefault($key) {
-        if (isset($this->_model[$key])) {
-            return $this->_model[$key];
-        }
-        return null;
+        $this->render(get_called_class(), null, false);
     }
 
     /**
