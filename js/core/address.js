@@ -45,7 +45,7 @@ var Core = Core || {};
 		var p;
 		var s = this.selector()
 			.clone()
-			.data("lab", this)
+			.data(this.getDataAttribute(), this)
 			.prop("readonly", true)
 			.attr("aria-describedBy", "address-addon-" + count)
 			.addClass("address-input");
@@ -154,17 +154,12 @@ var Core = Core || {};
 		return this.selector().find(".address-body").slideUp("fast", after);
 	};
 
-	Core.createAddress = function(selector, properties) {
+	Core.createPlugin("address", function(selector, properties) {
 		if ($(selector).parent().parent().hasClass("laboratory-address")) {
 			return void 0;
-		}
-		++count;
+		} ++count;
 		return Core.createObject(new Address(properties, $(selector)), selector, true);
-	};
-
-	$.fn.address = Core.createPlugin(
-		"createAddress"
-	);
+	});
 
 	Core.ready(function() {
 		$("[data-laboratory='address']").address();

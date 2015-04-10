@@ -21,17 +21,33 @@ var Core = Core || {};
 
     /**
      * Construct component
-     * @param properties {{}} - Object with properties
+	 * @param properties {{}} - Object with properties
      * @param [defaults] {{}|null|undefined} - Default component's properties
      * @param [selector] {jQuery|null|undefined} - Component's selector or nothing
      * @constructor
      */
     var Component = function(properties, defaults, selector) {
+		if (typeof (this._name = properties["<plugin>"]) !== "string") {
+			throw new Error("Can't resolve component's plugin name as string, found \"" + typeof this._name + "\"");
+		}
         this._properties = $.extend(
             defaults || {}, properties || {}
         );
         this._selector = selector || this.render();
     };
+
+	/**
+	 * That method returns name of data attribute for
+	 * current component
+	 * @returns {string} - Attribute name
+	 */
+	Component.prototype.getDataAttribute = function() {
+		if (!this._name) {
+			throw new Error("Component hasn't been registered as jQuery plugin");
+		} else {
+			return this._name;
+		}
+	};
 
     /**
      * Override that method to return jquery item
@@ -41,7 +57,7 @@ var Core = Core || {};
     };
 
     /**
-     * Override that method to activate just created jquery item
+     * Override that method to activate just created jQuery item
      */
     Component.prototype.activate = function() {
         /* Ignored */
@@ -71,8 +87,8 @@ var Core = Core || {};
 			if (!(selector instanceof jQuery)) {
 				throw new Error("Selector must be an instance of jQuery object");
 			}
-            if (!selector.data("lab")) {
-                selector.data("lab", this);
+            if (!selector.data(this.getDataAttribute())) {
+                selector.data(this.getDataAttribute(), this);
             }
             this._selector = selector;
         }
@@ -166,6 +182,26 @@ var Core = Core || {};
 		$(component).find(list.join(",")).val("");
 	};
 
+	Core.postFormErrors = function(where, json) {
+		var html = $("<ul>");
+		for (var i in json["errors"] || []) {
+			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
+			for (var j in json["errors"][i]) {
+				$("<li>", {
+					text: json["errors"][i][j]
+				}).appendTo(html);
+			}
+		}
+		return Core.createMessage({
+			message: json["message"] + html.html(),
+			delay: 10000
+		});
+	};
+
+	Core.resetFormErrors = function(where) {
+		$(where).find(".form-group").removeClass("has-error");
+	};
+
 	Core.Component = Component;
 	Core.SubComponent = SubComponent;
 	Core.Common = Common;
@@ -197,7 +233,7 @@ var Core = Core || {};
      * @param [update] {Boolean} - Update component or not (default yes)
      */
     Core.createObject = function(component, selector, update) {
-        $(selector).data("lab", component).append(
+        $(selector).data(component.getDataAttribute(), component).append(
             component.selector()
         );
         if (update !== false) {
@@ -210,40 +246,50 @@ var Core = Core || {};
 
 	/**
 	 * Create plugin for component
-	 * @param func {String} - Name of create function, for example 'createMessage'
+	 * @param plugin {String} - Name of jQuery plugin {@see Component#getDataAttribute}
+	 * @param func {Function} - Function that registers component
 	 * @static
 	 */
-	Core.createPlugin = function(func) {
+	Core.createPlugin = function(plugin, func) {
+		var attr = "core-" + plugin;
 		var register = function(me, options, args, ret) {
-			var r;
-			var a = [];
+			var r, a = [], s;
 			for (var i in args) {
 				if (i > 0) {
 					a.push(args[i]);
 				}
 			}
 			if (options !== void 0 && typeof options == "string") {
-				var c = me.data("lab");
+				var c = me.data(attr);
 				if (!c) {
 					if (!(c = register(me, {}, [], true))) {
 						throw new Error("Component hasn't been initialized, create it first");
 					}
-					me.data("lab", c);
+					me.data(attr, c);
 				}
 				if (c[options] == void 0) {
-					throw new Error("That component don't resolve method \"" + options + "\"");
+					throw new Error("That component doesn't implement method \"" + options + "\"");
 				}
 				if ((r = c[options].apply(c, a)) !== void 0) {
 					return r;
 				}
 			} else {
-				if (me.data("lab") != void 0) {
+				if (me.data(attr) != void 0) {
 					return void 0;
 				}
 				if (typeof me != "function") {
-					r = Core[func](me[0], options);
+					if (me.length) {
+						s = me[0];
+					} else {
+						s = me.selector;
+					}
+					r = func(s, $.extend(options, {
+						"<plugin>": attr
+					}));
 				} else {
-					r = Core[func](options);
+					r = func($.extend(options, {
+						"<plugin>": attr
+					}));
 				}
 				if (ret) {
 					return r;
@@ -251,7 +297,7 @@ var Core = Core || {};
 			}
 			return void 0;
 		};
-		return function(options) {
+		return $.fn[plugin] = function(options) {
 			var t;
 			var args = arguments || [];
 			if (this.length > 1) {
@@ -284,18 +330,9 @@ var Core = Core || {};
 	};
 
     /**
-     * Is string ends with some suffix
-     * @param suffix {string} - String suffix
-     * @returns {boolean} - True if string has suffix
-     */
-    String.prototype.endsWith = function(suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
-
-    /**
      * Generate url based on Yii's base url
-     * @param url {string} - Relative url
-     * @returns {string} - Absolute url
+     * @param url {String} - Relative url
+     * @returns {String} - Absolute url
      */
     window.url = function(url) {
 		if (url.charAt(0) != "/") {
@@ -305,27 +342,6 @@ var Core = Core || {};
     };
 
 })(Core);
-
-(function($) {
-	//var ev = new $.Event('style'),
-	//	orig = $.fn.css;
-	//$.fn.css = function() {
-	//	var result = orig.apply(this, arguments || []);
-	//	$(this).trigger(ev);
-	//	return result;
-	//};
-	$.each(['show', 'hide'], function (i, ev) {
-		var el = $.fn[ev];
-		$.fn[ev] = function() {
-			for (var i = 0; i < this.length; i++) {
-				if (this[i].tagName == "SELECT") {
-					$(this[i]).trigger(ev);
-				}
-			}
-			return el.apply(this, arguments);
-		};
-	});
-})(jQuery);
 
 /*
 $(document).ready(function() {

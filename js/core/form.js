@@ -4,17 +4,15 @@ var Core = Core || {};
 
 	"use strict";
 
-    var Form = function(properties, selector) {
-        Core.Component.call(this, properties, {
-            opacity: 0.4,
-            animation: 100,
-            url: null,
-            parent: null,
+	var Form = Core.createComponent(function(properties, selector) {
+		Core.Component.call(this, properties, {
+			opacity: 0.4,
+			animation: 100,
+			url: null,
+			parent: null,
 			disabled: false
-        }, selector);
-    };
-
-    Core.extend(Form, Core.Component);
+		}, selector);
+	});
 
     Form.prototype.render = function() {
         this.update();
@@ -97,38 +95,6 @@ var Core = Core || {};
         });
     };
 
-	/**
-	 *
-	 * @param where
-	 * @param json
-	 * @returns {*}
-	 * @static
-	 */
-    Core.postFormErrors = function(where, json) {
-        var html = $("<ul>");
-        for (var i in json["errors"] || []) {
-            where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
-            for (var j in json["errors"][i]) {
-                $("<li>", {
-                    text: json["errors"][i][j]
-                }).appendTo(html);
-            }
-        }
-        return Core.createMessage({
-            message: json["message"] + html.html(),
-            delay: 10000
-        });
-    };
-
-	/**
-	 *
-	 * @param where
-	 * @static
-	 */
-	Core.resetFormErrors = function(where) {
-		$(where).find(".form-group").removeClass("has-error");
-	};
-
     Form.prototype.send = function(after) {
 		if (this.property("disabled")) {
 			return false;
@@ -169,50 +135,36 @@ var Core = Core || {};
         return true;
     };
 
-    Core.createForm = function(selector, properties) {
-        return Core.createObject(new Form(properties, $(selector)), selector, false);
-    };
-
-	$.fn.form = Core.createPlugin(
-		"createForm"
-	);
-
-    $(document).ready(function() {
-        $("[id$='-panel'], [id$='-modal']").each(function(i, item) {
-            if (!$(item).find("form").length) {
-                return void 0;
-            }
-            var f = Core.createForm($(item).find("form")[0], {
-                url: $(item).find("form").attr("action"),
-                parent: $(item)
-            });
-            $(item).find("button.btn[type='submit']").click(function() {
-                var btn = this;
-                var c = function(me, status, msg) {
-                    $(btn).button("reset");
-                    if (status) {
-                        $(item).modal("hide");
-                    } else if (msg) {
-						Core.createMessage({
-							message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-						});
-					}
-                };
-                if (f.send(c)) {
-                    $(this).data("loading-text", "Загрузка ...").button("loading");
-                }
-            });
-        });
-        //$("[id$='-modal']").on("show.bs.modal", function() {
-        //    $(this).draggable("disable");
-        //    var form = $(this).find("form");
-        //    if (!form.length) {
-        //        return void 0;
-        //    }
-        //    form.find("input, textarea").val("");
-        //    form.find("select", -1);
-        //    form.find(".form-group").removeClass("has-error");
-        //});
-    });
+	Core.createPlugin("form", function(selector, properties) {
+		return Core.createObject(new Form(properties, $(selector)), selector, false);
+	});
 
 })(Core);
+
+$(document).ready(function() {
+	$("[id$='-panel'], [id$='-modal']").each(function(i, item) {
+		if (!$(item).find("form").length) {
+			return void 0;
+		}
+		var f = $(item).find("form:eq(0)").form({
+			url: $(item).find("form").attr("action"),
+			parent: $(item)
+		});
+		$(item).find("button.btn[type='submit']").click(function() {
+			var btn = this;
+			var c = function(me, status, msg) {
+				$(btn).button("reset");
+				if (status) {
+					$(item).modal("hide");
+				} else if (msg) {
+					Core.createMessage({
+						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
+					});
+				}
+			};
+			if (f.form("send", c)) {
+				$(this).data("loading-text", "Загрузка ...").button("loading");
+			}
+		});
+	});
+});

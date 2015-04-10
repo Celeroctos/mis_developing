@@ -28,7 +28,7 @@ var Core = Core || {};
 				return void 0;
 			}
 			me.selector().replaceWith(
-				$(json["component"]).data("lab", me)
+				$(json["component"]).data(me.getDataAttribute(), me)
 			);
 		}, "json").always(function() {
 			me.after();
@@ -79,7 +79,7 @@ var Core = Core || {};
 		});
 	};
 
-	Core.createTable = function(selector, properties) {
+	Core.createPlugin("table", function(selector, properties) {
 		var t;
 		if ($(selector).get(0).tagName != "TABLE") {
 			if ((t = $(selector).parents("table")).length != 0) {
@@ -89,8 +89,6 @@ var Core = Core || {};
 			}
 		}
 		return Core.createObject(new Table(properties, $(selector)), selector, false);
-	};
-
-	$.fn.table = Core.createPlugin("createTable");
+	});
 
 })(Core);
