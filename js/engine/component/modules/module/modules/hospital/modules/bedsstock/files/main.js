@@ -101,7 +101,7 @@ misEngine.class('component.module.hospital.bedsstock', function() {
         },
 
         bindHandlers : function() {
-            $(document).on('click', '.wardsList li', function() {
+            $(document).on('click', '.wardsList li:not(.new)', function() {
                 $(this).parents('.wrap').animate({
                     'marginLeft' : '-100%'
                 }, 500)

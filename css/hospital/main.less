@@ -76,7 +76,7 @@
   top: 60px;
   left: 90%;
 }
-.bedsstockExpanderBody, .relocationExpanderBody, .settingsForm {
+.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont {
   display: none;
 }
 
@@ -182,8 +182,6 @@
       text-align: center;
       padding: 0 5px 5px 0;
       margin-right: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .3), -23px 0 20px -23px rgba(0, 0, 0, .8), 23px 0 20px -23px rgba(0, 0, 0, .8), 0 0 40px rgba(0, 0, 0, .1) inset;
       cursor: pointer;
       .wardType, .paidType, .numFree {
@@ -192,6 +190,18 @@
     }
     .numFree {
       margin-top: 50px;
+    }
+    .new { // Suck.
+      position: relative;
+      top: 15px;
+      button {
+        position: absolute;
+        top: 50px;
+        font-size: 35px;
+        left: 50px;
+        width: 50px;
+        padding: 0;
+      }
     }
   }
   ul.bedsList {
@@ -239,5 +249,10 @@
   min-width: 500px;
   .popover-content {
     width: 100%;
+  }
+  .settingsForm {
+    .form-group {
+      margin: 5px 0;
+    }
   }
 }

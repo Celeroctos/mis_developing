@@ -103,11 +103,8 @@
             <span class="paidType">Платная</span>
             <span class="numFree">Свободно: <strong>3</strong></span>
         </li>
-        <li>
-            <h4>Палата №1</h4>
-            <span class="wardType">Обычная</span>
-            <span class="paidType">Платная</span>
-            <span class="numFree">Свободно: <strong>3</strong></span>
+        <li class="new">
+            <button class="btn btn-success" title="Добавить новую палату" id="addNewWard">+</button>
         </li>
     </ul>
 </div>
