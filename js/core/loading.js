@@ -8,8 +8,9 @@ var Core = Core || {};
 		Core.Component.call(this, properties, {
 			image: url("/images/ajax-loader.gif"),
 			size: "50",
-			depth: "200",
-			velocity: "fast"
+			depth: "2000",
+			velocity: "fast",
+			color: "whitesmoke"
 		}, selector);
 	});
 
@@ -33,7 +34,7 @@ var Core = Core || {};
 				"width": width,
 				"height": height,
 				"position": "absolute",
-				"background-color": "whitesmoke",
+				"background-color": this.property("color"),
 				"opacity": "0.5",
 				"z-index": "100"
 			}
