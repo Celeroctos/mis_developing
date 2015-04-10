@@ -14,21 +14,24 @@ var Core = Core || {};
 	});
 
     Loading.prototype.render = function() {
-		var half = this.property("size") / 2;
+		var half = this.property("size") / 2,
+			height = this.selector().outerHeight(false),
+			width = this.selector().outerWidth(false);
 		this.image = $("<img>", {
 			css: {
 				"position": "absolute",
-				"width": this.property("size"),
-				"height": this.property("size"),
+				"width": half * 2,
+				"height": half * 2,
 				"left": "calc(50% - " + half + "px)",
+				"margin-top": (this.selector().height() / 2 - half) + "px",
 				"z-index": this.property("depth")
 			},
 			src: this.property("image")
 		});
 		this.selector().before(this.back = $("<div>", {
 			css: {
-				"width": this.selector().width(),
-				"height": this.selector().height(),
+				"width": width,
+				"height": height,
 				"position": "absolute",
 				"background-color": "whitesmoke",
 				"opacity": "0.5",

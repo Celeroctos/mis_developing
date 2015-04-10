@@ -17,6 +17,7 @@ class CoreAsset extends AssetBundle {
 		"css/message.css",
 		"css/panel.css",
 		"css/multiple.css",
+		"css/loading.css",
 		"css/table.css",
 	];
 
