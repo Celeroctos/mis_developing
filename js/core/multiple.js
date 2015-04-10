@@ -233,6 +233,7 @@ var Core = Core || {};
                 text: key.text()
             })
         );
+		delete this.choosen[key.data("key")];
 		/* Удаляем элемент из списка выбранных */
 		key.parent(".multiple-chosen").remove();
 		/* Fix #13590 - 9 */
