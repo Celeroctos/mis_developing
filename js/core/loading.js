@@ -6,22 +6,24 @@ var Core = Core || {};
 
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			image: url("/images/ajax-loader.gif"),
+			image: url("/images/ajax-loader2.gif"),
 			depth: 1000,
-			size: 50,
+			width: 150,
+			height: 25,
 			velocity: "fast",
 			color: "lightgray"
 		}, selector);
 	});
 
     Loading.prototype.render = function() {
-		var half = this.property("size") / 2,
+		var imageWidth = this.property("width"),
+			imageHeight = this.property("height"),
 			height = this.selector().outerHeight(false),
-			width = this.selector().outerWidth(false),
-			index;
+			width = this.selector().outerWidth(false);
 		if (this.hasOwnProperty("image")) {
-			this.reset();
+			return void 0;
 		}
+		var index;
 		if (!(index = parseInt(this.selector().css("z-index")))) {
 			index = this.property("depth");
 		} else {
@@ -30,10 +32,10 @@ var Core = Core || {};
 		this.image = $("<img>", {
 			css: {
 				"position": "absolute",
-				"width": half * 2,
-				"height": half * 2,
-				"left": "calc(50% - " + half + "px)",
-				"margin-top": (height / 2 - half) + "px",
+				"height": imageHeight,
+				"width": imageWidth,
+				"left": "calc(50% - " + (imageWidth / 2) + "px)",
+				"margin-top": height / 2 - imageHeight / 2,
 				"z-index": index
 			},
 			src: this.property("image")
@@ -57,16 +59,22 @@ var Core = Core || {};
 	};
 
 	Loading.prototype.destroy = function() {
-		this.reset();
+		this.reset(function() {
+			Core.Component.prototype.destroy.call(this);
+		});
 	};
 
-    Loading.prototype.reset = function() {
-		if (this.image) {
-			this.image.fadeOut(this.property("velocity"));
-		}
-		if (this.back) {
-			this.back.fadeOut(this.property("velocity"));
-		}
+    Loading.prototype.reset = function(after) {
+		var me = this;
+		this.image.fadeOut(this.property("velocity"), function() {
+			$(this).remove();
+			delete me.image;
+			after && after.call(me);
+		});
+		this.back.fadeOut(this.property("velocity"), function() {
+			$(this).remove();
+			delete me.back;
+		});
     };
 
     Core.createPlugin("loading", function(selector, properties) {

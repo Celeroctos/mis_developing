@@ -35,12 +35,12 @@ var Core = Core || {};
 	};
 
 	Panel.prototype.before = function() {
-		this.selector().loading().find(".panel-update-button")
+		this.selector().loading("render").find(".panel-update-button")
 			.rotate(360, 500, "swing");
 	};
 
 	Panel.prototype.after = function() {
-		this.selector().loading("reset");
+		this.selector().loading("destroy");
 	};
 
 	Panel.prototype.update = function() {
@@ -51,7 +51,7 @@ var Core = Core || {};
 			throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
 		}
 		this.before();
-		var params = $.parseJSON(this.selector().attr("data-parameters"));
+		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		$.get(window["globalVariables"]["getWidget"], $.extend(params, {
 			class: this.selector().attr("data-widget")
 		}), function(json) {

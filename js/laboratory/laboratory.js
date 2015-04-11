@@ -49,7 +49,7 @@ var Table = {
 		$.get(url("/laboratory/medcard/getWidget"), $.extend(parameters, {
 			class: table.data("class"),
 			condition: table.data("condition"),
-			params: table.data("parameters")
+			params: table.data("attributes")
 		}), function(json) {
 			if (!Message.display(json)) {
 				return void 0;

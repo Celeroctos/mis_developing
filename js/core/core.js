@@ -113,7 +113,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-        throw new Error("That component doesn't support downgrade");
+		$.removeData(this.selector(), this.getDataAttribute);
     };
 
     /**
@@ -340,6 +340,32 @@ var Core = Core || {};
 		}
         return window["globalVariables"]["baseUrl"] + url;
     };
+
+	$.fn.update = function() {
+		return this.each(function() {
+			var widget, params, me = this;
+			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
+				return void 0;
+			} else if (!window["globalVariables"]["getWidget"]) {
+				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
+			}
+			$(this).loading();
+			params = $.parseJSON(params);
+			$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+				class: widget
+			}), function(json) {
+				if (json["status"]) {
+					$(me).fadeOut("fast", function() {
+						$(this).empty().append(json["component"]).hide().fadeIn("fast");
+					});
+				} else {
+					$(json["message"]).message();
+				}
+			}, "json").always(function() {
+				$(me).loading("reset");
+			});
+		});
+	};
 
 	$.fn.rotate = function(angle, duration, easing, deg, complete) {
 		var args = $.speed(duration, easing, deg, complete);

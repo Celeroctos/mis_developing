@@ -165,7 +165,7 @@ $this->widget("Modal", [
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?php $this->widget("Panel", [
-				"title" => "Направления на анализ",
+				"title" => "Направления на повторный анализ",
 				"body" => $this->createWidget("DirectionTable", [
 					"where" => "status = 3"
 				]),

@@ -7,7 +7,7 @@
  */
 ?>
 
-<div class="<?= $this->panelClass ?>" id="<?= $this->id ?>" <?= !empty($widget) ? "data-widget=\"$widget\"" : "" ?> <?= !empty($parameters) ? "data-parameters=\"$parameters\"" : "" ?>>
+<div class="<?= $this->panelClass ?>" id="<?= $this->id ?>" <?= !empty($widget) ? "data-widget=\"$widget\"" : "" ?> <?= !empty($parameters) ? "data-attributes=\"$parameters\"" : "" ?>>
     <div class="<?= $this->headingClass ?>">
 		<div class="<?= $this->titleWrapperClass ?>">
 			<span class="<?= $this->titleClass ?>"><?= $this->title ?></span>

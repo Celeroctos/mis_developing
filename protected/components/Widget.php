@@ -34,18 +34,18 @@ class Widget extends CWidget {
 		$params = [];
 		if ($attributes !== null) {
 			foreach ($attributes as $key) {
-				if (is_scalar($this->$key) || is_array($this->$key)) {
+				if ((is_scalar($this->$key) || is_array($this->$key)) && !empty($this->$key)) {
 					$params[$key] = $this->$key;
 				}
 			}
 		} else {
 			foreach ($this as $key => $value) {
-				if (is_scalar($value) || is_array($value)) {
+				if ((is_scalar($value) || is_array($value)) && !empty($value)) {
 					$params[$key] = $value;
 				}
 			}
 		}
-		return urlencode(json_encode($params));
+		return htmlspecialchars(json_encode($params));
 	}
 
 	/**

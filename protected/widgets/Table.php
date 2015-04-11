@@ -250,7 +250,7 @@ class Table extends Widget {
 			}
 		}
 		if (!empty($this->criteria->params)) {
-			$options["data-parameters"] = urlencode(serialize($this->criteria->params));
+			$options["data-attributes"] = urlencode(serialize($this->criteria->params));
 		}
 		print CHtml::renderAttributes($options);
 	}

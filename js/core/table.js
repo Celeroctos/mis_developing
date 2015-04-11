@@ -21,7 +21,7 @@ var Core = Core || {};
 		$.get(this.selector().data("url"), $.extend({
 			class: table.data("class"),
 			condition: table.data("condition"),
-			params: table.data("parameters"),
+			params: table.data("attributes"),
 			pageLimit: table.data("limit")
 		}, parameters), function(json) {
 			if (!Message.display(json)) {

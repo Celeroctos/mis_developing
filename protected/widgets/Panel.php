@@ -95,7 +95,7 @@ class Panel extends Widget {
 	 * @var string - String with serialized parameters
 	 * @internal
 	 */
-	public $parameters = null;
+	public $attributes = null;
 
 	/**
 	 * Initialize widget
@@ -103,15 +103,7 @@ class Panel extends Widget {
     public function init() {
         if ($this->body instanceof Widget) {
 			$this->_widget = get_class($this->body);
-			$params = [];
-			foreach ($this->body as $key => $value) {
-				if (is_scalar($value)) {
-					$params[$key] = $value;
-				}
-			}
-			$this->parameters = htmlspecialchars(
-				json_encode($params)
-			);
+			$this->attributes = $this->body->getSerializedAttributes();
             $this->body = $this->body->call();
         } else {
 			if ($this->upgradeable !== null) {
@@ -139,7 +131,7 @@ class Panel extends Widget {
     public function run() {
 		$this->render(__CLASS__, [
 			"content" => $this->body ? $this->body : ob_get_clean(),
-			"parameters" => $this->parameters,
+			"parameters" => $this->attributes,
 			"widget" => $this->_widget,
 		]);
     }
