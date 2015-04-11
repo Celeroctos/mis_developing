@@ -35,6 +35,14 @@ var Core = Core || {};
 		});
 	};
 
+	Table.prototype.before = function() {
+		//this.selector().loading();
+	};
+
+	Table.prototype.after = function() {
+		//this.selector().loading("reset");
+	};
+
 	Table.prototype.fetch = function(properties) {
 		for (var key in properties) {
 			this.property(key, properties[key]);

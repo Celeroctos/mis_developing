@@ -37,12 +37,12 @@ class DirectionTable extends Table {
 	/**
 	 * @var string - Default table order
 	 */
-	public $sort = "id";
+	public $orderBy = "id";
 
 	/**
 	 * @var int - Count of items to display
 	 */
-	public $limit = 25;
+	public $pageLimit = 25;
 
 	/**
 	 * Run widget to return it's just rendered content
@@ -52,5 +52,7 @@ class DirectionTable extends Table {
 		$this->provider = (new LDirection("laboratory.treatment.grid"))
 			->getTableProvider();
 		$this->provider->getCriteria()->addCondition($this->where);
+		$this->provider->getPagination()->pageLimit = $this->pageLimit;
+		$this->provider->getCriteria()->order = $this->orderBy;
 	}
 }

@@ -66,37 +66,70 @@ class Panel extends Widget {
 	 * @var bool - Should panel be collapsible with
 	 * 	collapse/expand button
 	 */
-    public $collapsible = null;
+    public $collapsible = true;
 
 	/**
 	 * @var bool - Should panel be upgradable with
-	 *	refresh button
+	 *	refresh button, that flag sets to false if
+	 * 	widget's [body] not instance of [Widget]
+	 * @see Widget
+	 * @see body
 	 */
-	public $upgradeable = true;
+	public $upgradeable = null;
 
+	/**
+	 * @var array - Array with control elements
+	 */
 	public $controls = [
 		"panel-update-button" => [
 			"class" => "glyphicon glyphicon-refresh text-center",
 			"onclick" => "$(this).panel('update')"
 		],
 		"panel-collapse-button" => [
-			"class" => "glyphicon glyphicon-chevron-up text-center",
+			"class" => "glyphicon glyphicon glyphicon-chevron-up text-center",
 			"onclick" => "$(this).panel('toggle')"
 		]
 	];
 
 	/**
+	 * @var string - String with serialized parameters
+	 * @internal
+	 */
+	public $parameters = null;
+
+	/**
 	 * Initialize widget
 	 */
     public function init() {
-        if ($this->body instanceof Widget && !empty($this->body)) {
+        if ($this->body instanceof Widget) {
+			$this->_widget = get_class($this->body);
+			$params = [];
+			foreach ($this->body as $key => $value) {
+				if (is_scalar($value)) {
+					$params[$key] = $value;
+				}
+			}
+			$this->parameters = htmlspecialchars(
+				json_encode($params)
+			);
             $this->body = $this->body->call();
-        }
+        } else {
+			if ($this->upgradeable !== null) {
+				$this->upgradeable = false;
+			}
+			$this->_widget = null;
+		}
 		if (empty($this->id)) {
 			$this->id = UniqueGenerator::generate("panel");
 		}
 		if ($this->body == null) {
 			ob_start();
+		}
+		if ($this->collapsible == false) {
+			unset($this->controls["panel-collapse-button"]);
+		}
+		if ($this->upgradeable == false) {
+//			unset($this->controls["panel-update-button"]);
 		}
     }
 
@@ -105,7 +138,9 @@ class Panel extends Widget {
 	 */
     public function run() {
 		$this->render(__CLASS__, [
-			"content" => $this->body ? $this->body : ob_get_clean()
+			"content" => $this->body ? $this->body : ob_get_clean(),
+			"parameters" => $this->parameters,
+			"widget" => $this->_widget,
 		]);
     }
 
@@ -122,4 +157,6 @@ class Panel extends Widget {
 			print CHtml::tag("span", $options, "");
 		}
 	}
+
+	private $_widget;
 } 

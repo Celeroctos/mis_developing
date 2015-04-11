@@ -153,23 +153,26 @@ $this->widget("Modal", [
 			</button>
 		</div>
 	</div>
-	<div class="treatment-table-wrapper treatment-header-rounded">
+	<div class="treatment-table-wrapper">
 		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget("DirectionTable", [
-				"where" => "status <> 3"
+			<?php $this->widget("Panel", [
+				"title" => "Направления на анализ",
+				"body" => $this->createWidget("DirectionTable", [
+					"where" => "status <> 3"
+				]),
+				"collapsible" => false
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget("DirectionTable", [
-				"where" => "status = 3"
+			<?php $this->widget("Panel", [
+				"title" => "Направления на анализ",
+				"body" => $this->createWidget("DirectionTable", [
+					"where" => "status = 3"
+				]),
+				"collapsible" => false
 			]) ?>
 		</div>
 	</div>
 </div>
 <br>
 <br>
-
-<?php $this->widget("Panel", [
-	"title" => "Hello, World",
-	"body" => "<h1>Hello, World</h1>"
-]) ?>

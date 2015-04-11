@@ -174,7 +174,7 @@ class Table extends Widget {
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
 		}
-		if (is_string($this->condition) && is_array($this->parameters)) {
+		if (is_string($this->condition) && !empty($this->condition) && is_array($this->parameters)) {
 			$this->criteria->condition = $this->condition;
 			$this->criteria->params = $this->params;
 		}

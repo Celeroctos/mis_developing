@@ -19,6 +19,48 @@ class Widget extends CWidget {
     }
 
 	/**
+	 * Serialize widget's attributes by all scalar attributes and
+	 * arrays or set your own array with attribute names
+	 *
+	 * Agreement: I hope that you will put serialized attributes
+	 * 	in root widget's HTML tag named [data-attributes]
+	 *
+	 * @param array|null $attributes - Array with attributes, which have
+	 * 	to be serialized, by default it serializes all scalar attributes
+	 *
+	 * @return string - Serialized and URL encoded attributes
+	 */
+	public function getSerializedAttributes($attributes = null) {
+		$params = [];
+		if ($attributes !== null) {
+			foreach ($attributes as $key) {
+				if (is_scalar($this->$key) || is_array($this->$key)) {
+					$params[$key] = $this->$key;
+				}
+			}
+		} else {
+			foreach ($this as $key => $value) {
+				if (is_scalar($value) || is_array($value)) {
+					$params[$key] = $value;
+				}
+			}
+		}
+		return urlencode(json_encode($params));
+	}
+
+	/**
+	 * That method tests widget's identification number
+	 * and generates random value for that component
+	 */
+	public function init() {
+		if (empty($this->id)) {
+			$this->id = UniqueGenerator::generate(
+				strtolower(get_called_class())
+			);
+		}
+	}
+
+	/**
 	 * Create widget for current instance by it's static
 	 * context
 	 * @param string $config - Widget's configuration
@@ -33,8 +75,8 @@ class Widget extends CWidget {
 	 * @param string $action - Action for new URL
 	 * @return string - Url for widget update
 	 */
-	public function createUrl($query = [], $action = "getWidget") {
-		return preg_replace("/\\/[a-z0-9]*$/i", "/$action", $this->getController()->createUrl("", $query));
+	public static function createUrl($action = "getWidget", $query = []) {
+		return preg_replace("/\\/[a-z0-9]*$/i", "/$action", Yii::app()->getController()->createUrl("", $query));
 	}
 
 	/**

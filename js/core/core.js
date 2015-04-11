@@ -83,7 +83,7 @@ var Core = Core || {};
      * @returns {jQuery} - Component's jquery
      */
     Component.prototype.selector = function(selector) {
-        if (arguments.length > 0) {
+        if (arguments.length > 0 && selector !== void 0) {
 			if (!(selector instanceof jQuery)) {
 				throw new Error("Selector must be an instance of jQuery object");
 			}
@@ -340,6 +340,20 @@ var Core = Core || {};
 		}
         return window["globalVariables"]["baseUrl"] + url;
     };
+
+	$.fn.rotate = function(angle, duration, easing, deg, complete) {
+		var args = $.speed(duration, easing, deg, complete);
+		var step = args.step;
+		deg = deg || 0;
+		return this.each(function(i, e) {
+			args.complete = $.proxy(args.complete, e);
+			args.step = function(now) {
+				$.style(e, 'transform', 'rotate(' + now + 'deg)');
+				if (step) return step.apply(e, arguments);
+			};
+			$({deg: deg}).animate({deg: angle}, args);
+		});
+	};
 
 })(Core);
 

@@ -2,10 +2,12 @@
 /**
  * @var $this Panel
  * @var $content string
+ * @var $widget string
+ * @var $parameters string
  */
 ?>
 
-<div class="<?= $this->panelClass ?>" id="<?= $this->id ?>">
+<div class="<?= $this->panelClass ?>" id="<?= $this->id ?>" <?= !empty($widget) ? "data-widget=\"$widget\"" : "" ?> <?= !empty($parameters) ? "data-parameters=\"$parameters\"" : "" ?>>
     <div class="<?= $this->headingClass ?>">
 		<div class="<?= $this->titleWrapperClass ?>">
 			<span class="<?= $this->titleClass ?>"><?= $this->title ?></span>

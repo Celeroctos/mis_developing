@@ -7,25 +7,34 @@ var Core = Core || {};
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
 			image: url("/images/ajax-loader.gif"),
-			size: "50",
-			depth: "2000",
+			depth: 1000,
+			size: 50,
 			velocity: "fast",
-			color: "whitesmoke"
+			color: "lightgray"
 		}, selector);
 	});
 
     Loading.prototype.render = function() {
 		var half = this.property("size") / 2,
 			height = this.selector().outerHeight(false),
-			width = this.selector().outerWidth(false);
+			width = this.selector().outerWidth(false),
+			index;
+		if (this.hasOwnProperty("image")) {
+			this.reset();
+		}
+		if (!(index = parseInt(this.selector().css("z-index")))) {
+			index = this.property("depth");
+		} else {
+			index += 1;
+		}
 		this.image = $("<img>", {
 			css: {
 				"position": "absolute",
 				"width": half * 2,
 				"height": half * 2,
 				"left": "calc(50% - " + half + "px)",
-				"margin-top": (this.selector().height() / 2 - half) + "px",
-				"z-index": this.property("depth")
+				"margin-top": (height / 2 - half) + "px",
+				"z-index": index
 			},
 			src: this.property("image")
 		});
@@ -41,10 +50,11 @@ var Core = Core || {};
 		}).addClass(this.selector().attr("class")).fadeIn(this.property("velocity"))).before(
 			this.image.fadeIn(this.property("velocity"))
 		);
-		return this.selector().animate({
-			"opacity": 0.4
-		}, this.property("velocity"));
     };
+
+	Loading.prototype.update = function() {
+		this.render();
+	};
 
 	Loading.prototype.destroy = function() {
 		this.reset();
@@ -57,9 +67,6 @@ var Core = Core || {};
 		if (this.back) {
 			this.back.fadeOut(this.property("velocity"));
 		}
-		this.selector().animate({
-			"opacity": 1
-		}, this.property("velocity"));
     };
 
     Core.createPlugin("loading", function(selector, properties) {

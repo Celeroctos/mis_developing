@@ -6,7 +6,7 @@ var Core = Core || {};
 
 	var Panel = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			velocity: "slow"
+			velocity: "fast"
 		}, selector);
 	});
 
@@ -14,22 +14,29 @@ var Core = Core || {};
 		this.selector().find(".panel-body").slideUp(
 			this.property("velocity")
 		);
+		this.selector().find(".panel-collapse-button")
+			.rotate(180, 500, 'swing', 0);
 	};
 
 	Panel.prototype.expand = function() {
 		this.selector().find(".panel-body").slideDown(
 			this.property("velocity")
 		);
+		this.selector().find(".panel-collapse-button")
+			.rotate(360, 500, "swing", 180);
 	};
 
 	Panel.prototype.toggle = function() {
-		this.selector().find(".panel-body").slideToggle(
-			this.property("velocity")
-		);
+		if (this.selector().find(".panel-body").is(":visible")) {
+			this.collapse();
+		} else {
+			this.expand();
+		}
 	};
 
 	Panel.prototype.before = function() {
-		this.selector().loading({});
+		this.selector().loading().find(".panel-update-button")
+			.rotate(360, 500, "swing");
 	};
 
 	Panel.prototype.after = function() {
@@ -37,13 +44,27 @@ var Core = Core || {};
 	};
 
 	Panel.prototype.update = function() {
-		var widget;
+		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
-			//return void 0;
+			return void 0;
+		} else if (!window["globalVariables"]["getWidget"]) {
+			throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
 		}
 		this.before();
-
-		//this.after();
+		var params = $.parseJSON(this.selector().attr("data-parameters"));
+		$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+			class: this.selector().attr("data-widget")
+		}), function(json) {
+			if (json["status"]) {
+				me.selector().find(".panel-content").fadeOut("fast", function() {
+					$(this).empty().append(json["component"]).hide().fadeIn("fast");
+				});
+			} else {
+				$(json["message"]).message();
+			}
+		}, "json").always(function() {
+			me.after();
+		});
 	};
 
 	Core.createPlugin("panel", function(selector, properties) {
