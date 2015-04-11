@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -44,6 +44,7 @@ var Laboratory = Laboratory || {};
 		/* Клонируем старый элемент и сохраняем со всеми
 		 установленными данными и текщуими событиями */
 		this.native = selector.clone(true);
+		this.choosen = [];
 	});
 
 	/**
@@ -63,7 +64,7 @@ var Laboratory = Laboratory || {};
 	 * @returns {jQuery}
 	 */
 	Multiple.prototype.render = function() {
-        var s = this.selector().clone().data("lab", this)
+        var s = this.selector().clone().data(this.getDataAttribute(), this)
             .addClass("multiple-value").css({
                 "min-height": this.property("height")
             }).addClass("form-control");
@@ -232,6 +233,7 @@ var Laboratory = Laboratory || {};
                 text: key.text()
             })
         );
+		delete this.choosen[key.data("key")];
 		/* Удаляем элемент из списка выбранных */
 		key.parent(".multiple-chosen").remove();
 		/* Fix #13590 - 9 */
@@ -281,6 +283,11 @@ var Laboratory = Laboratory || {};
 				me.clear();
 			}
 			return void 0;
+		}
+		if (key in this.choosen) {
+			return void 0;
+		} else {
+			this.choosen[key] = true;
 		}
 		var value = multiple.find("select.multiple-value")
 			.find("option[value='" + key + "']");
@@ -336,7 +343,7 @@ var Laboratory = Laboratory || {};
 		 * 		установить или массив значений
 		 */
 		set: function(item, list) {
-			if ($(item).data("lab") == void 0) {
+			if ($(item).data("core-multiple") == void 0) {
 				return $.valHooks["select"].set(item, list);
 			}
 			var multiple = $(item).parents(".multiple");
@@ -345,13 +352,10 @@ var Laboratory = Laboratory || {};
 			} else if (list == null) {
 				list = "[]";
 			}
-			if (!list.length || list == "[]") {
-				multiple.find(".multiple-chosen div").each(function(i, div) {
-					$(item).multiple("remove", $(div));
-				});
-				$(item).multiple("choose", []);
-			} else {
+			if (list.length) {
 				$(item).multiple("choose", $.parseJSON(list));
+			} else {
+				$(item).multiple("clear");
 			}
 		},
 
@@ -364,7 +368,7 @@ var Laboratory = Laboratory || {};
 		 */
 		get: function(item) {
 			var list = [];
-			if ($(item).data("lab") == void 0) {
+			if ($(item).data("core-multiple") == void 0) {
 				return $.valHooks["select"].get(item);
 			}
 			this.container(item).find(".multiple-chosen div").each(function(i, c) {
@@ -374,26 +378,13 @@ var Laboratory = Laboratory || {};
 		}
 	};
 
-	/**
-	 * Базовый метод, который используется для всех компонентов
-	 * базового ядра системы. Создает сущность Multiple для
-	 * объект select[multiple], если такой еще не имеется
-	 *
-	 * @param {HTMLElement} selector - Объект с select[multiple]
-	 * @param {{}} properties - Атрибуты для создания компонента
-	 * @returns {Multiple} - Объект Multiple
-	 */
-	Core.createMultiple = function(selector, properties) {
+	Core.createPlugin("multiple", function(selector, properties) {
 		if (!$(selector).hasClass("multiple-value")) {
 			return Core.createObject(new Multiple(properties, $(selector)), selector, true);
 		} else {
 			return void 0;
 		}
-	};
-
-	$.fn.multiple = Core.createPlugin(
-		"createMultiple"
-	);
+	});
 
     $(document).ready(function() {
 		/* Создаем событие на обработку изменения стиля элемента
@@ -474,4 +465,18 @@ var Laboratory = Laboratory || {};
 		});
     });
 
-})(Laboratory);
+})(Core);
+
+(function($) {
+	$.each(['show', 'hide'], function (i, ev) {
+		var el = $.fn[ev];
+		$.fn[ev] = function() {
+			for (var i = 0; i < this.length; i++) {
+				if (this[i].tagName == "SELECT") {
+					$(this[i]).trigger(ev);
+				}
+			}
+			return el.apply(this, arguments);
+		};
+	});
+})(jQuery);

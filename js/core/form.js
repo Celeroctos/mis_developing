@@ -1,20 +1,18 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
-(function(Laboratory) {
+(function(Core) {
 
 	"use strict";
 
-    var Form = function(properties, selector) {
-        Laboratory.Component.call(this, properties, {
-            opacity: 0.4,
-            animation: 100,
-            url: null,
-            parent: null,
+	var Form = Core.createComponent(function(properties, selector) {
+		Core.Component.call(this, properties, {
+			opacity: 0.4,
+			animation: 100,
+			url: null,
+			parent: null,
 			disabled: false
-        }, selector);
-    };
-
-    Laboratory.extend(Form, Laboratory.Component);
+		}, selector);
+	});
 
     Form.prototype.render = function() {
         this.update();
@@ -49,7 +47,7 @@ var Laboratory = Laboratory || {};
         var me = this;
         var form = this.selector();
         if (!this.property("url")) {
-            return Laboratory.createMessage({
+            return Core.createMessage({
                 message: "Missed 'url' property for AutoForm component"
             });
         }
@@ -67,7 +65,7 @@ var Laboratory = Laboratory || {};
             if (!json.status) {
                 me.after();
                 me.activate();
-                return Laboratory.createMessage({
+                return Core.createMessage({
                     message: json.message
                 });
             }
@@ -97,38 +95,6 @@ var Laboratory = Laboratory || {};
         });
     };
 
-	/**
-	 *
-	 * @param where
-	 * @param json
-	 * @returns {*}
-	 * @static
-	 */
-    Laboratory.postFormErrors = function(where, json) {
-        var html = $("<ul>");
-        for (var i in json["errors"] || []) {
-            where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
-            for (var j in json["errors"][i]) {
-                $("<li>", {
-                    text: json["errors"][i][j]
-                }).appendTo(html);
-            }
-        }
-        return Laboratory.createMessage({
-            message: json["message"] + html.html(),
-            delay: 10000
-        });
-    };
-
-	/**
-	 *
-	 * @param where
-	 * @static
-	 */
-	Laboratory.resetFormErrors = function(where) {
-		$(where).find(".form-group").removeClass("has-error");
-	};
-
     Form.prototype.send = function(after) {
 		if (this.property("disabled")) {
 			return false;
@@ -136,7 +102,7 @@ var Laboratory = Laboratory || {};
         this.selector().find(".form-group").removeClass("has-error");
         var form = this.selector();
         if (!this.property("url")) {
-            return Laboratory.createMessage({
+            return Core.createMessage({
                 message: "Missed 'url' property for AutoForm component"
             });
         }
@@ -147,7 +113,7 @@ var Laboratory = Laboratory || {};
             me.after();
             if (!json["status"]) {
                 after && after(me, false);
-				return Laboratory.postFormErrors(me.selector(), json);
+				return Core.postFormErrors(me.selector(), json);
             } else {
                 if (me.property("success")) {
                     me.property("success").call(me, json);
@@ -155,7 +121,7 @@ var Laboratory = Laboratory || {};
                 after && after(me, true);
             }
             if (json["message"]) {
-                Laboratory.createMessage({
+                Core.createMessage({
                     type: "success",
                     sign: "ok",
                     message: json["message"]
@@ -169,50 +135,36 @@ var Laboratory = Laboratory || {};
         return true;
     };
 
-    Laboratory.createForm = function(selector, properties) {
-        return Laboratory.createObject(new Form(properties, $(selector)), selector, false);
-    };
+	Core.createPlugin("form", function(selector, properties) {
+		return Core.createObject(new Form(properties, $(selector)), selector, false);
+	});
 
-	$.fn.form = Laboratory.createPlugin(
-		"createForm"
-	);
+})(Core);
 
-    $(document).ready(function() {
-        $("[id$='-panel'], [id$='-modal']").each(function(i, item) {
-            if (!$(item).find("form").length) {
-                return void 0;
-            }
-            var f = Laboratory.createForm($(item).find("form")[0], {
-                url: $(item).find("form").attr("action"),
-                parent: $(item)
-            });
-            $(item).find("button.btn[type='submit']").click(function() {
-                var btn = this;
-                var c = function(me, status, msg) {
-                    $(btn).button("reset");
-                    if (status) {
-                        $(item).modal("hide");
-                    } else if (msg) {
-						Laboratory.createMessage({
-							message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-						});
-					}
-                };
-                if (f.send(c)) {
-                    $(this).data("loading-text", "Загрузка ...").button("loading");
-                }
-            });
-        });
-        //$("[id$='-modal']").on("show.bs.modal", function() {
-        //    $(this).draggable("disable");
-        //    var form = $(this).find("form");
-        //    if (!form.length) {
-        //        return void 0;
-        //    }
-        //    form.find("input, textarea").val("");
-        //    form.find("select", -1);
-        //    form.find(".form-group").removeClass("has-error");
-        //});
-    });
-
-})(Laboratory);
+$(document).ready(function() {
+	$("[id$='-panel'], [id$='-modal']").each(function(i, item) {
+		if (!$(item).find("form").length) {
+			return void 0;
+		}
+		var f = $(item).find("form:eq(0)").form({
+			url: $(item).find("form").attr("action"),
+			parent: $(item)
+		});
+		$(item).find("button.btn[type='submit']").click(function() {
+			var btn = this;
+			var c = function(me, status, msg) {
+				$(btn).button("reset");
+				if (status) {
+					$(item).modal("hide");
+				} else if (msg) {
+					Core.createMessage({
+						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
+					});
+				}
+			};
+			if (f.form("send", c)) {
+				$(this).data("loading-text", "Загрузка ...").button("loading");
+			}
+		});
+	});
+});

@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -17,16 +17,14 @@ var Laboratory = Laboratory || {};
 	 * @param properties {{}} - Properties
 	 * @constructor
 	 */
-	var Message = function(properties) {
+	var Message = Core.createComponent(function(properties) {
 		Core.Component.call(this, properties, {
 			type: "danger",
 			message: "Not-Initialized",
 			sign: "info",
 			delay: 5000
 		});
-	};
-
-	Core.extend(Message, Core.Component);
+	});
 
 	/**
 	 * Render message component
@@ -160,11 +158,15 @@ var Laboratory = Laboratory || {};
 	 * @param properties {{}} - Message component's properties
 	 */
 	Core.createMessage = function(properties) {
-		Collection.create(properties);
+		Collection.create($.extend(properties, {
+			"<plugin>": "core-message"
+		}));
 	};
 
-	$.message = $.fn.message = Core.createPlugin(
-		"createMessage"
-	);
+	Core.createPlugin("message", function(selector, properties) {
+		Collection.create($.extend(properties, {
+			message: selector
+		}));
+	});
 
-})(Laboratory);
+})(Core);

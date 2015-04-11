@@ -146,8 +146,7 @@
 }
 
 .treatment-header-rounded .row {
-    display: table-cell;
-    vertical-align: middle;
+    margin: 0;
 }
 
 .treatment-header .dropdown-menu li {
@@ -231,4 +230,16 @@
 #treatment-direction-creator {
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+.treatment-table-wrapper .panel {
+    margin: 0;
+}
+
+.treatment-table-wrapper .panel-body {
+    padding: 0;
+}
+
+.panel-body {
+    margin-right: -1px;
 }

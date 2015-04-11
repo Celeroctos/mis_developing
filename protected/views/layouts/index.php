@@ -10,7 +10,8 @@ MainAsset::register()
     <title>МИС МОНИИАГ</title>
     <script type="text/javascript">
         var globalVariables = {
-            baseUrl : '<?php echo Yii::app()->request->baseUrl; ?>'
+            baseUrl : '<?= Yii::app()->request->baseUrl; ?>',
+			getWidget: '<?= Widget::createUrl() ?>'
         };
     </script>
 	<?= AssetBundleManager::getManager()->render() ?>

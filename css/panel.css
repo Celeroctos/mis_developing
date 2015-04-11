@@ -1,0 +1,27 @@
+
+.panel-heading {
+    font-size: 18px;
+}
+
+.panel-control-button {
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.panel-control-button:hover {
+    color: #47a247;
+}
+
+.panel-content > *:first-child {
+    margin-top: 0;
+}
+
+.panel-content > *:last-child {
+    margin-bottom: 0;
+}
+
+.panel-content > * {
+    margin-left: 0;
+    margin-right: 0;
+}

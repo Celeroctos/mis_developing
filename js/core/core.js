@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -21,17 +21,33 @@ var Laboratory = Laboratory || {};
 
     /**
      * Construct component
-     * @param properties {{}} - Object with properties
+	 * @param properties {{}} - Object with properties
      * @param [defaults] {{}|null|undefined} - Default component's properties
      * @param [selector] {jQuery|null|undefined} - Component's selector or nothing
      * @constructor
      */
     var Component = function(properties, defaults, selector) {
+		if (typeof (this._name = properties["<plugin>"]) !== "string") {
+			throw new Error("Can't resolve component's plugin name as string, found \"" + typeof this._name + "\"");
+		}
         this._properties = $.extend(
             defaults || {}, properties || {}
         );
         this._selector = selector || this.render();
     };
+
+	/**
+	 * That method returns name of data attribute for
+	 * current component
+	 * @returns {string} - Attribute name
+	 */
+	Component.prototype.getDataAttribute = function() {
+		if (!this._name) {
+			throw new Error("Component hasn't been registered as jQuery plugin");
+		} else {
+			return this._name;
+		}
+	};
 
     /**
      * Override that method to return jquery item
@@ -41,7 +57,7 @@ var Laboratory = Laboratory || {};
     };
 
     /**
-     * Override that method to activate just created jquery item
+     * Override that method to activate just created jQuery item
      */
     Component.prototype.activate = function() {
         /* Ignored */
@@ -67,12 +83,12 @@ var Laboratory = Laboratory || {};
      * @returns {jQuery} - Component's jquery
      */
     Component.prototype.selector = function(selector) {
-        if (arguments.length > 0) {
+        if (arguments.length > 0 && selector !== void 0) {
 			if (!(selector instanceof jQuery)) {
 				throw new Error("Selector must be an instance of jQuery object");
 			}
-            if (!selector.data("lab")) {
-                selector.data("lab", this);
+            if (!selector.data(this.getDataAttribute())) {
+                selector.data(this.getDataAttribute(), this);
             }
             this._selector = selector;
         }
@@ -97,7 +113,7 @@ var Laboratory = Laboratory || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-        throw new Error("That component doesn't support downgrade");
+		$.removeData(this.selector(), this.getDataAttribute);
     };
 
     /**
@@ -166,6 +182,26 @@ var Laboratory = Laboratory || {};
 		$(component).find(list.join(",")).val("");
 	};
 
+	Core.postFormErrors = function(where, json) {
+		var html = $("<ul>");
+		for (var i in json["errors"] || []) {
+			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
+			for (var j in json["errors"][i]) {
+				$("<li>", {
+					text: json["errors"][i][j]
+				}).appendTo(html);
+			}
+		}
+		return Core.createMessage({
+			message: json["message"] + html.html(),
+			delay: 10000
+		});
+	};
+
+	Core.resetFormErrors = function(where) {
+		$(where).find(".form-group").removeClass("has-error");
+	};
+
 	Core.Component = Component;
 	Core.SubComponent = SubComponent;
 	Core.Common = Common;
@@ -197,7 +233,7 @@ var Laboratory = Laboratory || {};
      * @param [update] {Boolean} - Update component or not (default yes)
      */
     Core.createObject = function(component, selector, update) {
-        $(selector).data("lab", component).append(
+        $(selector).data(component.getDataAttribute(), component).append(
             component.selector()
         );
         if (update !== false) {
@@ -210,40 +246,50 @@ var Laboratory = Laboratory || {};
 
 	/**
 	 * Create plugin for component
-	 * @param func {String} - Name of create function, for example 'createMessage'
+	 * @param plugin {String} - Name of jQuery plugin {@see Component#getDataAttribute}
+	 * @param func {Function} - Function that registers component
 	 * @static
 	 */
-	Core.createPlugin = function(func) {
+	Core.createPlugin = function(plugin, func) {
+		var attr = "core-" + plugin;
 		var register = function(me, options, args, ret) {
-			var r;
-			var a = [];
+			var r, a = [], s;
 			for (var i in args) {
 				if (i > 0) {
 					a.push(args[i]);
 				}
 			}
 			if (options !== void 0 && typeof options == "string") {
-				var c = me.data("lab");
+				var c = me.data(attr);
 				if (!c) {
 					if (!(c = register(me, {}, [], true))) {
 						throw new Error("Component hasn't been initialized, create it first");
 					}
-					me.data("lab", c);
+					me.data(attr, c);
 				}
 				if (c[options] == void 0) {
-					throw new Error("That component don't resolve method \"" + options + "\"");
+					throw new Error("That component doesn't implement method \"" + options + "\"");
 				}
 				if ((r = c[options].apply(c, a)) !== void 0) {
 					return r;
 				}
 			} else {
-				if (me.data("lab") != void 0) {
+				if (me.data(attr) != void 0) {
 					return void 0;
 				}
 				if (typeof me != "function") {
-					r = Core[func](me[0], options);
+					if (me.length) {
+						s = me[0];
+					} else {
+						s = me.selector;
+					}
+					r = func(s, $.extend(options, {
+						"<plugin>": attr
+					}));
 				} else {
-					r = Core[func](options);
+					r = func($.extend(options, {
+						"<plugin>": attr
+					}));
 				}
 				if (ret) {
 					return r;
@@ -251,7 +297,7 @@ var Laboratory = Laboratory || {};
 			}
 			return void 0;
 		};
-		return function(options) {
+		return $.fn[plugin] = function(options) {
 			var t;
 			var args = arguments || [];
 			if (this.length > 1) {
@@ -284,18 +330,9 @@ var Laboratory = Laboratory || {};
 	};
 
     /**
-     * Is string ends with some suffix
-     * @param suffix {string} - String suffix
-     * @returns {boolean} - True if string has suffix
-     */
-    String.prototype.endsWith = function(suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
-
-    /**
      * Generate url based on Yii's base url
-     * @param url {string} - Relative url
-     * @returns {string} - Absolute url
+     * @param url {String} - Relative url
+     * @returns {String} - Absolute url
      */
     window.url = function(url) {
 		if (url.charAt(0) != "/") {
@@ -304,28 +341,47 @@ var Laboratory = Laboratory || {};
         return window["globalVariables"]["baseUrl"] + url;
     };
 
-})(Laboratory);
-
-(function($) {
-	//var ev = new $.Event('style'),
-	//	orig = $.fn.css;
-	//$.fn.css = function() {
-	//	var result = orig.apply(this, arguments || []);
-	//	$(this).trigger(ev);
-	//	return result;
-	//};
-	$.each(['show', 'hide'], function (i, ev) {
-		var el = $.fn[ev];
-		$.fn[ev] = function() {
-			for (var i = 0; i < this.length; i++) {
-				if (this[i].tagName == "SELECT") {
-					$(this[i]).trigger(ev);
-				}
+	$.fn.update = function() {
+		return this.each(function() {
+			var widget, params, me = this;
+			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
+				return void 0;
+			} else if (!window["globalVariables"]["getWidget"]) {
+				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
 			}
-			return el.apply(this, arguments);
-		};
-	});
-})(jQuery);
+			$(this).loading();
+			params = $.parseJSON(params);
+			$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+				class: widget
+			}), function(json) {
+				if (json["status"]) {
+					$(me).fadeOut("fast", function() {
+						$(this).empty().append(json["component"]).hide().fadeIn("fast");
+					});
+				} else {
+					$(json["message"]).message();
+				}
+			}, "json").always(function() {
+				$(me).loading("reset");
+			});
+		});
+	};
+
+	$.fn.rotate = function(angle, duration, easing, deg, complete) {
+		var args = $.speed(duration, easing, deg, complete);
+		var step = args.step;
+		deg = deg || 0;
+		return this.each(function(i, e) {
+			args.complete = $.proxy(args.complete, e);
+			args.step = function(now) {
+				$.style(e, 'transform', 'rotate(' + now + 'deg)');
+				if (step) return step.apply(e, arguments);
+			};
+			$({deg: deg}).animate({deg: angle}, args);
+		});
+	};
+
+})(Core);
 
 /*
 $(document).ready(function() {

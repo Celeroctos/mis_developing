@@ -1,11 +1,11 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
-(function(Lab) {
+(function(Core) {
 
 	"use strict";
 
-	var Address = Lab.createComponent(function(properties, selector) {
-		Lab.Component.call(this, properties, {
+	var Address = Core.createComponent(function(properties, selector) {
+		Core.Component.call(this, properties, {
 			list: {
 				"region_name": {
 					"label": "Регион / Город",
@@ -45,7 +45,7 @@ var Laboratory = Laboratory || {};
 		var p;
 		var s = this.selector()
 			.clone()
-			.data("lab", this)
+			.data(this.getDataAttribute(), this)
 			.prop("readonly", true)
 			.attr("aria-describedBy", "address-addon-" + count)
 			.addClass("address-input");
@@ -154,22 +154,17 @@ var Laboratory = Laboratory || {};
 		return this.selector().find(".address-body").slideUp("fast", after);
 	};
 
-	Lab.createAddress = function(selector, properties) {
+	Core.createPlugin("address", function(selector, properties) {
 		if ($(selector).parent().parent().hasClass("laboratory-address")) {
 			return void 0;
-		}
-		++count;
-		return Lab.createObject(new Address(properties, $(selector)), selector, true);
-	};
+		} ++count;
+		return Core.createObject(new Address(properties, $(selector)), selector, true);
+	});
 
-	$.fn.address = Lab.createPlugin(
-		"createAddress"
-	);
-
-	Lab.ready(function() {
+	Core.ready(function() {
 		$("[data-laboratory='address']").address();
 	});
 
 	var count = 0;
 
-})(Laboratory);
+})(Core);

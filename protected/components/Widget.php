@@ -19,12 +19,64 @@ class Widget extends CWidget {
     }
 
 	/**
+	 * Serialize widget's attributes by all scalar attributes and
+	 * arrays or set your own array with attribute names
+	 *
+	 * Agreement: I hope that you will put serialized attributes
+	 * 	in root widget's HTML tag named [data-attributes]
+	 *
+	 * @param array|null $attributes - Array with attributes, which have
+	 * 	to be serialized, by default it serializes all scalar attributes
+	 *
+	 * @return string - Serialized and URL encoded attributes
+	 */
+	public function getSerializedAttributes($attributes = null) {
+		$params = [];
+		if ($attributes !== null) {
+			foreach ($attributes as $key) {
+				if ((is_scalar($this->$key) || is_array($this->$key)) && !empty($this->$key)) {
+					$params[$key] = $this->$key;
+				}
+			}
+		} else {
+			foreach ($this as $key => $value) {
+				if ((is_scalar($value) || is_array($value)) && !empty($value)) {
+					$params[$key] = $value;
+				}
+			}
+		}
+		return htmlspecialchars(json_encode($params));
+	}
+
+	/**
+	 * That method tests widget's identification number
+	 * and generates random value for that component
+	 */
+	public function init() {
+		if (empty($this->id)) {
+			$this->id = UniqueGenerator::generate(
+				strtolower(get_called_class())
+			);
+		}
+	}
+
+	/**
+	 * Create widget for current instance by it's static
+	 * context
+	 * @param string $config - Widget's configuration
+	 */
+	public static function runWidget($config) {
+		self::createWidget(get_called_class(), $config)->run();
+	}
+
+	/**
 	 * Create url for widget's update for current module and controller
 	 * @param array $query - Additional query GET parameters
+	 * @param string $action - Action for new URL
 	 * @return string - Url for widget update
 	 */
-	public function createUrl($query = []) {
-		return preg_replace("/\\/[a-z0-9]*$/i", "/getWidget", $this->getController()->createUrl("", $query));
+	public static function createUrl($action = "getWidget", $query = []) {
+		return preg_replace("/\\/[a-z0-9]*$/i", "/$action", Yii::app()->getController()->createUrl("", $query));
 	}
 
 	/**
@@ -32,19 +84,7 @@ class Widget extends CWidget {
 	 * This method is called by {@link CBaseController::endWidget}.
 	 */
     public function run() {
-        $this->render(__CLASS__, null, false);
-    }
-
-    /**
-     * Try to get default value for some field
-     * @param string $key - Value's key
-     * @return mixed - Default value or null
-     */
-    public function getDefault($key) {
-        if (isset($this->_model[$key])) {
-            return $this->_model[$key];
-        }
-        return null;
+        $this->render(get_called_class(), null, false);
     }
 
     /**
