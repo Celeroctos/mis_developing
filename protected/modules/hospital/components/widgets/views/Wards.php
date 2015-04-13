@@ -4,12 +4,20 @@
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidWard">Платные
+                        <input type="checkbox" id="paidWard" />Платные
+                        <span class="tabmark" id="paidWardsTabmark">
+                            <span class="roundedLabel"></span>
+                            <span class="roundedLabelText"></span>
+                        </span>
                     </label>
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidWard">Бесплатные
+                        <input type="checkbox" id="notPaidWard" />Бесплатные
+                        <span class="tabmark" id="notPaidWardsTabmark">
+                            <span class="roundedLabel"></span>
+                            <span class="roundedLabelText"></span>
+                        </span>
                     </label>
                 </li>
             </ul>
@@ -18,12 +26,20 @@
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidBeds">Платные
+                        <input type="checkbox" id="paidBeds" />Платные
+                        <span class="tabmark" id="paidBedsTabmark">
+                            <span class="roundedLabel"></span>
+                            <span class="roundedLabelText"></span>
+                        </span>
                     </label>
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidBeds">Бесплатные
+                        <input type="checkbox" id="notPaidBeds" />Бесплатные
+                        <span class="tabmark" id="notPaidBedsTabmark">
+                            <span class="roundedLabel"></span>
+                            <span class="roundedLabelText"></span>
+                        </span>
                     </label>
                 </li>
             </ul>
