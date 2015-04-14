@@ -2488,7 +2488,7 @@ class TasuController extends Controller {
 					AND [oms].version_end = ".$this->version_end."
 					) 
 			INNER JOIN PDPStdStorage.dbo.t_smo_30821 AS [s] ON [oms].[smouid_20464] = [s].[uid]
-			WHERE O.ENP = '".$series.$number."'";
+			WHERE O.ENP = '".str_replace(' ', '', $series.$number)."'";
 			$tasuOmsRow = $conn3->createCommand($sql)->queryRow();
 			if($tasuOmsRow == null) {
 				return false;

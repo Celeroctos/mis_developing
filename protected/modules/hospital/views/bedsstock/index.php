@@ -32,7 +32,7 @@
     </ul>
 </div>
 <div class="row col-xs-12 tableBlock">
-    <div class="bedssotckTablesCont col-xs-11">
+    <div class="bedsstockTablesCont col-xs-11">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="patients">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
@@ -43,7 +43,7 @@
             <div role="tabpanel" class="tab-pane" id="relocations">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
             </div>
-            <div role="tabpanel" class="tab-pane" id="wards">
+            <div role="tabpanel" class="tab-pane wardsSettings" id="wards">
                 <?php $this->widget('application.modules.hospital.components.widgets.Wards', array(
                     'showSettingsIcon' => true
                 )); ?>
@@ -53,7 +53,7 @@
 </div>
 <div class="bedsstockExpanderBody">
     <div class="wrap">
-        <div class="cont left">
+        <div class="cont left wardsChoose">
             <?php $this->widget('application.modules.hospital.components.widgets.Wards'); ?>
         </div>
         <div class="cont left">
@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option>%any doctor%</option>
+                                <option value="-1">%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option>%any doctor%</option>
+                                <option value="-1">%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -107,7 +107,7 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option>%any doctor%</option>
+                                <option value="-1">%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">

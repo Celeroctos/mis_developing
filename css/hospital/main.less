@@ -78,7 +78,7 @@
   top: 60px;
   left: 90%;
 }
-.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont {
+.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont, .bedsEditCont {
   display: none;
 }
 
@@ -155,6 +155,7 @@
     overflow: hidden;
     font-size: 14px;
     font-weight: bold;
+    margin-top: 5px;
     li {
       float: left;
       list-style: none;
@@ -169,6 +170,9 @@
       input[type="checkbox"] {
         margin-right: 10px;
         margin-left: -5px;
+      }
+      .resetFilter {
+        margin-top: 17px;
       }
     }
     #wardType {
@@ -264,10 +268,23 @@
       font-weight: bold;
     }
   }
+
+  ul.bedsSettingsList {
+    li {
+      float: none;
+      width: 100%;
+      height: 50px;
+      text-align: left;
+      margin-bottom: 10px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+  }
 }
 
-.popover-wardedit, .popover-wardadd {
+.popover-wardedit, .popover-wardadd, .popover-bedsedit {
   min-width: 500px;
+  cursor: default;
   .popover-title {
     margin-top: 0;
   }
