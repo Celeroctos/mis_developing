@@ -1,4 +1,4 @@
-var Laboratory = Laboratory || {};
+var Core = Core || {};
 
 (function(Core) {
 
@@ -21,18 +21,26 @@ var Laboratory = Laboratory || {};
 		$.get(this.selector().data("url"), $.extend({
 			class: table.data("class"),
 			condition: table.data("condition"),
-			params: table.data("parameters"),
+			params: table.data("attributes"),
 			pageLimit: table.data("limit")
 		}, parameters), function(json) {
 			if (!Message.display(json)) {
 				return void 0;
 			}
 			me.selector().replaceWith(
-				$(json["component"]).data("lab", me)
+				$(json["component"]).data(me.getDataAttribute(), me)
 			);
 		}, "json").always(function() {
 			me.after();
 		});
+	};
+
+	Table.prototype.before = function() {
+		//this.selector().loading();
+	};
+
+	Table.prototype.after = function() {
+		//this.selector().loading("reset");
 	};
 
 	Table.prototype.fetch = function(properties) {
@@ -79,7 +87,7 @@ var Laboratory = Laboratory || {};
 		});
 	};
 
-	Core.createTable = function(selector, properties) {
+	Core.createPlugin("table", function(selector, properties) {
 		var t;
 		if ($(selector).get(0).tagName != "TABLE") {
 			if ((t = $(selector).parents("table")).length != 0) {
@@ -89,8 +97,6 @@ var Laboratory = Laboratory || {};
 			}
 		}
 		return Core.createObject(new Table(properties, $(selector)), selector, false);
-	};
+	});
 
-	$.fn.table = Core.createPlugin("createTable");
-
-})(Laboratory);
+})(Core);

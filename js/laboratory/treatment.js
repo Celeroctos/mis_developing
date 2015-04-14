@@ -17,7 +17,7 @@ var TreatmentViewHeader = {
 				.trigger("change");
 		});
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
-			Laboratory.Common.cleanup(this);
+			Core.Common.cleanup(this);
 		});
 	},
 	active: null
@@ -49,7 +49,7 @@ var MedcardEditableViewerModal = {
 			});
 			MedcardEditableViewerModal.copied = json;
 			me.check();
-			Laboratory.createMessage({
+			Core.createMessage({
 				message: "Данные скопированы",
 				sign: "ok",
 				type: "success"
@@ -66,16 +66,16 @@ var MedcardEditableViewerModal = {
 					f.find($("[id='" + j + "']")).val(json[i][j]);
 				}
 			}
-			Laboratory.createMessage({
+			Core.createMessage({
 				message: "Данные вставлены",
 				sign: "ok",
 				type: "success"
 			});
 		});
 		modal.find("#clear-button").click(function() {
-			Laboratory.Common.cleanup(modal);
+			Core.Common.cleanup(modal);
 			me.check();
-			Laboratory.createMessage({
+			Core.createMessage({
 				message: "Данные очищены",
 				sign: "ok",
 				type: "success"
@@ -86,10 +86,10 @@ var MedcardEditableViewerModal = {
 			modal.find("form").each(function(i, f) {
 				forms.push($(f).serialize());
 			});
-			Laboratory.resetFormErrors(modal);
+			Core.resetFormErrors(modal);
 			$.post(url("laboratory/direction/register"), forms.join("&"), function(json) {
 				if (json["errors"]) {
-					Laboratory.postFormErrors(modal, json);
+					Core.postFormErrors(modal, json);
 				} else if (!Message.display(json)) {
 					return void 0;
 				}
@@ -99,7 +99,7 @@ var MedcardEditableViewerModal = {
 	},
 	load: function(model) {
 		var modal = $("#medcard-editable-viewer-modal");
-		Laboratory.Common.cleanup(modal);
+		Core.Common.cleanup(modal);
 		var put = function(from, key, value) {
 			if (key == "card_number") {
 				return void 0;

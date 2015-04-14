@@ -49,7 +49,7 @@ var GuideColumnEditor = {
 		}, function(json) {
 			GuideColumnEditor.after(button);
 			if (!json.status) {
-				return Laboratory.createMessage({
+				return Core.createMessage({
 					message: json["message"]
 				});
 			}
@@ -124,11 +124,11 @@ var GuideTableViewer = {
 			id: id
 		}, function(json) {
 			if (!json["status"]) {
-				return Laboratory.createMessage({
+				return Core.createMessage({
 					message: json["message"]
 				});
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					type: "success",
 					sign: "ok",
 					message: json["message"]
@@ -149,7 +149,7 @@ var GuideTableViewer = {
 			model: serialized
 		}, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(panel, json);
+				return Core.postFormErrors(panel, json);
 			} else {
 				Message.display(json);
 			}
@@ -209,7 +209,7 @@ var GuideTableViewer = {
 			class: "GuideTable"
 		}, function(json) {
 			if (!json["status"]) {
-				return Laboratory.createMessage({
+				return Core.createMessage({
 					message: json["message"]
 				});
 			}

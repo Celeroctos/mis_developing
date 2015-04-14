@@ -9,8 +9,8 @@ var GuideGridView = {
 			delete: grid.data("delete-action")
 		};
 		$("#register-guide-modal").on("show.bs.modal", function() {
-			Laboratory.resetFormErrors($(this));
-			Laboratory.Common.cleanup($(this));
+			Core.resetFormErrors($(this));
+			Core.Common.cleanup($(this));
 		});
 		var me = this;
 		$("#register-guide-modal #register-button").click(function() {
@@ -48,11 +48,11 @@ var GuideGridView = {
 			var me = this;
 			$.post(url, str.replace(/&$/, ""), function(json) {
 				if (!json["status"]) {
-					Laboratory.createMessage({
+					Core.createMessage({
 						message: json["message"]
 					});
 				} else if (json["message"]) {
-					Laboratory.createMessage({
+					Core.createMessage({
 						message: json["message"],
 						sign: "ok",
 						type: "success"
@@ -76,9 +76,9 @@ var GuideGridView = {
 		console.log(this.actions);
 		$.post(this.actions.create, model, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(form, json)
+				return Core.postFormErrors(form, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -93,9 +93,9 @@ var GuideGridView = {
 		var form = $("#update-guide-modal form");
 		$.post(this.actions.update, model, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(form, json)
+				return Core.postFormErrors(form, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -110,9 +110,9 @@ var GuideGridView = {
 		var m = $("#update-guide-modal");
 		$.get(this.actions.load, { id: id }, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(m, json)
+				return Core.postFormErrors(m, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -128,11 +128,11 @@ var GuideGridView = {
 	drop: function(id) {
 		$.post(this.actions.delete, { id: id }, function(json) {
 			if (!json["status"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"]
 				});
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"

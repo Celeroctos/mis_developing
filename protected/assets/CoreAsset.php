@@ -4,6 +4,8 @@ class CoreAsset extends AssetBundle {
 
 	public $js = [
 		"js/core/core.js",
+		"js/core/panel.js",
+		"js/core/loading.js",
 		"js/core/form.js",
 		"js/core/multiple.js",
 		"js/core/message.js",
@@ -13,7 +15,9 @@ class CoreAsset extends AssetBundle {
 
 	public $css = [
 		"css/message.css",
+		"css/panel.css",
 		"css/multiple.css",
+		"css/loading.css",
 		"css/table.css",
 	];
 
