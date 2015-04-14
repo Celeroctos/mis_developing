@@ -320,4 +320,12 @@ $(document).ready(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
 	});
+
+	//$(".panel[data-widget]").on("panel.update.before", function() {
+	//	$('[data-toggle="tooltip"]').tooltip("destroy");
+	//}).on("panel.update", function() {
+	//	$(this).find('[data-toggle="tooltip"]').tooltip();
+	//});
+
+	$('[data-toggle="tooltip"]').tooltip();
 });
