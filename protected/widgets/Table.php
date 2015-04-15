@@ -160,6 +160,12 @@ class Table extends Widget {
 	public $textEmptyData = "Не выбраны критерии поиска";
 
 	/**
+	 * @var string - Default placement for bootstrap tooltip
+	 * 	component [left, right, top, bottom]
+	 */
+	public $tooltipDefaultPlacement = "left";
+
+	/**
 	 * Run widget and return just rendered content
 	 * @return string - Just rendered content
 	 * @throws CException
@@ -360,12 +366,30 @@ class Table extends Widget {
 			"align" => "middle"
 		]);
 		foreach ($this->controls as $c => $class) {
+			$options = [];
+			if (is_array($class)) {
+				$options["class"] = $class["class"];
+				if (isset($class["tooltip"])) {
+					$options["onmouseenter"] = "$(this).tooltip('show')";
+					if (is_array($class["tooltip"])) {
+						$options["title"] = $class["tooltip"]["label"];
+						if (isset($class["tooltip"]["placement"])) {
+							$options["data-placement"] = $class["tooltip"]["placement"];
+						} else {
+							$options["data-placement"] = $this->tooltipDefaultPlacement;
+						}
+					} else {
+						$options["title"] = $class["tooltip"];
+						$options["data-placement"] = $this->tooltipDefaultPlacement;
+					}
+				}
+			} else {
+				$options["class"] = $class;
+			}
 			print CHtml::tag("a", [
 				"href" => "javascript:void(0)",
 				"class" => $c
-			], CHtml::tag("span", [
-				"class" => $class
-			]));
+			], CHtml::tag("span", $options));
 		}
 		print CHtml::closeTag("td");
 	}

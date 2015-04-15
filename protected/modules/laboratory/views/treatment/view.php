@@ -174,5 +174,3 @@ $this->widget("Modal", [
 		</div>
 	</div>
 </div>
-<br>
-<br>

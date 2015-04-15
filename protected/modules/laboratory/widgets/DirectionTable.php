@@ -35,6 +35,19 @@ class DirectionTable extends Table {
 	];
 
 	/**
+	 * @var array - Array with elements controls buttons, like edit
+	 * 	or remove. Array's key is class for [a] tag and value is
+	 * 	class for [span] tag like glyphicon or button
+	 * @see renderControls
+	 */
+	public $controls = [
+		"direction-repeat-icon" => [
+			"class" => "glyphicon glyphicon-repeat",
+			"tooltip" => "Отправить на повторный анализ"
+		]
+	];
+
+	/**
 	 * @var string - Default table order
 	 */
 	public $orderBy = "id";

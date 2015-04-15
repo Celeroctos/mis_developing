@@ -173,10 +173,6 @@
     margin: 0;
 }
 
-.treatment-table-wrapper {
-    margin-top: 75px;
-}
-
 .treatment-header-wrapper .dropdown-menu a[data-toggle] {
     cursor: pointer;
 }
@@ -232,14 +228,18 @@
     padding-bottom: 20px;
 }
 
+.panel-body {
+    margin-right: -1px;
+}
+
+.treatment-table-wrapper {
+    margin-top: 75px;
+}
+
 .treatment-table-wrapper .panel {
     margin: 0;
 }
 
 .treatment-table-wrapper .panel-body {
     padding: 0;
-}
-
-.panel-body {
-    margin-right: -1px;
 }
