@@ -43,45 +43,6 @@ var Panel = {
     }
 };
 
-var Table = {
-	fetch: function(me, parameters) {
-		var table = $(me).parents(".table[data-class]");
-		$.get(url("/laboratory/medcard/getWidget"), $.extend(parameters, {
-			class: table.data("class"),
-			condition: table.data("condition"),
-			params: table.data("attributes")
-		}), function(json) {
-			if (!Message.display(json)) {
-				return void 0;
-			}
-			$(me).parents(".table[data-class]").replaceWith(
-				$(json["component"])
-			);
-		}, "json");
-	},
-	order: function(row) {
-		var parameters = {};
-		if ($(this).find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = row + " desc";
-		} else {
-			parameters["orderBy"] = row;
-		}
-		Table.fetch(this, parameters);
-	},
-	page: function(page) {
-		var td = $(this).parents(".table[data-class]").find("tr:first-child td .glyphicon").parents("td");
-		var parameters = {
-			page: page
-		};
-		if (td.find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = td.data("key") + " desc";
-		} else {
-			parameters["orderBy"] = td.data("key");
-		}
-		Table.fetch(this, parameters);
-	}
-};
-
 var DropDown = {
     change: function(animate, update) {
         const DELAY = 100;

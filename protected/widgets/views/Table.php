@@ -3,7 +3,7 @@
  * @var Table $this - Table widget instance
  */
 ?>
-<table class="<?= $this->tableClass ?> core-table" id="<?=$this->id?>" <?php $this->renderExtra() ?>>
+<table class="<?= $this->tableClass ?> core-table" id="<?=$this->id?>" <?php $this->renderExtra() ?> data-widget="<?= get_class($this) ?>" data-attributes="<?= $this->getSerializedAttributes() ?>">
 	<thead class="core-table-header">
 	<?php $this->renderHeader() ?>
 	</thead>

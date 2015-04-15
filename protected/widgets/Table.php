@@ -258,19 +258,6 @@ class Table extends Widget {
 			"data-class" => get_class($this),
 			"data-url" => $this->createUrl()
 		];
-		if (!empty($this->criteria->condition)) {
-			$options["data-condition"] = $this->criteria->condition;
-		}
-		if (!empty($this->provider->getPagination()->pageLimit)) {
-			if ($this->pageLimit !== null) {
-				$options["data-limit"] = $this->pageLimit;
-			} else {
-				$options["data-limit"] = $this->provider->getPagination()->pageLimit;
-			}
-		}
-		if (!empty($this->criteria->params)) {
-			$options["data-attributes"] = urlencode(serialize($this->criteria->params));
-		}
 		print CHtml::renderAttributes($options);
 	}
 
@@ -363,7 +350,7 @@ class Table extends Widget {
 		} else {
 			$class = "glyphicon glyphicon-chevron-down table-order table-order-asc";
 		}
-		print CHtml::tag("span", [
+		print "&nbsp;".CHtml::tag("span", [
 			"class" => $class
 		]);
 	}

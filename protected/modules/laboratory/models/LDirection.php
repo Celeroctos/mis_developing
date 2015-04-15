@@ -29,7 +29,7 @@ class LDirection extends ActiveRecord {
         $row = $this->getDbConnection()->createCommand()
             ->select("count(1) as count")
             ->from("lis.direction")
-            ->where("status = 3")
+            ->where("status = 4")
             ->queryRow();
         if ($row) {
             return $row["count"];
