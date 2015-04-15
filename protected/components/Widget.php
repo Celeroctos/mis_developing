@@ -23,23 +23,32 @@ class Widget extends CWidget {
 	 * arrays or set your own array with attribute names
 	 *
 	 * Agreement: I hope that you will put serialized attributes
-	 * 	in root widget's HTML tag named [data-attributes]
+	 *    in root widget's HTML tag named [data-attributes]
 	 *
 	 * @param array|null $attributes - Array with attributes, which have
-	 * 	to be serialized, by default it serializes all scalar attributes
+	 *    to be serialized, by default it serializes all scalar attributes
+	 *
+	 * @param array|null $excepts - Array with attributes, that should
+	 * 	be excepted
 	 *
 	 * @return string - Serialized and URL encoded attributes
 	 */
-	public function getSerializedAttributes($attributes = null) {
+	public function getSerializedAttributes($attributes = null, $excepts = null) {
 		$params = [];
 		if ($attributes !== null) {
 			foreach ($attributes as $key) {
+				if ($excepts !== null && in_array($key, $excepts)) {
+					continue;
+				}
 				if ((is_scalar($this->$key) || is_array($this->$key)) && !empty($this->$key)) {
 					$params[$key] = $this->$key;
 				}
 			}
 		} else {
 			foreach ($this as $key => $value) {
+				if ($excepts !== null && in_array($key, $excepts)) {
+					continue;
+				}
 				if ((is_scalar($value) || is_array($value)) && !empty($value)) {
 					$params[$key] = $value;
 				}

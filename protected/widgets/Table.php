@@ -166,6 +166,12 @@ class Table extends Widget {
 	public $tooltipDefaultPlacement = "left";
 
 	/**
+	 * @var string - Default search criteria for table, it uses
+	 * 	to store compiled criteria
+	 */
+	public $searchCriteria = "";
+
+	/**
 	 * Run widget and return just rendered content
 	 * @return string - Just rendered content
 	 * @throws CException
@@ -201,7 +207,21 @@ class Table extends Widget {
 		if (empty($this->orderBy)) {
 			$this->orderBy = $this->primaryKey;
 		}
+		$this->data = $this->fetchData();
+		$this->searchCriteria = $this->getSearchCriteria();
 		return $this->render("application.widgets.views.Table");
+	}
+
+	/**
+	 * Get search criteria for current table provider
+	 * @return string - SQL statement for criteria
+	 */
+	public function getSearchCriteria() {
+		$params = $this->provider->getCriteria()->params;
+		foreach ($params as &$param) {
+			$param = "'$param'::text";
+		}
+		return strtr($this->provider->getCriteria()->condition, $params);
 	}
 
 	/**
@@ -232,6 +252,9 @@ class Table extends Widget {
 		}
 		if (!empty($this->orderBy)) {
 			$this->provider->orderBy = $this->orderBy;
+		}
+		if (!empty($this->searchCriteria)) {
+			$this->provider->getCriteria()->addCondition($this->searchCriteria);
 		}
 		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
 		if (!class_exists($form)) {
@@ -265,7 +288,7 @@ class Table extends Widget {
 	 * Render table's body
 	 */
 	public function renderBody() {
-		foreach ($this->fetchData() as $key => $value) {
+		foreach ($this->data as $key => $value) {
 			$options = [
 				"data-id" => $value[$this->primaryKey],
 				"class" => "core-table-row"
@@ -452,5 +475,31 @@ class Table extends Widget {
 		}
 		print CHtml::closeTag("td");
 		print CHtml::closeTag("tr");
+	}
+
+	/**
+	 * Serialize widget's attributes by all scalar attributes and
+	 * arrays or set your own array with attribute names
+	 *
+	 * Agreement: I hope that you will put serialized attributes
+	 *    in root widget's HTML tag named [data-attributes]
+	 *
+	 * @param array|null $attributes - Array with attributes, which have
+	 *    to be serialized, by default it serializes all scalar attributes
+	 *
+	 * @param array|null $excepts - Array with attributes, that should
+	 * 	be excepted
+	 *
+	 * @return string - Serialized and URL encoded attributes
+	 */
+	public function getSerializedAttributes($attributes = null, $excepts = null) {
+		return parent::getSerializedAttributes($attributes, [
+			"data",
+			"header",
+			"availableLimits",
+			"tooltipDefaultPlacement",
+			"textNoData",
+			"textEmptyData"
+		]);
 	}
 }
