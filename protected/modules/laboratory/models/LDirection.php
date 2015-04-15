@@ -2,6 +2,11 @@
 
 class LDirection extends ActiveRecord {
 
+	const STATUS_JUST_CREATED = 1;
+	const STATUS_SAMPLE_DONE = 2;
+	const STATUS_ANALYSIS_DONE = 3;
+	const STATUS_SAMPLE_REPEAT = 4;
+
 	/**
 	 * Override that method to return data for grid view
 	 * @return CDbCommand - Command with query

@@ -158,7 +158,7 @@ $this->widget("Modal", [
 			<?php $this->widget("Panel", [
 				"title" => "Направления на анализ",
 				"body" => $this->createWidget("DirectionTable", [
-					"where" => "status <> 3"
+					"where" => "status <> 4"
 				]),
 				"collapsible" => false
 			]) ?>
@@ -167,7 +167,8 @@ $this->widget("Modal", [
 			<?php $this->widget("Panel", [
 				"title" => "Направления на повторный анализ",
 				"body" => $this->createWidget("DirectionTable", [
-					"where" => "status = 3"
+					"where" => "status = 4",
+					"controls" => "false"
 				]),
 				"collapsible" => false
 			]) ?>

@@ -323,7 +323,7 @@ class Table extends Widget {
 			$this->renderChevron($key);
 			print CHtml::closeTag("td");
 		}
-		if (count($this->controls) > 0) {
+		if (is_array($this->controls) && !empty($this->controls)) {
 			print CHtml::tag("td", [
 				"align" => "middle",
 				"style" => "width: 50px"
@@ -359,32 +359,35 @@ class Table extends Widget {
 	 * Render table controls for each row
 	 */
 	public function renderControls() {
-		if (!count($this->controls)) {
+		if (!is_array($this->controls) || !count($this->controls)) {
 			return ;
 		}
 		print CHtml::openTag("td", [
 			"align" => "middle"
 		]);
-		foreach ($this->controls as $c => $class) {
+		foreach ($this->controls as $c => $attributes) {
 			$options = [];
-			if (is_array($class)) {
-				$options["class"] = $class["class"];
-				if (isset($class["tooltip"])) {
+			if (is_array($attributes)) {
+				$options["class"] = $attributes["class"];
+				if (isset($attributes["tooltip"])) {
 					$options["onmouseenter"] = "$(this).tooltip('show')";
-					if (is_array($class["tooltip"])) {
-						$options["title"] = $class["tooltip"]["label"];
-						if (isset($class["tooltip"]["placement"])) {
-							$options["data-placement"] = $class["tooltip"]["placement"];
+					if (is_array($attributes["tooltip"])) {
+						$options["title"] = $attributes["tooltip"]["label"];
+						if (isset($attributes["tooltip"]["placement"])) {
+							$options["data-placement"] = $attributes["tooltip"]["placement"];
 						} else {
 							$options["data-placement"] = $this->tooltipDefaultPlacement;
 						}
 					} else {
-						$options["title"] = $class["tooltip"];
+						$options["title"] = $attributes["tooltip"];
 						$options["data-placement"] = $this->tooltipDefaultPlacement;
 					}
 				}
+				if (isset($attributes["options"])) {
+					$options += $attributes["options"];
+				}
 			} else {
-				$options["class"] = $class;
+				$options["class"] = $attributes;
 			}
 			print CHtml::tag("a", [
 				"href" => "javascript:void(0)",
@@ -406,8 +409,12 @@ class Table extends Widget {
 		print CHtml::openTag("tr", [
 			"class" => "core-table-row"
 		]);
+		$columns = count($this->header) - 1;
+		if (is_array($this->controls) && !empty($this->controls)) {
+			$columns++;
+		}
 		print CHtml::openTag("td", [
-			"colspan" => count($this->header) - 1,
+			"colspan" => $columns,
 			"align" => "left"
 		]);
 		if ($this->provider->pagination !== false) {

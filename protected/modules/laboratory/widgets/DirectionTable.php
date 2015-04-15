@@ -6,7 +6,7 @@ class DirectionTable extends Table {
 	 * @var string - Condition for [DbCriteria]
 	 * @see DbCriteria::createWhere
 	 */
-	public $where = "status <> 3";
+	public $where = "status <> 4";
 
 	/**
 	 * @var array - Array with table's header
@@ -43,6 +43,9 @@ class DirectionTable extends Table {
 	public $controls = [
 		"direction-repeat-icon" => [
 			"class" => "glyphicon glyphicon-repeat",
+			"options" => [
+				"onclick" => "$(this).parents('tr:eq(0)').trigger('table.direction.repeat')"
+			],
 			"tooltip" => "Отправить на повторный анализ"
 		]
 	];
