@@ -341,6 +341,19 @@ var Core = Core || {};
         return window["globalVariables"]["baseUrl"] + url;
     };
 
+	window.serialize = function(obj, prefix) {
+		var str = [];
+		for(var p in obj) {
+			if (obj.hasOwnProperty(p)) {
+				var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+				str.push(typeof v == "object" ?
+					serialize(v, k) :
+				encodeURIComponent(k) + "=" + encodeURIComponent(v));
+			}
+		}
+		return str.join("&");
+	};
+
 	$.fn.update = function() {
 		return this.each(function() {
 			var widget, params, me = this;

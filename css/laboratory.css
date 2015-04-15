@@ -113,7 +113,7 @@
 
 #medcard-table tr[data-id]:hover td,
 .table tr[data-id]:hover td,
-#medcard-table .medcard-table-active td {
+.modal #medcard-table .medcard-table-active td {
     background-color: #c3e8f7;
 }
 

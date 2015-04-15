@@ -153,6 +153,7 @@ var MedcardSearch = {
 			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
 		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
 			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
+		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
 		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;
