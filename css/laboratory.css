@@ -107,10 +107,14 @@
     margin-bottom: -50px;
 }
 
+.modal #medcard-table tr[data-id]:hover td {
+    cursor: pointer;
+}
+
 #medcard-table tr[data-id]:hover td,
+.table tr[data-id]:hover td,
 #medcard-table .medcard-table-active td {
     background-color: #c3e8f7;
-    cursor: pointer;
 }
 
 .medcard-viewer .panel-body {
@@ -242,4 +246,8 @@
 
 .treatment-table-wrapper .panel-body {
     padding: 0;
+}
+
+#treatment-medcard-search-view table:last-child {
+    margin-bottom: 50px;
 }

@@ -66,7 +66,7 @@ class Panel extends Widget {
 	 * @var bool - Should panel be collapsible with
 	 * 	collapse/expand button
 	 */
-    public $collapsible = true;
+    public $collapsible = false;
 
 	/**
 	 * @var bool - Should panel be upgradable with

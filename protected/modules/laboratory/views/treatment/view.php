@@ -5,23 +5,6 @@
  */
 
 $this->widget("Modal", [
-	"title" => "Создать направление",
-	"body" => $this->getWidget("AutoForm", [
-		"model" => new LDirectionForm(),
-		"id" => "direction-register-form",
-		"url" => Yii::app()->getBaseUrl() . "/laboratory/direction/register"
-	]),
-	"id" => "direction-register-modal",
-	"buttons" => [
-		"register" => [
-			"text" => "Создать",
-			"class" => "btn btn-primary",
-			"type" => "submit"
-		]
-	]
-]);
-
-$this->widget("Modal", [
 	"title" => "Поиск медкарты в МИС",
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
@@ -102,21 +85,11 @@ $this->widget("Modal", [
 		],
 		"mis-find-button" => [
 			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент МИС",
-			"class" => "btn btn-default",
-			"type" => "button",
-			"attributes" => [
-				"data-toggle" => "modal",
-				"data-target" => "#mis-medcard-search-modal"
-			],
-			"align" => "center"
-		],
-		"lis-find-button" => [
-			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент ЛИС",
 			"class" => "btn btn-success",
 			"type" => "button",
 			"attributes" => [
 				"data-toggle" => "modal",
-				"data-target" => "#lis-medcard-search-modal"
+				"data-target" => "#mis-medcard-search-modal"
 			],
 			"align" => "center"
 		]
@@ -154,6 +127,7 @@ $this->widget("Modal", [
 		</div>
 	</div>
 	<div class="treatment-table-wrapper">
+		<hr>
 		<div id="treatment-direction-grid-wrapper">
 			<?php $this->widget("Panel", [
 				"title" => "Направления на анализ",
@@ -174,4 +148,11 @@ $this->widget("Modal", [
 			]) ?>
 		</div>
 	</div>
+	<hr>
+	<?php $this->widget("Panel", [
+		"title" => "Медицинские карты лаборатории",
+		"body" => $this->createWidget("TreatmentMedcardSearch"),
+		"id" => "treatment-medcard-search-view",
+		"collapsible" => false
+	]) ?>
 </div>

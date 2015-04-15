@@ -43,9 +43,6 @@ class DirectionTable extends Table {
 	public $controls = [
 		"direction-repeat-icon" => [
 			"class" => "glyphicon glyphicon-repeat",
-			"options" => [
-				"onclick" => "$(this).parents('tr:eq(0)').trigger('table.direction.repeat')"
-			],
 			"tooltip" => "Отправить на повторный анализ"
 		]
 	];

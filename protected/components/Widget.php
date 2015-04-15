@@ -84,7 +84,6 @@ class Widget extends CWidget {
 	 * This method is called by {@link CBaseController::endWidget}.
 	 */
     public function run() {
-        $this->render(get_called_class(), null, false);
     }
 
     /**

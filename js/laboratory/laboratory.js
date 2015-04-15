@@ -180,42 +180,18 @@ var Message = {
 
 var MedcardSearch = {
 	construct: function() {
-		$("[id='medcard-search-button']").click(function() {
-			MedcardSearch.search($(this).parents(".modal:eq(0)"));
-		});
-		$("#medcard-edit-button").click(function() {
-			MedcardSearch.edit();
+		$(document).on("click", "[id='medcard-search-button']", function() {
+			MedcardSearch.search($(this).parents(".medcard-search-wrapper:eq(0)"));
 		});
 		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
 			MedcardSearch.reset();
 		});
 	},
-	edit: function(number) {
-		if (!(number = number || this.id)) {
-			return void 0;
-		}
-		$.get(url("/reception/patient/getMedcardData"), {
-			cardId: number
-		}, function(data) {
-			if(data.success == true) {
-				data = data.data["formModel"];
-				var form = $('#patient-medcard-edit-form');
-				$('#patient-medcard-edit-modal').modal();
-				for(var i in data) {
-					$(form).find('#' + i).val(data[i]);
-				}
-			} else {
-				$('#errorSearchPopup .modal-body .row p').remove();
-				$('#errorSearchPopup .modal-body .row').append('<p>' + data.data + '</p>')
-				$('#errorSearchPopup').modal();
-			}
-		}, "json");
-	},
-	search: function(modal) {
-		var table = modal.find("#medcard-search-button").button("loading")
-			.parents(".modal:eq(0)").find("table[data-class]");
-		var data = $("#medcard-search-form").serialize() + "&" +
-			$("#medcard-range-form").serialize() + "&widget=" + table.data("class");
+	search: function(wrapper) {
+		var table = wrapper.find("#medcard-search-button").button("loading")
+			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
+		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
+			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
 		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;
@@ -228,7 +204,7 @@ var MedcardSearch = {
 				delay: 2000
 			});
 		}, "json").always(function() {
-			modal.find("#medcard-search-button").button("reset");
+			wrapper.find("#medcard-search-button").button("reset");
 		});
 	},
 	click: function(tr, id) {

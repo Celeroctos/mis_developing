@@ -15,6 +15,7 @@ var TreatmentViewHeader = {
 			});
 			$($(this).data("tab")).removeClass("no-display")
 				.trigger("change");
+			/* $(".panel[data-widget]").panel("update"); */
 		});
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
 			Core.Common.cleanup(this);

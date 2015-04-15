@@ -233,7 +233,20 @@ class Table extends Widget {
 		if (!empty($this->orderBy)) {
 			$this->provider->orderBy = $this->orderBy;
 		}
-		return $this->data = $this->provider->fetchData();
+		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
+		if (!class_exists($form)) {
+			return $this->data = $this->provider->fetchData();
+		} else {
+			$this->data = $this->provider->fetchData();
+		}
+		$model = new $form($this->provider->activeRecord->getScenario());
+		if (!$model instanceof FormModel) {
+			return $this->data;
+		}
+		foreach ($this->data as &$row) {
+			ActiveDataProvider::fetchExtraData($model, $row);
+		}
+		return $this->data;
 	}
 
 	/**

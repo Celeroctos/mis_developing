@@ -16,6 +16,7 @@ class LMedcard extends ActiveRecord {
 	public function getMedcardSearchTableProvider() {
 		$fetchQuery = $this->getDbConnection()->createCommand()
 			->select("
+				m.id as medcard_id,
                 m.card_number as number,
                 p.sex as phone,
                 concat(p.surname, ' ', p.name, ' ', p.patronymic) as fio,
