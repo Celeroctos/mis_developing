@@ -82,7 +82,7 @@ class MedcardController extends Controller2 {
 			$this->leave([
 				"component" => $this->getWidget(Yii::app()->getRequest()->getPost("widget"), [
 					"criteria" => $criteria
-				])
+				] + json_decode(Yii::app()->getRequest()->getPost("attributes"), true))
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);

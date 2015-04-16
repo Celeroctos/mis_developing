@@ -267,11 +267,11 @@ class CategoriesController extends Controller {
     }
 
     // Сменить пути у категорий и элементов: выборка категорий и элементов
-    private function changePaths($categorieId) {
+    public static function changePaths($categorieId) {
         $categories = MedcardCategorie::model()->findAll('parent_id = :parent_id', array(':parent_id' => $categorieId));
         $elements = MedcardElement::model()->findAll('categorie_id = :categorie_id', array(':categorie_id' => $categorieId));
         foreach($categories as $categorie) {
-            $partOfPath = $this->getCategoriePath($categorie);
+            $partOfPath = self::getCategoriePath($categorie);
             $partOfPath = implode('.', array_reverse(explode('.', $partOfPath)));
             $path = $partOfPath;
 
@@ -281,10 +281,10 @@ class CategoriesController extends Controller {
                 exit('Не удалось сохранить категорию медкарты :(');
             }
             // Эта категория может быть родительской для каких-нибудь ещё категорий, а также содержать в себе элементы
-            $this->changePaths($categorieModel->id);
+			self::changePaths($categorieModel->id);
         }
         foreach($elements as $element) {
-            $partOfPath = $this->getElementPath($element->categorie_id);
+            $partOfPath = self::getElementPath($element->categorie_id);
             $partOfPath = implode('.', array_reverse(explode('.', $partOfPath)));
 
             $categorieModel = MedcardCategorie::model()->findByPk($element->categorie_id);
@@ -298,7 +298,7 @@ class CategoriesController extends Controller {
         }
     }
 
-    private function getElementPath($categorieId) {
+    public static function getElementPath($categorieId) {
         $categorie = MedcardCategorie::model()->findByPk($categorieId);
         $path = '';
         if($categorie != null) {
@@ -316,7 +316,7 @@ class CategoriesController extends Controller {
             }
 
             if($categorie->parent_id != -1) {
-                $path .= '.'.$this->getElementPath($categorie->parent_id);
+                $path .= '.'.self::getElementPath($categorie->parent_id);
                 return $categorie->position.$path;
             } else {
                 return $categorie->position;
@@ -335,12 +335,12 @@ class CategoriesController extends Controller {
         return $path;
     }
 
-    private function getCategoriePath($categorie) {
+    public static function getCategoriePath($categorie) {
         $path = '';
         if($categorie->parent_id == -1) {
             return $categorie->position;
         } else {
-            $path .= '.'.$this->getElementPath($categorie->parent_id);
+            $path .= '.'.self::getElementPath($categorie->parent_id);
             return $categorie->position.$path;
         }
     }

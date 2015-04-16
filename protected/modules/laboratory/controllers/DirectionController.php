@@ -136,11 +136,38 @@ class DirectionController extends Controller2 {
 			if (!$medcard->save(true)) {
 				throw new CException("Can't register medcard in database");
 			}
+			$transaction->commit();
 		} catch (Exception $e) {
 			$transaction->rollback();
 			$this->exception($e);
 		}
-		$transaction->commit();
+	}
+
+	/**
+	 * That action sets direction status to 3, which means that
+	 * analysis should be repeated
+	 *
+	 * @in (POST):
+	 *  + id - direction's identification number
+	 * @out (JSON):
+	 *  + [message] - Response message
+	 *  + status - Action result status
+	 *
+	 * @throws Exception
+	 */
+	public function actionRepeat() {
+		try {
+			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => LDirection::STATUS_SAMPLE_REPEAT
+			]);
+			if (!$r) {
+				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
+			} else {
+				$this->success("Направление отправлено на повторный забор образца");
+			}
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
 	}
 
 	/**

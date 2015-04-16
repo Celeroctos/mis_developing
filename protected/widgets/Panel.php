@@ -66,7 +66,7 @@ class Panel extends Widget {
 	 * @var bool - Should panel be collapsible with
 	 * 	collapse/expand button
 	 */
-    public $collapsible = true;
+    public $collapsible = false;
 
 	/**
 	 * @var bool - Should panel be upgradable with
@@ -83,11 +83,13 @@ class Panel extends Widget {
 	public $controls = [
 		"panel-update-button" => [
 			"class" => "glyphicon glyphicon-refresh text-center",
-			"onclick" => "$(this).panel('update')"
+			"onclick" => "$(this).panel('update')",
+			"title" => "Обновить"
 		],
 		"panel-collapse-button" => [
 			"class" => "glyphicon glyphicon glyphicon-chevron-up text-center",
-			"onclick" => "$(this).panel('toggle')"
+			"onclick" => "$(this).panel('toggle')",
+			"title" => "Свернуть/Развернуть"
 		]
 	];
 
@@ -120,8 +122,8 @@ class Panel extends Widget {
 		if ($this->collapsible == false) {
 			unset($this->controls["panel-collapse-button"]);
 		}
-		if ($this->upgradeable == false) {
-//			unset($this->controls["panel-update-button"]);
+		if ($this->upgradeable === false) {
+			unset($this->controls["panel-update-button"]);
 		}
     }
 
@@ -145,6 +147,13 @@ class Panel extends Widget {
 				$options["class"] = "panel-control-button $class";
 			} else {
 				$options["class"] .= " panel-control-button $class";
+			}
+			if (isset($options["title"])) {
+				$options += [
+					"onmouseenter" => "$(this).tooltip('show')",
+					"title" => $options["title"],
+					"data-placement" => "left"
+				];
 			}
 			print CHtml::tag("span", $options, "");
 		}

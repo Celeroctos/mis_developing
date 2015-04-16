@@ -6,7 +6,7 @@ class DirectionTable extends Table {
 	 * @var string - Condition for [DbCriteria]
 	 * @see DbCriteria::createWhere
 	 */
-	public $where = "status <> 3";
+	public $where = "status <> 4";
 
 	/**
 	 * @var array - Array with table's header
@@ -31,6 +31,19 @@ class DirectionTable extends Table {
 		],
 		"analysis_type_id" => [
 			"label" => "Тип анализа"
+		]
+	];
+
+	/**
+	 * @var array - Array with elements controls buttons, like edit
+	 * 	or remove. Array's key is class for [a] tag and value is
+	 * 	class for [span] tag like glyphicon or button
+	 * @see renderControls
+	 */
+	public $controls = [
+		"direction-repeat-icon" => [
+			"class" => "glyphicon glyphicon-repeat",
+			"tooltip" => "Отправить на повторный анализ"
 		]
 	];
 

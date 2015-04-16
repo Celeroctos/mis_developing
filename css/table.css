@@ -1,5 +1,6 @@
 
-.core-table {
+.core-table td > a {
+    margin: 7px;
 }
 
 .core-table-header td[data-key] {

@@ -37,9 +37,11 @@ var Core = Core || {};
 	Panel.prototype.before = function() {
 		this.selector().loading("render").find(".panel-update-button")
 			.rotate(360, 500, "swing");
+		this.selector().trigger("panel.update");
 	};
 
 	Panel.prototype.after = function() {
+		this.selector().trigger("panel.updated");
 		this.selector().loading("destroy");
 	};
 
