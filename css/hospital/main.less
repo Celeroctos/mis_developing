@@ -78,7 +78,7 @@
   top: 60px;
   left: 90%;
 }
-.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont, .bedsEditCont {
+.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont, .bedsEditCont, .bedSettingsFormCont {
   display: none;
 }
 
@@ -160,6 +160,10 @@
       float: left;
       list-style: none;
       margin-right: 10px;
+      label {
+        padding-left: 0;
+        margin-right: 10px;
+      }
       ul {
         font-weight: normal;
         padding: 0;
@@ -168,8 +172,8 @@
         }
       }
       input[type="checkbox"] {
-        margin-right: 10px;
-        margin-left: -5px;
+        margin-left: -20px;
+        margin-top: 4px;
       }
       .resetFilter {
         margin-top: 17px;
@@ -270,6 +274,7 @@
   }
 
   ul.bedsSettingsList {
+    margin-top: 10px;
     li {
       float: none;
       width: 100%;
@@ -278,18 +283,29 @@
       margin-bottom: 10px;
       padding: 0 10px;
       cursor: pointer;
+      position: relative;
+      .bed-settings, .bed-add {
+        position: absolute;
+        left: 90%;
+        top: 10px;
+        font-size: 25px;
+      }
+    }
+    li:last-child {
+      margin-bottom: 0;
     }
   }
 }
 
-.popover-wardedit, .popover-wardadd, .popover-bedsedit {
-  min-width: 500px;
+.popover-wardedit, .popover-wardadd, .popover-bedsedit, .popover-bededit {
+  min-width: 600px;
   cursor: default;
   .popover-title {
     margin-top: 0;
   }
   .popover-content {
     width: 100%;
+    padding: 0 25px;
     .control-label {
       display: inline-block;
       text-align: left;
@@ -301,4 +317,27 @@
       margin: 5px 0;
     }
   }
+}
+
+.no-float {
+  float: none;
+}
+
+@keyframes blink-cog {
+  0%   {color: #000000;}
+  25%  {color: #250b23;}
+  50%  {color: #ffc21d;}
+  75%  {color: #250b23;}
+  100% {color: #000000;}
+}
+@-webkit-keyframes blink-cog {
+  0%   {color: #000000;}
+  25%  {color: #250b23;}
+  50%  {color: #ffc21d;}
+  75%  {color: #250b23;}
+  100% {color: #000000;}
+}
+.cog-blinking-css {
+  animation: blink-cog 1.5s steps(20, start) infinite;
+  -webkit-animation: blink-cog 1.5s steps(20, start) infinite;
 }

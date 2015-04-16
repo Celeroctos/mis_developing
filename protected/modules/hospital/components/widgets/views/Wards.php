@@ -136,25 +136,68 @@
         <ul class="list-group bedsSettingsList">
             <li class="list-group-item">
                 <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog settings" title="Настройки"></span>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b1"></span>
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Иванова Ивана Ивановна" width="48" height="48" />
                 <a href="#" class="reservedBed">Иванова Ивана Ивановна</a>
-                <span class="glyphicon glyphicon-cog settings" title="Настройки"></span>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog settings" title="Настройки"></span>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Сидорова Сидора Сидоровна" width="48" height="48" />
                 <a href="#" class="reservedBed">Сидорова Сидора Сидоровна</a>
-                <span class="glyphicon glyphicon-cog settings" title="Настройки"></span>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b4"></span>
             </li>
             <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="" width="48" height="48" />
+                <span class="glyphicon glyphicon-plus bed-add" title="Добавить койку" id="b5"></span>
             </li>
         </ul>
+    </div>
+    <div class="bedAddCont">
+
+    </div>
+    <div class="bedSettingsFormCont">
+        <form class="bedSettingsForm form-horizontal">
+            <div class="form-group">
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Платная
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Бесплатная
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">№ палаты</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Статус</label>
+                <div class="col-xs-8">
+                    <select class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Зарезервировать до</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Комментарий</label>
+                <div class="col-xs-8">
+                    <textarea cols="30" rows="10" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Применить</button>
+                <button class="btn btn-success">Закрыть</button>
+            </div>
+        </form>
     </div>
 </div>

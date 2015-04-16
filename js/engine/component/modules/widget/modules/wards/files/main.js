@@ -6,6 +6,7 @@ misEngine.class('component.widget.wards', function() {
         },
         popover : null,
         bedsPopover : null,
+        bedEditPopover : null,
         tabmarks : [],
 
         displayTabmarks : function() {
@@ -179,6 +180,30 @@ misEngine.class('component.widget.wards', function() {
                 e.stopPropagation();
             }, this));
 
+            $(document).on('dblclick', '.bed-settings', $.proxy(function(e) {
+                if(this.bedEditPopover) {
+                    this.hideBedPopover();
+                }
+                this.initBedPopover($(e.target), parseInt($(e.target).prop('id').substr(1)));
+                e.stopPropagation();
+            }, this));
+
+            $(document).on('mouseover', '.settings, .bed-settings', function(e) {
+                $(e.target).addClass('cog-blinking-css');
+            });
+
+            $(document).on('mouseout', '.settings .popover, .bed-settings .popover', function(e) {
+                e.stopPropagation();
+            });
+
+            $(document).on('mouseover', '.settings .popover, .bed-settings .popover', function(e) {
+                e.stopPropagation();
+            });
+
+            $(document).on('mouseout', '.settings, .bed-settings', function(e) {
+                $(e.target).removeClass('cog-blinking-css');
+            });
+
             $(document).on('click', '#addNewWard', function(e) {
                 $(this).prop({
                    'disabled' : true
@@ -208,7 +233,7 @@ misEngine.class('component.widget.wards', function() {
                 var span = $('<span class="glyphicon glyphicon-remove" title="Закрыть окно">').css({
                     position: 'absolute',
                     cursor: 'pointer',
-                    left: '480px'
+                    left: '580px'
                 });
 
                 $(span).on('click', $.proxy(function(e) {
@@ -230,6 +255,11 @@ misEngine.class('component.widget.wards', function() {
                 $('#wardType').val(-1);
                 this.updateList();
             }, this));
+
+
+            $(document).on('click', '.bed-add', function(e) {
+
+            });
         },
 
         updateList: function() {
@@ -268,7 +298,7 @@ misEngine.class('component.widget.wards', function() {
             var span = $('<span class="glyphicon glyphicon-remove" title="Закрыть окно">').css({
                 position: 'absolute',
                 cursor: 'pointer',
-                left: '480px'
+                left: '580px'
             });
 
             $(span).on('click', function(e) {
@@ -311,7 +341,7 @@ misEngine.class('component.widget.wards', function() {
             var span = $('<span class="glyphicon glyphicon-remove" title="Закрыть окно">').css({
                 position: 'absolute',
                 cursor: 'pointer',
-                left: '480px'
+                left: '580px'
             });
 
             $(span).on('click', function(e) {
@@ -328,6 +358,51 @@ misEngine.class('component.widget.wards', function() {
         hideBedsPopover : function() {
             this.bedsPopover.popover('destroy');
             this.bedsPopover = null;
+            if(this.bedEditPopover) {
+                this.hideBedPopover();
+            }
+        },
+
+        initBedPopover : function(contSpan, bedId) {
+            this.bedEditPopover = $(contSpan).popover({
+                animation: true,
+                html: true,
+                placement: 'bottom',
+                title: 'Настройка коек',
+                delay: {
+                    show: 300,
+                    hide: 300
+                },
+                template : $('<div>').prop({
+                    'class' : 'popover popover-bedsedit',
+                    'role' : 'tooltip'
+                }).append($('<div>').addClass('arrow'), $('<h3>').addClass('popover-title'), $('<div>').addClass('popover-content')),
+                container: $(contSpan),
+                content: $.proxy(function () {
+                    return $('.bedSettingsFormCont').html();
+                }, this)
+            });
+            $(contSpan).popover('show');
+            var span = $('<span class="glyphicon glyphicon-remove" title="Закрыть окно">').css({
+                position: 'absolute',
+                cursor: 'pointer',
+                left: '580px'
+            });
+
+            $(span).on('click', function(e) {
+                $(contSpan).popover('destroy');
+                e.stopPropagation();
+                return false;
+            });
+
+            $(contSpan).parents('li').find('.popover').append(span).on('click', function() {
+                return false;
+            })
+        },
+
+        hideBedPopover : function() {
+            this.bedEditPopover.popover('destroy');
+            this.bedEditPopover = null;
         },
 
         run : function() {

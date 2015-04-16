@@ -137,7 +137,7 @@
 <div class="settingsFormCont">
     <form class="col-xs-12 settingsForm form-horizontal">
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-5">
                 <div>
                     <label class="radio-inline">
                         <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Платная
@@ -148,45 +148,63 @@
                 </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label">№ палаты</label>
-                    <input type="text" class="form-control col-xs-8" />
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label">Тип палаты</label>
-                    <select class="form-control col-xs-8"></select>
+                    <div class="col-xs-8">
+                        <select class="form-control"></select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label">Пол</label>
-                    <select class="form-control col-xs-8"></select>
+                    <div class="col-xs-8">
+                        <select class="form-control"></select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label">Кол-во коек</label>
-                    <input type="text" class="form-control col-xs-8">
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-4 control-label">Платных</label>
-                    <input type="text" class="form-control col-xs-8">
-                </div>
-            </div>
-            <div class="col-xs-6">
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Отделение</label>
-                    <select class="form-control col-xs-8"></select>
-                </div>
-                    <div class="form-group">
-                    <label class="col-xs-4 control-label">Статус</label>
-                    <select class="form-control col-xs-8"></select>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Врач</label>
-                    <select class="form-control col-xs-8"></select>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Комментарий</label>
-                    <textarea class="control-label" cols="30" rows="10"></textarea>
+                    <div class="col-xs-8">
+                        <input type="text" class="form-control" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary">Применить</button>
                     <button class="btn btn-success">Закрыть</button>
+                </div>
+            </div>
+            <div class="col-xs-7">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Отделение</label>
+                    <div class="col-xs-8">
+                        <select class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Статус</label>
+                    <div class="col-xs-8">
+                        <select class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Врач</label>
+                    <div class="col-xs-8">
+                        <select class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Комментарий</label>
+                    <div class="col-xs-8">
+                        <textarea class="form-control" cols="30" rows="5"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
