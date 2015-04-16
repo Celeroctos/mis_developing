@@ -386,7 +386,7 @@ var Core = Core || {};
 		}
 	});
 
-    $(document).ready(function() {
+    var ready = function() {
 		/* Создаем событие на обработку изменения стиля элемента
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
@@ -437,22 +437,23 @@ var Core = Core || {};
 		клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
 		что если массив пустой, то все поля будут удалены */
 		$("select[multiple][data-ignore!='multiple']").each(function() {
-			var result = $(this).multiple("selected", true);
+			var result = $(this).multiple("selected", true),
+				me = this;
 			if (result.length > 0) {
 				$(this).multiple("choose", result);
 			}
 			// #13553 - Hot! Hot! Hot!
-			this.onhide = function(e) {
+			me.onhide = function(e) {
 				if (e.target.tagName === "SELECT") {
 					$(this).parents(".multiple").hide();
 				}
 			};
-			this.onshow = function(e) {
+			me.onshow = function(e) {
 				if (e.target.tagName === "SELECT") {
 					$(this).parents(".multiple").show();
 				}
 			};
-			this.onstyle = function(e) {
+			me.onstyle = function(e) {
 				if (e.target.tagName === "SELECT") {
 					f.call(this, e);
 				}
@@ -463,7 +464,11 @@ var Core = Core || {};
 		$("select[multiple][data-ignore!='multiple'][style]").each(function() {
 			$(this).parents(".multiple").attr("style", $(this).attr("style"));
 		});
-    });
+    };
+
+	$(document).ready(function() {
+		setTimeout(ready, 0);
+	});
 
 })(Core);
 
