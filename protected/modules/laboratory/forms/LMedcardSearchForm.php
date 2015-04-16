@@ -3,11 +3,9 @@
 class LMedcardSearchForm extends FormModel {
 
 	public $card_number;
+	public $fio;
 	public $enterprise_id;
 	public $phone;
-	public $first_name;
-	public $middle_name;
-	public $last_name;
 
     /**
      * Override that method to return config. Config should return array associated with
@@ -32,22 +30,14 @@ class LMedcardSearchForm extends FormModel {
 					"value" => "shortname"
 				]
             ],
+			"fio" => [
+				"label" => "ФИО",
+				"type" => "text"
+			],
             "phone" => [
                 "label" => "Телефон",
                 "type" => "Phone",
                 "rules" => "LPhoneValidator"
-            ],
-            "first_name" => [
-                "label" => "Фамилия",
-                "type" => "text"
-            ],
-            "middle_name" => [
-                "label" => "Имя",
-                "type" => "text"
-            ],
-            "last_name" => [
-                "label" => "Отчество",
-                "type" => "text"
             ]
         ];
     }

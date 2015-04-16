@@ -6,7 +6,7 @@ class DirectionTable extends Table {
 	 * @var string - Condition for [DbCriteria]
 	 * @see DbCriteria::createWhere
 	 */
-	public $where = "status <> 3";
+	public $where = "status <> 4";
 
 	/**
 	 * @var array - Array with table's header

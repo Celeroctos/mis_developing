@@ -15,6 +15,7 @@ var TreatmentViewHeader = {
 			});
 			$($(this).data("tab")).removeClass("no-display")
 				.trigger("change");
+			/* $(".panel[data-widget]").panel("update"); */
 		});
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
 			Core.Common.cleanup(this);
@@ -138,7 +139,31 @@ var MedcardEditableViewerModal = {
 	copied: false
 };
 
+var DirectionTable = {
+	ready: function() {
+		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function() {
+			$.post(url("laboratory/direction/repeat"), {
+				id: $(this).parents("tr:eq(0)").attr("data-id")
+			}, function(json) {
+				if (!json["status"]) {
+					return Core.createMessage({
+						message: json["message"]
+					});
+				} else if (json["message"]) {
+					Core.createMessage({
+						message: json["message"],
+						sign: "ok",
+						type: "success"
+					});
+				}
+				$(".treatment-table-wrapper .panel").panel("update");
+			}, "json");
+		});
+	}
+};
+
 $(document).ready(function() {
 	MedcardEditableViewerModal.construct();
 	TreatmentViewHeader.construct();
+	DirectionTable.ready();
 });

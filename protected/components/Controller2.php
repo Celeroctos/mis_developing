@@ -488,6 +488,17 @@ abstract class Controller2 extends Controller {
         ]);
     }
 
+	/**
+	 * Post error message and terminate script evaluation
+	 * @param $message String - Message with error
+	 */
+	public function success($message) {
+		$this->leave([
+			"message" => $message,
+			"status" => true
+		]);
+	}
+
     /**
      * Leave script execution and print server's response
      * @param $parameters array - Array with parameters to return

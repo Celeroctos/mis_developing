@@ -166,6 +166,12 @@ class Table extends Widget {
 	public $tooltipDefaultPlacement = "left";
 
 	/**
+	 * @var string - Default search criteria for table, it uses
+	 * 	to store compiled criteria
+	 */
+	public $searchCriteria = "";
+
+	/**
 	 * Run widget and return just rendered content
 	 * @return string - Just rendered content
 	 * @throws CException
@@ -201,7 +207,21 @@ class Table extends Widget {
 		if (empty($this->orderBy)) {
 			$this->orderBy = $this->primaryKey;
 		}
+		$this->data = $this->fetchData();
+		$this->searchCriteria = $this->getSearchCriteria();
 		return $this->render("application.widgets.views.Table");
+	}
+
+	/**
+	 * Get search criteria for current table provider
+	 * @return string - SQL statement for criteria
+	 */
+	public function getSearchCriteria() {
+		$params = $this->provider->getCriteria()->params;
+		foreach ($params as &$param) {
+			$param = "'$param'::text";
+		}
+		return strtr($this->provider->getCriteria()->condition, $params);
 	}
 
 	/**
@@ -233,7 +253,23 @@ class Table extends Widget {
 		if (!empty($this->orderBy)) {
 			$this->provider->orderBy = $this->orderBy;
 		}
-		return $this->data = $this->provider->fetchData();
+		if (!empty($this->searchCriteria)) {
+			$this->provider->getCriteria()->addCondition($this->searchCriteria);
+		}
+		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
+		if (!class_exists($form)) {
+			return $this->data = $this->provider->fetchData();
+		} else {
+			$this->data = $this->provider->fetchData();
+		}
+		$model = new $form($this->provider->activeRecord->getScenario());
+		if (!$model instanceof FormModel) {
+			return $this->data;
+		}
+		foreach ($this->data as &$row) {
+			ActiveDataProvider::fetchExtraData($model, $row);
+		}
+		return $this->data;
 	}
 
 	/**
@@ -245,19 +281,6 @@ class Table extends Widget {
 			"data-class" => get_class($this),
 			"data-url" => $this->createUrl()
 		];
-		if (!empty($this->criteria->condition)) {
-			$options["data-condition"] = $this->criteria->condition;
-		}
-		if (!empty($this->provider->getPagination()->pageLimit)) {
-			if ($this->pageLimit !== null) {
-				$options["data-limit"] = $this->pageLimit;
-			} else {
-				$options["data-limit"] = $this->provider->getPagination()->pageLimit;
-			}
-		}
-		if (!empty($this->criteria->params)) {
-			$options["data-attributes"] = urlencode(serialize($this->criteria->params));
-		}
 		print CHtml::renderAttributes($options);
 	}
 
@@ -265,7 +288,7 @@ class Table extends Widget {
 	 * Render table's body
 	 */
 	public function renderBody() {
-		foreach ($this->fetchData() as $key => $value) {
+		foreach ($this->data as $key => $value) {
 			$options = [
 				"data-id" => $value[$this->primaryKey],
 				"class" => "core-table-row"
@@ -323,7 +346,7 @@ class Table extends Widget {
 			$this->renderChevron($key);
 			print CHtml::closeTag("td");
 		}
-		if (count($this->controls) > 0) {
+		if (is_array($this->controls) && !empty($this->controls)) {
 			print CHtml::tag("td", [
 				"align" => "middle",
 				"style" => "width: 50px"
@@ -350,7 +373,7 @@ class Table extends Widget {
 		} else {
 			$class = "glyphicon glyphicon-chevron-down table-order table-order-asc";
 		}
-		print CHtml::tag("span", [
+		print "&nbsp;".CHtml::tag("span", [
 			"class" => $class
 		]);
 	}
@@ -359,32 +382,35 @@ class Table extends Widget {
 	 * Render table controls for each row
 	 */
 	public function renderControls() {
-		if (!count($this->controls)) {
+		if (!is_array($this->controls) || !count($this->controls)) {
 			return ;
 		}
 		print CHtml::openTag("td", [
 			"align" => "middle"
 		]);
-		foreach ($this->controls as $c => $class) {
+		foreach ($this->controls as $c => $attributes) {
 			$options = [];
-			if (is_array($class)) {
-				$options["class"] = $class["class"];
-				if (isset($class["tooltip"])) {
+			if (is_array($attributes)) {
+				$options["class"] = $attributes["class"];
+				if (isset($attributes["tooltip"])) {
 					$options["onmouseenter"] = "$(this).tooltip('show')";
-					if (is_array($class["tooltip"])) {
-						$options["title"] = $class["tooltip"]["label"];
-						if (isset($class["tooltip"]["placement"])) {
-							$options["data-placement"] = $class["tooltip"]["placement"];
+					if (is_array($attributes["tooltip"])) {
+						$options["title"] = $attributes["tooltip"]["label"];
+						if (isset($attributes["tooltip"]["placement"])) {
+							$options["data-placement"] = $attributes["tooltip"]["placement"];
 						} else {
 							$options["data-placement"] = $this->tooltipDefaultPlacement;
 						}
 					} else {
-						$options["title"] = $class["tooltip"];
+						$options["title"] = $attributes["tooltip"];
 						$options["data-placement"] = $this->tooltipDefaultPlacement;
 					}
 				}
+				if (isset($attributes["options"])) {
+					$options += $attributes["options"];
+				}
 			} else {
-				$options["class"] = $class;
+				$options["class"] = $attributes;
 			}
 			print CHtml::tag("a", [
 				"href" => "javascript:void(0)",
@@ -406,8 +432,12 @@ class Table extends Widget {
 		print CHtml::openTag("tr", [
 			"class" => "core-table-row"
 		]);
+		$columns = count($this->header) - 1;
+		if (is_array($this->controls) && !empty($this->controls)) {
+			$columns++;
+		}
 		print CHtml::openTag("td", [
-			"colspan" => count($this->header) - 1,
+			"colspan" => $columns,
 			"align" => "left"
 		]);
 		if ($this->provider->pagination !== false) {
@@ -445,5 +475,31 @@ class Table extends Widget {
 		}
 		print CHtml::closeTag("td");
 		print CHtml::closeTag("tr");
+	}
+
+	/**
+	 * Serialize widget's attributes by all scalar attributes and
+	 * arrays or set your own array with attribute names
+	 *
+	 * Agreement: I hope that you will put serialized attributes
+	 *    in root widget's HTML tag named [data-attributes]
+	 *
+	 * @param array|null $attributes - Array with attributes, which have
+	 *    to be serialized, by default it serializes all scalar attributes
+	 *
+	 * @param array|null $excepts - Array with attributes, that should
+	 * 	be excepted
+	 *
+	 * @return string - Serialized and URL encoded attributes
+	 */
+	public function getSerializedAttributes($attributes = null, $excepts = null) {
+		return parent::getSerializedAttributes($attributes, [
+			"data",
+			"header",
+			"availableLimits",
+			"tooltipDefaultPlacement",
+			"textNoData",
+			"textEmptyData"
+		]);
 	}
 }

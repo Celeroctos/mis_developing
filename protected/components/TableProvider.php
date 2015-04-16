@@ -65,15 +65,6 @@ class TableProvider extends CComponent {
 	}
 
 	/**
-	 * Create static adapter for active record database model
-	 * @param CActiveRecord $activeRecord - Active record instance
-	 * @return TableProvider - Just adapted table provider
-	 */
-	public static function createActiveRecordAdapter(CActiveRecord $activeRecord) {
-		return new TableProvider($activeRecord->tableName());
-	}
-
-	/**
 	 * Override that method to return command for table widget
 	 * @return CDbCommand - Command with selection query
 	 * @throws CDbException

@@ -6,41 +6,47 @@ var Core = Core || {};
 
 	var Table = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			page: 1
+			updateDelay: 250
 		}, selector);
 	});
 
 	Table.prototype.update = function(parameters) {
 		var me = this, table = this.selector();
-		parameters = $.extend({
-			currentPage: this.property("page"),
-			orderBy: this.property("order"),
-			pageLimit: this.property("limit")
-		}, parameters);
 		this.before();
-		$.get(this.selector().data("url"), $.extend({
-			class: table.data("class"),
-			condition: table.data("condition"),
-			params: table.data("attributes"),
-			pageLimit: table.data("limit")
-		}, parameters), function(json) {
+		var data = $.extend({
+			class: table.attr("data-widget"),
+			currentPage: this.property("currentPage"),
+			orderBy: this.property("orderBy"),
+			pageLimit: this.property("pageLimit")
+		}, parameters || {});
+		console.log(this.selector().attr("data-attributes"));
+		var params = $.parseJSON(this.selector().attr("data-attributes"));
+		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
 			if (!Message.display(json)) {
 				return void 0;
 			}
+			me.after();
 			me.selector().replaceWith(
 				$(json["component"]).data(me.getDataAttribute(), me)
 			);
-		}, "json").always(function() {
+		}, "json").fail(function() {
 			me.after();
 		});
 	};
 
 	Table.prototype.before = function() {
-		//this.selector().loading();
+		var me = this;
+		setTimeout(function() {
+			me.selector().loading();
+		}, this.property("updateDelay"));
+		this.selector().trigger("table.update");
 	};
 
 	Table.prototype.after = function() {
-		//this.selector().loading("reset");
+		if (this.selector().data("core-loading")) {
+			this.selector().loading("destroy");
+		}
+		this.selector().trigger("table.updated");
 	};
 
 	Table.prototype.fetch = function(properties) {
@@ -71,19 +77,20 @@ var Core = Core || {};
 		} else {
 			order = key;
 		}
-		this.property("order", this["lastOrderBy"] = order);
-		this.update();
+		this.fetch({
+			orderBy: order
+		});
 	};
 
 	Table.prototype.page = function(page) {
 		this.fetch({
-			page: +page
+			currentPage: +page
 		});
 	};
 
 	Table.prototype.limit = function(limit) {
 		this.fetch({
-			limit: +limit
+			pageLimit: +limit
 		});
 	};
 

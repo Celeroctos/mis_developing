@@ -43,45 +43,6 @@ var Panel = {
     }
 };
 
-var Table = {
-	fetch: function(me, parameters) {
-		var table = $(me).parents(".table[data-class]");
-		$.get(url("/laboratory/medcard/getWidget"), $.extend(parameters, {
-			class: table.data("class"),
-			condition: table.data("condition"),
-			params: table.data("attributes")
-		}), function(json) {
-			if (!Message.display(json)) {
-				return void 0;
-			}
-			$(me).parents(".table[data-class]").replaceWith(
-				$(json["component"])
-			);
-		}, "json");
-	},
-	order: function(row) {
-		var parameters = {};
-		if ($(this).find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = row + " desc";
-		} else {
-			parameters["orderBy"] = row;
-		}
-		Table.fetch(this, parameters);
-	},
-	page: function(page) {
-		var td = $(this).parents(".table[data-class]").find("tr:first-child td .glyphicon").parents("td");
-		var parameters = {
-			page: page
-		};
-		if (td.find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = td.data("key") + " desc";
-		} else {
-			parameters["orderBy"] = td.data("key");
-		}
-		Table.fetch(this, parameters);
-	}
-};
-
 var DropDown = {
     change: function(animate, update) {
         const DELAY = 100;
@@ -180,42 +141,19 @@ var Message = {
 
 var MedcardSearch = {
 	construct: function() {
-		$("[id='medcard-search-button']").click(function() {
-			MedcardSearch.search($(this).parents(".modal:eq(0)"));
-		});
-		$("#medcard-edit-button").click(function() {
-			MedcardSearch.edit();
+		$(document).on("click", "[id='medcard-search-button']", function() {
+			MedcardSearch.search($(this).parents(".medcard-search-wrapper:eq(0)"));
 		});
 		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
 			MedcardSearch.reset();
 		});
 	},
-	edit: function(number) {
-		if (!(number = number || this.id)) {
-			return void 0;
-		}
-		$.get(url("/reception/patient/getMedcardData"), {
-			cardId: number
-		}, function(data) {
-			if(data.success == true) {
-				data = data.data["formModel"];
-				var form = $('#patient-medcard-edit-form');
-				$('#patient-medcard-edit-modal').modal();
-				for(var i in data) {
-					$(form).find('#' + i).val(data[i]);
-				}
-			} else {
-				$('#errorSearchPopup .modal-body .row p').remove();
-				$('#errorSearchPopup .modal-body .row').append('<p>' + data.data + '</p>')
-				$('#errorSearchPopup').modal();
-			}
-		}, "json");
-	},
-	search: function(modal) {
-		var table = modal.find("#medcard-search-button").button("loading")
-			.parents(".modal:eq(0)").find("table[data-class]");
-		var data = $("#medcard-search-form").serialize() + "&" +
-			$("#medcard-range-form").serialize() + "&widget=" + table.data("class");
+	search: function(wrapper) {
+		var table = wrapper.find("#medcard-search-button").button("loading")
+			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
+		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
+			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
+		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
 		$.post(url("/laboratory/medcard/search"), data, function(json) {
 			if (!Message.display(json)) {
 				return void 0;
@@ -228,7 +166,7 @@ var MedcardSearch = {
 				delay: 2000
 			});
 		}, "json").always(function() {
-			modal.find("#medcard-search-button").button("reset");
+			wrapper.find("#medcard-search-button").button("reset");
 		});
 	},
 	click: function(tr, id) {
@@ -320,12 +258,4 @@ $(document).ready(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
 	});
-
-	//$(".panel[data-widget]").on("panel.update.before", function() {
-	//	$('[data-toggle="tooltip"]').tooltip("destroy");
-	//}).on("panel.update", function() {
-	//	$(this).find('[data-toggle="tooltip"]').tooltip();
-	//});
-
-	$('[data-toggle="tooltip"]').tooltip();
 });

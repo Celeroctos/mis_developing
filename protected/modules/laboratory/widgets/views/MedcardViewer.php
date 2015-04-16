@@ -11,9 +11,7 @@ CHtml::openTag("div", [
 $this->beginWidget("Panel", [
 	"title" => "Реквизитная информация",
 	"collapse" => "true"
-]);
-
-?>
+]); ?>
 
 <span class="medcard-info">
 	<b>ФИО:&nbsp;</b> <?= $model["first_name"]." ".$model["middle_name"]." ".$model["last_name"] ?>&nbsp;
@@ -27,9 +25,7 @@ $this->beginWidget("Panel", [
 	<b>Место работы:&nbsp;</b> <?= $model["work_place"] ?>
 </span>
 
-<?
-
-$this->endWidget();
+<? $this->endWidget();
 
 $this->beginWidget("Panel", [
 	"title" => "Результаты обследования",
@@ -65,9 +61,5 @@ $this->beginWidget("Panel", [
 ]);
 print "Не реализовано";
 $this->endWidget();
-
-//print "<pre>";
-//print_r($model);
-//print "</pre>";
 
 CHtml::closeTag("div");
