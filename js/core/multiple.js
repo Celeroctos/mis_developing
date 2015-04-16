@@ -423,7 +423,7 @@ var Core = Core || {};
 			if (e.target.tagName === "SELECT") {
 				$(this).parents(".multiple").show();
 			}
-		}).trigger("style");
+		}); //.trigger("style");
 		/* Обходим все элементы, которые уже имеют установленные значения в
 		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
 		добавляем в компонент, после чего удалем поле value */
