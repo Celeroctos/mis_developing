@@ -68,12 +68,11 @@
     globalVariables.isSavingErrors = false;
     // Вызывается при событии сохранения одной секции приёма (шаблона или диагнозов)
     function onSectionSave(ajaxData) {
-
         if(!ajaxData.success) {
             // Поднимаем флаг, что есть ошибки
             globalVariables.isSavingErrors = true;
         }
-
+        console.log( globalVariables.numCalls);
         if ($(".submitEditPatient").length == globalVariables.numCalls) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;
@@ -97,6 +96,7 @@
                         showMsgs = true;
                         setTimeout(autoSave, 30000);
                     }
+                    $('.bodyOverlay').remove();
                 }
             } else  {
                 if(showMsgs || isThisPrint) {
@@ -226,6 +226,7 @@
     $('#medcardContentSave, #sideMedcardContentSave').on('click', function (e) {
         isThisPrint = false;
         printHandler = 'accept-greeting-link';
+        $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
         onStartSave();
 		e.stopPropagation();
     });
@@ -379,68 +380,6 @@
     // Сжатие-расширение селект-контролов
     expandSelectTimer = null;
     selectToExpand = null;
-
-    //$('form.template-edit-form select[multiple]').mouseenter(
-    //    function(e) {
-    //        onActivate(this);
-    //    }
-    //);
-	//
-    //$('form.template-edit-form select[multiple]').mousemove(
-    //    function(e) {
-    //        onActivate(this);
-    //    }
-    //);
-
-    //function onActivate(element) {
-    //    selectToExpand = element;
-    //    // Запускаем таймер
-    //    if(wasScroll) {
-    //        expandSelectTimer = setTimeout(expandSelect,250);
-    //    } else {
-    //        expandSelectTimer = setTimeout(expandSelect,3000);
-    //    }
-    //}
-
-    //$(document).on('focus','form.template-edit-form select[multiple]',
-    //    function(e){
-    //       expandSelect();
-    //    }
-    //);
-
-    //function expandSelect() {
-    //    clearTimeout(expandSelectTimer);
-    //    expandSelectTimer = null;
-    //    if (wasScroll)  {
-    //        expandSelectTimer = setTimeout(expandSelect,2000);
-    //    } else{
-    //        $(selectToExpand).attr("size", $(selectToExpand).find('option').length );
-    //    }
-    //}
-
-    //$(document).on('blur','form.template-edit-form select[multiple]',
-    //    function(e)
-    //    {
-    //        // Нужно удалить расширение
-    //      $(this).removeAttr("size");
-    //      clearTimeout(expandSelectTimer);
-    //        expandSelectTimer = null;
-    //    }
-    //);
-
-    //$('form.template-edit-form select[multiple]').mouseleave(
-    //    function(e)
-    //    {
-    //        clearTimeout(expandSelectTimer);
-    //        expandSelectTimer = null;
-    //        // Убираем расширение только если this не в фокусе
-    //        if ( ! $(e.currentTarget).is(':focus') )
-    //        {
-    //            $(e.currentTarget).removeAttr("size");
-    //        }
-    //    }
-    //);
-
     wasScroll = false;
 
     $(document).on('scroll',
@@ -457,34 +396,6 @@
     elementUnderCursorOld = null;
     elementUnderCursor = null;
     ticksAfterCursor = 0;
-
-    //function collapseCursorElement(){
-    //    if (  $(elementUnderCursor).is(elementUnderCursorOld)==false  ){
-    //        $('.expandedElement:not(:focus)').removeAttr("size")
-    //        $('.expandedElement:not(:focus)').removeClass('expandedElement');
-    //    }
-    //}
-
-    //function onExpandTimerTick() {
-    //    ticksAfterCursor--;
-    //    if (ticksAfterCursor>0) {
-    //        return;
-    //    }
-	//
-    //    if (isCursorInElement) {
-    //        // Смотрим - если старый элемент не соотносится с новым, то нужно спрятать раскрытые элементы
-    //        //    c классом expandedElement, кроме сфокусированного
-    //        collapseCursorElement();
-    //        if (elementUnderCursor!=null) {
-    //        // Раскрываем элемент, ставим ему класс
-    //            $(elementUnderCursor).attr("size", $(elementUnderCursor).find('option').length );
-    //            $(elementUnderCursor).addClass('expandedElement');
-    //        }
-    //    } else {
-    //        collapseCursorElement();
-    //    }
-    //    elementUnderCursorOld = elementUnderCursor;
-    //}
 
     $(document).on('mouseenter','form.template-edit-form select[multiple]',
         function(e) {
@@ -761,8 +672,9 @@ $('.print-greeting-link').on('click', function (e) {
     printHandler = 'print-greeting-link';
     // После закрытия окна начинать сохранение медкарты и печать листа приёма
     isThisPrint = true;
+    $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
     // Если нет кнопки "сохранить" - вызываем печать сразу
-    if ($('.submitEditPatient input').length<=0) {
+    if ($('.submitEditPatient input').length <= 0) {
         $('.activeGreeting .print-greeting-link').trigger('print');
     } else {  // Иначе вызываем процедуру сохранения
         onStartSave();
@@ -773,6 +685,7 @@ $('.print-greeting-link').on('print', function (e) {
     printDataToPrintPopup();
     $('#greetingPrintNeed input').attr('checked', '');
     // Отмечаем пункт "Приём", а остальные - нет
+    $('.bodyOverlay').remove();
     $('#whatPrinting').modal({});
     return false;
 });
@@ -780,6 +693,7 @@ $('.print-greeting-link').on('print', function (e) {
 $('.print-recomendation-link').on('click', function (e) {
     printHandler = 'print-recomendation-link';
     isThisPrint = true;
+    $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
     onStartSave();
 });
 
@@ -843,6 +757,7 @@ $('.print-recomendation-link').on('print', function (e) {
     printDataToPrintPopup();
     $('#greetingPrintNeed input').removeAttr('checked');
     $('#recommendationTemplatesPrintNeed input').attr('checked', '');
+    $('.bodyOverlay').remove();
     // Отмечаем все пункты, кроме "Приём"
     $('#whatPrinting').modal({});
     return false;

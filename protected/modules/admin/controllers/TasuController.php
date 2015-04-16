@@ -1160,15 +1160,32 @@ class TasuController extends Controller {
 		} else {
 			$docserie = $medcard->serie;
 		}
-		
-		$sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
-			SET 
-				[dulseries_30145] = '".$docserie."',
-				[dulnumber_50657] = '".$medcard->docnumber."',
-				[issuedate_42162] = '".$givedDate."'
-			WHERE 
-				[patientuid_53984] = ".$patientUid." 
-				AND [version_end] = '".$this->version_end."'";
+
+        $sql = "SELECT * FROM PDPStdStorage.dbo.t_dul_44571
+				WHERE
+					[dulseries_30145] = '".$docserie."'
+					AND [dulnumber_50657] = '".$medcard->docnumber."'
+					AND [version_end] = '".$this->version_end."'";
+
+        $result = $conn->createCommand($sql)->queryRow();
+        if(!$result) {
+            $sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
+				SET
+					[dulseries_30145] = '" . $docserie . "',
+					[dulnumber_50657] = '" . $medcard->docnumber . "',
+					[issuedate_42162] = '" . $givedDate . "'
+				WHERE
+					[patientuid_53984] = " . $patientUid . "
+					AND [version_end] = '" . $this->version_end . "'";
+        } elseif($result['patientuid_53984'] != $patientUid) {
+            $sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
+				SET
+					[patientuid_53984] = ".$patientUid."
+				WHERE
+					[dulseries_30145] = '".$docserie."'
+					AND [dulnumber_50657] = '".$medcard->docnumber."'
+					AND [version_end] = '".$this->version_end."'";
+        }
 				
 		try {
 			$conn->createCommand($sql)->execute();
