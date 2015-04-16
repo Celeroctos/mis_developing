@@ -4,8 +4,8 @@ class m150321_064551_laboratory_card_generator_rule extends CDbMigration
 {
 	public function safeUp() {
 		$sql = <<< SQL
-			INSERT INTO mis.medcards_rules (prefix_id, postfix_id, value, parent_id, name, participle_mode_prefix, participle_mode_postfix, prefix_separator_id, postfix_separator_id, type) VALUES (
-			  -2, 1, 0, NULL, 'Лаборатория', NULL, NULL, 4, 5, 1
+			INSERT INTO mis.medcards_rules (prefix_id, postfix_id, value, parent_id, name, participle_mode_prefix, participle_mode_postfix, prefix_separator_id, postfix_separator_id) VALUES (
+			  -2, 1, 0, NULL, 'Лаборатория', NULL, NULL, 4, 5
 			)
 SQL;
 		foreach (explode(";", $sql) as $s) {
