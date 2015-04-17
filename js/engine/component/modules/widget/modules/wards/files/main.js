@@ -9,6 +9,7 @@ misEngine.class('component.widget.wards', function() {
         bedEditPopover : null,
         bedAddPopover : null,
         wardAddPopover : null,
+        openedLi : null,
         tabmarks : [],
 
         displayTabmarks : function() {
@@ -214,6 +215,39 @@ misEngine.class('component.widget.wards', function() {
                 $(e.target).removeClass('cog-blinking-css');
             });
 
+            $(document).on('click', '.wardsList input[type="radio"]', function(e) {
+                e.stopPropagation();
+                return true;
+            });
+            $(document).on('change', '.wardsList input[type="radio"]', function(e) {
+                e.stopPropagation();
+                return true;
+            });
+
+            $(document).on('dblclick', '.bedsSettingsList .list-group-item', $.proxy(function(e) {
+                if(this.openedLi) {
+                   var li = this.openedLi;
+                   $(this.openedLi).animate({
+                       'height' : '50px'
+                   }, 300, function(e) {
+                       $(li).find('.addPatientForm').remove();
+                   });
+                }
+                var _e = e;
+                $(e.target).animate({
+                    'height': '400px'
+                }, 300, $.proxy(function (e) {
+                    this.openedLi = $(_e.target);
+                    $(this.openedLi).css({
+                        'position' : 'relative'
+                    }).append(
+                        $('.addPatientFormCont').html()
+                    )
+                }, this));
+
+                e.stopPropagation();
+            }, this));
+
             $(document).on('click', '#addNewWard', $.proxy(function(e) {
                 $(e.target).prop({
                    'disabled' : true
@@ -232,7 +266,7 @@ misEngine.class('component.widget.wards', function() {
 
                 var _e = e;
 
-                $(document).on('click', '.popover-wardadd .popover-title span', function(e) {
+                $(document).on('close', '.popover-wardadd span.glyphicon-remove', function(e) {
                     $(_e.target).prop({
                         'disabled' : false
                     });
@@ -272,7 +306,7 @@ misEngine.class('component.widget.wards', function() {
                 title : 'Настройки',
                 templateClass : 'popover-wardedit',
                 content : $('.settingsFormCont').html(),
-                container : li,
+                container : $(li).parent(),
                 crossLeft : '580px'
             });
         },
@@ -352,6 +386,7 @@ misEngine.class('component.widget.wards', function() {
 
             $(span).on('click', function(e) {
                 $(config.selector).popover('destroy');
+                $(span).trigger('close');
                 e.stopPropagation();
                 return false;
             });
@@ -361,9 +396,17 @@ misEngine.class('component.widget.wards', function() {
             })
         },
 
+        initHelpSystem : function() {
+            var helpSystem = misEngine.create('component.helper', {
+                file : '/js/engine/component/modules/helper/files/text/bedstock.js',
+                iconContainer : '#helperIcon'
+            });
+        },
+
         run : function() {
             this.bindHandlers();
             this.displayTabmarks();
+            this.initHelpSystem();
             return this;
         },
 

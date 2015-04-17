@@ -60,6 +60,10 @@ misEngine.class('component.helper', function() {
                         show: 300,
                         hide: 300
                     },
+                    template : $('<div>').prop({
+                        'class' : 'popover popover-helpsystem',
+                        'role' : 'tooltip'
+                    }).append($('<div>').addClass('arrow'), $('<h5>').addClass('popover-title'), $('<div>').addClass('popover-content')),
                     container: $(this.tooltips[i].selector),
                     content: $.proxy(function () {
                         return $(this.tooltips[i].body);
