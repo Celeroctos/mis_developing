@@ -281,10 +281,17 @@ misEngine.class('component.widget.wards', function() {
                 this.updateList();
             }, this));
 
-
-            $(document).on('click', '.bed-add', function(e) {
-
-            });
+            $(document).on('click', '.closePatientForm:visible', $.proxy(function(e) {
+                if(this.openedLi) {
+                    var li = this.openedLi;
+                    $(this.openedLi).animate({
+                        'height' : '50px'
+                    }, 300, function(e) {
+                        $(li).find('.addPatientForm').remove();
+                    });
+                }
+                e.stopPropagation();
+            }, this));
         },
 
         updateList: function() {
