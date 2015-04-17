@@ -98,6 +98,8 @@ class TableProvider extends CComponent {
 	public function fetchData() {
 		$this->fetchQuery = $this->getDbConnection()->createCommand()
 			->select("*")->from("(". $this->fetchQuery->getText() .") as _");
+		$this->countQuery = $this->getDbConnection()->createCommand()
+			->select("*")->from("(". $this->countQuery->getText() .") as _");
 		if ($this->getPagination()->optimizedMode) {
 			$this->applyCriteria($this->getCriteria(), function($query) {
 				/** @var $query CDbCommand */

@@ -15,7 +15,7 @@ class LMedcard extends ActiveRecord {
 	 */
 	public function getMedcardSearchTableProvider() {
 		$fetchQuery = $this->getDbConnection()->createCommand()
-			->select("
+			->selectDistinct("
 				m.id as medcard_id,
                 m.card_number as card_number,
                 p.sex as phone,
@@ -31,7 +31,8 @@ class LMedcard extends ActiveRecord {
 		$countQuery = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")
 			->from("lis.medcard as m")
-			->join("lis.patient as p", "p.id = m.patient_id");
+			->join("lis.patient as p", "p.id = m.patient_id")
+			->group("fio");
 		return new TableProvider($this, $fetchQuery, $countQuery);
 	}
 

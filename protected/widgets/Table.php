@@ -183,6 +183,9 @@ class Table extends Widget {
 	 * @throws CException
 	 */
 	public function run() {
+		if (is_string($this->provider)) {
+			$this->provider = ActiveRecord::model($this->provider)->getDefaultTableProvider();
+		}
 		if (!$this->provider instanceof TableProvider && is_array($this->data)) {
 			throw new CException("Table provider must be an instance of TableProvider and don't have to be null");
 		}
@@ -261,7 +264,8 @@ class Table extends Widget {
 			$this->provider->orderBy = $this->orderBy;
 		}
 		if (!empty($this->searchCriteria)) {
-			$this->provider->getCriteria()->addCondition($this->searchCriteria);
+			$this->provider->countQuery->andWhere($this->searchCriteria);
+			$this->provider->fetchQuery->andWhere($this->searchCriteria);
 		}
 		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
 		if (!class_exists($form)) {

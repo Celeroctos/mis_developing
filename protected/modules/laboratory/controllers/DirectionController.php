@@ -144,7 +144,7 @@ class DirectionController extends Controller2 {
 	}
 
 	/**
-	 * That action sets direction status to 3, which means that
+	 * That action sets direction status to 4, which means that
 	 * analysis should be repeated
 	 *
 	 * @in (POST):
@@ -164,6 +164,33 @@ class DirectionController extends Controller2 {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
 			} else {
 				$this->success("Направление отправлено на повторный забор образца");
+			}
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	/**
+	 * That action sets direction status to 1, which means that
+	 * analysis should be repeated
+	 *
+	 * @in (POST):
+	 *  + id - direction's identification number
+	 * @out (JSON):
+	 *  + [message] - Response message
+	 *  + status - Action result status
+	 *
+	 * @throws Exception
+	 */
+	public function actionRestore() {
+		try {
+			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => LDirection::STATUS_JUST_CREATED
+			]);
+			if (!$r) {
+				$this->error("Произошла ошибка при обновлении данных. Направление не было установлено как новое");
+			} else {
+				$this->success("Направление восстановлено как новое");
 			}
 		} catch (Exception $e) {
 			$this->exception($e);

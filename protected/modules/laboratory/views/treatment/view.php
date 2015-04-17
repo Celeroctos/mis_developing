@@ -132,17 +132,22 @@ $this->widget("Modal", [
 			<?php $this->widget("Panel", [
 				"title" => "Направления на анализ",
 				"body" => $this->createWidget("DirectionTable", [
-					"where" => "status <> 4"
+					"searchCriteria" => "status <> 4"
 				]),
 				"collapsible" => false
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?php $this->widget("Panel", [
-				"title" => "Направления на повторный анализ",
+				"title" => "Направления на повторный забор образца",
 				"body" => $this->createWidget("DirectionTable", [
-					"where" => "status = 4",
-					"controls" => "false"
+					"searchCriteria" => "status = 4",
+					"controls" => [
+						"direction-restore-icon" => [
+							"class" => "glyphicon glyphicon-arrow-left",
+							"tooltip" => "Отменить"
+						]
+					]
 				]),
 				"collapsible" => false
 			]) ?>
@@ -152,7 +157,7 @@ $this->widget("Modal", [
 	<?php $this->widget("Panel", [
 		"title" => "Медицинские карты лаборатории",
 		"body" => $this->createWidget("TreatmentMedcardSearch"),
-		"id" => "treatment-medcard-search-view",
+		"id" => "treatment-laboratory-medcard-table-panel",
 		"collapsible" => false
 	]) ?>
 </div>

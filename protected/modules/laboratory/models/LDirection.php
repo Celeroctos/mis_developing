@@ -48,15 +48,11 @@ class LDirection extends ActiveRecord {
 			$this->getDbConnection()->createCommand()
 				->select("d.*, m.card_number as card_number")
 				->from("lis.direction as d")
-				->join("lis.medcard as m", "d.medcard_id = m.id")
+				->join("lis.medcard as m", "d.medcard_id = m.id"),
+			$this->getDbConnection()->createCommand()
+				->select("count(1) as count")
+				->from("lis.direction")
 		);
-	}
-
-	public function applyDefaultValues() {
-		$this->setAttributes([
-			"barcode" => BarcodeGenerator::getGenerator()->generate(),
-			"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId")
-		]);
 	}
 
     /**

@@ -60,10 +60,8 @@ class MedcardController extends Controller2 {
 			}
 			$like = [
 				"card_number",
+				"fio",
 				"phone",
-				"first_name",
-				"middle_name",
-				"last_name"
 			];
 			$compare = [];
 			foreach ($medcard as $key => $value) {
@@ -79,15 +77,16 @@ class MedcardController extends Controller2 {
 			if (count($compare) > 0) {
 				$criteria->addColumnCondition($compare);
 			}
+			$widget = Yii::app()->getRequest()->getPost("widget");
 			$attributes = json_decode(Yii::app()->getRequest()->getPost("attributes"), true);
-			if (isset($medcard["fio"]) && !empty($medcard["fio"])) {
+			if (isset($medcard["fio"]) && !empty($medcard["fio"]) && $widget === "MedcardTable2") {
 				$attributes["optimizedPagination"] = true;
 			} else {
 				$attributes["optimizedPagination"] = false;
 			}
 			unset($attributes["searchCriteria"]);
 			$this->leave([
-				"component" => $this->getWidget(Yii::app()->getRequest()->getPost("widget"), [
+				"component" => $this->getWidget($widget, [
 					"criteria" => $criteria
 				] + $attributes)
 			]);
