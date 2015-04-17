@@ -96,7 +96,18 @@ class TableProvider extends CComponent {
 	 * @return array - Array with fetched data
 	 */
 	public function fetchData() {
-		$this->applyCriteria($this->getCriteria());
+		$this->fetchQuery = $this->getDbConnection()->createCommand()
+			->select("*")->from("(". $this->fetchQuery->getText() .") as _");
+		if ($this->getPagination()->optimizedMode) {
+			$this->applyCriteria($this->getCriteria(), function($query) {
+				/** @var $query CDbCommand */
+				$query->limit($this->getPagination()->pageLimit + 1,
+					$this->getPagination()->pageLimit * $this->getPagination()->currentPage
+				);
+			});
+		} else {
+			$this->applyCriteria($this->getCriteria());
+		}
 		if (($row = $this->countQuery->queryRow()) != null) {
 			$count = $row["count"];
 		} else {
@@ -112,13 +123,21 @@ class TableProvider extends CComponent {
 	/**
 	 * Apply criteria to provider's query
 	 * @param CDbCriteria $criteria - Database criteria
+	 * @param callable $custom - Custom function for count query
 	 * @return CDbCriteria - Same criteria instance
 	 */
-	public function applyCriteria($criteria) {
-		$queries = [
-			$this->countQuery,
-			$this->fetchQuery
-		];
+	public function applyCriteria($criteria, $custom = null) {
+		if ($custom == null) {
+			$queries = [
+				$this->countQuery,
+				$this->fetchQuery
+			];
+		} else {
+			$queries = [
+				$this->fetchQuery
+			];
+			$custom($this->countQuery);
+		}
 		foreach ($queries as $query) {
 			/** @var $query CDbCommand */
 			$query->where($criteria->condition, $criteria->params);

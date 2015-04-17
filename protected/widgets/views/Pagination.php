@@ -7,6 +7,7 @@
 ?>
 
 <nav>
+	<?php if (!$this->optimizedMode): ?>
 	<ul class="pagination">
 		<li <?= $this->getClick($this->currentPage != 1, -1) ?>>
 			<a href="javascript:void(0)" aria-label="Предыдущая">
@@ -55,4 +56,18 @@
 			</a>
 		</li>
 	</ul>
+	<?php else: ?>
+	<ul class="pager">
+		<li class="previous" <?= $this->getClick($this->currentPage != 1, -1) ?>>
+			<a href="javascript:void(0)">
+				<span aria-hidden="true">&larr;</span> Предыдущие
+			</a>
+		</li>
+		<li class="next" <?= $this->getClick($this->currentPage != $this->totalPages, 1) ?>>
+			<a href="javascript:void(0)">
+				Следующие <span aria-hidden="true">&rarr;</span>
+			</a>
+		</li>
+	</ul>
+	<?php endif ?>
 </nav>

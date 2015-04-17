@@ -79,10 +79,17 @@ class MedcardController extends Controller2 {
 			if (count($compare) > 0) {
 				$criteria->addColumnCondition($compare);
 			}
+			$attributes = json_decode(Yii::app()->getRequest()->getPost("attributes"), true);
+			if (isset($medcard["fio"]) && !empty($medcard["fio"])) {
+				$attributes["optimizedPagination"] = true;
+			} else {
+				$attributes["optimizedPagination"] = false;
+			}
+			unset($attributes["searchCriteria"]);
 			$this->leave([
 				"component" => $this->getWidget(Yii::app()->getRequest()->getPost("widget"), [
 					"criteria" => $criteria
-				] + json_decode(Yii::app()->getRequest()->getPost("attributes"), true))
+				] + $attributes)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);

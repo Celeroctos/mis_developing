@@ -3,12 +3,12 @@
 class MedcardTable extends Table {
 
 	public $header = [
-		"number" => [
+		"card_number" => [
 			"label" => "Номер",
 			"style" => "width: 10%"
 		],
 		"fio" => [
-			"label" => "ФИО пациента",
+			"label" => "ФИО",
 			"style" => "width: 35%"
 		],
 		"enterprise" => [
@@ -20,14 +20,14 @@ class MedcardTable extends Table {
 			"style" => "width: 15%"
 		],
 		"phone" => [
-			"label" => "Контактный телефон"
+			"label" => "Телефон"
 		]
 	];
 
-	public $primaryKey = "number";
-	public $sort = "number";
+	public $primaryKey = "card_number";
+	public $orderBy = "card_number";
 	public $id = "medcard-table";
-	public $limit = 10;
+	public $pageLimit = 10;
 	public $click = "MedcardSearch.click";
 
 	/**

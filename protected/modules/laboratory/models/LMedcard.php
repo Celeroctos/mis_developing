@@ -17,7 +17,7 @@ class LMedcard extends ActiveRecord {
 		$fetchQuery = $this->getDbConnection()->createCommand()
 			->select("
 				m.id as medcard_id,
-                m.card_number as number,
+                m.card_number as card_number,
                 p.sex as phone,
                 concat(p.surname, ' ', p.name, ' ', p.patronymic) as fio,
                 p.birthday as birthday,
@@ -31,9 +31,7 @@ class LMedcard extends ActiveRecord {
 		$countQuery = $this->getDbConnection()->createCommand()
 			->select("count(1) as count")
 			->from("lis.medcard as m")
-			->join("lis.patient as p", "p.id = m.patient_id")
-			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
-			->leftJoin("lis.analysis as a", "a.direction_id = d.id");
+			->join("lis.patient as p", "p.id = m.patient_id");
 		return new TableProvider($this, $fetchQuery, $countQuery);
 	}
 
