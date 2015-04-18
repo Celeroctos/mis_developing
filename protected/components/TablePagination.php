@@ -18,6 +18,12 @@ class TablePagination extends CComponent {
 	public $pageLimit = 10;
 
 	/**
+	 * @var bool - Shall table's pagination use
+	 * 	optimized display mode for high performance
+	 */
+	public $optimizedMode = false;
+
+	/**
 	 * Construct table pagination with count of rows
 	 * @param int $totalCount - Total count of rows
 	 */

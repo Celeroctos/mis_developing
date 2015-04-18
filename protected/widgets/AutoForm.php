@@ -67,12 +67,12 @@ class AutoForm extends Widget {
         return true;
     }
 
-    /**
-     * Format every data field with specific format, it will get data format field's
-     * from model
-     * @param String $format - String with data format, for example ${id} or ${surname}
-     * @param Array $data - Array with data to format
-     */
+	/**
+	 * Format every data field with specific format, it will get data format field's
+	 * from model
+	 * @param String $format - String with data format, for example ${id} or ${surname}
+	 * @param Array $data - Array with data to format
+	 */
     public static function format($format, array& $data) {
         foreach ($data as $i => &$value) {
 			if (is_object($value)) {
@@ -86,7 +86,7 @@ class AutoForm extends Widget {
                 $value = $format;
                 if (count($matches)) {
                     foreach ($matches[1] as $m) {
-                        $value = preg_replace("/%\\{([({$m})]+)\\}/", $model[$m], $value);
+                        $value = preg_replace("/\\%{{$m}}/", $model[$m], $value);
                     }
                 }
             } else if (is_callable($format)) {

@@ -19,7 +19,6 @@ var Core = Core || {};
 			orderBy: this.property("orderBy"),
 			pageLimit: this.property("pageLimit")
 		}, parameters || {});
-		console.log(this.selector().attr("data-attributes"));
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
 			if (!Message.display(json)) {

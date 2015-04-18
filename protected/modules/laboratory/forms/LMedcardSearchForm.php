@@ -3,7 +3,9 @@
 class LMedcardSearchForm extends FormModel {
 
 	public $card_number;
-	public $fio;
+	public $surname;
+	public $name;
+	public $patronymic;
 	public $enterprise_id;
 	public $phone;
 
@@ -30,8 +32,16 @@ class LMedcardSearchForm extends FormModel {
 					"value" => "shortname"
 				]
             ],
-			"fio" => [
-				"label" => "ФИО",
+			"surname" => [
+				"label" => "Фамилия",
+				"type" => "text"
+			],
+			"name" => [
+				"label" => "Имя",
+				"type" => "text"
+			],
+			"patronymic" => [
+				"label" => "Отчество",
 				"type" => "text"
 			],
             "phone" => [
