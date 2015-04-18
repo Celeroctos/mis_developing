@@ -29,10 +29,19 @@ class LMedcard extends ActiveRecord {
 			->leftJoin("lis.analysis as a", "a.direction_id = d.id")
 			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
 		$countQuery = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
+			->select("count(1) as count, m.id as medcard_id,
+                m.card_number as card_number,
+                p.sex as phone,
+                concat(p.surname, ' ', p.name, ' ', p.patronymic) as fio,
+                p.birthday as birthday,
+                e.shortname as enterprise,
+                cast(a.registration_time as date) as registration_date")
 			->from("lis.medcard as m")
 			->join("lis.patient as p", "p.id = m.patient_id")
-			->group("fio");
+			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
+			->leftJoin("lis.analysis as a", "a.direction_id = d.id")
+			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id")
+			->group("m.id, p.sex, card_number, fio, birthday, enterprise, registration_date");
 		return new TableProvider($this, $fetchQuery, $countQuery);
 	}
 

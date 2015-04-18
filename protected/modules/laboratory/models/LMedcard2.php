@@ -26,14 +26,6 @@ class LMedcard2 extends ActiveRecord {
 	public $user_created;
 
 	/**
-	 * @param string $className - Name of class to load
-	 * @return LMedcard2 - ActiveRecord instance
-	 */
-	public static function model($className = __CLASS__) {
-		return parent::model($className);
-	}
-
-	/**
 	 * Find information about patient by it's card number
 	 * @param string $number - Number of patients card (mis.medcards.card_number)
 	 * @return mixed - Mixed object with found row
