@@ -264,8 +264,8 @@ class Table extends Widget {
 			$this->provider->orderBy = $this->orderBy;
 		}
 		if (!empty($this->searchCriteria)) {
-			$this->provider->countQuery->andWhere($this->searchCriteria);
-			$this->provider->fetchQuery->andWhere($this->searchCriteria);
+			$this->provider->fetchQuery->where($this->searchCriteria);
+			$this->provider->countQuery->where($this->searchCriteria);
 		}
 		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
 		if (!class_exists($form)) {

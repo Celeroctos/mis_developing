@@ -34,15 +34,15 @@ class TableProvider extends CComponent {
 	/**
 	 * Construct table provider with [tableName] check
 	 * @param CActiveRecord|string $activeRecord - Active record instance
-	 *    or class name
+	 *  or class name
 	 * @param CDbCommand $fetchQuery - Query to fetch rows from
-	 *    database's table
-	 * @param CDbCommand $countQuery - Query to count rows from
-	 *    database's table
+	 *  database's table
+	 * @param array|null $config - Array with classes table provider
+	 * 	configuration
 	 * @throws CException
 	 * @see activeRecord
 	 */
-	public function __construct($activeRecord = null, $fetchQuery = null, $countQuery = null) {
+	public function __construct($activeRecord = null, $fetchQuery = null, $config = null) {
 		if (($this->activeRecord = $activeRecord) == null) {
 			throw new CException("Table provider can't resolve [null] active record instance");
 		}
@@ -54,13 +54,15 @@ class TableProvider extends CComponent {
 		} else {
 			$this->fetchQuery = $fetchQuery;
 		}
-		if ($countQuery == null) {
-			$this->countQuery = $this->getCountQuery();
-		} else {
-			$this->countQuery = $countQuery;
-		}
+		$this->countQuery = clone $this->fetchQuery;
+		$this->countQuery->select("count(1) as count");
 		if ($this->pagination !== false) {
 			$this->pagination = $this->getPagination();
+		}
+		if ($config !== null) {
+			foreach ($config as $key => $value) {
+				$this->$key = $value;
+			}
 		}
 	}
 
@@ -75,19 +77,6 @@ class TableProvider extends CComponent {
 		}
 		return $this->getDbConnection()->createCommand()
 			->select("*")
-			->from($this->activeRecord->tableName());
-	}
-
-	/**
-	 * Override that method to return count of rows in table
-	 * @return CDbCommand - Command to get count of rows
-	 */
-	public function getCountQuery() {
-		if ($this->countQuery !== null) {
-			return $this->countQuery;
-		}
-		return $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
 			->from($this->activeRecord->tableName());
 	}
 

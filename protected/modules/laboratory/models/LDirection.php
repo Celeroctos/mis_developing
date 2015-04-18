@@ -44,14 +44,10 @@ class LDirection extends ActiveRecord {
 	 * @throws CDbException
 	 */
 	public function getTableProvider() {
-		return new TableProvider($this,
-			$this->getDbConnection()->createCommand()
-				->select("d.*, m.card_number as card_number")
-				->from("lis.direction as d")
-				->join("lis.medcard as m", "d.medcard_id = m.id"),
-			$this->getDbConnection()->createCommand()
-				->select("count(1) as count")
-				->from("lis.direction")
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
+			->select("d.*, m.card_number as card_number, d.status as status")
+			->from("lis.direction as d")
+			->join("lis.medcard as m", "d.medcard_id = m.id")
 		);
 	}
 

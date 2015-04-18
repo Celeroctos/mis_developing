@@ -223,20 +223,18 @@ class LMedcard2 extends ActiveRecord {
 	 * @return TableProvider - Default table provider
 	 */
 	public function getMedcardSearchTableProvider() {
-		$fetchQuery = $this->getDbConnection()->createCommand()
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->select("
                 m.card_number as card_number,
                 m.contact as phone,
                 concat(o.last_name, ' ', o.first_name, ' ', o.middle_name) as fio,
                 o.birthday as birthday,
-                e.shortname as enterprise")
+                e.shortname as enterprise,
+                e.id as enterprise_id")
 			->from("mis.medcards as m")
 			->join("mis.oms as o", "m.policy_id = o.id")
-			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
-		$countQuery = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
-			->from("mis.medcards as m");
-		return new TableProvider($this, $fetchQuery, $countQuery);
+			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id")
+		);
 	}
 
 	/**
