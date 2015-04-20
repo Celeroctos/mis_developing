@@ -172,11 +172,20 @@ class Table extends Widget {
 	public $searchCriteria = "";
 
 	/**
+	 * @var bool - Shall use optimized pagination for
+	 *	higher performance
+	 */
+	public $optimizedPagination = false;
+
+	/**
 	 * Run widget and return just rendered content
 	 * @return string - Just rendered content
 	 * @throws CException
 	 */
 	public function run() {
+		if (is_string($this->provider)) {
+			$this->provider = ActiveRecord::model($this->provider)->getDefaultTableProvider();
+		}
 		if (!$this->provider instanceof TableProvider && is_array($this->data)) {
 			throw new CException("Table provider must be an instance of TableProvider and don't have to be null");
 		}
@@ -218,8 +227,8 @@ class Table extends Widget {
 	 */
 	public function getSearchCriteria() {
 		$params = $this->provider->getCriteria()->params;
-		foreach ($params as &$param) {
-			$param = "'$param'::text";
+		foreach ($params as $key => &$param) {
+			$param = "'$param'";
 		}
 		return strtr($this->provider->getCriteria()->condition, $params);
 	}
@@ -237,6 +246,7 @@ class Table extends Widget {
 		} else if ($this->provider == null && is_array($this->data)) {
 			return $this->data;
 		}
+		$this->provider->getPagination()->optimizedMode = $this->optimizedPagination;
 		$this->provider->getPagination()->currentPage = $this->currentPage;
 		if ($this->pageLimit != null) {
 			$this->provider->getPagination()->pageLimit = $this->pageLimit;
@@ -254,7 +264,8 @@ class Table extends Widget {
 			$this->provider->orderBy = $this->orderBy;
 		}
 		if (!empty($this->searchCriteria)) {
-			$this->provider->getCriteria()->addCondition($this->searchCriteria);
+			$this->provider->fetchQuery->where($this->searchCriteria);
+			$this->provider->countQuery->where($this->searchCriteria);
 		}
 		$form = preg_replace('/(^\d*)|(\d*$)/', "", get_class($this->provider->activeRecord))."Form";
 		if (!class_exists($form)) {
@@ -285,6 +296,23 @@ class Table extends Widget {
 	}
 
 	/**
+	 * Format data row's cell
+	 * @param string $format - Format string
+	 * @param array $cell - Array with cell data
+	 * @return string - Formatted result
+	 */
+	private function format($format, $cell) {
+		preg_match_all("/%\\{([a-zA-Z_0-9]+)\\}/", $format, $matches);
+		$value = $format;
+		if (count($matches)) {
+			foreach ($matches[1] as $m) {
+				$value = preg_replace("/\\%{{$m}}/", $cell[$m], $value);
+			}
+		}
+		return $value;
+	}
+
+	/**
 	 * Render table's body
 	 */
 	public function renderBody() {
@@ -298,10 +326,15 @@ class Table extends Widget {
 			}
 			print CHtml::openTag("tr", $options);
 			foreach ($this->header as $k => $v) {
+				if (isset($v["format"])) {
+					$val = $this->format($v["format"], $value);
+				} else {
+					$val = isset($value[$k]) ? $value[$k] : "";
+				}
 				print CHtml::tag("td", [
 					"align" => "left",
 					"class" => "core-table-cell"
-				], isset($value[$k]) ? $value[$k] : "");
+				], $val);
 			}
 			$this->renderControls();
 			print CHtml::closeTag("tr");
@@ -494,12 +527,25 @@ class Table extends Widget {
 	 */
 	public function getSerializedAttributes($attributes = null, $excepts = null) {
 		return parent::getSerializedAttributes($attributes, [
+			/*
+			 * Don't let widget to serialize array
+			 * with data, pff :D
+			 */
 			"data",
+			/*
+			 * Allow this fields only if you want to
+			 * didn't declare custom widget for ur table
+			 */
 			"header",
 			"availableLimits",
 			"tooltipDefaultPlacement",
 			"textNoData",
-			"textEmptyData"
+			"textEmptyData",
+			/*
+			 * We can't allow widget to set [emptyData] attribute for actions
+			 * like search or update, cuz it will always return empty data
+			 */
+			"emptyData"
 		]);
 	}
 }

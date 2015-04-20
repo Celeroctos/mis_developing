@@ -14,10 +14,13 @@ class LMedcard extends ActiveRecord {
 	 * @return TableProvider - Default table provider
 	 */
 	public function getMedcardSearchTableProvider() {
-		$fetchQuery = $this->getDbConnection()->createCommand()
-			->select("
+		SearchEngine::createWithConfig($this, [
+
+		]);
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
+			->selectDistinct("
 				m.id as medcard_id,
-                m.card_number as number,
+                m.card_number,
                 p.sex as phone,
                 concat(p.surname, ' ', p.name, ' ', p.patronymic) as fio,
                 p.birthday as birthday,
@@ -27,14 +30,8 @@ class LMedcard extends ActiveRecord {
 			->join("lis.patient as p", "p.id = m.patient_id")
 			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
 			->leftJoin("lis.analysis as a", "a.direction_id = d.id")
-			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id");
-		$countQuery = $this->getDbConnection()->createCommand()
-			->select("count(1) as count")
-			->from("lis.medcard as m")
-			->join("lis.patient as p", "p.id = m.patient_id")
-			->leftJoin("lis.direction as d", "d.medcard_id = m.id")
-			->leftJoin("lis.analysis as a", "a.direction_id = d.id");
-		return new TableProvider($this, $fetchQuery, $countQuery);
+			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id")
+		);
 	}
 
 	/**

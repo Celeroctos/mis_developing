@@ -21,6 +21,12 @@ class Pagination extends Widget {
 	public $pageLimit = 10;
 
 	/**
+	 * @var bool - Shall pagination use optimized mode
+	 * 	for high performance
+	 */
+	public $optimizedMode = false;
+
+	/**
 	 * @var TablePagination - Table pagination instance, if
 	 * 	not null, the upper values get it
 	 */

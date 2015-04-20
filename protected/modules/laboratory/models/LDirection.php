@@ -44,19 +44,11 @@ class LDirection extends ActiveRecord {
 	 * @throws CDbException
 	 */
 	public function getTableProvider() {
-		return new TableProvider($this,
-			$this->getDbConnection()->createCommand()
-				->select("d.*, m.card_number as card_number")
-				->from("lis.direction as d")
-				->join("lis.medcard as m", "d.medcard_id = m.id")
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
+			->select("d.*, m.card_number as card_number, d.status as status")
+			->from("lis.direction as d")
+			->join("lis.medcard as m", "d.medcard_id = m.id")
 		);
-	}
-
-	public function applyDefaultValues() {
-		$this->setAttributes([
-			"barcode" => BarcodeGenerator::getGenerator()->generate(),
-			"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId")
-		]);
 	}
 
     /**
