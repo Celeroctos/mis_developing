@@ -48,10 +48,14 @@ misEngine.class('component.module.hospital.bedsstock', function() {
                 .render()
                 .on();
 
+            var expanderBody = $('.bedsstockExpanderBody');
+            expanderBody.find('li.new').remove();
+            expanderBody.find('.wardsList li').addClass('default-margin-bottom');
+
             var expander = misEngine.create('component.expander', {
                 grid : this.patientsGrid,
                 renderConfig : {
-                    template : '.bedsstockExpanderBody'
+                    template : expanderBody
                 }
             });
         },

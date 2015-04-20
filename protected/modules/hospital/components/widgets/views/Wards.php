@@ -195,8 +195,56 @@
                 </div>
             </div>
             <div class="form-group">
+                <button class="btn btn-danger" id="deleteBed">Удалить койку</button>
                 <button class="btn btn-primary">Применить</button>
                 <button class="btn btn-success">Закрыть</button>
+            </div>
+        </form>
+    </div>
+    <div class="addPatientFormCont">
+        <form class="addPatientForm form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-xs-4">ФИО</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Год рождения</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Дата выписки</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Врач</label>
+                <div class="col-xs-8">
+                    <select class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Зарезервировать до</label>
+                <div class="col-xs-8">
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-4">Комментарий</label>
+                <div class="col-xs-8">
+                    <textarea cols="30" rows="3" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group col-xs-12">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-8">
+                    <button class="btn btn-primary acceptPatient">Подтвердить</button>
+                    <button class="btn btn-success closePatientForm">Закрыть</button>
+                </div>
             </div>
         </form>
     </div>

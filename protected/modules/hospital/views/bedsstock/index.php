@@ -124,10 +124,12 @@
 <div class="relocationExpanderBody">
     <form class="form-inline relocationForm">
         <div class="form-group">
-            <label for="wardId">Выберите отделение для перевода</label>
-            <select class="form-control col-xs-3" id="wardId">
-                <option>%any doctor%</option>
-            </select>
+            <label for="wardId" class="col-xs-5">Выберите отделение для перевода</label>
+            <div class="col-xs-7">
+                <select class="form-control" id="wardId">
+                    <option>%any ward%</option>
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <button class="btn btn-success" type="button">Подтвердить</button>
@@ -177,8 +179,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary">Применить</button>
-                    <button class="btn btn-success">Закрыть</button>
+                    <button class="btn btn-danger" id="deleteWard">Удалить палату</button>
                 </div>
             </div>
             <div class="col-xs-7">
@@ -205,6 +206,10 @@
                     <div class="col-xs-8">
                         <textarea class="form-control" cols="30" rows="5"></textarea>
                     </div>
+                </div>
+                <div class="form-group col-xs-12 col-sm-offset-3">
+                    <button class="btn btn-primary" id="changeWard">Применить</button>
+                    <button class="btn btn-success" id="closeWard">Закрыть</button>
                 </div>
             </div>
         </div>

@@ -1,3 +1,9 @@
+@default-margin: 10px;
+
+.default-margin-bottom {
+  margin-bottom: @default-margin;
+}
+
 .tabmark {
   display: none;
 }
@@ -352,13 +358,52 @@
 }
 
 .popover-helpsystem {
+  @link-color: #FF4500;
   .popover-title {
     font-size: 14px;
+    color: #000000;
   }
   .popover-content {
     width: auto;
     min-width: 150px;
     font-size: 13px;
     line-height: normal;
+    font-weight: normal;
+  }
+  .popover-footer {
+    text-align: right;
+    padding: 0 15px 10px 0;
+    font-size: 13px;
+    a {
+      color: @link-color !important;
+    }
+  }
+}
+
+.popover-helpsystem-mode {
+  @background: #0b211e;
+  @font-color : #ffffff;
+  .arrow::after {
+    border-bottom-color: @background !important;
+  }
+  .popover-content, .popover-title {
+    background: @background;
+    width: 280px;
+    color: @font-color;
+  }
+  .popover-title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .popover-content {
+    font-weight: 13px;
+    a {
+      color: @font-color !important;
+    }
+    h6 {
+      font-weight: bold;
+      color: #f9ffd7;
+    }
   }
 }

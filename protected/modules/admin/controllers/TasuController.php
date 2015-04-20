@@ -1178,13 +1178,23 @@ class TasuController extends Controller {
 					[patientuid_53984] = " . $patientUid . "
 					AND [version_end] = '" . $this->version_end . "'";
         } elseif($result['patientuid_53984'] != $patientUid) {
-            $sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
-				SET
-					[patientuid_53984] = ".$patientUid."
-				WHERE
-					[dulseries_30145] = '".$docserie."'
-					AND [dulnumber_50657] = '".$medcard->docnumber."'
-					AND [version_end] = '".$this->version_end."'";
+            $sql = "SELECT * FROM PDPStdStorage.dbo.t_dul_44571
+					WHERE
+						[dulseries_30145] = '".$docserie."'
+						AND [dulnumber_50657] = '".$medcard->docnumber."'
+						AND [version_end] = '".$this->version_end."'
+						AND [patientuid_53984] = ".$patientUid;
+
+            $result = $conn->createCommand($sql)->queryRow();
+            if(!$result) {
+                $sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
+					SET
+						[patientuid_53984] = ".$patientUid."
+					WHERE
+						[dulseries_30145] = '".$docserie."'
+						AND [dulnumber_50657] = '".$medcard->docnumber."'
+						AND [version_end] = '".$this->version_end."'";
+            }
         }
 				
 		try {
@@ -1192,7 +1202,6 @@ class TasuController extends Controller {
 		} catch(Exception $e) {
 			var_dump($e);
 			exit();
-			
 		}
 		
 		$sql = "ALTER TABLE dbo.t_dul_44571 ENABLE TRIGGER trt_dul_44571_update";
