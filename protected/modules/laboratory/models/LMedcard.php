@@ -9,6 +9,27 @@ class LMedcard extends ActiveRecord {
 	public $card_number;
 	public $enterprise_id;
 
+	public function __get($key) {
+		$value = $this->getAttribute($key);
+		if (!isset($value) || empty($value)) {
+			if (isset($this->_attr[$key])) {
+				return $this->_attr[$key];
+			} else {
+				return null;
+			}
+		} else {
+			return $value;
+		}
+	}
+
+	public function __set($key, $value) {
+		if (!$this->setAttribute($key, $value)) {
+			$this->_attr[$key] = $value;
+		}
+	}
+
+	private $_attr = [];
+
 	/**
 	 * Get instance of default table provider for current table
 	 * @return TableProvider - Default table provider

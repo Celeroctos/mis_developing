@@ -100,7 +100,7 @@ class DirectionController extends Controller2 {
 
 	private function registerMedcardForDirection(&$patient, &$medcard) {
 		$patientForm = $this->requireModel("LPatientForm", [
-			"surname", "name", "patronymic", "sex", "birthday"
+			"surname", "name", "patronymic", "sex", "birthday", "contact", "work_place"
 		]);
 		$medcardForm = $this->requireModel("LMedcardForm", [
 			"mis_medcard", "card_number", "enterprise_id"
@@ -112,8 +112,12 @@ class DirectionController extends Controller2 {
 		}
 		$transaction = Yii::app()->getDb()->beginTransaction();
 		try {
-			$address = LAddress::loadFromModel($addressForm);
-			$registerAddress = LAddress::loadFromModel($registerAddressForm);
+			$address = LAddress::loadFromModel($addressForm, [
+				"string" => $patientForm["address_id"]
+			]);
+			$registerAddress = LAddress::loadFromModel($registerAddressForm, [
+				"string" => $patientForm["register_address_id"]
+			]);
 			if (!$address->save(true)) {
 				throw new CException("Can't register patient address in database");
 			}

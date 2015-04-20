@@ -189,7 +189,6 @@ var TreatmentDirectionTable = {
 					type: "success"
 				});
 			}
-			console.log($("#treatment-repeat-counts"));
 			$("#treatment-repeat-counts").text(
 				json["repeats"]
 			);
@@ -201,9 +200,17 @@ var TreatmentDirectionTable = {
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
 		$("#treatment-laboratory-medcard-table-panel").on("click", ".direction-register-icon", function() {
-
+			/* Not Implemented */
 		}).on("click", ".medcard-show-icon", function() {
-
+			var loading = $("#treatment-laboratory-medcard-table-panel")
+				.find(".table").loading("render");
+			Core.Common.loadWidget("MedcardViewer", {
+				medcard: $(this).parents("tr:eq(0)").attr("data-id")
+			}, function(component) {
+				$("#show-medcard-modal").modal().find(".modal-body").empty().append(component);
+			}).always(function() {
+				loading.loading("reset");
+			});
 		});
 	}
 };

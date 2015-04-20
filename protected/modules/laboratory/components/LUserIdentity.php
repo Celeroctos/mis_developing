@@ -13,6 +13,7 @@ class LUserIdentity extends CUserIdentity {
 
     public function authenticate() {
 
+		/** @var mixed $record */
         $record = User::model()->findByAttributes([
             'password' => md5(md5($this->password)),
             'login' => $this->username

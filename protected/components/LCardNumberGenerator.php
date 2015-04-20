@@ -14,7 +14,7 @@ class LCardNumberGenerator {
 		$row = Yii::app()->getDb()->createCommand()
 			->select("card_number")
 			->from("lis.medcard")
-			->offset("card_number")
+			->order("card_number desc")
 			->limit(1)
 			->queryRow();
 		$generator = new CardnumberGenerator();

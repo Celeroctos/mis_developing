@@ -31,8 +31,11 @@ class DirectionTable extends Table {
 		]
 	];
 
-	public $provider = "LDirection";
 	public $orderBy = "id";
 	public $searchCriteria = "status <> 4";
 	public $pageLimit = 25;
+
+	public function init() {
+		$this->provider = LDirection::model()->getTreatmentTableProvider();
+	}
 }

@@ -113,7 +113,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute);
+		$.removeData(this.selector(), this.getDataAttribute());
     };
 
     /**
@@ -180,6 +180,35 @@ var Core = Core || {};
 			list[i] += "[data-cleanup!='false']";
 		}
 		$(component).find(list.join(",")).val("");
+	};
+
+	/**
+	 * Get url to get widget component
+	 * @returns {String} - Path to widget action
+	 * @static
+	 */
+	Common.getWidget = function() {
+		return window["globalVariables"]["getWidget"];
+	};
+
+	/**
+	 * Load widget
+	 * @param {String} widget - Name of widget's class
+	 * @param {{}} [attributes] - Widget's parameters
+	 * @param {Function} [success] - Callback after fetch
+	 */
+	Common.loadWidget = function(widget, attributes, success) {
+		return $.get(this.getWidget(), $.extend(attributes, {
+			class: widget
+		}), function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else {
+				success && success(json["component"]);
+			}
+		}, "json");
 	};
 
 	Core.postFormErrors = function(where, json) {
