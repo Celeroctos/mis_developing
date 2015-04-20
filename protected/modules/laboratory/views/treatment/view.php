@@ -115,7 +115,7 @@ $this->widget("Modal", [
 		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<span class="badge">
+				<span class="badge" id="treatment-repeat-counts">
 					<?= $directionRepeats ?>
 				</span>
 			</button>

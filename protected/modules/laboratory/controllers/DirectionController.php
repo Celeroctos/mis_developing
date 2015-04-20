@@ -163,7 +163,10 @@ class DirectionController extends Controller2 {
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
 			} else {
-				$this->success("Направление отправлено на повторный забор образца");
+				$this->leave([
+					"message" => "Направление отправлено на повторный забор образца",
+					"repeats" => LDirection::model()->getCountOfRepeats(),
+				]);
 			}
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -190,7 +193,10 @@ class DirectionController extends Controller2 {
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было установлено как новое");
 			} else {
-				$this->success("Направление восстановлено как новое");
+				$this->leave([
+					"message" => "Направление восстановлено как новое",
+					"repeats" => LDirection::model()->getCountOfRepeats(),
+				]);
 			}
 		} catch (Exception $e) {
 			$this->exception($e);

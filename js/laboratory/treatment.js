@@ -141,41 +141,60 @@ var MedcardEditableViewerModal = {
 
 var TreatmentDirectionTable = {
 	ready: function() {
+		var me = this;
 		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function() {
-			$.post(url("laboratory/direction/repeat"), {
-				id: $(this).parents("tr:eq(0)").attr("data-id")
-			}, function(json) {
-				if (!json["status"]) {
-					return Core.createMessage({
-						message: json["message"]
-					});
-				} else if (json["message"]) {
-					Core.createMessage({
-						message: json["message"],
-						sign: "ok",
-						type: "success"
-					});
-				}
-				$(".treatment-table-wrapper .panel").panel("update");
-			}, "json");
+			me.repeat($(this).parents("tr:eq(0)").attr("data-id"));
 		}).on("click", ".direction-restore-icon", function() {
-			$.post(url("laboratory/direction/restore"), {
-				id: $(this).parents("tr:eq(0)").attr("data-id")
-			}, function(json) {
-				if (!json["status"]) {
-					return Core.createMessage({
-						message: json["message"]
-					});
-				} else if (json["message"]) {
-					Core.createMessage({
-						message: json["message"],
-						sign: "ok",
-						type: "success"
-					});
-				}
-				$(".treatment-table-wrapper .panel").panel("update");
-			}, "json");
+			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
 		});
+	},
+	update: function() {
+		$(".treatment-table-wrapper .panel").panel("update");
+	},
+	repeat: function(id) {
+		var me = this;
+		$.post(url("laboratory/direction/repeat"), {
+			id: id
+		}, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					message: json["message"],
+					sign: "ok",
+					type: "success"
+				});
+			}
+			$("#treatment-repeat-counts").text(
+				json["repeats"]
+			);
+			me.update();
+		}, "json");
+	},
+	cancel: function(id) {
+		var me = this;
+		$.post(url("laboratory/direction/restore"), {
+			id: id
+		}, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					message: json["message"],
+					sign: "ok",
+					type: "success"
+				});
+			}
+			console.log($("#treatment-repeat-counts"));
+			$("#treatment-repeat-counts").text(
+				json["repeats"]
+			);
+			me.update();
+		}, "json");
 	}
 };
 
