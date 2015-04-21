@@ -142,6 +142,12 @@ class SideMenu extends CWidget {
 					"label" => "Процедурный кабинет",
 					"image" => "treatment.png",
 					"href" => "/laboratory/treatment/view"
+				],
+				"guides" => [
+					"label" => "Справочники",
+					"image" => "notepad.png",
+					"privilege" => [ "menuAdmin", "menuOrgGuides", "menuGuides" ],
+					"href" => "/guides/laboratory/analysisType"
 				]
 			]
 		],
@@ -416,11 +422,20 @@ class SideMenu extends CWidget {
 
 	/**
 	 * Check user's access
-	 * @param string $privilege - Name of privilege
+	 * @param string|array $privilege - Name of privilege
 	 * @return bool - True on success on false on failure
 	 */
 	public function checkAccess($privilege) {
-		return Yii::app()->{"user"}->{"checkAccess"}($privilege);
+		if (is_array($privilege)) {
+			foreach ($privilege as $p) {
+				if (!$this->checkAccess($p)) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return Yii::app()->{"user"}->{"checkAccess"}($privilege);
+		}
 	}
 
 	private $_module;

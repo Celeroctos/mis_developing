@@ -230,7 +230,6 @@ var TreatmentMedcardViewer = {
 			Core.Common.cleanup($(this).parents("form:eq(0)"));
 		}).on("click", "#treatment-direction-history-panel .direction-creator-register", function() {
 			$(this).parents("form:eq(0)").form("send", function() {
-				console.log(this);
 				$(this).panel("update");
 			});
 		});
