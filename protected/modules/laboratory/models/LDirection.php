@@ -74,4 +74,18 @@ class LDirection extends ActiveRecord {
     public function tableName() {
         return "lis.direction";
     }
+
+	public $id;
+	public $barcode;
+	public $status;
+	public $comment;
+	public $analysis_type_id;
+	public $medcard_id;
+	public $sender_id;
+	public $sending_date;
+	public $treatment_room_employee_id;
+	public $laboratory_employee_id;
+	public $history;
+	public $ward_id;
+	public $enterprise_id;
 }

@@ -252,6 +252,7 @@ abstract class Controller2 extends Controller {
 	 * @throws CException
 	 */
 	public function requireModel($class, $attributes = null, $regexp = null, $scenario = "") {
+		$name = $class;
 		if (!($model = Yii::app()->getRequest()->getPost($class))) {
 			throw new CException("Can't resolve \"{$class}\" form model");
 		}
@@ -261,7 +262,11 @@ abstract class Controller2 extends Controller {
 		/** @var $form FormModel */
 		$form = new $class($scenario, $model);
 		if (!$form->validate($attributes)) {
-			$this->errors = CMap::mergeArray($this->errors, $form->getErrors());
+			$errors = [];
+			foreach ($form->errors as $key => $e) {
+				$errors[$name."[$key]"] = $e;
+			}
+			$this->errors = CMap::mergeArray($this->errors, $errors);
 		}
 		return $form;
 	}

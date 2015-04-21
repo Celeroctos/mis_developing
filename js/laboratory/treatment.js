@@ -97,6 +97,14 @@ var MedcardEditableViewerModal = {
 				console.log(json);
 			}, "json");
 		});
+		modal.find("#treatment-document-control-wrapper label[data-target]").click(function() {
+			$($(this).attr("data-target")).slideToggle("normal");
+			if ($(this).children("input[type='checkbox']").prop("checked")) {
+				$(this).children(".glyphicon").rotate(360, 350, "swing", 180);
+			} else {
+				$(this).children(".glyphicon").rotate(180, 350, "swing", 0);
+			}
+		});
 	},
 	load: function(model) {
 		var modal = $("#medcard-editable-viewer-modal");

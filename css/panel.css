@@ -13,10 +13,10 @@
     color: #337ab6;
 }
 
-.panel-control-button:not(:first-child) {
+button.panel-control-button:not(:first-child) {
     margin-left: 2px;
 }
-.panel-control-button:not(:last-child) {
+button.panel-control-button:not(:last-child) {
     margin-right: 2px;
 }
 

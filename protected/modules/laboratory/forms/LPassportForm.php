@@ -10,6 +10,17 @@ class LPassportForm extends FormModel {
 	public $subdivision_code;
 
 	/**
+	 * Override that method to return additional rule configuration, like
+	 * scenario conditions or others
+	 * @return array - Array with rule configuration
+	 */
+	public function backward() {
+		return [
+			[ "id", "hide", "on" => "treatment.edit" ]
+		];
+	}
+
+	/**
 	 * Override that method to return config. Config should return array associated with
 	 * model's variables. Every field must contains 3 parameters:
 	 *  + label - Variable's label, will be displayed in the form
@@ -21,7 +32,7 @@ class LPassportForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Идентификатор",
-				"type" => "number"
+				"type" => "hidden"
 			],
 			"series" => [
 				"label" => "Серия",
@@ -34,7 +45,7 @@ class LPassportForm extends FormModel {
 				"rules" => "required"
 			],
 			"subdivision_name" => [
-				"label" => "Название подразделения",
+				"label" => "Подразделение",
 				"type" => "text",
 				"rules" => "required"
 			],

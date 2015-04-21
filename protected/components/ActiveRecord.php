@@ -44,9 +44,14 @@ abstract class ActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$this->{$this->tableSchema->primaryKey} = Yii::app()->getDb()->getLastInsertID(
+			$pk = Yii::app()->getDb()->getLastInsertID(
 				$this->tableName()."_id_seq"
 			);
+			if (!empty($this->tableSchema->primaryKey)) {
+				$this->{$this->tableSchema->primaryKey} = $pk;
+			} else {
+				$this->{$this->primaryKey} = $pk;
+			}
 		} catch (Exception $ignored) {
 			/* We can't be sure, that we've just inserted new row in db */
 		}

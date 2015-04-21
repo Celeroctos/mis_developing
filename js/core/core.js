@@ -214,6 +214,7 @@ var Core = Core || {};
 	Core.postFormErrors = function(where, json) {
 		var html = $("<ul>");
 		for (var i in json["errors"] || []) {
+			where.find("[name='" + i + "']").parents(".form-group").addClass("has-error");
 			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
 			for (var j in json["errors"][i]) {
 				$("<li>", {
@@ -410,7 +411,7 @@ var Core = Core || {};
 	};
 
 	$.fn.rotate = function(angle, duration, easing, deg, complete) {
-		var args = $.speed(duration, easing, deg, complete);
+		var args = $.speed(duration || 350, easing || "swing", deg || 0, complete);
 		var step = args.step;
 		deg = deg || 0;
 		return this.each(function(i, e) {

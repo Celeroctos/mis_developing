@@ -82,7 +82,7 @@ class Panel extends Widget {
 	 */
 	public $controls = [
 		"panel-update-button" => [
-			"class" => "glyphicon glyphicon-refresh text-center",
+			"class" => "glyphicon glyphicon-refresh",
 			"onclick" => "$(this).panel('update')",
 			"title" => "Обновить"
 		],
