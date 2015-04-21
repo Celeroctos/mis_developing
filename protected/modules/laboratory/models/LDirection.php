@@ -43,7 +43,7 @@ class LDirection extends ActiveRecord {
 	 * @return TableProvider - Table provider instance
 	 * @throws CDbException
 	 */
-	public function getTableProvider() {
+	public function getTreatmentTableProvider() {
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->select("d.*, m.card_number as card_number, d.status as status")
 			->from("lis.direction as d")
@@ -74,4 +74,18 @@ class LDirection extends ActiveRecord {
     public function tableName() {
         return "lis.direction";
     }
+
+	public $id;
+	public $barcode;
+	public $status;
+	public $comment;
+	public $analysis_type_id;
+	public $medcard_id;
+	public $sender_id;
+	public $sending_date;
+	public $treatment_room_employee_id;
+	public $laboratory_employee_id;
+	public $history;
+	public $ward_id;
+	public $enterprise_id;
 }

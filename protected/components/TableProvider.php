@@ -56,6 +56,7 @@ class TableProvider extends CComponent {
 		}
 		$this->countQuery = clone $this->fetchQuery;
 		$this->countQuery->select("count(1) as count");
+		$this->countQuery->setJoin(null);
 		if ($this->pagination !== false) {
 			$this->pagination = $this->getPagination();
 		}

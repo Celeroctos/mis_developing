@@ -12,6 +12,8 @@ class LPatientForm extends FormModel {
 	public $policy_id;
 	public $register_address_id;
 	public $address_id;
+	public $contact;
+	public $work_place;
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -85,8 +87,15 @@ class LPatientForm extends FormModel {
 			],
 			"address_id" => [
 				"label" => "Адрес проживания",
-				"type" => "address",
-				"rules" => "safe"
+				"type" => "address"
+			],
+			"contact" => [
+				"label" => "Телефон",
+				"type" => "text"
+			],
+			"work_place" => [
+				"label" => "Место работы",
+				"type" => "text"
 			]
 		];
 	}

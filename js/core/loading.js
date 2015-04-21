@@ -20,7 +20,7 @@ var Core = Core || {};
 			imageHeight = this.property("height"),
 			height = this.selector().outerHeight(false),
 			width = this.selector().outerWidth(false);
-		if (this.hasOwnProperty("image")) {
+		if (this.image) {
 			return void 0;
 		}
 		var index;
@@ -59,17 +59,15 @@ var Core = Core || {};
 	};
 
 	Loading.prototype.destroy = function() {
-		this.reset(function() {
-			Core.Component.prototype.destroy.call(this);
-		});
+		this.reset();
 	};
 
-    Loading.prototype.reset = function(after) {
+    Loading.prototype.reset = function() {
 		var me = this;
 		this.image.fadeOut(this.property("velocity"), function() {
 			$(this).remove();
 			delete me.image;
-			after && after.call(me);
+			Core.Component.prototype.destroy.call(me);
 		});
 		this.back.fadeOut(this.property("velocity"), function() {
 			$(this).remove();
@@ -77,7 +75,7 @@ var Core = Core || {};
 		});
     };
 
-    Core.createPlugin("loading", function(selector, properties) {
+	$.fn.loading = Core.createPlugin("loading", function(selector, properties) {
 		if (!$(selector).data("core-loading") || !$(selector).data("core-loading").image) {
 			return Core.createObject(new Loading(properties, $(selector)), selector, true);
 		} else {

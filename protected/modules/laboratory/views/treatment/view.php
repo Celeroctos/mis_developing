@@ -26,34 +26,6 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
-	"title" => "Поиск медкарты в ЛИС",
-	"body" => CHtml::tag("div", [
-		"style" => "padding: 10px"
-	], $this->getWidget("MedcardSearch", [
-		"tableWidget" => "MedcardTable"
-	])),
-	"id" => "lis-medcard-search-modal",
-	"buttons" => [
-		"load" => [
-			"text" => "Открыть",
-			"class" => "btn btn-primary",
-			"attributes" => [
-				"data-loading-text" => "Загрузка ..."
-			],
-			"type" => "button"
-		]
-	],
-	"class" => "modal-lg"
-]);
-
-$this->widget("Modal", [
-	"title" => "Новое направление",
-	"body" => CHtml::tag("div", [
-		"style" => "padding: 10px"
-	], $this->getWidget("DirectionCreator"))
-]);
-
-$this->widget("Modal", [
 	"title" => "Медицинская карта № " . CHtml::tag("span", [
 			"id" => "card_number"
 		], ""),
@@ -98,11 +70,16 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
-	"title" => "Регистрация направления",
-	"body" => $this->getWidget("AutoForm", [
-		"model" => new LDirectionForm("treatment.edit")
-	]),
-	"id" => "direction-register-modal"
+	"title" => "Медицинская карта",
+	"body" => "<h4 class=\"text-center no-margin\">Медкарта не выбрана</h4>",
+	"buttons" => [
+	],
+	"id" => "show-medcard-modal"
+]);
+
+$this->widget("Modal", [
+	"title" => "Регистрация направления для пациента <span class=\"card_number\"></span>",
+	"id" => "register-direction-modal"
 ]); ?>
 
 <div class="treatment-header-wrapper row">
@@ -115,7 +92,7 @@ $this->widget("Modal", [
 		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<span class="badge">
+				<span class="badge" id="treatment-repeat-counts">
 					<?= $directionRepeats ?>
 				</span>
 			</button>

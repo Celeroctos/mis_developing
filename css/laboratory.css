@@ -251,3 +251,8 @@
 #treatment-laboratory-medcard-table-panel table:last-child {
     margin-bottom: 50px;
 }
+
+#treatment-direction-passport-form,
+#treatment-direction-policy-form {
+    display: none;
+}

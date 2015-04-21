@@ -19,13 +19,10 @@ class LPolicyForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			$this->createFilter("treatment.policy", [
-				"region",
-				"insurance",
-				"oms_number",
-				"type",
-				"givedate",
-				"status"
+			$this->createFilter("treatment.edit", [
+				"number",
+				"insurance_id",
+				"issue_date",
 			])
 		];
 	}
@@ -42,11 +39,45 @@ class LPolicyForm extends FormModel {
 		return [
 			"id" => [
 				"label" => "Первичный ключ",
-				"type" => "number"
+				"type" => "hidden"
 			],
 			"surname" => [
 				"label" => "Фамилия",
 				"type" => "text",
+				"rules" => "required"
+			],
+			"name" => [
+				"label" => "Имя",
+				"type" => "text",
+				"rules" => "required"
+			],
+			"patronymic" => [
+				"label" => "Отчество",
+				"type" => "text"
+			],
+			"birthday" => [
+				"label" => "Дата рождения",
+				"type" => "date",
+				"rules" => "required"
+			],
+			"number" => [
+				"label" => "Номер полиса",
+				"type" => "text",
+				"rules" => "required"
+			],
+			"issue_date" => [
+				"label" => "Дата выдачи",
+				"type" => "date",
+				"rules" => "required"
+			],
+			"insurance_id" => [
+				"label" => "Страховая компания",
+				"type" => "DropDown",
+				"table" => [
+					"name" => "mis.insurances",
+					"key" => "id",
+					"value" => "name"
+				],
 				"rules" => "required"
 			]
 		];

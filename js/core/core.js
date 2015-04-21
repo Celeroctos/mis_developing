@@ -113,7 +113,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute);
+		$.removeData(this.selector(), this.getDataAttribute());
     };
 
     /**
@@ -182,9 +182,39 @@ var Core = Core || {};
 		$(component).find(list.join(",")).val("");
 	};
 
+	/**
+	 * Get url to get widget component
+	 * @returns {String} - Path to widget action
+	 * @static
+	 */
+	Common.getWidget = function() {
+		return window["globalVariables"]["getWidget"];
+	};
+
+	/**
+	 * Load widget
+	 * @param {String} widget - Name of widget's class
+	 * @param {{}} [attributes] - Widget's parameters
+	 * @param {Function} [success] - Callback after fetch
+	 */
+	Common.loadWidget = function(widget, attributes, success) {
+		return $.get(this.getWidget(), $.extend(attributes, {
+			class: widget
+		}), function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else {
+				success && success(json["component"]);
+			}
+		}, "json");
+	};
+
 	Core.postFormErrors = function(where, json) {
 		var html = $("<ul>");
 		for (var i in json["errors"] || []) {
+			where.find("[name='" + i + "']").parents(".form-group").addClass("has-error");
 			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
 			for (var j in json["errors"][i]) {
 				$("<li>", {
@@ -381,7 +411,7 @@ var Core = Core || {};
 	};
 
 	$.fn.rotate = function(angle, duration, easing, deg, complete) {
-		var args = $.speed(duration, easing, deg, complete);
+		var args = $.speed(duration || 350, easing || "swing", deg || 0, complete);
 		var step = args.step;
 		deg = deg || 0;
 		return this.each(function(i, e) {
