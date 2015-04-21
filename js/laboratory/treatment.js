@@ -229,9 +229,13 @@ var TreatmentMedcardViewer = {
 			$("#direction-history-nav a:first").tab("show");
 			Core.Common.cleanup($(this).parents("form:eq(0)"));
 		}).on("click", "#treatment-direction-history-panel .direction-creator-register", function() {
-			$(this).parents("form:eq(0)").form("send", function() {
-				$(this).panel("update");
-			});
+			var f = $(this).parents("form:eq(0)").form("send", function(status) {
+				if (status) {
+					$(this).panel("update");
+				} else {
+					f.loading("destroy");
+				}
+			}).loading("render");
 		});
 	}
 };

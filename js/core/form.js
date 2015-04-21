@@ -97,7 +97,7 @@ var Core = Core || {};
 
     Form.prototype.send = function(callback) {
 		if (this.property("disabled")) {
-			return false;
+			return void 0;
 		}
         this.selector().find(".form-group").removeClass("has-error");
         var form = this.selector();
@@ -133,7 +133,7 @@ var Core = Core || {};
 			callback && callback.call(me.selector(), false, arguments[2]);
 		});
         form.serialize();
-        return true;
+		return void 0;
     };
 
 	Core.createPlugin("form", function(selector, properties) {

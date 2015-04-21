@@ -14,7 +14,7 @@
 		"title" => "Реквизитная информация",
 		"controls" => [
 			"panel-edit-button" => [
-				"class" => "btn btn-primary btn-xs",
+				"class" => "btn btn-default btn-xs",
 				"label" => "<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;&nbsp;Редактировать",
 				"onclick" => "",
 			],

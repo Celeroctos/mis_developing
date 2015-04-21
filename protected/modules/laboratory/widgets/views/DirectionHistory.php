@@ -5,15 +5,15 @@
  */
 ?>
 
-<ul class="nav nav-tabs" id="direction-history-nav">
+<ul class="nav nav-tabs nav-justified" id="direction-history-nav">
 	<li role="presentation" class="active">
 		<a href="#direction-history-view" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">
-			История направлений
+			<span class="glyphicon glyphicon-list"></span> История
 		</a>
 	</li>
 	<li role="presentation" class="">
 		<a href="#direction-history-register" role="tab" data-toggle="tab" aria-controls="profile" aria-expanded="false">
-			Создать направление
+			<span class="glyphicon glyphicon-plus"></span> Новое
 		</a>
 	</li>
 </ul>
