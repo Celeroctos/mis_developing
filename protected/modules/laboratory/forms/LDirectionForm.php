@@ -23,7 +23,7 @@ class LDirectionForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			$this->createFilter("treatment.edit", [
+			$this->createFilter("treatment", [
 				"comment",
 				"analysis_type_id",
 				"treatment_room_employee_id",
@@ -62,24 +62,30 @@ class LDirectionForm extends FormModel {
                 "type" => "DirectionStatus",
                 "rules" => "required"
             ],
-			"comment" => [
-				"label" => "Комментарий",
-				"type" => "TextArea"
-			],
 			"analysis_type_id" => [
 				"label" => "Тип анализа",
 				"type" => "DropDown",
-                "table" => [
-                    "name" => "lis.analysis_type",
-                    "key" => "id",
-                    "value" => "name"
-                ],
+				"table" => [
+					"name" => "lis.analysis_type",
+					"key" => "id",
+					"value" => "name"
+				],
 				"rules" => "required",
+			],
+			"comment" => [
+				"label" => "Комментарий",
+				"options" => [
+					"rows" => "7"
+				],
+				"type" => "TextArea"
 			],
 			"medcard_id" => [
 				"label" => "Медкарта",
 				"type" => "number",
 				"rules" => "required",
+				"options" => [
+					"data-cleanup" => "false"
+				],
 				"hidden" => "true"
 			],
 			"sender_id" => [
@@ -119,6 +125,9 @@ class LDirectionForm extends FormModel {
 			],
             "history" => [
                 "label" => "Медикаментозный анамнез",
+				"options" => [
+					"rows" => "7"
+				],
                 "type" => "TextArea"
             ],
 			"ward_id" => [

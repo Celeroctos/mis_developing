@@ -76,6 +76,9 @@ class DirectionController extends Controller2 {
 				"history",
 				"ward_id"
 			]);
+			if ($this->hasValidationErrors()) {
+				$this->postValidationError();
+			}
 			if (!$directionForm->{"medcard_id"}) {
 				$medcard->{"id"} = $this->registerMedcardForDirection($patient, $medcard, false);
 			} else {

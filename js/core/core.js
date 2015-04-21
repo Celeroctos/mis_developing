@@ -175,11 +175,11 @@ var Core = Core || {};
 		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
-		var list = [ "input", "textarea", "select[multiple]" ];
-		for (var i in list) {
-			list[i] += "[data-cleanup!='false']";
+		var filters = [ "input[type!='button'][type!='submit']", "textarea", "select[multiple]" ];
+		for (var i in filters) {
+			filters[i] += "[data-cleanup!='false']";
 		}
-		$(component).find(list.join(",")).val("");
+		$(component).find(filters.join(",")).val("");
 	};
 
 	/**
