@@ -2,6 +2,9 @@
 
 class LDirectionForm extends FormModel {
 
+	/*
+	 * Basic defaults
+	 */
 	public $id;
 	public $barcode;
 	public $status;
@@ -15,6 +18,11 @@ class LDirectionForm extends FormModel {
 	public $history;
 	public $ward_id;
 	public $enterprise_id;
+
+	/*
+	 * In doctors module
+	 */
+	public $mis_medcard_id;
 
 	/**
 	 * Override that method to return additional rule configuration, like
