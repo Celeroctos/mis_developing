@@ -48,13 +48,13 @@ class Panel extends Widget {
 	 * @var string - Classes for heading's title
 	 * 	div container
 	 */
-	public $titleWrapperClass = "col-xs-10 text-left no-padding";
+	public $titleWrapperClass = "col-xs-9 text-left no-padding";
 
 	/**
 	 * @var string - Classes for control container which
 	 * 	separated after title container
 	 */
-	public $controlsWrapperClass = "col-xs-2 text-right no-padding";
+	public $controlsWrapperClass = "col-xs-3 text-right no-padding";
 
 	/**
 	 * @var string - Classes for panel's title, which separated
@@ -82,12 +82,13 @@ class Panel extends Widget {
 	 */
 	public $controls = [
 		"panel-update-button" => [
-			"class" => "glyphicon glyphicon-refresh text-center",
+			"class" => "glyphicon glyphicon-refresh",
 			"onclick" => "$(this).panel('update')",
 			"title" => "Обновить"
 		],
 		"panel-collapse-button" => [
-			"class" => "glyphicon glyphicon glyphicon-chevron-up text-center",
+			"class" => "btn btn-default btn-xs",
+			"label" => "<span class=\"glyphicon glyphicon-asterisk\"></span>&nbsp;&nbsp;Свернуть",
 			"onclick" => "$(this).panel('toggle')",
 			"title" => "Свернуть/Развернуть"
 		]
@@ -108,7 +109,7 @@ class Panel extends Widget {
 			$this->attributes = $this->body->getSerializedAttributes();
             $this->body = $this->body->call();
         } else {
-			if ($this->upgradeable !== null) {
+			if ($this->upgradeable === null) {
 				$this->upgradeable = false;
 			}
 			$this->_widget = null;
@@ -119,8 +120,11 @@ class Panel extends Widget {
 		if ($this->body == null) {
 			ob_start();
 		}
-		if ($this->collapsible == false) {
+		if ($this->collapsible == false || true) {
 			unset($this->controls["panel-collapse-button"]);
+		}
+		if ($this->collapsible == true) {
+			$this->titleClass .= " panel-title-collapsible";
 		}
 		if ($this->upgradeable === false) {
 			unset($this->controls["panel-update-button"]);
@@ -131,7 +135,7 @@ class Panel extends Widget {
 	 * Run widget
 	 */
     public function run() {
-		$this->render(__CLASS__, [
+		$this->render("Panel", [
 			"content" => $this->body ? $this->body : ob_get_clean(),
 			"parameters" => $this->attributes,
 			"widget" => $this->_widget,
@@ -143,6 +147,14 @@ class Panel extends Widget {
 	 */
 	public function renderControls() {
 		foreach ($this->controls as $class => $options) {
+			if (isset($options["label"])) {
+				$label = $options["label"];
+				$tag = "button";
+			} else {
+				$label = "";
+				$tag = "span";
+			}
+			unset($options["label"]);
 			if (!isset($options["class"])) {
 				$options["class"] = "panel-control-button $class";
 			} else {
@@ -155,7 +167,7 @@ class Panel extends Widget {
 					"data-placement" => "left"
 				];
 			}
-			print CHtml::tag("span", $options, "");
+			print CHtml::tag($tag, $options, $label);
 		}
 	}
 

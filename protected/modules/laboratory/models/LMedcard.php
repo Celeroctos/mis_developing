@@ -14,9 +14,6 @@ class LMedcard extends ActiveRecord {
 	 * @return TableProvider - Default table provider
 	 */
 	public function getMedcardSearchTableProvider() {
-		SearchEngine::createWithConfig($this, [
-
-		]);
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->selectDistinct("
 				m.id as medcard_id,

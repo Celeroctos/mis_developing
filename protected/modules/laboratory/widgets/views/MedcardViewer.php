@@ -1,65 +1,48 @@
 <?php
 /**
- * @var MedcardViewer $this - Widget instance
- * @var mixed $model - Medcard cortege
+ * @var MedcardViewer $this
+ * @var int $age
+ * @var mixed $medcard
+ * @var mixed $patient
+ * @var mixed $address
+ * @var mixed $registerAddress
  */
+?>
 
-CHtml::openTag("div", [
-	"class" => "medcard-viewer"
-]);
-
-$this->beginWidget("Panel", [
-	"title" => "Реквизитная информация",
-	"collapse" => "true"
-]); ?>
-
-<span class="medcard-info">
-	<b>ФИО:&nbsp;</b> <?= $model["first_name"]." ".$model["middle_name"]." ".$model["last_name"] ?>&nbsp;
-	<b>Возраст:&nbsp;</b> <?= $model["age"] ?>&nbsp;
-	<b>Номер абмулаторной карты</b> <?= $model["card_number"] ?>
-	<br>
-	<b>Адрес:&nbsp;</b> <?= $model["address_str"] ?>
-	<br>
-	<b>Телефон:&nbsp;</b> <?= $model["contact"] ?>
-	<br>
-	<b>Место работы:&nbsp;</b> <?= $model["work_place"] ?>
-</span>
-
-<? $this->endWidget();
-
-$this->beginWidget("Panel", [
-	"title" => "Результаты обследования",
-	"collapse" => "true"
-]);
-print "Не реализовано";
-$this->endWidget();
-
-$this->beginWidget("Panel", [
-	"title" => "Согласия пациента",
-	"collapse" => "true"
-]);
-print "Не реализовано";
-$this->endWidget();
-
-$this->beginWidget("Panel", [
-	"title" => "История приемов",
-	"collapse" => "true"
-]);
-print "Не реализовано";
-$this->endWidget();
-
-$this->beginWidget("Panel", [
-	"title" => "Печать документов",
-	"collapse" => "true"
-]);
-print "Не реализовано";
-$this->endWidget();
-
-$this->beginWidget("Panel", [
-	"title" => "Направления",
-	"collapse" => "true"
-]);
-print "Не реализовано";
-$this->endWidget();
-
-CHtml::closeTag("div");
+<div class="medcard-viewer">
+	<?php $this->beginWidget("Panel", [
+		"title" => "Реквизитная информация",
+		"controls" => [
+			"panel-edit-button" => [
+				"class" => "btn btn-default btn-xs",
+				"label" => "<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;&nbsp;Редактировать",
+				"onclick" => "",
+			],
+		],
+		"collapsible" => true
+	]); ?>
+	<span class="medcard-info">
+		<b>ФИО:&nbsp;</b> <?= $patient->surname." ".$patient->name." ".$patient->patronymic ?>&nbsp;<br>
+		<b>Возраст:&nbsp;</b> <?= $age ?>&nbsp;<br>
+		<b>Номер абмулаторной карты</b> <?= $medcard->card_number ?><br>
+		<b>Адрес:&nbsp;</b> <?= $address->string ?><br>
+		<b>Телефон:&nbsp;</b> <?= $patient->contact ?><br>
+		<b>Место работы:&nbsp;</b> <?= $patient->work_place ?>
+	</span>
+	<?php $this->endWidget(); ?>
+	<?php $this->widget("Panel", [
+		"title" => "Направления",
+		"id" => "treatment-direction-history-panel",
+		"body" => $this->createWidget("DirectionHistory", [
+			"medcard" => $this->medcard
+		]),
+		"controls" => [
+			"panel-update-button" => [
+				"class" => "btn btn-default btn-xs",
+				"label" => "<span class=\"glyphicon glyphicon-refresh\"></span>&nbsp;&nbsp;Обновить",
+				"onclick" => "$(this).panel('update')"
+			]
+		],
+		"collapsible" => true
+	]); ?>
+</div>

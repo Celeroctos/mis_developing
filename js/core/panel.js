@@ -14,16 +14,24 @@ var Core = Core || {};
 		this.selector().find(".panel-body").slideUp(
 			this.property("velocity")
 		);
-		this.selector().find(".panel-collapse-button")
-			.rotate(180, 500, 'swing', 0);
+		var btn = this.selector().find(".panel-collapse-button");
+		if (btn.children(".glyphicon").length > 0) {
+			btn.children(".glyphicon").rotate(360, 500, 'swing', 0);
+		} else {
+			btn.rotate(360, 500, 'swing', 0);
+		}
 	};
 
 	Panel.prototype.expand = function() {
 		this.selector().find(".panel-body").slideDown(
 			this.property("velocity")
 		);
-		this.selector().find(".panel-collapse-button")
-			.rotate(360, 500, "swing", 180);
+		var btn = this.selector().find(".panel-collapse-button");
+		if (btn.children(".glyphicon").length > 0) {
+			btn.children(".glyphicon").rotate(360, 500, "swing", 0);
+		} else {
+			btn.rotate(360, 500, "swing", 0);
+		}
 	};
 
 	Panel.prototype.toggle = function() {
@@ -35,8 +43,12 @@ var Core = Core || {};
 	};
 
 	Panel.prototype.before = function() {
-		this.selector().loading("render").find(".panel-update-button")
-			.rotate(360, 500, "swing");
+		var refresh = this.selector().loading("render").find(".panel-update-button");
+		if (refresh[0].tagName != "SPAN") {
+			refresh.children(".glyphicon").rotate(360, 500, "swing");
+		} else {
+			refresh.rotate(360, 500, "swing");
+		}
 		this.selector().trigger("panel.update");
 	};
 
@@ -45,22 +57,29 @@ var Core = Core || {};
 		this.selector().loading("destroy");
 	};
 
+	Panel.prototype.replace = function(component) {
+		this.selector().find(".panel-content").fadeOut("fast", function() {
+			$(this).empty().append(component).hide().fadeIn("fast");
+		});
+	};
+
 	Panel.prototype.update = function() {
 		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
 			return void 0;
-		} else if (!window["globalVariables"]["getWidget"]) {
-			throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
+		} else if (!Core.Common.getWidget()) {
+			throw new Error("Layout hasn't declared [doc::widget] field via [Widget::createUrl] method");
 		}
 		this.before();
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
-		$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+		if (params.length !== void 0 && !params.length) {
+			params = {};
+		}
+		$.get(Core.Common.getWidget(), $.extend(params, {
 			class: this.selector().attr("data-widget")
 		}), function(json) {
 			if (json["status"]) {
-				me.selector().find(".panel-content").fadeOut("fast", function() {
-					$(this).empty().append(json["component"]).hide().fadeIn("fast");
-				});
+				me.replace(json["component"]);
 			} else {
 				$(json["message"]).message();
 			}
@@ -69,7 +88,7 @@ var Core = Core || {};
 		});
 	};
 
-	Core.createPlugin("panel", function(selector, properties) {
+	$.fn.panel = Core.createPlugin("panel", function(selector, properties) {
 		var t;
 		if (!$(selector).hasClass("panel")) {
 			if ((t = $(selector).parents(".panel:eq(0)")).length != 0) {

@@ -7,6 +7,27 @@ class LDirection extends ActiveRecord {
 	const STATUS_ANALYSIS_DONE = 3;
 	const STATUS_SAMPLE_REPEAT = 4;
 
+	public function getWithAnalysis() {
+		return $this->getDbConnection()->createCommand()
+			->select("d.*, at.short_name as analysis_type_short_name")
+			->from("lis.direction as d")
+			->join("lis.analysis_type as at", "d.analysis_type_id = at.id")
+			->queryAll();
+	}
+
+	public function getDates() {
+		$rows = $this->getDbConnection()->createCommand()
+			->select("cast(registration_time as date) as date")
+			->from("lis.direction")
+			->group("date")
+			->queryAll();
+		$dates = [];
+		foreach ($rows as $row) {
+			$dates[] = $row["date"];
+		}
+		return $dates;
+	}
+
 	/**
 	 * Override that method to return data for grid view
 	 * @return CDbCommand - Command with query
@@ -43,7 +64,7 @@ class LDirection extends ActiveRecord {
 	 * @return TableProvider - Table provider instance
 	 * @throws CDbException
 	 */
-	public function getTableProvider() {
+	public function getTreatmentTableProvider() {
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->select("d.*, m.card_number as card_number, d.status as status")
 			->from("lis.direction as d")
@@ -74,4 +95,19 @@ class LDirection extends ActiveRecord {
     public function tableName() {
         return "lis.direction";
     }
+
+	public $id;
+	public $barcode;
+	public $status;
+	public $comment;
+	public $analysis_type_id;
+	public $medcard_id;
+	public $sender_id;
+	public $sending_date;
+	public $treatment_room_employee_id;
+	public $laboratory_employee_id;
+	public $history;
+	public $ward_id;
+	public $enterprise_id;
+	public $mis_medcard;
 }

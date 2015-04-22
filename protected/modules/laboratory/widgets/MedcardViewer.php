@@ -3,31 +3,44 @@
 class MedcardViewer extends Widget {
 
 	/**
-	 * @var string - Medcard number from laboratory module
-	 * @see mis.medcards.card_number
+	 * @var int - Medcard identification number (primary key) from
+	 *	database's table (lis/medcard/id)
 	 */
-	public $number;
+	public $medcard;
 
 	/**
 	 * Run widget
 	 * @throws CException
 	 */
 	public function run() {
-		if (empty($this->number)) {
-			throw new CException("Medcard viewer requires medcard number, see MedcardViewer::number");
+		if (empty($this->medcard)) {
+			throw new CException("Medcard viewer requires medcard identification number, see [MedcardViewer::medcard]");
 		}
-		if (($model = LMedcard2::model()->fetchByNumber($this->number)) == null) {
-			throw new CException("Unresolved medcard number \"{$this->number}\"");
+		if (($medcard = LMedcard::model()->findByPk($this->medcard)) == null) {
+			throw new CException("Unresolved medcard identification number \"{$this->medcard}\"");
 		}
-		$model["age"] = DateTime::createFromFormat("Y-m-d", $model["birthday"])
+		if (($patient = LPatient::model()->findByPk($medcard->{"patient_id"})) == null) {
+			throw new CException("Unresolved patient identification number \"{$medcard->{"patient_id"}}\"");
+		}
+		$age = DateTime::createFromFormat("Y-m-d", $patient->{"birthday"})
 			->diff(new DateTime())->y;
-		foreach ($model as $key => &$value) {
+		foreach ($medcard->getAttributes() as $key => $value) {
 			if (empty($value)) {
-				$value = "Нет";
+				$medcard->setAttribute($key, "Нет");
 			}
 		}
+		if ($address = LAddress::model()->findByPk($patient->{"address_id"}) == null) {
+			throw new CException("Unresolved address identification number \"{$this->{"address_id"}}\"");
+		}
+		if ($registerAddress = LAddress::model()->findByPk($patient->{"register_address_id"}) == null) {
+			throw new CException("Unresolved address identification number \"{$this->{"register_address_id"}}\"");
+		}
 		$this->render(__CLASS__, [
-			"model" => $model
+			"medcard" => $medcard,
+			"age" => $age,
+			"patient" => $patient,
+			"address" => $address,
+			"registerAddress" => $registerAddress
 		]);
 	}
 }

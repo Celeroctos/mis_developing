@@ -76,7 +76,11 @@ return array(
             'import'=>array(
                 'application.modules.doctors.models.*',
                 'application.modules.doctors.components.*',
-                'application.modules.doctors.controllers.*'
+                'application.modules.doctors.controllers.*'.
+				# import components for doctor module
+				'application.modules.laboratory.widgets.*',
+				'application.modules.laboratory.forms.*',
+				'application.modules.laboratory.models.*',
             ),
         ),
         'settings' => array(

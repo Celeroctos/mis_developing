@@ -26,34 +26,6 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
-	"title" => "Поиск медкарты в ЛИС",
-	"body" => CHtml::tag("div", [
-		"style" => "padding: 10px"
-	], $this->getWidget("MedcardSearch", [
-		"tableWidget" => "MedcardTable"
-	])),
-	"id" => "lis-medcard-search-modal",
-	"buttons" => [
-		"load" => [
-			"text" => "Открыть",
-			"class" => "btn btn-primary",
-			"attributes" => [
-				"data-loading-text" => "Загрузка ..."
-			],
-			"type" => "button"
-		]
-	],
-	"class" => "modal-lg"
-]);
-
-$this->widget("Modal", [
-	"title" => "Новое направление",
-	"body" => CHtml::tag("div", [
-		"style" => "padding: 10px"
-	], $this->getWidget("DirectionCreator"))
-]);
-
-$this->widget("Modal", [
 	"title" => "Медицинская карта № " . CHtml::tag("span", [
 			"id" => "card_number"
 		], ""),
@@ -98,11 +70,31 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
+	"title" => "Медицинская карта",
+	"body" => "<h4 class=\"text-center no-margin\">Медкарта не выбрана</h4>",
+	"buttons" => [
+	],
+	"id" => "show-medcard-modal"
+]);
+
+$this->widget("Modal", [
 	"title" => "Регистрация направления",
-	"body" => $this->getWidget("AutoForm", [
-		"model" => new LDirectionForm("treatment.edit")
+	"body" => $this->createWidget("AutoForm", [
+		"url" => Yii::app()->getUrlManager()->createUrl("laboratory/direction/register"),
+		"model" => new LDirectionForm("treatment"),
+		"id" => "register-direction-form"
 	]),
-	"id" => "direction-register-modal"
+	"buttons" => [
+		"buttons" => [
+			"text" => "Сохранить",
+			"class" => "btn btn-primary",
+			"type" => "button",
+			"attributes" => [
+				"onclick" => "$('#register-direction-form').form('send', function(status) { if (status) $(this).parents('.modal').modal('hide'); })"
+			]
+		],
+	],
+	"id" => "register-direction-modal"
 ]); ?>
 
 <div class="treatment-header-wrapper row">
@@ -115,7 +107,7 @@ $this->widget("Modal", [
 		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
-				<span class="badge">
+				<span class="badge" id="treatment-repeat-counts">
 					<?= $directionRepeats ?>
 				</span>
 			</button>
@@ -129,16 +121,15 @@ $this->widget("Modal", [
 	<div class="treatment-table-wrapper">
 		<hr>
 		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget("Panel", [
+			<?php $this->widget("DatePanel", [
 				"title" => "Направления на анализ",
 				"body" => $this->createWidget("DirectionTable", [
 					"searchCriteria" => "status <> 4"
-				]),
-				"collapsible" => false
+				])
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget("Panel", [
+			<?php $this->widget("DatePanel", [
 				"title" => "Направления на повторный забор образца",
 				"body" => $this->createWidget("DirectionTable", [
 					"searchCriteria" => "status = 4",
@@ -148,8 +139,7 @@ $this->widget("Modal", [
 							"tooltip" => "Отменить"
 						]
 					]
-				]),
-				"collapsible" => false
+				])
 			]) ?>
 		</div>
 	</div>

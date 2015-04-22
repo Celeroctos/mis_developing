@@ -49,6 +49,24 @@ var Core = Core || {};
 		}
 	};
 
+	/**
+	 * Get value of attribute by it's key or set it's value
+	 * @param {String} key - Value's key to set/get
+	 * @param {*} [value] - Value to set
+	 * @returns {*} - Value associated with that key
+	 */
+	Component.prototype.attr = function(key, value) {
+		if (!this._attributes) {
+			this._attributes = this.selector().attr("data-attributes") || "{}";
+			this._attributes = $.parseJSON(this._attributes);
+		}
+		if (arguments.length > 1) {
+			this._attributes[key] = value;
+			this.selector().attr("data-attributes", this._attributes);
+		}
+		return this._attributes[key];
+	};
+
     /**
      * Override that method to return jquery item
      */
@@ -113,7 +131,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute);
+		$.removeData(this.selector(), this.getDataAttribute());
     };
 
     /**
@@ -175,16 +193,46 @@ var Core = Core || {};
 		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
-		var list = [ "input", "textarea", "select[multiple]" ];
-		for (var i in list) {
-			list[i] += "[data-cleanup!='false']";
+		var filters = [ "input[type!='button'][type!='submit']", "textarea", "select[multiple]" ];
+		for (var i in filters) {
+			filters[i] += "[data-cleanup!='false']";
 		}
-		$(component).find(list.join(",")).val("");
+		$(component).find(filters.join(",")).val("");
+	};
+
+	/**
+	 * Get url to get widget component
+	 * @returns {String} - Path to widget action
+	 * @static
+	 */
+	Common.getWidget = function() {
+		return window["globalVariables"]["getWidget"];
+	};
+
+	/**
+	 * Load widget
+	 * @param {String} widget - Name of widget's class
+	 * @param {{}} [attributes] - Widget's parameters
+	 * @param {Function} [success] - Callback after fetch
+	 */
+	Common.loadWidget = function(widget, attributes, success) {
+		return $.get(this.getWidget(), $.extend(attributes, {
+			class: widget
+		}), function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else {
+				success && success(json["component"], json);
+			}
+		}, "json");
 	};
 
 	Core.postFormErrors = function(where, json) {
 		var html = $("<ul>");
 		for (var i in json["errors"] || []) {
+			where.find("[name='" + i + "']").parents(".form-group").addClass("has-error");
 			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
 			for (var j in json["errors"][i]) {
 				$("<li>", {
@@ -359,12 +407,12 @@ var Core = Core || {};
 			var widget, params, me = this;
 			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
 				return void 0;
-			} else if (!window["globalVariables"]["getWidget"]) {
+			} else if (!Core.Common.getWidget()) {
 				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
 			}
 			$(this).loading();
 			params = $.parseJSON(params);
-			$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+			$.get(Core.Common.getWidget(), $.extend(params, {
 				class: widget
 			}), function(json) {
 				if (json["status"]) {
@@ -380,8 +428,14 @@ var Core = Core || {};
 		});
 	};
 
+	$.fn.cleanup = function() {
+		return this.each(function(i, e) {
+			Core.Common.cleanup(e);
+		});
+	};
+
 	$.fn.rotate = function(angle, duration, easing, deg, complete) {
-		var args = $.speed(duration, easing, deg, complete);
+		var args = $.speed(duration || 350, easing || "swing", deg || 0, complete);
 		var step = args.step;
 		deg = deg || 0;
 		return this.each(function(i, e) {

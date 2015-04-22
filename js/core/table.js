@@ -17,7 +17,8 @@ var Core = Core || {};
 			class: table.attr("data-widget"),
 			currentPage: this.property("currentPage"),
 			orderBy: this.property("orderBy"),
-			pageLimit: this.property("pageLimit")
+			pageLimit: this.property("pageLimit"),
+			searchCriteria: this.property("searchCriteria")
 		}, parameters || {});
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
@@ -46,6 +47,11 @@ var Core = Core || {};
 			this.selector().loading("destroy");
 		}
 		this.selector().trigger("table.updated");
+	};
+
+	Table.prototype.find = function(condition) {
+		this.property("searchCriteria", condition);
+		this.update();
 	};
 
 	Table.prototype.fetch = function(properties) {
