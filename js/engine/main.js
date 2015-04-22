@@ -46,6 +46,9 @@ misEngine = (function() {
                     'name' : 'wards',
                     'script' : null
                 }]
+            },{
+                'name' : 'webspeech',
+                'script' : null
             }]
         }],
 		getConfig : function(key) {

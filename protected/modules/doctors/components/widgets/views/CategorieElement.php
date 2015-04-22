@@ -80,9 +80,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'id' => 'f_'.$prefix.'_'.$element['undotted_path'].'_'.$element['id'],
                 'class' => 'form-control',
                 'placeholder' => '',
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['size']) && $element['size'] != null) {
                 $options['style'] = 'width: '.($element['size'] * $lettersInPixel).'px;';
             } else {
@@ -125,9 +127,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'id' => 'f_'.$prefix.'_'.$element['undotted_path'].'_'.$element['id'],
                 'class' => 'form-control',
                 'placeholder' => '',
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['size']) && $element['size'] != null) {
                 $options['style'] = 'width: '.($element['size'] * $lettersInPixel).'px;';
             } else {
@@ -159,9 +163,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'class' => 'form-control',
                 'placeholder' => '',
                 'options' => $element['selected'],
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['size']) && $element['size'] != null) {
                 $options['style'] = 'width: '.($element['size'] * $lettersInPixel).'px;';
             } else {
@@ -211,9 +217,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'placeholder' => '',
                 'options' => $element['selected'],
                 'multiple' => 'multiple',
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['size']) && $element['size'] != null) {
                 $options['style'] = 'width: '.($element['size'] * $lettersInPixel).'px;';
             } else {
@@ -354,9 +362,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'id' => 'f_'.$prefix.'_'.$element['undotted_path'].'_'.$element['id'],
                 'class' => 'form-control',
                 'placeholder' => '',
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['config'])) {
                 if(trim($element['config']['maxValue']) != '') {
                     $options['max'] = $element['config']['maxValue'];
@@ -396,9 +406,11 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 'id' => 'f_'.$prefix.'_'.implode('-', explode('|',$element['undotted_path'])).'_'.$element['id'],
                 'class' => 'form-control',
                 'placeholder' => '',
-                'title' => 'ID '.$element['id'].', путь '.$element['path'],
-                'value' => isset($element['default_value']) ? $element['default_value'] : ''
+                'title' => 'ID '.$element['id'].', путь '.$element['path']
             );
+            if(isset($element['default_value']) && trim($model->{'f'.$element['undotted_path'].'_'.$element['id']}) != '') {
+                $options['value'] = $element['default_value'];
+            }
             if(isset($element['size']) && $element['size'] != null) {
                 $options['style'] = 'width: '.($element['size'] * $lettersInPixel).'px;';
             } else {

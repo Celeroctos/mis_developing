@@ -106,6 +106,14 @@ misEngine.class('component.module.hospital.bedsstock', function() {
 
         bindHandlers : function() {
             $(document).on('click', '.wardsChoose .wardsList li:not(.new)', function() {
+                $('.wardsWidget').css({
+                    'position' : 'relative'
+                }).prepend(
+                    $('<div>').addClass('overlay').css('top', '-5px')
+                );
+                // Here must be ajaxQuery to give all beds in ward
+                $('.overlay').remove();
+
                 $(this).parents('.wrap').animate({
                     'marginLeft' : '-100%'
                 }, 500)
@@ -123,6 +131,20 @@ misEngine.class('component.module.hospital.bedsstock', function() {
                 return false;
             });
 
+            $(document).on('click', '.relocationForm .acceptRelocation', function(e) {
+                // Here must be ajax Query TODO
+               $(this).parents('tr.expander').fadeOut(300, function() {
+                   $(e.target).parents('tr.expander').remove();
+               });
+            });
+
+            $(document).on('click', '.reserveForm .acceptReserve', function(e) {
+                // Here must be ajax Query TODO
+                $(e.target).parents('tr.expander').fadeOut(300, function() {
+                    $(e.target).parents('tr.expander').remove();
+                })
+            });
+
             this.changeTabHandler();
         },
 
@@ -135,6 +157,12 @@ misEngine.class('component.module.hospital.bedsstock', function() {
 
         initWidgets : function() {
             var widget = misEngine.create('component.widget.wards').run();
+            var webspeech = misEngine.create('component.webspeech', {
+                lang : 'ru',
+                continuous : true,
+                interimResults : true,
+                iconContainer : '#voiceIcon'
+            });
         },
 
         run : function() {

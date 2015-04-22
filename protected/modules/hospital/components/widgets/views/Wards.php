@@ -8,8 +8,7 @@
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidWard" />Платные
-                        <span class="tabmark" id="paidWardsTabmark">
+                        <input type="checkbox" id="paidWard" />Платные<span class="tabmark" id="paidWardsTabmark">
                             <span class="roundedLabel"></span>
                             <span class="roundedLabelText"></span>
                         </span>
@@ -17,8 +16,7 @@
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidWard" />Бесплатные
-                        <span class="tabmark" id="notPaidWardsTabmark">
+                        <input type="checkbox" id="notPaidWard" />Бесплатные<span class="tabmark" id="notPaidWardsTabmark">
                             <span class="roundedLabel"></span>
                             <span class="roundedLabelText"></span>
                         </span>
@@ -30,8 +28,7 @@
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidBeds" />Платные
-                        <span class="tabmark" id="paidBedsTabmark">
+                        <input type="checkbox" id="paidBeds" />Платные<span class="tabmark" id="paidBedsTabmark">
                             <span class="roundedLabel"></span>
                             <span class="roundedLabelText"></span>
                         </span>
@@ -39,8 +36,7 @@
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidBeds" />Бесплатные
-                        <span class="tabmark" id="notPaidBedsTabmark">
+                        <input type="checkbox" id="notPaidBeds" />Бесплатные<span class="tabmark" id="notPaidBedsTabmark">
                             <span class="roundedLabel"></span>
                             <span class="roundedLabelText"></span>
                         </span>
@@ -195,9 +191,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" id="deleteBed">Удалить койку</button>
-                <button class="btn btn-primary">Применить</button>
-                <button class="btn btn-success">Закрыть</button>
+                <button class="btn btn-danger deleteBed">Удалить койку</button>
+                <button class="btn btn-primary acceptBed">Применить</button>
+                <button class="btn btn-success closeBed">Закрыть</button>
             </div>
         </form>
     </div>
@@ -240,8 +236,9 @@
                 </div>
             </div>
             <div class="form-group col-xs-12">
-                <div class="col-xs-4"></div>
-                <div class="col-xs-8">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-10">
+                    <button class="btn btn-warning dischargePatient">Выписать</button>
                     <button class="btn btn-primary acceptPatient">Подтвердить</button>
                     <button class="btn btn-success closePatientForm">Закрыть</button>
                 </div>

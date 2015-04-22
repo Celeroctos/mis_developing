@@ -1,4 +1,5 @@
-<div id="helperIcon" xmlns="http://www.w3.org/1999/html"></div>
+<div id="helperIcon"></div>
+<div id="voiceIcon"></div>
 <div class="col-xs-12 row">
     <ul class="nav nav-tabs" id="bedsstockNavbar">
         <li role="navigation" class="active">
@@ -74,7 +75,7 @@
                             <label for="patientCheckoutDate">Дата выписки</label>
                             <input type="text" class="form-control" id="patientCheckoutDate">
                         </div>
-                        <button class="btn btn-success" type="button">Подтвердить</button>
+                        <button class="btn btn-success acceptReserve" type="button">Подтвердить</button>
                     </form>
                 </li>
                 <li class="list-group-item">
@@ -132,7 +133,7 @@
             </div>
         </div>
         <div class="form-group">
-            <button class="btn btn-success" type="button">Подтвердить</button>
+            <button class="btn btn-success acceptRelocation" type="button">Подтвердить</button>
         </div>
     </form>
 </div>

@@ -34,6 +34,7 @@ misEngine.class('component.helper', function() {
                             'src' : '/images/icons/help_7103.png'
                         })
                     ).on('click', $.proxy(function(e) {
+                        this.hideStep();
                         if(!this.displayed) {
                             if(this.learnList) {
                                 // If isset learn list, user must to choose, what he wants
@@ -139,9 +140,8 @@ misEngine.class('component.helper', function() {
             if(!groupIndex) {
                 return false;
             }
-
-            this.displayStep(this.tooltips[groupIndex].tooltips, 0);
             this.hideModePopover();
+            this.displayStep(this.tooltips[groupIndex].tooltips, 0);
             e.stopPropagation();
         },
 

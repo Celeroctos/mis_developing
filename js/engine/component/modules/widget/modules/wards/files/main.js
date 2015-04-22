@@ -196,6 +196,10 @@ misEngine.class('component.widget.wards', function() {
                     this.hideBedPopover();
                 }
                 this.initBedPopover($(e.target), parseInt($(e.target).prop('id').substr(1)));
+                $('.popover-bededit .deleteBed').remove();
+                $('.popover-bededit .acceptBed')
+                    .text('Добавить койку')
+                    .on('click', $.proxy(this.addBedHandler, this));
                 e.stopPropagation();
             }, this));
 
@@ -224,7 +228,7 @@ misEngine.class('component.widget.wards', function() {
                 return true;
             });
 
-            $(document).on('dblclick', '.bedsSettingsList .list-group-item', $.proxy(function(e) {
+            $(document).on('dblclick', '.bedsSettingsList .list-group-item:not(:last-child)', $.proxy(function(e) {
                 if(this.openedLi) {
                    var li = this.openedLi;
                    $(this.openedLi).animate({
@@ -292,6 +296,8 @@ misEngine.class('component.widget.wards', function() {
                 }
                 e.stopPropagation();
             }, this));
+
+            $(document).on('dblclick', '.dischargePatient:visible', $.proxy(this.dischargePatientHandler, this));
         },
 
         updateList: function() {
@@ -362,6 +368,41 @@ misEngine.class('component.widget.wards', function() {
             this.bedEditPopover = null;
         },
 
+        addBedHandler : function(e) {
+            // Here must be ajax Query TODO
+            $(e.target).parents('.list-group-item').before(
+                $('<li>').prop({
+                    'class' : 'list-group-item'
+                }).append(
+                    $('<img>').prop({
+                        'width' : '48',
+                        'height' : '48',
+                        'title' : 'Койка свободна',
+                        'src' : '/images/icons/48565.png'
+                    }),
+                    $('<a>').prop({
+                        'class' : 'reservedBed',
+                        'href' : '#'
+                    }),
+                    $('<span>').prop({
+                        'id' : '', // Here must be id of row
+                        'class' : 'glyphicon glyphicon-cog bed-settings',
+                        'title' : '',
+                        'data-original-title' : 'Настройки'
+                    })
+                )
+            );
+
+            this.hideBedPopover();
+        },
+
+        dischargePatientHandler : function(e) {
+            // Here must be ajax Query TODO
+            $(e.target).parents('.list-group-item').fadeOut(300, function(e) {
+
+            });
+            e.stopPropagation();
+        },
 
         initPopover : function(config) {
             this[config.prop] = $(config.selector).popover({
