@@ -3,8 +3,8 @@
 class MedcardViewer extends Widget {
 
 	/**
-	 * @var string - Medcard number from laboratory module
-	 * @see mis.medcards.card_number
+	 * @var int - Medcard identification number (primary key) from
+	 *	database's table (lis/medcard/id)
 	 */
 	public $medcard;
 

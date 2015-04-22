@@ -17,7 +17,7 @@ class LMedcardForm extends FormModel {
 	public function backward() {
 		return [
 			// hide identification number and reference to patient on medcard edit from treatment room
-			[ [ "id", "patient_id" ], "hide", "on" => "treatment.edit" ],
+			[ [ "id", "patient_id" ], "hide", "on" => "treatment" ],
 		];
 	}
 

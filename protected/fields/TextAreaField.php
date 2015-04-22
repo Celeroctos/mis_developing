@@ -9,7 +9,7 @@ class TextAreaField extends Field {
 	 * @return String - Just rendered field result
 	 */
 	public function render($form, $model) {
-		return $form->textArea($model, $this->getKey(), [
+		return $form->textArea($model, $this->getKey(), $this->getOptions() + [
 			'placeholder' => $this->getLabel(),
 			'id' => $this->getKey(),
 			'class' => 'form-control',

@@ -16,7 +16,7 @@ class LPassportForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			[ "id", "hide", "on" => "treatment.edit" ]
+			[ "id", "hide", "on" => "treatment" ]
 		];
 	}
 

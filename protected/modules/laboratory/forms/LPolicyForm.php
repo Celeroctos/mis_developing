@@ -19,7 +19,7 @@ class LPolicyForm extends FormModel {
 	 */
 	public function backward() {
 		return [
-			$this->createFilter("treatment.edit", [
+			$this->createFilter("treatment", [
 				"number",
 				"insurance_id",
 				"issue_date",

@@ -11,7 +11,7 @@
 		<b>Медицинская карта</b>
 		<br><br>
 		<?php $this->widget("AutoForm", [
-			"model" => new LMedcardForm("treatment.edit", [
+			"model" => new LMedcardForm("treatment", [
 				"card_number" => $number
 			])
 		]) ?>
@@ -19,14 +19,14 @@
 		<b>Пациент</b>
 		<br><br>
 		<?php $this->widget("AutoForm", [
-			"model" => new LPatientForm("treatment.edit")
+			"model" => new LPatientForm("treatment")
 		]) ?>
 	</div>
 	<div class="col-xs-6 text-center">
 		<b>Направление</b>
 		<br><br>
 		<?php $this->widget("AutoForm", [
-			"model" => new LDirectionForm("treatment.edit")
+			"model" => new LDirectionForm("treatment")
 		]) ?>
 	</div>
 </div>
@@ -50,7 +50,7 @@
 			<b>Паспорт</b>
 			<br><br>
 			<?php $this->widget("AutoForm", [
-				"model" => new LPassportForm("treatment.edit")
+				"model" => new LPassportForm("treatment")
 			]) ?>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 			<b>Полис</b>
 			<br><br>
 			<?php $this->widget("AutoForm", [
-				"model" => new LPolicyForm("treatment.edit")
+				"model" => new LPolicyForm("treatment")
 			]) ?>
 		</div>
 	</div>

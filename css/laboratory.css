@@ -117,11 +117,6 @@
     background-color: #c3e8f7;
 }
 
-.medcard-viewer .panel-body {
-    margin: 0;
-    padding: 0;
-}
-
 .medcard-info {
     font-size: 14px;
 }
@@ -255,4 +250,22 @@
 #treatment-direction-passport-form,
 #treatment-direction-policy-form {
     display: none;
+}
+
+#treatment-direction-history-panel .panel-body {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    margin-left: -1px;
+    margin-right: -1px;
+    margin-top: -1px;
+}
+
+#treatment-direction-history-panel .panel-body .tab-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#direction-history-nav > li > a {
+    border-radius: 0;
 }

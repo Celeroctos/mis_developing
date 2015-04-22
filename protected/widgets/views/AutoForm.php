@@ -37,4 +37,5 @@ $form = $this->beginWidget('CActiveForm', [
     </div>
 <?php endforeach; ?>
 
-<?php $this->endWidget(); ?>
+<?php $this->renderButtons(); ?>
+<?php $this->endWidget("CActiveForm"); ?>

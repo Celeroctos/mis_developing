@@ -223,9 +223,27 @@ var TreatmentLaboratoryMedcardTable = {
 	}
 };
 
+var TreatmentMedcardViewer = {
+	ready: function() {
+		$("#show-medcard-modal").on("click", "#treatment-direction-history-panel .direction-creator-cancel", function() {
+			$("#direction-history-nav a:first").tab("show");
+			Core.Common.cleanup($(this).parents("form:eq(0)"));
+		}).on("click", "#treatment-direction-history-panel .direction-creator-register", function() {
+			var f = $(this).parents("form:eq(0)").form("send", function(status) {
+				if (status) {
+					$(this).panel("update");
+				} else {
+					f.loading("destroy");
+				}
+			}).loading("render");
+		});
+	}
+};
+
 $(document).ready(function() {
 	MedcardEditableViewerModal.construct();
 	TreatmentViewHeader.construct();
 	TreatmentLaboratoryMedcardTable.ready();
 	TreatmentDirectionTable.ready();
+	TreatmentMedcardViewer.ready();
 });
