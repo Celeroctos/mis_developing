@@ -1,6 +1,7 @@
 
 var TreatmentViewHeader = {
 	construct: function() {
+		var me = this;
 		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
 			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("active");
 			TreatmentViewHeader.active = $(this).addClass("active");
@@ -20,6 +21,53 @@ var TreatmentViewHeader = {
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
 			Core.Common.cleanup(this);
 		});
+		$(".panel-date-button").each(function(i, p) {
+			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");
+			if (dates) {
+				dates = $.parseJSON(dates);
+			} else {
+				dates = [];
+			}
+			$(p).datepicker({
+				language: "ru-RU",
+				orientation: "top",
+				todayBtn: "linked",
+				beforeShowDay: function(date) {
+					if ($.inArray($.datepicker.formatDate("yy-mm-dd", date), dates) != -1) {
+						return "btn btn-success";
+					} else {
+						return void 0;
+					}
+				}
+			}).on("changeDate", function() {
+				var $this = $(this);
+				me.update($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
+					function() {
+						$this.datepicker("hide");
+					});
+			});
+			$(p).parents(".panel:eq(0)").on("panel.updated", function() {
+				$(this).find(".direction-date").text($(this).panel("attr", "date"));
+			});
+		});
+	},
+	update: function(table, date, success) {
+		var panel = $(table).parents(".panel:eq(0)").panel("before");
+		$.get(url("laboratory/direction/getTable"), {
+			class: table.attr("data-class"),
+			attributes: table.attr("data-attributes"),
+			date: date
+		}, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			}
+			panel.panel("after").panel("replace", json["component"])
+				.find(".direction-date").text(date);
+			table.table("attr", "date", date);
+			success && success(json);
+		}, "json");
 	},
 	active: null
 };
@@ -208,7 +256,9 @@ var TreatmentDirectionTable = {
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
 		$("#treatment-laboratory-medcard-table-panel").on("click", ".direction-register-icon", function() {
-			/* Not Implemented */
+			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionForm[medcard_id]']").val(
+				$(this).parents("tr:eq(0)").attr("data-id")
+			);
 		}).on("click", ".medcard-show-icon", function() {
 			var loading = $("#treatment-laboratory-medcard-table-panel")
 				.find(".table").loading("render");

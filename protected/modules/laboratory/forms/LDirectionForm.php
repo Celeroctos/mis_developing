@@ -22,7 +22,7 @@ class LDirectionForm extends FormModel {
 	/*
 	 * In doctors module
 	 */
-	public $mis_medcard_id;
+	public $mis_medcard;
 
 	/**
 	 * Override that method to return additional rule configuration, like

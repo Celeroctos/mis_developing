@@ -49,6 +49,24 @@ var Core = Core || {};
 		}
 	};
 
+	/**
+	 * Get value of attribute by it's key or set it's value
+	 * @param {String} key - Value's key to set/get
+	 * @param {*} [value] - Value to set
+	 * @returns {*} - Value associated with that key
+	 */
+	Component.prototype.attr = function(key, value) {
+		if (!this._attributes) {
+			this._attributes = this.selector().attr("data-attributes") || "{}";
+			this._attributes = $.parseJSON(this._attributes);
+		}
+		if (arguments.length > 1) {
+			this._attributes[key] = value;
+			this.selector().attr("data-attributes", this._attributes);
+		}
+		return this._attributes[key];
+	};
+
     /**
      * Override that method to return jquery item
      */
@@ -206,7 +224,7 @@ var Core = Core || {};
 					message: json["message"]
 				});
 			} else {
-				success && success(json["component"]);
+				success && success(json["component"], json);
 			}
 		}, "json");
 	};
@@ -389,12 +407,12 @@ var Core = Core || {};
 			var widget, params, me = this;
 			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
 				return void 0;
-			} else if (!window["globalVariables"]["getWidget"]) {
+			} else if (!Core.Common.getWidget()) {
 				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
 			}
 			$(this).loading();
 			params = $.parseJSON(params);
-			$.get(window["globalVariables"]["getWidget"], $.extend(params, {
+			$.get(Core.Common.getWidget(), $.extend(params, {
 				class: widget
 			}), function(json) {
 				if (json["status"]) {
@@ -407,6 +425,12 @@ var Core = Core || {};
 			}, "json").always(function() {
 				$(me).loading("reset");
 			});
+		});
+	};
+
+	$.fn.cleanup = function() {
+		return this.each(function(i, e) {
+			Core.Common.cleanup(e);
 		});
 	};
 

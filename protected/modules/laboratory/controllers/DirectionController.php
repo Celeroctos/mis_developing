@@ -76,13 +76,18 @@ class DirectionController extends Controller2 {
 				"history",
 				"ward_id"
 			]);
-			if ($this->hasValidationErrors()) {
-				$this->postValidationError();
-			}
 			if (!$directionForm->{"medcard_id"}) {
 				$medcard->{"id"} = $this->registerMedcardForDirection($patient, $medcard, false);
 			} else {
 				$medcard = LMedcard::model()->findByPk($directionForm->{"medcard_id"});
+			}
+			if ($this->hasValidationErrors()) {
+				$this->postValidationError();
+			}
+			if (isset($directionForm->{"mis_medcard"})) {
+				$mis_medcard = $directionForm->{"mis_medcard"};
+			} else {
+				$mis_medcard = null;
 			}
 			$direction = LDirection::loadFromModel($directionForm, [
 				"barcode" => BarcodeGenerator::getGenerator()->generate(),
@@ -238,6 +243,24 @@ class DirectionController extends Controller2 {
 		}
 
 		return $medcard->{"id"};
+	}
+
+	public function actionGetTable() {
+		try {
+			if (!$class = Yii::app()->getRequest()->getQuery("class")) {
+				throw new CException("Can't resolve [class] parameter");
+			}
+			if (!$attributes = json_decode(Yii::app()->getRequest()->getQuery("attributes"), true)) {
+				throw new CException("Can't resolve [attributes] parameter");
+			}
+			$this->leave([
+				"component" => $this->getWidget($class, [
+						"date" => Yii::app()->getRequest()->getQuery("date")
+					] + $attributes)
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
 	}
 
 	/**

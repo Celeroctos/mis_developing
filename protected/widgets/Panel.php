@@ -135,7 +135,7 @@ class Panel extends Widget {
 	 * Run widget
 	 */
     public function run() {
-		$this->render(__CLASS__, [
+		$this->render("Panel", [
 			"content" => $this->body ? $this->body : ob_get_clean(),
 			"parameters" => $this->attributes,
 			"widget" => $this->_widget,
@@ -148,10 +148,13 @@ class Panel extends Widget {
 	public function renderControls() {
 		foreach ($this->controls as $class => $options) {
 			if (isset($options["label"])) {
+				$label = $options["label"];
 				$tag = "button";
 			} else {
+				$label = "";
 				$tag = "span";
 			}
+			unset($options["label"]);
 			if (!isset($options["class"])) {
 				$options["class"] = "panel-control-button $class";
 			} else {
@@ -164,7 +167,7 @@ class Panel extends Widget {
 					"data-placement" => "left"
 				];
 			}
-			print CHtml::tag($tag, $options, isset($options["label"]) ? $options["label"] : "");
+			print CHtml::tag($tag, $options, $label);
 		}
 	}
 

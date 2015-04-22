@@ -123,7 +123,7 @@
 								],
 							],
 							"defaults" => [
-								"mis_medcard_id" => Yii::app()->getRequest()->getQuery("cardid")
+								"mis_medcard" => Yii::app()->getRequest()->getQuery("cardid")
 							]
 						]) ?>
 						<br>

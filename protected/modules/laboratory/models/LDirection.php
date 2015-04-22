@@ -15,6 +15,19 @@ class LDirection extends ActiveRecord {
 			->queryAll();
 	}
 
+	public function getDates() {
+		$rows = $this->getDbConnection()->createCommand()
+			->select("cast(registration_time as date) as date")
+			->from("lis.direction")
+			->group("date")
+			->queryAll();
+		$dates = [];
+		foreach ($rows as $row) {
+			$dates[] = $row["date"];
+		}
+		return $dates;
+	}
+
 	/**
 	 * Override that method to return data for grid view
 	 * @return CDbCommand - Command with query
@@ -96,4 +109,5 @@ class LDirection extends ActiveRecord {
 	public $history;
 	public $ward_id;
 	public $enterprise_id;
+	public $mis_medcard;
 }

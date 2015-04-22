@@ -269,3 +269,8 @@
 #direction-history-nav > li > a {
     border-radius: 0;
 }
+
+/* Fix for DatePicker popup */
+.datepicker {
+    margin-top: 75px;
+}

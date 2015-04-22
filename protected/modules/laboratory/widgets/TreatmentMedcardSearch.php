@@ -5,11 +5,11 @@ class TreatmentMedcardSearch extends MedcardSearch {
 	public $tableConfig = [
 		"controls" => [
 			"direction-register-icon" => [
-				"class" => "glyphicon glyphicon-plus",
+				"class" => "glyphicon glyphicon-link",
 				"tooltip" => "Создать направление"
 			],
 			"medcard-show-icon" => [
-				"class" => "glyphicon glyphicon-list-alt",
+				"class" => "glyphicon glyphicon-list",
 				"tooltip" => "Открыть / Изменить медкарту"
 			]
 		],

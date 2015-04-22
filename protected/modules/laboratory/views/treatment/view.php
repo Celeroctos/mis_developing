@@ -78,7 +78,22 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
-	"title" => "Регистрация направления для пациента <span class=\"card_number\"></span>",
+	"title" => "Регистрация направления",
+	"body" => $this->createWidget("AutoForm", [
+		"url" => Yii::app()->getUrlManager()->createUrl("laboratory/direction/register"),
+		"model" => new LDirectionForm("treatment"),
+		"id" => "register-direction-form"
+	]),
+	"buttons" => [
+		"buttons" => [
+			"text" => "Сохранить",
+			"class" => "btn btn-primary",
+			"type" => "button",
+			"attributes" => [
+				"onclick" => "$('#register-direction-form').form('send', function(status) { if (status) $(this).parents('.modal').modal('hide'); })"
+			]
+		],
+	],
 	"id" => "register-direction-modal"
 ]); ?>
 
@@ -106,16 +121,15 @@ $this->widget("Modal", [
 	<div class="treatment-table-wrapper">
 		<hr>
 		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget("Panel", [
+			<?php $this->widget("DatePanel", [
 				"title" => "Направления на анализ",
 				"body" => $this->createWidget("DirectionTable", [
 					"searchCriteria" => "status <> 4"
-				]),
-				"collapsible" => false
+				])
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget("Panel", [
+			<?php $this->widget("DatePanel", [
 				"title" => "Направления на повторный забор образца",
 				"body" => $this->createWidget("DirectionTable", [
 					"searchCriteria" => "status = 4",
@@ -125,8 +139,7 @@ $this->widget("Modal", [
 							"tooltip" => "Отменить"
 						]
 					]
-				]),
-				"collapsible" => false
+				])
 			]) ?>
 		</div>
 	</div>

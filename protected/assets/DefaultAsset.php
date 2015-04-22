@@ -14,7 +14,9 @@ class DefaultAsset extends AssetBundle {
         "js/libs/jquery.keyfilter-1.7.js",
         "js/libs/jquery-json.js",
         "js/libs/jqGrid/src/i18n/grid.locale-ru.js",
-        "js/libs/jqGrid/js/jquery.jqGrid.src.js"
+        "js/libs/jqGrid/js/jquery.jqGrid.src.js",
+		"js/libs/datepicker/bootstrap-datepicker.js",
+		"js/libs/datepicker/bootstrap-datepicker.ru.min.js",
     ];
 
     public $css = [
@@ -22,6 +24,7 @@ class DefaultAsset extends AssetBundle {
         "js/libs/jqGrid/css/ui.jqgrid.css",
         "js/libs/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.0.custom.css",
         "css/bootstrap-datetimepicker.min.css",
-		"js/libs/bootstrap-3.0.0/less/bootstrap.less"
+		"js/libs/bootstrap-3.0.0/less/bootstrap.less",
+		"js/libs/datepicker/bootstrap-datepicker3.css"
     ];
 } 

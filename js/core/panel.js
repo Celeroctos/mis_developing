@@ -57,6 +57,12 @@ var Core = Core || {};
 		this.selector().loading("destroy");
 	};
 
+	Panel.prototype.replace = function(component) {
+		this.selector().find(".panel-content").fadeOut("fast", function() {
+			$(this).empty().append(component).hide().fadeIn("fast");
+		});
+	};
+
 	Panel.prototype.update = function() {
 		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
@@ -73,9 +79,7 @@ var Core = Core || {};
 			class: this.selector().attr("data-widget")
 		}), function(json) {
 			if (json["status"]) {
-				me.selector().find(".panel-content").fadeOut("fast", function() {
-					$(this).empty().append(json["component"]).hide().fadeIn("fast");
-				});
+				me.replace(json["component"]);
 			} else {
 				$(json["message"]).message();
 			}
