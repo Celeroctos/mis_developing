@@ -14,8 +14,9 @@
 		"title" => "Реквизитная информация",
 		"controls" => [
 			"panel-edit-button" => [
+				"icon" => "glyphicon glyphicon-pencil",
 				"class" => "btn btn-default btn-xs",
-				"label" => "<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;&nbsp;Редактировать",
+				"label" => "Редактировать",
 				"onclick" => "",
 			],
 		],
@@ -38,8 +39,9 @@
 		]),
 		"controls" => [
 			"panel-update-button" => [
+				"icon" => "glyphicon glyphicon-refresh",
 				"class" => "btn btn-default btn-xs",
-				"label" => "<span class=\"glyphicon glyphicon-refresh\"></span>&nbsp;&nbsp;Обновить",
+				"label" => "Обновить",
 				"onclick" => "$(this).panel('update')"
 			]
 		],

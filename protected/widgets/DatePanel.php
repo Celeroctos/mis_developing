@@ -7,21 +7,30 @@ class DatePanel extends Panel {
 	 */
 	public $date = null;
 
-	public $titleWrapperClass = "col-xs-6 text-left no-padding";
 	public $controlsWrapperClass = "col-xs-6 text-right no-padding";
+	public $titleWrapperClass = "col-xs-6 text-left no-padding";
+
+	/**
+	 * @var int - Default panel's control mode is button, don't
+	 * 	change it, cuz it uses inline button elements
+	 * @internal
+	 */
+ 	public $controlMode = ControlMenu::MODE_BUTTON;
 
 	public function init() {
 		$this->controls = [
 			"panel-date-button" => [
-				"class" => "btn btn-default btn",
-				"label" => "<span class=\"glyphicon glyphicon-calendar\"></span>&nbsp;&nbsp;Дата&nbsp;(" . CHtml::tag("span", [
+				"class" => "btn btn-default",
+				"icon" => "glyphicon glyphicon-calendar",
+				"label" => "Дата&nbsp;(" . CHtml::tag("span", [
 						"class" => "direction-date"
 					], date("Y-m-d")) . ")",
 			],
 			"panel-update-button" => [
-				"class" => "btn btn-default btn",
-				"label" => "<span class=\"glyphicon glyphicon-refresh\"></span>&nbsp;&nbsp;Обновить",
-				"onclick" => "$(this).panel('update')"
+				"class" => "btn btn-default",
+				"icon" => "glyphicon glyphicon-refresh",
+				"onclick" => "$(this).panel('update')",
+				"label" => "Обновить",
 			]
 		];
 		parent::init();

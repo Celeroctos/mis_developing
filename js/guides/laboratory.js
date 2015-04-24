@@ -10,7 +10,7 @@ var GuideGridView = {
 		};
 		$("#register-guide-modal").on("show.bs.modal", function() {
 			Core.resetFormErrors($(this));
-			Core.Common.cleanup($(this));
+			$(this).cleanup();
 		});
 		var me = this;
 		$("#register-guide-modal #register-button").click(function() {

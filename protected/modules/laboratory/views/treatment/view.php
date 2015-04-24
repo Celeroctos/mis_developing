@@ -135,8 +135,8 @@ $this->widget("Modal", [
 					"searchCriteria" => "status = 4",
 					"controls" => [
 						"direction-restore-icon" => [
-							"class" => "glyphicon glyphicon-arrow-left",
-							"tooltip" => "Отменить"
+							"icon" => "glyphicon glyphicon-arrow-left",
+							"label" => "Отменить"
 						]
 					]
 				])

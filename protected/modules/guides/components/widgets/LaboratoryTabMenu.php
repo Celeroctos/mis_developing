@@ -75,6 +75,9 @@ class LaboratoryTabMenu extends CWidget {
 							"label" => $config["label"],
 							"type" => "multiple",
 							"value" => json_encode($values),
+							"options" => [
+								"data-cleanup" => "false"
+							],
 							"table" => $config["clef"],
 						]
 					]),
