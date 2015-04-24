@@ -115,7 +115,7 @@ class ControlMenu extends Widget {
 					], "") ."&nbsp;&nbsp;". $label;
 			}
 			$options["class"] = preg_replace($this->buttonRegexp, "", $options["class"]);
-			print CHtml::tag("button", $options, $label);
+			print CHtml::tag("a", $options, $label);
 		}
 	}
 
@@ -155,8 +155,64 @@ class ControlMenu extends Widget {
 			print CHtml::tag("button", $options, $label);
 		}
 	}
+	/*
+<div class="dropdown">
+	<a id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+		Dropdown
+		<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Action</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Another action</a></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Something else here</a></li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Separated link</a></li>
+	</ul>
+</div>
+	*/
 
 	public function renderMenuControls() {
+		print CHtml::openTag("div", [
+			"class" => "dropdown text-right"
+		]);
+		print CHtml::tag("div", [
+			"href" => "javascript:void(0)",
+			"class" => "dropdown-toggle",
+			"data-toggle" => "dropdown",
+			"aria-haspopup" => "true",
+			"role" => "button",
+			"aria-expanded" => "false",
+			"style" => "cursor: pointer; font-size: 20px;",
+		], CHtml::tag("span", [
+			"class" => "glyphicon glyphicon-list"
+		], ""));
+		print CHtml::openTag("ul", [
+			"class" => "dropdown-menu",
+			"role" => "menu"
+		]);
+		foreach ($this->controls as $class => $options) {
+			$required = $this->prepareControl($class, $options);
+			if (empty($required["label"])) {
+				throw new CException("Panel's controls mode [CONTROL_MODE_MENU] requires [label] attribute");
+			} else {
+				$label = $required["label"];
+			}
+			if (!empty($required["icon"])) {
+				$label = CHtml::tag("span", [
+						"class" => $required["icon"]
+					], "") ."&nbsp;&nbsp;". $label;
+			}
+			$options["class"] = preg_replace($this->buttonRegexp, "", $options["class"]);
+			print CHtml::tag("li", [
+				"role" => "presentation",
+				"class" => "text-left"
+			], CHtml::tag("a", [
+				"role" => "menuitem",
+				"tagindex" => "-1"
+			] + $options, $label));
+		}
+		print CHtml::closeTag("ul");
+		print CHtml::closeTag("div");
 	}
 
 	/**

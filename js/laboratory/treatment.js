@@ -3,10 +3,10 @@ var TreatmentViewHeader = {
 	construct: function() {
 		var me = this;
 		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
-			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("active");
-			TreatmentViewHeader.active = $(this).addClass("active");
+			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("treatment-header-wrapper-active");
+			TreatmentViewHeader.active = $(this).addClass("treatment-header-wrapper-active");
 		});
-		this.active = $(".treatment-header").find("button.active");
+		this.active = $(".treatment-header").find(".treatment-header-wrapper-active");
 		if (!this.active.length) {
 			this.active = null;
 		}
@@ -255,11 +255,11 @@ var TreatmentDirectionTable = {
 
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
-		$("#treatment-laboratory-medcard-table-panel").on("click", ".direction-register-icon", function() {
+		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
 			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionForm[medcard_id]']").val(
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
-		}).on("click", ".medcard-show-icon", function() {
+		}).on("click", "#medcard-search-table-wrapper .medcard-show-icon", function() {
 			var loading = $("#treatment-laboratory-medcard-table-panel")
 				.find(".table").loading("render");
 			Core.Common.loadWidget("MedcardViewer", {

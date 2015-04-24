@@ -152,10 +152,10 @@
     text-align: left;
 }
 
-.treatment-header-wrapper .active {
-    background-color: #47a347;
-    color: white;
-    border: none;
+.treatment-header-wrapper-active {
+    background-color: #47a347 !important;
+    color: white !important;
+    border: none !important;
 }
 
 .treatment-header-wrapper .treatment-header-rounded span.badge {
