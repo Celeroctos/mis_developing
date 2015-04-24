@@ -536,7 +536,6 @@ class Table extends Widget {
 			 * Allow this fields only if you want to
 			 * didn't declare custom widget for ur table
 			 */
-			"header",
 			"availableLimits",
 			"tooltipDefaultPlacement",
 			"textNoData",

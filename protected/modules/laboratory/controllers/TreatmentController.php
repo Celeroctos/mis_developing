@@ -11,6 +11,10 @@ class TreatmentController extends Controller2 {
 		]);
 	}
 
+	public function actionGuide() {
+		$this->render("guide");
+	}
+
 	/**
 	 * Override that method to return controller's model
 	 * @return ActiveRecord - Controller's model instance
