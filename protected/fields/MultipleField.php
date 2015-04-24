@@ -13,7 +13,7 @@ class MultipleField extends Field {
             'placeholder' => $this->getLabel(),
             'id' => $this->getKey(),
             'class' => 'form-control',
-            'value' => json_encode($this->getValue()),
+            'value' => $this->getValue(),
             'options' => [ $this->getValue() => [ 'selected' => true ] ],
             'multiple' => true
         ]);

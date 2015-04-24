@@ -386,7 +386,7 @@ var Core = Core || {};
 		}
 	});
 
-    var ready = function() {
+    Core.prepareMultiple = function() {
 		/* Создаем событие на обработку изменения стиля элемента
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
@@ -467,7 +467,7 @@ var Core = Core || {};
     };
 
 	$(document).ready(function() {
-		setTimeout(ready, 0);
+		setTimeout(Core.prepareMultiple, 0);
 	});
 
 })(Core);
