@@ -1,10 +1,9 @@
 
-var TreatmentViewHeader = {
-	construct: function() {
-		var me = this;
+var TreatmentHeader = {
+	ready: function() {
 		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
-			TreatmentViewHeader.active && TreatmentViewHeader.active.removeClass("treatment-header-wrapper-active");
-			TreatmentViewHeader.active = $(this).addClass("treatment-header-wrapper-active");
+			TreatmentHeader.active && TreatmentHeader.active.removeClass("treatment-header-wrapper-active");
+			TreatmentHeader.active = $(this).addClass("treatment-header-wrapper-active");
 		});
 		this.active = $(".treatment-header").find(".treatment-header-wrapper-active");
 		if (!this.active.length) {
@@ -18,69 +17,19 @@ var TreatmentViewHeader = {
 				.trigger("change");
 			/* $(".panel[data-widget]").panel("update"); */
 		});
-		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
-			Core.Common.cleanup(this);
-		});
-		$(".panel-date-button").each(function(i, p) {
-			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");
-			if (dates) {
-				dates = $.parseJSON(dates);
-			} else {
-				dates = [];
-			}
-			$(p).datepicker({
-				language: "ru-RU",
-				orientation: "top",
-				todayBtn: "linked",
-				beforeShowDay: function(date) {
-					if ($.inArray($.datepicker.formatDate("yy-mm-dd", date), dates) != -1) {
-						return "btn btn-success";
-					} else {
-						return void 0;
-					}
-				}
-			}).on("changeDate", function() {
-				var $this = $(this);
-				me.update($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
-					function() {
-						$this.datepicker("hide");
-					});
-			});
-			$(p).parents(".panel:eq(0)").on("panel.updated", function() {
-				$(this).find(".direction-date").text($(this).panel("attr", "date"));
-			});
-		});
-	},
-	update: function(table, date, success) {
-		var panel = $(table).parents(".panel:eq(0)").panel("before");
-		$.get(url("laboratory/direction/getTable"), {
-			class: table.attr("data-class"),
-			attributes: table.attr("data-attributes"),
-			date: date
-		}, function(json) {
-			if (!json["status"]) {
-				return Core.createMessage({
-					message: json["message"]
-				});
-			}
-			panel.panel("after").panel("replace", json["component"])
-				.find(".direction-date").text(date);
-			table.table("attr", "date", date);
-			success && success(json);
-		}, "json");
 	},
 	active: null
 };
 
-var MedcardEditableViewerModal = {
+var TreatmentMedcardEditableViewerModal = {
 	check: function() {
-		if (MedcardEditableViewerModal.copied !== false) {
+		if (this.copied !== false) {
 			$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
 		} else {
 			$("#medcard-editable-viewer-modal #insert-button").prop("disabled", true);
 		}
 	},
-	construct: function() {
+	ready: function() {
 		var me = this, modal = $("#medcard-editable-viewer-modal"), v;
 		modal.on("show.bs.modal", function() {
 			modal.find("input#card_number").val(v = $("#laboratory-medcard-number").val());
@@ -96,7 +45,7 @@ var MedcardEditableViewerModal = {
 				});
 				json[$(f).attr("id")] = j;
 			});
-			MedcardEditableViewerModal.copied = json;
+			me.copied = json;
 			me.check();
 			Core.createMessage({
 				message: "Данные скопированы",
@@ -105,10 +54,10 @@ var MedcardEditableViewerModal = {
 			});
 		});
 		modal.find("#insert-button").click(function() {
-			if (MedcardEditableViewerModal.copied === false) {
+			if (me.copied === false) {
 				return void 0;
 			}
-			var json = MedcardEditableViewerModal.copied;
+			var json = me.copied;
 			for (var i in json) {
 				var f = $("[id='" + i + "']");
 				for (var j in json[i]) {
@@ -202,10 +151,80 @@ var TreatmentDirectionTable = {
 			me.repeat($(this).parents("tr:eq(0)").attr("data-id"));
 		}).on("click", ".direction-restore-icon", function() {
 			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
+		}).on("click", ".direction-show-icon", function() {
+			me.show($(this).parents("tr:eq(0)").attr("data-id"), this);
+		});
+		$(".panel-date-button").each(function(i, p) {
+			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");
+			if (dates) {
+				dates = $.parseJSON(dates);
+			} else {
+				dates = [];
+			}
+			me.createDatePicker(p, dates);
+		});
+		$(".panel-today-button").click(function() {
+			me.updateByDate($(this).parents(".panel:eq(0)").find(".table:eq(0)"), $(this).attr("data-date"));
+		});
+		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
+			Core.Common.cleanup(this);
+		});
+	},
+	updateByDate: function(table, date, success) {
+		var panel = $(table).parents(".panel:eq(0)").panel("before");
+		$.get(url("laboratory/direction/getTable"), {
+			class: table.attr("data-class"),
+			attributes: table.attr("data-attributes"),
+			date: date
+		}, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			}
+			panel.panel("after").panel("replace", json["component"])
+				.find(".direction-date").text(date);
+			table.table("attr", "date", date);
+			success && success(json);
+		}, "json");
+	},
+	createDatePicker: function(element, dates) {
+		var me = this;
+		$(element).datepicker({
+			language: "ru-RU",
+			orientation: "top",
+			todayBtn: "linked",
+			beforeShowDay: function(date) {
+				if ($.inArray($.datepicker.formatDate("yy-mm-dd", date), dates) != -1) {
+					return "btn btn-success";
+				} else {
+					return void 0;
+				}
+			}
+		}).on("changeDate", function() {
+			var $this = $(this);
+			me.updateByDate($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
+				function() {
+					$this.datepicker("hide");
+				});
+		}).parents(".panel:eq(0)").on("panel.updated", function() {
+			$(this).find(".direction-date").text($(this).panel("attr", "date"));
 		});
 	},
 	update: function() {
 		$(".treatment-table-wrapper .panel").panel("update");
+	},
+	show: function(id, from) {
+		var panel = from ? $(from).parents(".panel:eq(0)") :
+			$(".treatment-table-wrapper .panel:eq(0)");
+		panel.panel("before");
+		Core.Common.loadWidget("AboutDirection", {
+			direction: id
+		}, function(component) {
+			$("#treatment-about-direction-modal").modal().find(".modal-body")
+				.empty().append(component);
+			panel.panel("after");
+		});
 	},
 	repeat: function(id) {
 		var me = this;
@@ -255,6 +274,7 @@ var TreatmentDirectionTable = {
 
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
+		var me = this;
 		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
 			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionForm[medcard_id]']").val(
 				$(this).parents("tr:eq(0)").attr("data-id")
@@ -262,22 +282,18 @@ var TreatmentLaboratoryMedcardTable = {
 		}).on("click", "#medcard-search-table-wrapper .medcard-show-icon", function() {
 			var loading = $("#treatment-laboratory-medcard-table-panel")
 				.find(".table").loading("render");
-			Core.Common.loadWidget("MedcardViewer", {
-				medcard: $(this).parents("tr:eq(0)").attr("data-id")
-			}, function(component) {
-				$("#show-medcard-modal").modal().find(".modal-body").empty().append(component);
-			}).always(function() {
+			TreatmentAboutMedcard.load($(this).parents("tr:eq(0)").attr("data-id")).always(function() {
 				loading.loading("reset");
 			});
 		});
 	}
 };
 
-var TreatmentMedcardViewer = {
+var TreatmentAboutMedcard = {
 	ready: function() {
-		$("#show-medcard-modal").on("click", "#treatment-direction-history-panel .direction-creator-cancel", function() {
-			$("#direction-history-nav a:first").tab("show");
-			Core.Common.cleanup($(this).parents("form:eq(0)"));
+		$(document).on("click", ".direction-creator-cancel", function() {
+			$(this).parents(".direction-history-wrapper").find(".nav > li:first > a").tab("show");
+			$(this).parents("form:eq(0)").cleanup();
 		}).on("click", "#treatment-direction-history-panel .direction-creator-register", function() {
 			var f = $(this).parents("form:eq(0)").form("send", function(status) {
 				if (status) {
@@ -287,13 +303,29 @@ var TreatmentMedcardViewer = {
 				}
 			}).loading("render");
 		});
+	},
+	load: function(id) {
+		return Core.Common.loadWidget("MedcardViewer", {
+			medcard: id
+		}, function(component) {
+			$("#show-medcard-modal").modal().find(".modal-body").empty().append(component);
+		});
+	}
+};
+
+var TreatmentAboutDirection = {
+	ready: function() {
+		$("#treatment-about-direction-modal").on("click", "#open-medcard-button", function() {
+			TreatmentAboutMedcard.load($("#treatment-about-direction-medcard-id").val());
+		});
 	}
 };
 
 $(document).ready(function() {
-	MedcardEditableViewerModal.construct();
-	TreatmentViewHeader.construct();
+	TreatmentMedcardEditableViewerModal.ready();
+	TreatmentHeader.ready();
 	TreatmentLaboratoryMedcardTable.ready();
 	TreatmentDirectionTable.ready();
-	TreatmentMedcardViewer.ready();
+	TreatmentAboutMedcard.ready();
+	TreatmentAboutDirection.ready();
 });

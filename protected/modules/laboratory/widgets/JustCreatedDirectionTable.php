@@ -1,6 +1,6 @@
 <?php
 
-class DirectionTable extends Table {
+class JustCreatedDirectionTable extends Table {
 
 	/**
 	 * @var string|null - Current date when direction
@@ -17,15 +17,15 @@ class DirectionTable extends Table {
 	public $header = [
 		"id" => [
 			"label" => "#",
-			"style" => "width: 15%"
+			"style" => "width: 50px"
+		],
+		"fio" => [
+			"label" => "Фамилия И.О",
+			"style" => "30%"
 		],
 		"card_number" => [
 			"label" => "Номер карты",
 			"style" => "width: 25%"
-		],
-		"status" => [
-			"label" => "Статус",
-			"style" => "width: 20%"
 		],
 		"sender_id" => [
 			"label" => "Направитель",
@@ -37,14 +37,19 @@ class DirectionTable extends Table {
 	];
 
 	public $controls = [
+		"direction-show-icon" => [
+			"icon" => "glyphicon glyphicon-list",
+			"label" => "Открыть направление"
+		],
 		"direction-repeat-icon" => [
-			"class" => "glyphicon glyphicon-arrow-right",
-			"tooltip" => "Отправить на повторный забор"
+			"icon" => "glyphicon glyphicon-arrow-right",
+			"label" => "Отправить на повторный забор"
 		]
 	];
 
-	public $orderBy = "id";
-	public $searchCriteria = "status <> 4";
+	public $textNoData = "На этот день нет направлений";
+	public $orderBy = "id desc";
+	public $searchCriteria = "status = 1";
 	public $pageLimit = 25;
 
 	public function renderExtra() {
@@ -64,6 +69,15 @@ class DirectionTable extends Table {
 		} else {
 			$this->searchCriteria .= " and cast(registration_time as date) = '{$this->date}'";
 		}
-		$this->directionDates = LDirection::model()->getDates();
+		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED);
+	}
+
+	public function getSerializedAttributes($attributes = null, $excepts = []) {
+		return parent::getSerializedAttributes($attributes, array_merge([
+				"directionDates",
+				"header",
+				"textNoData",
+				"controls",
+			], $excepts));
 	}
 }

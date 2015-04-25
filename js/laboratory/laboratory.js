@@ -220,7 +220,7 @@ var MedcardSearchModal = {
 				if (!Message.display(json)) {
 					return void 0;
 				}
-				MedcardEditableViewerModal.load(json["model"]);
+				TreatmentMedcardEditableViewerModal.load(json["model"]);
 				modal.modal("hide");
 			}, "json")
 				.always(function() {

@@ -158,7 +158,7 @@ class Panel extends Widget {
 	 * Run widget
 	 */
     public function run() {
-		$this->render("Panel", [
+		$this->render("application.widgets.views.Panel", [
 			"content" => $this->body ? $this->body : ob_get_clean(),
 			"parameters" => $this->attributes,
 			"widget" => $this->_widget,

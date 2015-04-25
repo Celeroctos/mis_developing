@@ -69,12 +69,20 @@ class Table extends Widget {
 	public $hideOrderByIcon = false;
 
 	/**
-	 * @var array - Array with elements controls buttons, like edit
-	 * 	or remove. Array's key is class for [a] tag and value is
-	 * 	class for [span] tag like glyphicon or button
-	 * @see renderControls
+	 * @var array - Array with control elements, it's attributes depends on
+	 * 	control display mode. You should always use [icon] and [label] attributes
+	 * 	cuz every control mode must support that attributes. Control parameters
+	 * 	is HTML attributes that moves to it's tag (tag name depends on control
+	 * 	display mode).
+	 * @see controlMode
 	 */
 	public $controls = [];
+
+	/**
+	 * @var int - How to display control elements, set it
+	 * 	to CONTROL_MODE_NONE to disable control elements
+	 */
+	public $controlMode = ControlMenu::MODE_ICON;
 
 	/**
 	 * @var string - String with search conditions, uses for
@@ -346,7 +354,8 @@ class Table extends Widget {
 				$text = $this->textNoData;
 			}
 			print CHtml::tag("tr", [], CHtml::tag("td", [
-				"colspan" => count($this->header) + 1
+				"colspan" => count($this->header) + 1,
+				"align" => "middle"
 			], "<b>$text</b>"));
 		}
 	}
@@ -421,7 +430,11 @@ class Table extends Widget {
 		print CHtml::openTag("td", [
 			"align" => "middle"
 		]);
-		foreach ($this->controls as $c => $attributes) {
+		$this->widget("ControlMenu", [
+			"controls" => $this->controls,
+			"mode" => $this->controlMode
+		]);
+		/* foreach ($this->controls as $c => $attributes) {
 			$options = [];
 			if (is_array($attributes)) {
 				$options["class"] = $attributes["class"];
@@ -449,7 +462,7 @@ class Table extends Widget {
 				"href" => "javascript:void(0)",
 				"class" => $c
 			], CHtml::tag("span", $options));
-		}
+		} */
 		print CHtml::closeTag("td");
 	}
 
@@ -525,8 +538,8 @@ class Table extends Widget {
 	 *
 	 * @return string - Serialized and URL encoded attributes
 	 */
-	public function getSerializedAttributes($attributes = null, $excepts = null) {
-		return parent::getSerializedAttributes($attributes, [
+	public function getSerializedAttributes($attributes = null, $excepts = []) {
+		return parent::getSerializedAttributes($attributes, array_merge([
 			/*
 			 * Don't let widget to serialize array
 			 * with data, pff :D
@@ -540,11 +553,12 @@ class Table extends Widget {
 			"tooltipDefaultPlacement",
 			"textNoData",
 			"textEmptyData",
+			"primaryKey",
 			/*
 			 * We can't allow widget to set [emptyData] attribute for actions
 			 * like search or update, cuz it will always return empty data
 			 */
 			"emptyData"
-		]);
+		], $excepts));
 	}
 }

@@ -15,11 +15,14 @@ class LDirection extends ActiveRecord {
 			->queryAll();
 	}
 
-	public function getDates() {
-		$rows = $this->getDbConnection()->createCommand()
+	public function getDates($status = null) {
+		$query = $this->getDbConnection()->createCommand()
 			->select("cast(registration_time as date) as date")
-			->from("lis.direction")
-			->group("date")
+			->from("lis.direction");
+		if ($status != null) {
+			$query->where("status in (".implode(",", (array) $status).")");
+		}
+		$rows = $query->group("date")
 			->queryAll();
 		$dates = [];
 		foreach ($rows as $row) {
@@ -66,9 +69,24 @@ class LDirection extends ActiveRecord {
 	 */
 	public function getTreatmentTableProvider() {
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
-			->select("d.*, m.card_number as card_number, d.status as status")
-			->from("lis.direction as d")
+			->select("d.*,
+				m.card_number as card_number,
+				concat(p.surname, ' ', substring(p.name from 1 for 1), '.', substring(p.patronymic from 1 for 1)) as fio
+			")->from("lis.direction as d")
 			->join("lis.medcard as m", "d.medcard_id = m.id")
+			->join("lis.patient as p", "m.patient_id = p.id")
+		);
+	}
+
+	public function getSampleRepeatTableProvider() {
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
+			->select("d.*,
+				m.card_number as card_number,
+				concat(p.surname, ' ', substring(p.name from 1 for 1), '.', substring(p.patronymic from 1 for 1)) as fio
+			")->from("lis.direction as d")
+			->join("lis.medcard as m", "d.medcard_id = m.id")
+			->join("lis.patient as p", "m.patient_id = p.id")
+			->where("d.status = 4")
 		);
 	}
 

@@ -173,7 +173,7 @@ class ControlMenu extends Widget {
 
 	public function renderMenuControls() {
 		print CHtml::openTag("div", [
-			"class" => "dropdown text-right"
+			"class" => "dropdown"
 		]);
 		print CHtml::tag("div", [
 			"href" => "javascript:void(0)",
@@ -182,7 +182,7 @@ class ControlMenu extends Widget {
 			"aria-haspopup" => "true",
 			"role" => "button",
 			"aria-expanded" => "false",
-			"style" => "cursor: pointer; font-size: 20px;",
+			"style" => "cursor: pointer",
 		], CHtml::tag("span", [
 			"class" => "glyphicon glyphicon-list"
 		], ""));

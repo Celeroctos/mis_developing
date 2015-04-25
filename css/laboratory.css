@@ -266,7 +266,7 @@
     padding-right: 15px;
 }
 
-#direction-history-nav > li > a {
+.direction-history-wrapper > .nav > li > a {
     border-radius: 0;
 }
 
@@ -277,4 +277,9 @@
 
 .medcard-search-wrapper {
     padding-bottom: 30px;
+}
+
+/* Stupidest button bug "laboratory/treatment/view" */
+.panel-today-button > .glyphicon {
+    padding-bottom: 9px;
 }

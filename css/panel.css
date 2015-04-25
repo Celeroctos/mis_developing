@@ -33,6 +33,10 @@ button.panel-control-button:not(:last-child) {
     margin-right: 0;
 }
 
+.panel-content {
+    text-align: left;
+}
+
 .panel-title-collapsible {
     text-decoration: underline;
     cursor: pointer;

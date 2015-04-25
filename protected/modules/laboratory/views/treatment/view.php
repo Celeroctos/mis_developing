@@ -67,7 +67,28 @@ $this->widget("Modal", [
 		]
 	],
 	"class" => "modal-90"
-]); ?>
+]);
+
+$this->widget("Modal", [
+	"title" => "Информация о направлении",
+	"body" => CHtml::tag("h1", [], "Направление не выбрано"),
+	"buttons" => [
+		"open-medcard-button" => [
+			"text" => "Открыть медкарту",
+			"class" => "btn btn-success"
+		],
+		"print-barcode-button" => [
+			"text" => "Печать штрих-кода",
+			"class" => "btn btn-default"
+		],
+		"send-to-laboratory-button" => [
+			"text" => "Передать в лабораторию",
+			"class" => "btn btn-primary"
+		],
+	],
+	"id" => "treatment-about-direction-modal",
+	"class" => "modal-lg"
+]) ?>
 
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
@@ -93,25 +114,16 @@ $this->widget("Modal", [
 	<div class="treatment-table-wrapper">
 		<hr>
 		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget("DatePanel", [
+			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на анализ",
-				"body" => $this->createWidget("DirectionTable", [
-					"searchCriteria" => "status <> 4"
-				])
+				"body" => $this->createWidget("JustCreatedDirectionTable")
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget("DatePanel", [
+			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на повторный забор образца",
-				"body" => $this->createWidget("DirectionTable", [
-					"searchCriteria" => "status = 4",
-					"controls" => [
-						"direction-restore-icon" => [
-							"icon" => "glyphicon glyphicon-arrow-left",
-							"label" => "Отменить"
-						]
-					]
-				])
+				"body" => $this->createWidget("SampleRepeatDirectionTable"),
+				"status" => LDirection::STATUS_SAMPLE_REPEAT
 			]) ?>
 		</div>
 	</div>
