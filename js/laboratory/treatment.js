@@ -274,7 +274,6 @@ var TreatmentDirectionTable = {
 
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
-		var me = this;
 		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
 			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionForm[medcard_id]']").val(
 				$(this).parents("tr:eq(0)").attr("data-id")
