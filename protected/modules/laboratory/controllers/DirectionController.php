@@ -101,7 +101,8 @@ class DirectionController extends Controller2 {
 			}
 			$transaction->commit();
 			$this->leave([
-				"message" => "Данные медкарты были успешно сохранены"
+				"message" => "Данные медкарты были успешно сохранены",
+				"direction" => $direction->id
 			]);
 		} catch (Exception $e) {
 			$transaction->rollback();

@@ -91,7 +91,11 @@ var TreatmentMedcardEditableViewerModal = {
 				} else if (!Message.display(json)) {
 					return void 0;
 				}
-				console.log(json);
+				if (json["status"]) {
+					$("#treatment-laboratory-medcard-table-panel .table:eq(0)").table("update");
+					modal.modal("hide");
+					TreatmentDirectionTable.show(json["direction"]);
+				}
 			}, "json");
 		});
 		modal.find("#treatment-document-control-wrapper label[data-target]").click(function() {

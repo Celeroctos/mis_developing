@@ -75,14 +75,15 @@ $this->widget("Modal", [
 	"buttons" => [
 		"open-medcard-button" => [
 			"text" => "Открыть медкарту",
-			"class" => "btn btn-success"
-		],
-		"print-barcode-button" => [
-			"text" => "Печать штрих-кода",
-			"class" => "btn btn-default"
+			"class" => "btn btn-success",
+			"align" => "left"
 		],
 		"send-to-laboratory-button" => [
 			"text" => "Передать в лабораторию",
+			"class" => "btn btn-default"
+		],
+		"print-barcode-button" => [
+			"text" => "Печать штрих-кода",
 			"class" => "btn btn-primary"
 		],
 	],

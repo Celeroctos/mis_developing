@@ -7,11 +7,12 @@ class LDirection extends ActiveRecord {
 	const STATUS_ANALYSIS_DONE = 3;
 	const STATUS_SAMPLE_REPEAT = 4;
 
-	public function getWithAnalysis() {
+	public function getWithAnalysis($where = "", $params = []) {
 		return $this->getDbConnection()->createCommand()
 			->select("d.*, at.short_name as analysis_type_short_name")
 			->from("lis.direction as d")
 			->join("lis.analysis_type as at", "d.analysis_type_id = at.id")
+			->where($where, $params)
 			->queryAll();
 	}
 
