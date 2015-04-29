@@ -24,7 +24,7 @@ class BarcodeGenerator {
 		if (($bytes = Yii::app()->getSecurityManager()->generateRandomBytes($degree / 8 + 1)) === false) {
 		 	throw new CException("Can't generate barcode number \"" .openssl_error_string(). "\"");
 		} else {
-			return $bytes & ~(1 << $degree);
+			return $bytes & (1 << $degree);
 		}
 	}
 

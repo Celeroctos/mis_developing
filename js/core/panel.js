@@ -63,7 +63,7 @@ var Core = Core || {};
 		});
 	};
 
-	Panel.prototype.update = function() {
+	Panel.prototype.update = function(success) {
 		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
 			return void 0;
@@ -83,6 +83,7 @@ var Core = Core || {};
 			} else {
 				$(json["message"]).message();
 			}
+			success && success.call(me, json);
 		}, "json").always(function() {
 			me.after();
 		});

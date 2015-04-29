@@ -173,8 +173,27 @@ var TreatmentDirectionTable = {
 		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
 			Core.Common.cleanup(this);
 		});
+		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function() {
+			setTimeout(function() {
+				me.refreshDatePicker();
+			}, 0);
+		});
+	},
+	refreshDatePicker: function(dates) {
+		var me = this;
+		$(".panel-date-button").each(function(i, p) {
+			dates = dates || $(p).parents(".panel:eq(0)")
+				.find(".table:eq(0)")
+				.attr("data-dates");
+			try {
+				dates = $.parseJSON(dates);
+			} catch (ignored) {
+			}
+			me.createDatePicker(p, dates || []);
+		});
 	},
 	updateByDate: function(table, date, success) {
+		var me = this;
 		var panel = $(table).parents(".panel:eq(0)").panel("before");
 		$.get(url("laboratory/direction/getTable"), {
 			class: table.attr("data-class"),
@@ -194,29 +213,33 @@ var TreatmentDirectionTable = {
 	},
 	createDatePicker: function(element, dates) {
 		var me = this;
+		if ($(element).data("datepicker")) {
+			$(element).datepicker("remove");
+		}
 		$(element).datepicker({
 			language: "ru-RU",
 			orientation: "top",
 			todayBtn: "linked",
+			container: $(element).parents(".panel:eq(0)"),
 			beforeShowDay: function(date) {
 				if ($.inArray($.datepicker.formatDate("yy-mm-dd", date), dates) != -1) {
-					return "btn btn-success";
+					return "treatment-marked-day";
 				} else {
 					return void 0;
 				}
 			}
-		}).on("changeDate", function() {
+		}).unbind("changeDate").on("changeDate", function() {
 			var $this = $(this);
 			me.updateByDate($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
 				function() {
 					$this.datepicker("hide");
 				});
-		}).parents(".panel:eq(0)").on("panel.updated", function() {
+		}).parents(".panel:eq(0)").unbind("panel.updated").on("panel.updated", function() {
 			$(this).find(".direction-date").text($(this).panel("attr", "date"));
 		});
 	},
-	update: function() {
-		$(".treatment-table-wrapper .panel").panel("update");
+	update: function(success) {
+		$(".treatment-table-wrapper .panel").panel("update", success);
 	},
 	show: function(id, from) {
 		var panel = from ? $(from).parents(".panel:eq(0)") :
@@ -246,9 +269,8 @@ var TreatmentDirectionTable = {
 					type: "success"
 				});
 			}
-			$("#treatment-repeat-counts").text(
-				json["repeats"]
-			);
+			$("#treatment-repeat-counts").text(json["repeats"]);
+			me.refreshDatePicker(json["dates"]);
 			me.update();
 		}, "json");
 	},
@@ -268,9 +290,8 @@ var TreatmentDirectionTable = {
 					type: "success"
 				});
 			}
-			$("#treatment-repeat-counts").text(
-				json["repeats"]
-			);
+			$("#treatment-repeat-counts").text(json["repeats"]);
+			me.refreshDatePicker(json["dates"]);
 			me.update();
 		}, "json");
 	}
@@ -320,6 +341,27 @@ var TreatmentAboutDirection = {
 	ready: function() {
 		$("#treatment-about-direction-modal").on("click", "#open-medcard-button", function() {
 			TreatmentAboutMedcard.load($("#treatment-about-direction-medcard-id").val());
+		}).on("click", "#print-barcode-button", function() {
+			Core.createMessage({
+				message: "Печатаем или как-то так...",
+				sign: "ok",
+				type: "info"
+			});
+		}).on("click", "#send-to-laboratory-button", function() {
+			var me = $(this);
+			me.parents(".panel").loading("render");
+			Core.sendPost("laboratory/direction/laboratory", {
+				id: me.parents(".about-direction").find("#treatment-about-direction-id").val()
+			}, function(json) {
+				TreatmentDirectionTable.refreshDatePicker(json["dates"]);
+				TreatmentDirectionTable.update();
+				$("#treatment-about-direction-modal").modal("hide");
+			}).always(function() {
+				me.parents(".panel").loading("reset");
+			});
+		}).on("shown.bs.modal", function() {
+			$(this).find("#treatment-direction-history-panel").panel("collapse");
+		}).find(".sample-type-list-wrapper").on("change", ".sample-type-list", function() {
 		});
 	}
 };

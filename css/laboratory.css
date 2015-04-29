@@ -271,15 +271,20 @@
 }
 
 /* Fix for DatePicker popup */
-.datepicker {
-    margin-top: 75px;
+.panel > .datepicker {
+    margin-top: 105px;
+    margin-left: 18px;
 }
 
 .medcard-search-wrapper {
     padding-bottom: 30px;
 }
 
-/* Stupidest button bug "laboratory/treatment/view" */
-.panel-today-button > .glyphicon {
-    padding-bottom: 9px;
+.treatment-marked-day {
+    background-color: #5cb75c;
+    color: white;
+}
+
+#treatment-about-direction-modal .modal-body {
+    padding-bottom: 0;
 }

@@ -1,6 +1,6 @@
 <?php
 
-class JustCreatedDirectionTable extends Table {
+class DirectionTableTreatment extends Table {
 
 	/**
 	 * @var string|null - Current date when direction
@@ -60,14 +60,14 @@ class JustCreatedDirectionTable extends Table {
 	}
 
 	public function init() {
-		$this->provider = LDirection::model()->getTreatmentTableProvider();
+		$this->provider = LDirection::model()->getJustCreatedTableProvider();
 		if ($this->date == null) {
 			$this->date = date("Y-m-d");
 		}
 		if (empty($this->searchCriteria)) {
-			$this->searchCriteria = "cast(registration_time as date) = '{$this->date}'";
+			$this->searchCriteria = "cast(sending_date as date) = '{$this->date}'";
 		} else {
-			$this->searchCriteria .= " and cast(registration_time as date) = '{$this->date}'";
+			$this->searchCriteria .= " and cast(sending_date as date) = '{$this->date}'";
 		}
 		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED);
 	}

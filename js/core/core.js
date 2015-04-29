@@ -246,6 +246,35 @@ var Core = Core || {};
 		});
 	};
 
+	var sendAjax = function(method, href, data, success) {
+		return $[method](url(href), data, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					message: json["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			success && success(json);
+		}, "json").fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.sendQuery = function(href, data, success) {
+		return sendAjax("get", href, data, success);
+	};
+
+	Core.sendPost = function(href, data, success) {
+		return sendAjax("post", href, data, success);
+	};
+
 	Core.resetFormErrors = function(where) {
 		$(where).find(".form-group").removeClass("has-error");
 	};

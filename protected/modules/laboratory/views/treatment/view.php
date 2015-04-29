@@ -77,18 +77,9 @@ $this->widget("Modal", [
 			"text" => "Открыть медкарту",
 			"class" => "btn btn-success",
 			"align" => "left"
-		],
-		"send-to-laboratory-button" => [
-			"text" => "Передать в лабораторию",
-			"class" => "btn btn-default"
-		],
-		"print-barcode-button" => [
-			"text" => "Печать штрих-кода",
-			"class" => "btn btn-primary"
-		],
+		]
 	],
-	"id" => "treatment-about-direction-modal",
-	"class" => "modal-lg"
+	"id" => "treatment-about-direction-modal"
 ]) ?>
 
 <div class="treatment-header-wrapper row">
@@ -117,13 +108,14 @@ $this->widget("Modal", [
 		<div id="treatment-direction-grid-wrapper">
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на анализ",
-				"body" => $this->createWidget("JustCreatedDirectionTable")
+				"body" => $this->createWidget("DirectionTableTreatment"),
+				"status" => LDirection::STATUS_JUST_CREATED
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на повторный забор образца",
-				"body" => $this->createWidget("SampleRepeatDirectionTable"),
+				"body" => $this->createWidget("DirectionTableTreatmentRepeat"),
 				"status" => LDirection::STATUS_SAMPLE_REPEAT
 			]) ?>
 		</div>

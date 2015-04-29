@@ -27,7 +27,7 @@ $view = UniqueGenerator::generate("direction-history-view");
 				<?php foreach ($directions as $direction): ?>
 					<div class="col-xs-12 no-padding">
 						<div class="col-xs-2">№ <?= $direction["id"] ?></div>
-						<div class="col-xs-4"><?= $direction["registration_time"] ?></div>
+						<div class="col-xs-4"><?= $direction["sending_date"] ?></div>
 						<div class="col-xs-6"><?= $direction["analysis_type_short_name"] ?></div>
 					</div>
 				<?php endforeach ?>

@@ -155,21 +155,6 @@ class ControlMenu extends Widget {
 			print CHtml::tag("button", $options, $label);
 		}
 	}
-	/*
-<div class="dropdown">
-	<a id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-		Dropdown
-		<span class="caret"></span>
-	</a>
-	<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Action</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Another action</a></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Something else here</a></li>
-		<li role="presentation" class="divider"></li>
-		<li role="presentation"><a role="menuitem" tabindex="-1" href="https://twitter.com/fat">Separated link</a></li>
-	</ul>
-</div>
-	*/
 
 	public function renderMenuControls() {
 		print CHtml::openTag("div", [

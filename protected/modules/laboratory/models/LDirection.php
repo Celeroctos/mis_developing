@@ -18,7 +18,7 @@ class LDirection extends ActiveRecord {
 
 	public function getDates($status = null) {
 		$query = $this->getDbConnection()->createCommand()
-			->select("cast(registration_time as date) as date")
+			->select("cast(sending_date as date) as date")
 			->from("lis.direction");
 		if ($status != null) {
 			$query->where("status in (".implode(",", (array) $status).")");
@@ -68,7 +68,7 @@ class LDirection extends ActiveRecord {
 	 * @return TableProvider - Table provider instance
 	 * @throws CDbException
 	 */
-	public function getTreatmentTableProvider() {
+	public function getJustCreatedTableProvider() {
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->select("d.*,
 				m.card_number as card_number,
@@ -76,6 +76,9 @@ class LDirection extends ActiveRecord {
 			")->from("lis.direction as d")
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
+			->where("d.status = :status", [
+				":status" => LDirection::STATUS_JUST_CREATED
+			])
 		);
 	}
 
@@ -87,7 +90,9 @@ class LDirection extends ActiveRecord {
 			")->from("lis.direction as d")
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
-			->where("d.status = 4")
+			->where("d.status = :status", [
+				":status" => LDirection::STATUS_SAMPLE_REPEAT
+			])
 		);
 	}
 

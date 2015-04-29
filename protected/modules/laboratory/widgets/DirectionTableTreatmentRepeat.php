@@ -1,6 +1,6 @@
 <?php
 
-class SampleRepeatDirectionTable extends Table {
+class DirectionTableTreatmentRepeat extends Table {
 
 	public $header = [
 		"id" => [
@@ -11,7 +11,7 @@ class SampleRepeatDirectionTable extends Table {
 			"label" => "Фамилия И.О",
 			"style" => "30%"
 		],
-		"registration_time" => [
+		"sending_date" => [
 			"label" => "Время анализа",
 			"style" => "30%"
 		],

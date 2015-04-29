@@ -434,35 +434,6 @@ class Table extends Widget {
 			"controls" => $this->controls,
 			"mode" => $this->controlMode
 		]);
-		/* foreach ($this->controls as $c => $attributes) {
-			$options = [];
-			if (is_array($attributes)) {
-				$options["class"] = $attributes["class"];
-				if (isset($attributes["tooltip"])) {
-					$options["onmouseenter"] = "$(this).tooltip('show')";
-					if (is_array($attributes["tooltip"])) {
-						$options["title"] = $attributes["tooltip"]["label"];
-						if (isset($attributes["tooltip"]["placement"])) {
-							$options["data-placement"] = $attributes["tooltip"]["placement"];
-						} else {
-							$options["data-placement"] = $this->tooltipDefaultPlacement;
-						}
-					} else {
-						$options["title"] = $attributes["tooltip"];
-						$options["data-placement"] = $this->tooltipDefaultPlacement;
-					}
-				}
-				if (isset($attributes["options"])) {
-					$options += $attributes["options"];
-				}
-			} else {
-				$options["class"] = $attributes;
-			}
-			print CHtml::tag("a", [
-				"href" => "javascript:void(0)",
-				"class" => $c
-			], CHtml::tag("span", $options));
-		} */
 		print CHtml::closeTag("td");
 	}
 

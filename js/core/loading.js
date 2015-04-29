@@ -13,6 +13,7 @@ var Core = Core || {};
 			velocity: "fast",
 			color: "lightgray"
 		}, selector);
+		this.native = selector;
 	});
 
     Loading.prototype.render = function() {
@@ -54,26 +55,42 @@ var Core = Core || {};
 		);
     };
 
+	Loading.prototype.loading = function() {
+		this.render();
+	};
 	Loading.prototype.update = function() {
 		this.render();
 	};
-
 	Loading.prototype.destroy = function() {
 		this.reset();
 	};
 
-    Loading.prototype.reset = function() {
+    Loading.prototype.reset = function(success) {
 		var me = this;
 		this.image.fadeOut(this.property("velocity"), function() {
 			$(this).remove();
-			delete me.image;
+			success && success.call(this);
+			//delete me.image;
 			Core.Component.prototype.destroy.call(me);
 		});
 		this.back.fadeOut(this.property("velocity"), function() {
 			$(this).remove();
-			delete me.back;
+			//delete me.back;
 		});
     };
+
+	Loading.prototype.widget = function(widget, attributes, success) {
+		var me = this;
+		this.loading();
+		Core.Common.loadWidget(widget, attributes, success)
+			.success(function(json) {
+				me.reset(function() {
+					$(me.native).replaceWith(json["component"]);
+				});
+			}).fail(function() {
+				me.reset();
+			});
+	};
 
 	$.fn.loading = Core.createPlugin("loading", function(selector, properties) {
 		if (!$(selector).data("core-loading") || !$(selector).data("core-loading").image) {
