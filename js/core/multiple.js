@@ -69,7 +69,7 @@ var Core = Core || {};
                 "min-height": this.property("height")
             }).addClass("form-control");
         var g = $("<div>", {
-            class: "multiple-control",
+            class: "multiple-control text-left",
             role: "group",
             style: {
                 width: this.selector().width()

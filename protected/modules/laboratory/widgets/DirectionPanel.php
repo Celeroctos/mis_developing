@@ -20,7 +20,7 @@ class DirectionPanel extends Panel {
 	/**
 	 * @var int - Direction status (for extra menu)
 	 */
-	public $status = LDirection::STATUS_JUST_CREATED;
+	public $status = LDirection::STATUS_TREATMENT_ROOM;
 
 	public $controls = [
 		"panel-search-button" => [
@@ -31,7 +31,7 @@ class DirectionPanel extends Panel {
 	];
 
 	public function init() {
-		if ($this->status == LDirection::STATUS_JUST_CREATED) {
+		if ($this->status == LDirection::STATUS_TREATMENT_ROOM) {
 			$this->controls += [
 				"panel-date-button" => [
 					"class" => "btn btn-default",

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var MedcardViewer $this
+ * @var AboutMedcard $this
  * @var int $age
  * @var mixed $medcard
  * @var mixed $patient

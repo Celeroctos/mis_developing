@@ -40,10 +40,6 @@ class DirectionTableTreatment extends Table {
 		"direction-show-icon" => [
 			"icon" => "glyphicon glyphicon-list",
 			"label" => "Открыть направление"
-		],
-		"direction-repeat-icon" => [
-			"icon" => "glyphicon glyphicon-arrow-right",
-			"label" => "Отправить на повторный забор"
 		]
 	];
 
@@ -69,7 +65,7 @@ class DirectionTableTreatment extends Table {
 		} else {
 			$this->searchCriteria .= " and cast(sending_date as date) = '{$this->date}'";
 		}
-		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED);
+		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM);
 	}
 
 	public function getSerializedAttributes($attributes = null, $excepts = []) {

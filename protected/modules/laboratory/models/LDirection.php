@@ -2,10 +2,10 @@
 
 class LDirection extends ActiveRecord {
 
-	const STATUS_JUST_CREATED = 1;
-	const STATUS_SAMPLE_DONE = 2;
-	const STATUS_ANALYSIS_DONE = 3;
-	const STATUS_SAMPLE_REPEAT = 4;
+	const STATUS_TREATMENT_ROOM = 1;
+	const STATUS_LABORATORY = 2;
+	const STATUS_DONE = 3;
+	const STATUS_TREATMENT_REPEAT = 4;
 
 	public function getWithAnalysis($where = "", $params = []) {
 		return $this->getDbConnection()->createCommand()
@@ -77,7 +77,7 @@ class LDirection extends ActiveRecord {
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
 			->where("d.status = :status", [
-				":status" => LDirection::STATUS_JUST_CREATED
+				":status" => LDirection::STATUS_TREATMENT_ROOM
 			])
 		);
 	}
@@ -91,7 +91,7 @@ class LDirection extends ActiveRecord {
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
 			->where("d.status = :status", [
-				":status" => LDirection::STATUS_SAMPLE_REPEAT
+				":status" => LDirection::STATUS_TREATMENT_REPEAT
 			])
 		);
 	}

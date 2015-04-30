@@ -22,10 +22,9 @@ class TreatmentMedcardSearch extends MedcardSearch {
 	public function init() {
 		$this->widget("Modal", [
 			"title" => "Регистрация направления",
-			"body" => $this->createWidget("AutoForm", [
-				"url" => Yii::app()->getUrlManager()->createUrl("laboratory/direction/register"),
-				"model" => new LDirectionForm("treatment"),
-				"id" => "register-direction-form"
+			"body" => $this->createWidget("DirectionCreator", [
+				"id" => "register-direction-form",
+				"disableControls" => true
 			]),
 			"buttons" => [
 				"buttons" => [
@@ -42,8 +41,7 @@ class TreatmentMedcardSearch extends MedcardSearch {
 		$this->widget("Modal", [
 			"title" => "Медицинская карта",
 			"body" => "<h4 class=\"text-center no-margin\">Медкарта не выбрана</h4>",
-			"buttons" => [
-			],
+			"buttons" => [],
 			"id" => "show-medcard-modal"
 		]);
 		parent::init();

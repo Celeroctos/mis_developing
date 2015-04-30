@@ -1,6 +1,6 @@
 <?php
 
-class MedcardViewer extends Widget {
+class AboutMedcard extends Widget {
 
 	/**
 	 * @var int - Medcard identification number (primary key) from
@@ -14,7 +14,7 @@ class MedcardViewer extends Widget {
 	 */
 	public function run() {
 		if (empty($this->medcard)) {
-			throw new CException("Medcard viewer requires medcard identification number, see [MedcardViewer::medcard]");
+			throw new CException("Medcard viewer requires medcard identification number, see [AboutMedcard::medcard]");
 		}
 		if (($medcard = LMedcard::model()->findByPk($this->medcard)) == null) {
 			throw new CException("Unresolved medcard identification number \"{$this->medcard}\"");

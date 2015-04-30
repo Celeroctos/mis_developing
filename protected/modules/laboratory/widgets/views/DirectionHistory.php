@@ -35,14 +35,6 @@ $view = UniqueGenerator::generate("direction-history-view");
 		</div>
 		<div class="tab-pane fade" id="<?= $register ?>">
 			<?php $this->widget("DirectionCreator", [
-				"controls" => [
-					"direction-creator-cancel" => [
-						"label" => "Отменить",
-						"class" => "btn btn-default",
-						"type" => "button",
-						"style" => "margin-left: 10px"
-					],
-				],
 				"defaults" => [
 					"medcard_id" => $this->medcard
 				]

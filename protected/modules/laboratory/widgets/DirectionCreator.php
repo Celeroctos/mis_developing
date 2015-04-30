@@ -1,38 +1,29 @@
 <?php
 
-class DirectionCreator extends AutoForm {
-
-	public $buttons = [
-		"direction-creator-register" => [
-			"label" => "Сохранить",
-			"class" => "btn btn-primary",
-			"type" => "button"
-		],
-	];
+class DirectionCreator extends Widget {
 
 	/**
 	 * @var array - Array with extra controls
 	 * 	to avoid [buttons] override
 	 */
-	public $controls = [
-		"direction-creator-cancel" => [
-			"label" => "Отменить",
-			"class" => "btn btn-default",
-			"type" => "button",
-			"style" => "margin-left: 10px"
-		],
-	];
+	public $disableControls = false;
 
-	public $divide = true;
+	/**
+	 * @var array - Set default form values
+	 * @see AutoForm::defaults
+	 */
+	public $defaults = [];
 
+	/**
+	 * @var string - Relative href for direction register
+	 * 	form
+	 */
+	public $url = "laboratory/direction/register";
+
+	/**
+	 * Run widget to render it's content
+	 */
 	public function run() {
-		if (empty($this->model)) {
-			$this->model = new LDirectionForm("treatment");
-		}
-		if (empty($this->url)) {
-			$this->url = Yii::app()->getUrlManager()->createUrl("laboratory/direction/register");
-		}
-		$this->buttons += $this->controls;
-        parent::run();
+        $this->render("DirectionCreator");
     }
 } 

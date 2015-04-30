@@ -91,7 +91,7 @@
 </div>
 <?php $this->endWidget("Panel") ?>
 <hr>
-<?php $this->widget("MedcardViewer", [
+<?php $this->widget("AboutMedcard", [
 	"medcard" => $direction->medcard_id
 ]) ?>
 <?= CHtml::closeTag("div") ?>

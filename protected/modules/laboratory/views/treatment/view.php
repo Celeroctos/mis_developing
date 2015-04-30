@@ -109,14 +109,14 @@ $this->widget("Modal", [
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на анализ",
 				"body" => $this->createWidget("DirectionTableTreatment"),
-				"status" => LDirection::STATUS_JUST_CREATED
+				"status" => LDirection::STATUS_TREATMENT_ROOM
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на повторный забор образца",
 				"body" => $this->createWidget("DirectionTableTreatmentRepeat"),
-				"status" => LDirection::STATUS_SAMPLE_REPEAT
+				"status" => LDirection::STATUS_TREATMENT_REPEAT
 			]) ?>
 		</div>
 	</div>

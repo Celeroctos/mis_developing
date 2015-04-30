@@ -300,7 +300,7 @@ var TreatmentDirectionTable = {
 var TreatmentLaboratoryMedcardTable = {
 	ready: function() {
 		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
-			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionForm[medcard_id]']").val(
+			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionFormEx[medcard_id]']").val(
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
 		}).on("click", "#medcard-search-table-wrapper .medcard-show-icon", function() {
@@ -329,7 +329,7 @@ var TreatmentAboutMedcard = {
 		});
 	},
 	load: function(id) {
-		return Core.Common.loadWidget("MedcardViewer", {
+		return Core.Common.loadWidget("AboutMedcard", {
 			medcard: id
 		}, function(component) {
 			$("#show-medcard-modal").modal().find(".modal-body").empty().append(component);
@@ -362,6 +362,14 @@ var TreatmentAboutDirection = {
 		}).on("shown.bs.modal", function() {
 			$(this).find("#treatment-direction-history-panel").panel("collapse");
 		}).find(".sample-type-list-wrapper").on("change", ".sample-type-list", function() {
+		});
+	}
+};
+
+var TreatmentDirectionCreator = {
+	ready: function() {
+		$(document).on("click", ".direction-creator-register", function() {
+
 		});
 	}
 };

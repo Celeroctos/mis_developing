@@ -58,14 +58,20 @@ class Widget extends CWidget {
 	}
 
 	/**
-	 * That method tests widget's identification number
-	 * and generates random value for that component
+	 * Get widget's identification value or generate new
+	 * @param bool $autoGenerate - Is identification values should
+	 * 	be auto generated
+	 * @return null|string - Current widget's id, just generated or null
 	 */
-	public function init() {
-		if (empty($this->id)) {
-			$this->id = UniqueGenerator::generate(
+	public function getId($autoGenerate = true) {
+		if($this->id !== null) {
+			return $this->id;
+		} else if ($autoGenerate) {
+			return $this->id = UniqueGenerator::generate(
 				strtolower(get_called_class())
 			);
+		} else {
+			return null;
 		}
 	}
 

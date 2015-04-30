@@ -2,9 +2,6 @@
 
 class LDirectionForm extends FormModel {
 
-	/*
-	 * Basic defaults
-	 */
 	public $id;
 	public $barcode;
 	public $status;
@@ -18,10 +15,6 @@ class LDirectionForm extends FormModel {
 	public $history;
 	public $ward_id;
 	public $enterprise_id;
-
-	/*
-	 * In doctors module
-	 */
 	public $mis_medcard;
 
 	/**
@@ -34,8 +27,6 @@ class LDirectionForm extends FormModel {
 			$this->createFilter("treatment", [
 				"comment",
 				"analysis_type_id",
-				"treatment_room_employee_id",
-				"laboratory_employee_id",
 				"history",
 				"ward_id"
 			])
@@ -83,7 +74,7 @@ class LDirectionForm extends FormModel {
 			"comment" => [
 				"label" => "Комментарий",
 				"options" => [
-					"rows" => "7"
+					"rows" => "5"
 				],
 				"type" => "TextArea"
 			],
@@ -134,7 +125,7 @@ class LDirectionForm extends FormModel {
             "history" => [
                 "label" => "Медикаментозный анамнез",
 				"options" => [
-					"rows" => "7"
+					"rows" => "5"
 				],
                 "type" => "TextArea"
             ],

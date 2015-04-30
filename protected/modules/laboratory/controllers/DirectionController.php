@@ -71,8 +71,6 @@ class DirectionController extends Controller2 {
 			$directionForm = $this->requireModel("LDirectionForm", [
 				"comment",
 				"analysis_type_id",
-				"treatment_room_employee_id",
-				"laboratory_employee_id",
 				"history",
 				"ward_id"
 			]);
@@ -89,13 +87,19 @@ class DirectionController extends Controller2 {
 			} else {
 				$mis_medcard = null;
 			}
+			if (isset($directionForm->{"sender_id"}) && !empty($directionForm->{"sender_id"})) {
+				$sender = $directionForm->{"sender_id"};
+			} else {
+				$sender = Yii::app()->{"user"}->{"getState"}("doctorId");
+			}
 			$direction = LDirection::loadFromModel($directionForm, [
 				"barcode" => null,
 				"enterprise_id" => $medcard->{"enterprise_id"},
 				"medcard_id" => $medcard->{"id"},
-				"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
-				"status" => LDirection::STATUS_JUST_CREATED,
-				"sending_date" => date("Y-m-d H:i:s.u")
+				"sender_id" => $sender,
+				"treatment_room_employee_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
+				"status" => LDirection::STATUS_TREATMENT_ROOM,
+				"sending_date" => date("Y-m-d H:i:s.u"),
 			]);
 			if (!$direction->save(true)) {
 				throw new CException("Can't register direction in database");
@@ -262,7 +266,7 @@ class DirectionController extends Controller2 {
 				"component" => $this->getWidget($class, [
 						"date" => Yii::app()->getRequest()->getQuery("date")
 					] + $attributes),
-				"dates" => LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED)
+				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -284,7 +288,7 @@ class DirectionController extends Controller2 {
 	public function actionRepeat() {
 		try {
 			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_SAMPLE_REPEAT
+				"status" => LDirection::STATUS_TREATMENT_REPEAT
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
@@ -292,7 +296,7 @@ class DirectionController extends Controller2 {
 				$this->leave([
 					"message" => "Направление отправлено на повторный забор образца",
 					"repeats" => LDirection::model()->getCountOfRepeats(),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED)
+					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -303,7 +307,7 @@ class DirectionController extends Controller2 {
 	public function actionRestore() {
 		try {
 			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_JUST_CREATED
+				"status" => LDirection::STATUS_TREATMENT_ROOM
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было установлено как новое");
@@ -311,7 +315,7 @@ class DirectionController extends Controller2 {
 				$this->leave([
 					"message" => "Направление восстановлено как новое",
 					"repeats" => LDirection::model()->getCountOfRepeats(),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED)
+					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -322,7 +326,7 @@ class DirectionController extends Controller2 {
 	public function actionLaboratory() {
 		try {
 			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_SAMPLE_DONE
+				"status" => LDirection::STATUS_LABORATORY
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено в лабораторию");
@@ -330,7 +334,7 @@ class DirectionController extends Controller2 {
 				$this->leave([
 					"message" => "Направление успешно отправлено в лабораторию",
 					"repeats" => LDirection::model()->getCountOfRepeats(),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_JUST_CREATED)
+					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
