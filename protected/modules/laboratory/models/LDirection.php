@@ -16,6 +16,46 @@ class LDirection extends ActiveRecord {
 			->queryAll();
 	}
 
+	public function getAnalysisParameters($id, $unchecked = true) {
+		$checked = $this->getDbConnection()->createCommand()
+			->select("ap.*")
+			->from("lis.direction_parameter as dp")
+			->join("lis.direction as d", "d.id = dp.direction_id")
+			->join("lis.analysis_parameters AS ap", "ap.id = dp.analysis_type_parameter_id")
+			->where("d.analysis_type_id = ap.analysis_type_id")
+			->andWhere("dp.direction_id = :direction_id", [
+				":direction_id" => $id
+			])->queryAll();
+		foreach ($checked as &$row) {
+			$row["checked"] = 1;
+		}
+		if ($unchecked === false) {
+			return $checked;
+		}
+		$except = [];
+		foreach ($checked as &$row) {
+			$except[] = $row["id"];
+			$row["checked"] = 1;
+		}
+		$query = $this->getDbConnection()->createCommand()
+			->select("ap.*")
+			->from("lis.analysis_parameters as ap")
+			->join("lis.analysis_type as at", "at.id = ap.analysis_type_id")
+			->join("lis.direction as d", "at.id = d.analysis_type_id")
+			->where("d.id = :direction_id", [
+				":direction_id" => $id
+			]);
+		if (!empty($except)) {
+			$query->andWhere("ap.id not in (". implode(",", $except) .")");
+		}
+		$rows = $query->queryAll();
+		foreach ($rows as &$row) {
+			$row["checked"] = 0;
+			$checked[] = $row;
+		}
+		return $checked;
+	}
+
 	public function getDates($status = null) {
 		$query = $this->getDbConnection()->createCommand()
 			->select("cast(sending_date as date) as date")

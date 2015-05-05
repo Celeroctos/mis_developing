@@ -26,9 +26,19 @@ abstract class ActiveRecord extends CActiveRecord {
 		$self = new static();
 		if ($formModel !== null) {
 			foreach ($formModel->getAttributes() as $key => $value) {
-				$self->$key = $value;
+				if (isset($self->$key)) {
+					$self->$key = $value;
+				}
 			}
 		}
+		foreach ($data as $key => $value) {
+			$self->$key = $value;
+		}
+		return $self;
+	}
+
+	public static function load($data = []) {
+		$self = new static();
 		foreach ($data as $key => $value) {
 			$self->$key = $value;
 		}

@@ -47,14 +47,9 @@
 				<label><b>Параметры анализа: </b></label>
 			</div>
 			<div class="col-xs-8 text-left">
-			<?php foreach ($parameters as $parameter): ?>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" <?= $parameter["is_default"] ? "checked" : "" ?>>
-						&nbsp;<?= trim($parameter["name"])." (".trim($parameter["short_name"]).")" ?>
-					</label>
-				</div>
-			<?php endforeach ?>
+			<?php $this->widget("AnalysisParameterChecker", [
+				"parameters" => $parameters
+			]) ?>
 			</div>
 		</div>
 		<div class="row no-padding">

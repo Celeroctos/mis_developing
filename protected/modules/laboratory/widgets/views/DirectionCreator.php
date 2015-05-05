@@ -2,6 +2,9 @@
 /**
  * @var $this DirectionCreator
  */
+print CHtml::openTag("div", [
+	"class" => "direction-creator-wrapper"
+]);
 $this->widget("AutoForm", [
 	"model" => new LDirectionFormEx(),
 	"url" => Yii::app()->getUrlManager()->createUrl($this->url),
@@ -20,3 +23,4 @@ if (!$this->disableControls) {
 		"type" => "button"
 	], "Сохранить");
 }
+print CHtml::closeTag("div");

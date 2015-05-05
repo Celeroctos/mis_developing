@@ -32,10 +32,6 @@ class DirectionTableTreatmentRepeat extends Table {
 		"direction-show-icon" => [
 			"icon" => "glyphicon glyphicon-list",
 			"label" => "Открыть направление"
-		],
-		"direction-restore-icon" => [
-			"icon" => "glyphicon glyphicon-arrow-left",
-			"label" => "Отменить"
 		]
 	];
 

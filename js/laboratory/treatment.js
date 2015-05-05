@@ -318,14 +318,13 @@ var TreatmentAboutMedcard = {
 		$(document).on("click", ".direction-creator-cancel", function() {
 			$(this).parents(".direction-history-wrapper").find(".nav > li:first > a").tab("show");
 			$(this).parents("form:eq(0)").cleanup();
-		}).on("click", "#treatment-direction-history-panel .direction-creator-register", function() {
-			var f = $(this).parents("form:eq(0)").form("send", function(status) {
-				if (status) {
-					$(this).panel("update");
-				} else {
-					f.loading("destroy");
-				}
-			}).loading("render");
+		}).on("click", ".direction-creator-register", function() {
+			var f = $(this).parents(".direction-creator-wrapper").children("form");
+			f.loading("render").form("send", function(status) {
+				if (status) { $(this).panel("update"); }
+			}).always(function() {
+				f.loading("destroy");
+			});
 		});
 	},
 	load: function(id) {
@@ -366,10 +365,64 @@ var TreatmentAboutDirection = {
 	}
 };
 
-var TreatmentDirectionCreator = {
+var TreatmentDirectionCreatorModal = {
 	ready: function() {
-		$(document).on("click", ".direction-creator-register", function() {
+		$("#treatment-register-direction-modal-save-button").click(function() {
+			var modal = $(this).parents(".modal");
+			modal.find(".modal-content").loading("render");
+			$(this).parents(".modal").find("form").form("send", function(status) {
+				if (status) {
+					$(this).parents('.modal').modal("hide");
+				}
+			}).always(function() {
+				modal.find(".modal-content").loading("reset");
+			});
+		});
+	}
+};
 
+var LDirectionFormEx = {
+	ready: function() {
+		$(document).on("change", "[name='LDirectionFormEx[analysis_type_id]']", function() {
+			var me = $(this), form = me.parents("form:eq(0)");
+			if (!me.val() || me.val() == -1) {
+				var c = form.find("[name='LDirectionFormEx[analysis_parameters]']");
+				if (!c.length) {
+					c = form.find(".analysis-type-params-wrapper");
+				}
+				c.parents(".form-group:eq(0)").addClass("hidden");
+				c.children().remove();
+				return void 0;
+			}
+			me.loading({
+				width: 100,
+				height: 15
+			}).loading("render");
+			Core.sendQuery("laboratory/direction/params", {
+				id: me.val()
+			}, function(response) {
+				var c = form.find("[name='LDirectionFormEx[analysis_parameters]']");
+				if (!c.length) {
+					c = form.find(".analysis-type-params-wrapper");
+				}
+				c.parents(".form-group:eq(0)").removeClass("hidden");
+				c.replaceWith(response["component"]);
+			}).always(function() {
+				me.loading("reset");
+			});
+		});
+		$(document).on("change","[name='LDirectionFormEx[pregnant]']", function() {
+			var fields = [
+				"[name='LDirectionFormEx[gestational_age]']",
+				"[name='LDirectionFormEx[menstruation_cycle]']"
+			];
+			if ($(this).val() == 0) {
+				$(fields.join(",")).prop("disabled", true).each(function(i, s) {
+					$(s).val($(s).children("option:eq(0)").attr("value"));
+				});
+			} else {
+				$(fields.join(",")).prop("disabled", false);
+			}
 		});
 	}
 };
@@ -381,4 +434,6 @@ $(document).ready(function() {
 	TreatmentDirectionTable.ready();
 	TreatmentAboutMedcard.ready();
 	TreatmentAboutDirection.ready();
+	TreatmentDirectionCreatorModal.ready();
+	LDirectionFormEx.ready();
 });

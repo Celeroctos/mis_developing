@@ -5,7 +5,7 @@ class AnalysisTypeParameterForm extends FormModel {
 	public $id;
 	public $short_name;
 	public $name;
-	public $is_default;
+	public $checked;
 
 	/**
 	 * Override that method to return additional rule configuration, like
@@ -43,7 +43,7 @@ class AnalysisTypeParameterForm extends FormModel {
 				"type" => "text",
 				"rules" => "required"
 			],
-			"is_default" => [
+			"checked" => [
 				"label" => "По умолчанию",
 				"type" => "YesNo",
 				"value" => "1"

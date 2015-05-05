@@ -21,9 +21,6 @@ var Core = Core || {};
 			imageHeight = this.property("height"),
 			height = this.selector().outerHeight(false),
 			width = this.selector().outerWidth(false);
-		if (this.image) {
-			return void 0;
-		}
 		var index;
 		if (!(index = parseInt(this.selector().css("z-index")))) {
 			index = this.property("depth");
@@ -59,7 +56,6 @@ var Core = Core || {};
 		this.render();
 	};
 	Loading.prototype.update = function() {
-		this.render();
 	};
 	Loading.prototype.destroy = function() {
 		this.reset();
@@ -67,16 +63,18 @@ var Core = Core || {};
 
     Loading.prototype.reset = function(success) {
 		var me = this;
-		this.image.fadeOut(this.property("velocity"), function() {
+		this.image && this.image.fadeOut(this.property("velocity"), function() {
+			if (me.back) {
+				me.back.remove();
+			}
 			$(this).remove();
 			success && success.call(this);
-			//delete me.image;
 			Core.Component.prototype.destroy.call(me);
 		});
-		this.back.fadeOut(this.property("velocity"), function() {
-			$(this).remove();
-			//delete me.back;
-		});
+		this.back && this.back.fadeOut(this.property("velocity"));
+		if (!this.image) {
+			Core.Component.prototype.destroy.call(me);
+		}
     };
 
 	Loading.prototype.widget = function(widget, attributes, success) {

@@ -131,7 +131,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute());
+		this.selector().data(this.getDataAttribute(), false);
     };
 
     /**
@@ -190,7 +190,7 @@ var Core = Core || {};
 			.removeClass("has-error")
 			.removeClass("has-warning")
 			.removeClass("has-success");
-		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
+		$(component).find("select:not([multiple])[data-cleanup!='false']").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
 		var filters = [ "input[type!='button'][type!='submit']", "textarea", "select[multiple]" ];
@@ -351,7 +351,7 @@ var Core = Core || {};
 					return r;
 				}
 			} else {
-				if (me.data(attr) != void 0) {
+				if (!!me.data(attr)) {
 					return void 0;
 				}
 				if (typeof me != "function") {

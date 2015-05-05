@@ -66,50 +66,116 @@ class DirectionController extends Controller2 {
 	 * @see Panel
 	 */
 	public function actionRegister() {
+
+		// Open new transaction for direction registering
 		$transaction = Yii::app()->getDb()->beginTransaction();
+
 		try {
-			$directionForm = $this->requireModel("LDirectionForm", [
-				"comment",
+
+			// require LDirectionFormEx model from post request with next attributes
+			$form = $this->requireModel("LDirectionFormEx", [
 				"analysis_type_id",
+				"analysis_parameters",
+				"pregnant",
+				"smokes",
+				"gestational_age",
+				"menstruation_cycle",
+				"race",
 				"history",
-				"ward_id"
+				"comment",
+				"medcard_id"
 			]);
-			if (!$directionForm->{"medcard_id"}) {
+
+			// If we have not medcard identification number, then we must
+			// register information about patient in database before
+			if (!$form->{"medcard_id"}) {
 				$medcard->{"id"} = $this->registerMedcardForDirection($patient, $medcard, false);
 			} else {
-				$medcard = LMedcard::model()->findByPk($directionForm->{"medcard_id"});
+				$medcard = LMedcard::model()->findByPk($form->{"medcard_id"});
 			}
+
+			// Post validation errors
 			if ($this->hasValidationErrors()) {
 				$this->postValidationError();
 			}
-			if (isset($directionForm->{"mis_medcard"})) {
-				$mis_medcard = $directionForm->{"mis_medcard"};
+
+			// Load table model for patient category with next attributes
+			$category = LPatientCategory::load([
+				"pregnant" => $form->{"pregnant"},
+				"smokes" => $form->{"smokes"},
+				"gestational_age" => $form->{"gestational_age"},
+				"menstruation_cycle" => $form->{"menstruation_cycle"},
+				"race" => $form->{"race"}
+			]);
+
+			// Try to save model in database
+			if (!$category->save()) {
+				$this->postValidationError($category->errors);
+			}
+
+			// Get mis medcard identification number to provider
+			// auto loading
+			# TODO "Add mis medcard autoload"
+			if (isset($form->{"mis_medcard"})) {
+				$mis_medcard = $form->{"mis_medcard"};
 			} else {
 				$mis_medcard = null;
 			}
-			if (isset($directionForm->{"sender_id"}) && !empty($directionForm->{"sender_id"})) {
-				$sender = $directionForm->{"sender_id"};
+
+			// Get sender's identification number
+			if (isset($form->{"sender_id"}) && !empty($form->{"sender_id"})) {
+				$sender = $form->{"sender_id"};
 			} else {
 				$sender = Yii::app()->{"user"}->{"getState"}("doctorId");
 			}
-			$direction = LDirection::loadFromModel($directionForm, [
+
+			// Load table model for direction
+			$direction = LDirection::load([
 				"barcode" => null,
-				"enterprise_id" => $medcard->{"enterprise_id"},
+				"status" => LDirection::STATUS_TREATMENT_ROOM,
+				"comment" => $form->{"comment"},
+				"analysis_type_id" => $form->{"analysis_type_id"},
 				"medcard_id" => $medcard->{"id"},
 				"sender_id" => $sender,
-				"treatment_room_employee_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
-				"status" => LDirection::STATUS_TREATMENT_ROOM,
 				"sending_date" => date("Y-m-d H:i:s.u"),
+				"treatment_room_employee_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
+				"laboratory_employee_id" => null,
+				"history" => $form->{"history"},
+				"ward_id" => null,
+				"patient_category_id" => $category->{"id"}
 			]);
+
+			// Try to save direction in database
 			if (!$direction->save(true)) {
-				throw new CException("Can't register direction in database");
+				$this->postValidationError($direction->errors);
 			}
+
+			// After saving we have to set it's barcode as primary key (maybe changed)
 			LDirection::model()->updateByPk($direction->id, [
 				"barcode" => $direction->id
 			]);
+
+			// Register direction parameters in database
+			foreach ($form->{"analysis_parameters"} as $id) {
+				$dp = LDirectionParameter::load([
+					"direction_id" => $direction->id,
+					"analysis_type_parameter_id" => $id
+				]);
+				# Hot! Hot! Hot!
+				if (!$dp->validate()) {
+					$this->postValidationError($dp->errors);
+				} else {
+					Yii::app()->getDb()->createCommand()->insert("lis.direction_parameter", [
+						"direction_id" => $direction->id,
+						"analysis_type_parameter_id" => $id
+					]);
+				}
+			}
+
+			// Commit all changes and return response with new direction's id
 			$transaction->commit();
 			$this->leave([
-				"message" => "Данные медкарты были успешно сохранены",
+				"message" => "Направление успешно зарегистрировано",
 				"direction" => $direction->id
 			]);
 		} catch (Exception $e) {
@@ -181,13 +247,13 @@ class DirectionController extends Controller2 {
 				"string" => $patientForm["address_id"]
 			]);
 			if (!$address->save(true)) {
-				throw new CException("Can't register patient address in database");
+				$this->postValidationError($address->errors);
 			}
 			$registerAddress = LAddress::loadFromModel($registerAddressForm, [
 				"string" => $patientForm["register_address_id"]
 			]);
 			if (!$registerAddress->save(true)) {
-				throw new CException("Can't register patient register address in database");
+				$this->postValidationError($registerAddress->errors);
 			}
 
 			// Load models for passport and policy and save it in database
@@ -199,7 +265,7 @@ class DirectionController extends Controller2 {
 					"birthday" => $patientForm["birthday"]
 				]);
 				if (!$passport->save(true)) {
-					throw new CException("Can't register passport in database");
+					$this->postValidationError($passport->errors);
 				}
 			} else {
 				$passport = null;
@@ -213,7 +279,7 @@ class DirectionController extends Controller2 {
 					"document_type" => null
 				]);
 				if (!$policy->save(true)) {
-					throw new CException("Can't register policy in database");
+					$this->postValidationError($policy->errors);
 				}
 			} else {
 				$policy = null;
@@ -227,7 +293,7 @@ class DirectionController extends Controller2 {
 				"policy_id" => $policy != null ? $policy->{"id"} : null
 			]);
 			if (!$patient->save(true)) {
-				throw new CException("Can't register patient in database");
+				$this->postValidationError($patient->errors);
 			}
 
 			// Load model for medcard and register it in database
@@ -236,7 +302,7 @@ class DirectionController extends Controller2 {
 				"patient_id" => $patient->{"id"}
 			]);
 			if (!$medcard->save(true)) {
-				throw new CException("Can't register medcard in database");
+				$this->postValidationError($medcard->errors);
 			}
 
 			// Commit all changes
@@ -268,6 +334,22 @@ class DirectionController extends Controller2 {
 					] + $attributes),
 				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function actionParams() {
+		try {
+			if (!$id = Yii::app()->getRequest()->getQuery("id")) {
+				throw new CException("Can't resolve analysis type identification number");
+			} else {
+				$this->leave([
+					"component" => $this->getWidget("AnalysisParameterChecker", [
+						"parameters" => AnalysisType::model()->findAnalysisParameters($id)
+					])
+				]);
+			}
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

@@ -27,13 +27,10 @@ class TreatmentMedcardSearch extends MedcardSearch {
 				"disableControls" => true
 			]),
 			"buttons" => [
-				"buttons" => [
+				"treatment-register-direction-modal-save-button" => [
 					"text" => "Сохранить",
 					"class" => "btn btn-primary",
-					"type" => "button",
-					"attributes" => [
-						"onclick" => "$('#register-direction-form').form('send', function(status) { if (status) $(this).parents('.modal').modal('hide'); })"
-					]
+					"type" => "button"
 				],
 			],
 			"id" => "register-direction-modal"

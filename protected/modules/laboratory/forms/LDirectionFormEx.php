@@ -41,22 +41,22 @@ class LDirectionFormEx extends FormModel {
 			"pregnant" => [
 				"label" => "Беременна",
 				"type" => "YesNo",
-				"rules" => "required"
+				"options" => [
+					"data-cleanup" => "false",
+					"value" => "1",
+				]
 			],
 			"smokes" => [
 				"label" => "Курит",
-				"type" => "YesNo",
-				"rules" => "required"
+				"type" => "YesNo"
 			],
 			"gestational_age" => [
 				"label" => "Срок беременности",
-				"type" => "GestationalAge",
-				"rules" => "required"
+				"type" => "GestationalAge"
 			],
 			"menstruation_cycle" => [
 				"label" => "Менструальный цикл",
-				"type" => "MenstruationCycle",
-				"rules" => "required"
+				"type" => "MenstruationCycle"
 			],
 			"race" => [
 				"label" => "Расовая принадлежность",
