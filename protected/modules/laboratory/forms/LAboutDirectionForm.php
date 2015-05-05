@@ -7,11 +7,12 @@ class LAboutDirectionForm extends FormModel {
 	public $sample_type_id;
 	public $analysis_parameters;
 	public $comment;
+	public $sending_time;
 	public $sending_date;
 
 	public function rules() {
 		return [
-			[ "direction_id, medcard_id, sample_type_id, analysis_parameters, sending_date", "required" ]
+			[ "direction_id, medcard_id, sample_type_id, analysis_parameters, sending_time, sending_date", "RequiredValidator" ]
 		];
 	}
 
@@ -21,12 +22,17 @@ class LAboutDirectionForm extends FormModel {
 			"medcard_id" => "идентификатор медкарты",
 			"sample_type_id" => "Тип образца",
 			"analysis_parameters" => "Параметры анализа",
+			"sending_time" => "Время направления",
 			"sending_date" => "Дата направления",
 			"comment" => "Комментарий"
 		];
 	}
 
 	public function config() {
-		return [];
+		return [
+			"sample_type_id" => [
+				"type" => "dropdown"
+			]
+		];
 	}
 }

@@ -413,7 +413,7 @@ class DirectionController extends Controller2 {
 			}
 			$r = LDirection::model()->updateByPk($form->{"direction_id"}, [
 				"sample_type_id" => $form->{"sample_type_id"},
-				"sending_date" =>$form->{"sending_date"},
+				"sending_date" => $form->{"sending_date"}." ".$form->{"sending_time"}.".000000",
 				"comment" => $form->{"comment"},
 				"status" => LDirection::STATUS_LABORATORY
 			]);

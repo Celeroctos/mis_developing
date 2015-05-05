@@ -74,7 +74,7 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 			</div>
 			<div class="col-xs-8 text-left">
 				<div class="input-group">
-					<input style="margin-top: 0" disabled="disabled" class="form-control" value="<?= $sendingTime ?>" title="" aria-describedby="basic-addon">
+					<input name="LAboutDirectionForm[sending_time]" readonly style="margin-top: 0" class="form-control" value="<?= $sendingTime ?>" title="" aria-describedby="basic-addon">
 					<span class="input-group-addon" id="basic-addon">
 						<span class="glyphicon glyphicon-time"></span>
 					</span>

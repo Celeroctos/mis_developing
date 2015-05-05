@@ -349,13 +349,14 @@ var TreatmentAboutDirection = {
 		}).on("click", "#send-to-laboratory-button", function() {
 			var me = $(this);
 			me.parents(".panel").loading("render");
-			me.parents(".about-direction").find(".direction-info-wrapper").form("send", function(response) {
-				if (response["status"] == true) {
+			me.parents(".about-direction").find(".direction-info-wrapper").form({
+				success: function(response) {
 					TreatmentDirectionTable.refreshDatePicker(response["dates"]);
+					$("#treatment-repeat-counts").text(response["repeats"]);
 					TreatmentDirectionTable.update();
 					$("#treatment-about-direction-modal").modal("hide");
 				}
-			}).always(function() {
+			}).form("send").always(function() {
 				me.parents(".panel").loading("reset");
 			});
 		}).on("shown.bs.modal", function() {
