@@ -61,7 +61,13 @@ class LDirection extends ActiveRecord {
 			->select("cast(sending_date as date) as date")
 			->from("lis.direction");
 		if ($status != null) {
-			$query->where("status in (".implode(",", (array) $status).")");
+			if (is_array($status)) {
+				$query->where("status in (".implode(",", (array) $status).")");
+			} else {
+				$query->where("status = :status", [
+					":status" => $status
+				]);
+			}
 		}
 		$rows = $query->group("date")
 			->queryAll();

@@ -6,23 +6,25 @@
  * @var $parameters array - Array with analysis type parameters
  * @var $samples array - Array with analysis type sample types
  */
+$sendingDate = substr($direction->{"sending_date"}, 0, strpos($direction->{"sending_date"}, " "));
+$sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending_date"}, " ") + 1);
 ?>
 
-<?= CHtml::openTag("div", [
+<?= CHtml::openTag("dic", [
 	"class" => "about-direction"
 ]) ?>
-<?= CHtml::hiddenField("direction_id", $direction->id, [
-	"id" => "treatment-about-direction-id"
-]); ?>
-<?= CHtml::hiddenField("medcard_id", $direction->medcard_id, [
-	"id" => "treatment-about-direction-medcard-id"
-]); ?>
 <?php $this->beginWidget("Panel", [
 	"title" => "Информация об образце",
 	"id" => "treatment-about-direction-analysis-panel",
 	"collapsible" => true
 ]) ?>
-<div class="direction-info-wrapper" style="font-size: 15px">
+<form class="direction-info-wrapper" style="font-size: 15px" action="<?= Yii::app()->createUrl("laboratory/direction/laboratory") ?>">
+	<?= CHtml::hiddenField("LAboutDirectionForm[direction_id]", $direction->id, [
+		"id" => "treatment-about-direction-id"
+	]); ?>
+	<?= CHtml::hiddenField("LAboutDirectionForm[medcard_id]", $direction->medcard_id, [
+		"id" => "treatment-about-direction-medcard-id"
+	]); ?>
 	<div class="col-xs-12 no-padding">
 		<div class="row no-padding">
 			<div class="col-xs-4 text-right">
@@ -37,7 +39,7 @@
 				<label><b>Тип образца: </b></label>
 			</div>
 			<div class="col-xs-8 text-left sample-type-list-wrapper">
-				<?= CHtml::dropDownList("sampleTypes", "-1", CHtml::listData($samples, "id", "path"), [
+				<?= CHtml::dropDownList("LAboutDirectionForm[sample_type_id]", $direction->{"sample_type_id"} ? $direction->{"sample_type_id"} : "-1", [ -1 => "Нет" ] + CHtml::listData($samples, "id", "path"), [
 					"class" => "form-control sample-type-list"
 				]) ?>
 			</div>
@@ -48,7 +50,8 @@
 			</div>
 			<div class="col-xs-8 text-left">
 			<?php $this->widget("AnalysisParameterChecker", [
-				"parameters" => $parameters
+				"parameters" => $parameters,
+				"name" => "LAboutDirectionForm[analysis_parameters][]"
 			]) ?>
 			</div>
 		</div>
@@ -58,23 +61,36 @@
 			</div>
 			<div class="col-xs-8 text-left">
 				<div class="input-group">
-					<input style="margin-top: 0" data-provide="datepicker" data-date-language="ru-RU" data-date-format="yyyy-mm-dd" class="form-control" value="<?= substr($direction->{"sending_date"}, 0, strpos($direction->{"sending_date"}, " ")) ?>" title="" aria-describedby="basic-addon">
-					<span class="input-group-addon" id="basic-addon">
-						<span class="glyphicon glyphicon-calendar"></span>
+					<input name="LAboutDirectionForm[sending_date]" style="margin-top: 0" data-provide="datepicker" data-date-language="ru-RU" data-date-format="yyyy-mm-dd" class="form-control" value="<?= $sendingDate ?>" title="" aria-describedby="basic-addon">
+					<span class="input-group-addon" id="basic-addon" onclick="$(this).parent().children('input').val('<?= $sendingDate ?>')">
+						<span class="glyphicon glyphicon-calendar" onmouseenter="$(this).tooltip('show')" data-placement="top" data-original-title="Восстановить"></span>
 					</span>
 				</div>
 			</div>
 		</div>
 		<div class="row no-padding">
 			<div class="col-xs-4 text-right">
-				<label><b>Коментарий: </b></label>
+				<label><b>Время взятия образца: </b></label>
 			</div>
 			<div class="col-xs-8 text-left">
-				<textarea class="form-control" rows="6" style="resize: vertical" title=""><?= $direction->{"comment"} ?></textarea>
+				<div class="input-group">
+					<input style="margin-top: 0" disabled="disabled" class="form-control" value="<?= $sendingTime ?>" title="" aria-describedby="basic-addon">
+					<span class="input-group-addon" id="basic-addon">
+						<span class="glyphicon glyphicon-time"></span>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="row no-padding">
+			<div class="col-xs-4 text-right">
+				<label><b>Комментарий: </b></label>
+			</div>
+			<div class="col-xs-8 text-left">
+				<textarea name="LAboutDirectionForm[comment]" class="form-control" rows="6" style="resize: vertical" title=""><?= $direction->{"comment"} ?></textarea>
 			</div>
 		</div>
 	</div>
-</div>
+</form>
 <hr>
 <div class="col-xs-12 text-center">
 	<button id="send-to-laboratory-button" class="btn btn-default">

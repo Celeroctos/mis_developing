@@ -349,18 +349,23 @@ var TreatmentAboutDirection = {
 		}).on("click", "#send-to-laboratory-button", function() {
 			var me = $(this);
 			me.parents(".panel").loading("render");
-			Core.sendPost("laboratory/direction/laboratory", {
-				id: me.parents(".about-direction").find("#treatment-about-direction-id").val()
-			}, function(json) {
-				TreatmentDirectionTable.refreshDatePicker(json["dates"]);
-				TreatmentDirectionTable.update();
-				$("#treatment-about-direction-modal").modal("hide");
+			me.parents(".about-direction").find(".direction-info-wrapper").form("send", function(response) {
+				if (response["status"] == true) {
+					TreatmentDirectionTable.refreshDatePicker(response["dates"]);
+					TreatmentDirectionTable.update();
+					$("#treatment-about-direction-modal").modal("hide");
+				}
 			}).always(function() {
 				me.parents(".panel").loading("reset");
 			});
 		}).on("shown.bs.modal", function() {
-			$(this).find("#treatment-direction-history-panel").panel("collapse");
-		}).find(".sample-type-list-wrapper").on("change", ".sample-type-list", function() {
+			/* $(this).find("#treatment-direction-history-panel").panel("collapse"); */
+		}).on("change", "[name='LAboutDirectionForm[sample_type_id]']", function() {
+			/* if ($(this).val() != -1) {
+				$("#send-to-laboratory-button").prop("disabled", false);
+			} else {
+				$("#send-to-laboratory-button").prop("disabled", true);
+			} */
 		});
 	}
 };

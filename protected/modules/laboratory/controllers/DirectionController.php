@@ -407,18 +407,45 @@ class DirectionController extends Controller2 {
 
 	public function actionLaboratory() {
 		try {
-			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+			$form = $this->requireModel("LAboutDirectionForm");
+			if ($form->hasErrors()) {
+				$this->postValidationError($form->errors);
+			}
+			$r = LDirection::model()->updateByPk($form->{"direction_id"}, [
+				"sample_type_id" => $form->{"sample_type_id"},
+				"sending_date" =>$form->{"sending_date"},
+				"comment" => $form->{"comment"},
 				"status" => LDirection::STATUS_LABORATORY
 			]);
 			if (!$r) {
-				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено в лабораторию");
-			} else {
-				$this->leave([
-					"message" => "Направление успешно отправлено в лабораторию",
-					"repeats" => LDirection::model()->getCountOfRepeats(),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+				throw new CException("Can't refresh direction");
+			}
+			$params = LDirection::getIds(LDirection::model()->getAnalysisParameters(
+				$form->{"direction_id"}, false
+			));
+			foreach ($form->{"analysis_parameters"} as $id) {
+				if ($this->arrayInDrop([ "id" => $id ], $params)) {
+					continue;
+				}
+				$ar = LDirectionParameter::load([
+					"direction_id" => $form->{"direction_id"},
+					"analysis_type_parameter_id" => $id
+				]);
+				if (!$ar->save()) {
+					throw new CException("Can't save analysis parameter");
+				}
+			}
+			foreach ($params as $id) {
+				# Why Yii can't execute delete SQL query via [deleteAll] method ???
+				Yii::app()->getDb()->createCommand()->delete("lis.direction_parameter", "direction_id = :d and analysis_type_parameter_id = :a", [
+					":d" => $form->{"direction_id"}, ":a" => $id
 				]);
 			}
+			$this->leave([
+				"message" => "Направление успешно отправлено в лабораторию",
+				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM),
+				"repeats" => LDirection::model()->getCountOfRepeats(),
+			]);
 		} catch (Exception $e) {
 			$this->exception($e);
 		}
