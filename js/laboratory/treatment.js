@@ -174,9 +174,7 @@ var TreatmentDirectionTable = {
 			Core.Common.cleanup(this);
 		});
 		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function() {
-			setTimeout(function() {
-				me.refreshDatePicker();
-			}, 0);
+			setTimeout(function() { me.refreshDatePicker() }, 100);
 		});
 	},
 	refreshDatePicker: function(dates) {
@@ -186,7 +184,9 @@ var TreatmentDirectionTable = {
 				.find(".table:eq(0)")
 				.attr("data-dates");
 			try {
-				dates = $.parseJSON(dates);
+				if (typeof dates == "string") {
+					dates = $.parseJSON(dates);
+				}
 			} catch (ignored) {
 			}
 			me.createDatePicker(p, dates || []);
@@ -216,6 +216,9 @@ var TreatmentDirectionTable = {
 		if ($(element).data("datepicker")) {
 			$(element).datepicker("remove");
 		}
+		var handler = function() {
+			$(this).find(".direction-date").text($(this).panel("attr", "date"));
+		};
 		$(element).datepicker({
 			language: "ru-RU",
 			orientation: "top",
@@ -234,9 +237,8 @@ var TreatmentDirectionTable = {
 				function() {
 					$this.datepicker("hide");
 				});
-		}).parents(".panel:eq(0)").unbind("panel.updated").on("panel.updated", function() {
-			$(this).find(".direction-date").text($(this).panel("attr", "date"));
-		});
+		}).parents(".panel:eq(0)").unbind("panel.updated", handler)
+			.bind("panel.updated", handler);
 	},
 	update: function(success) {
 		$(".treatment-table-wrapper .panel").panel("update", success);
