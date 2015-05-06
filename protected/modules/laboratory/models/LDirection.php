@@ -4,7 +4,7 @@ class LDirection extends ActiveRecord {
 
 	const STATUS_TREATMENT_ROOM = 1;
 	const STATUS_LABORATORY = 2;
-	const STATUS_DONE = 3;
+	const STATUS_READY = 3;
 	const STATUS_TREATMENT_REPEAT = 4;
 
 	public function getWithAnalysis($where = "", $params = []) {
@@ -135,6 +135,18 @@ class LDirection extends ActiveRecord {
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
 			->where("d.status = :".LDirection::STATUS_TREATMENT_REPEAT)
+		);
+	}
+
+	public function getLaboratoryTableProvider() {
+		return new TableProvider($this, $this->getDbConnection()->createCommand()
+			->select("d.*,
+				m.card_number as card_number,
+				concat(p.surname, ' ', substring(p.name from 1 for 1), '.', substring(p.patronymic from 1 for 1)) as fio
+			")->from("lis.direction as d")
+			->join("lis.medcard as m", "d.medcard_id = m.id")
+			->join("lis.patient as p", "m.patient_id = p.id")
+			->where("d.status = :".LDirection::STATUS_LABORATORY)
 		);
 	}
 

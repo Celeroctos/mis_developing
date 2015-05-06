@@ -89,7 +89,14 @@ class LDirectionForm extends FormModel {
 			],
 			"sender_id" => [
 				"label" => "Врач направитель",
-				"type" => "number",
+				"type" => "dropdown",
+				"table" => [
+					"format" => "%{last_name} %{first_name}",
+					"name" => "mis.doctors",
+					"key" => "id",
+					"value" => "first_name, last_name",
+					"order" => "last_name, first_name"
+				],
 				"rules" => "required",
 				"hidden" => "true"
 			],
@@ -101,14 +108,14 @@ class LDirectionForm extends FormModel {
 			"treatment_room_employee_id" => [
 				"label" => "Сотрудник процедурного кабинета",
 				"type" => "DropDown",
-				"rules" => "required",
 				"table" => [
 					"format" => "%{last_name} %{first_name}",
 					"name" => "mis.doctors",
 					"key" => "id",
 					"value" => "first_name, last_name",
 					"order" => "last_name, first_name"
-				]
+				],
+				"rules" => "required"
 			],
 			"laboratory_employee_id" => [
 				"label" => "Сотрудник лаборатории",

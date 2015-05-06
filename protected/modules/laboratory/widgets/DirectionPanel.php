@@ -33,7 +33,9 @@ class DirectionPanel extends Panel {
 	];
 
 	public function init() {
-		if ($this->status == LDirection::STATUS_TREATMENT_ROOM) {
+		if ($this->status == LDirection::STATUS_TREATMENT_ROOM ||
+			$this->status == LDirection::STATUS_READY
+		) {
 			$this->controls += [
 				"panel-date-button" => [
 					"class" => "btn btn-default",

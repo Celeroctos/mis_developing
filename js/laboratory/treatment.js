@@ -110,7 +110,7 @@ var Laboratory_MedcardEditableViewer_Modal = {
 					$("#treatment-laboratory-medcard-table-panel .table:eq(0)").table("update");
 					modal.modal("hide");
 					Laboratory_DirectionTable_Widget.show(json["direction"]);
-					Laboratory_DirectionTable_Widget.update();
+					$("#treatment-direction-grid-wrapper > .panel").panel("update");
 				}
 			}, "json");
 		});
@@ -164,10 +164,58 @@ var Laboratory_MedcardEditableViewer_Modal = {
 	copied: false
 };
 
+var Laboratory_MedcardSearch_Widget = {
+	ready: function() {
+		var me = this;
+		$(document).on("click", "[id='medcard-search-button']", function() {
+			me.search($(this).parents(".medcard-search-wrapper:eq(0)"));
+		});
+		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
+			me.reset();
+		});
+	},
+	search: function(wrapper) {
+		var table = wrapper.find("#medcard-search-button").button("loading")
+			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
+		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
+			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
+		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
+		$.post(url("/laboratory/medcard/search"), data, function(json) {
+			if (!Message.display(json)) {
+				return void 0;
+			}
+			table.replaceWith($(json["component"]));
+			Core.createMessage({
+				message: "Таблица обновлена",
+				sign: "ok",
+				type: "success",
+				delay: 2000
+			});
+		}, "json").always(function() {
+			wrapper.find("#medcard-search-button").button("reset");
+		});
+	},
+	click: function(id) {
+		var me = Laboratory_MedcardSearch_Widget;
+		me.active && me.active.removeClass("medcard-table-active");
+		me.active = $(this).addClass("medcard-table-active");
+		if (me.active) {
+			$("#medcard-edit-button").removeClass("disabled");
+		}
+		this.id = id;
+	},
+	reset: function() {
+		this.active = this.id = null;
+		$("#medcard-edit-button").addClass("disabled");
+	},
+	active: null,
+	id: null
+};
+
 var Laboratory_DirectionTable_Widget = {
 	ready: function () {
 		var me = this;
-		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function () {
+		$(document).on("click", ".direction-repeat-icon", function () {
 			me.repeat($(this).parents("tr:eq(0)").attr("data-id"));
 		}).on("click", ".direction-restore-icon", function () {
 			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
@@ -261,7 +309,11 @@ var Laboratory_DirectionTable_Widget = {
 			.bind("panel.updated", handler);
 	},
 	update: function (success) {
-		$(".treatment-table-wrapper .panel").panel("update", success);
+		var panel = $(".treatment-table-wrapper .panel");
+		if (!panel.length) {
+			panel = $(".laboratory-table-wrapper .panel");
+		}
+		panel.panel("update", success);
 	},
 	show: function (id, from) {
 		var panel = from ? $(from).parents(".panel:eq(0)") :
@@ -477,8 +529,9 @@ var Laboratory_DirectionSearchForm_Modal = {
 };
 
 $(document).ready(function() {
-	Laboratory_MedcardEditableViewer_Modal.ready();
 	Laboratory_Treatment_Header.ready();
+	Laboratory_MedcardEditableViewer_Modal.ready();
+	Laboratory_MedcardSearch_Widget.ready();
 	Laboratory_Medcard_Table.ready();
 	Laboratory_DirectionTable_Widget.ready();
 	Laboratory_AboutMedcard_Widget.ready();

@@ -15,7 +15,7 @@ class DirectionStatusField extends DropDown {
 		return [
 			LDirection::STATUS_TREATMENT_ROOM => "Находится в процедурном кабинет",
 			LDirection::STATUS_LABORATORY => "Находится в лаборатории",
-			LDirection::STATUS_DONE => "Анализ завершен",
+			LDirection::STATUS_READY => "Анализ завершен",
 			LDirection::STATUS_TREATMENT_REPEAT => "Отправено на повторный забор образца"
 		];
 	}

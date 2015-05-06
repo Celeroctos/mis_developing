@@ -1,6 +1,6 @@
 <?php
 
-class DirectionTableTreatmentRepeat extends Table {
+class DirectionTableLaboratory extends Table {
 
 	public $header = [
 		"id" => [
@@ -15,23 +15,20 @@ class DirectionTableTreatmentRepeat extends Table {
 			"label" => "Время анализа",
 			"style" => "30%"
 		],
-		"card_number" => [
-			"label" => "Номер карты",
-			"style" => "width: 25%"
-		],
 		"sender_id" => [
 			"label" => "Направитель",
 			"style" => "width: 15%"
-		],
-		"analysis_type_id" => [
-			"label" => "Тип анализа"
 		]
 	];
 
 	public $controls = [
-		"direction-show-icon" => [
-			"icon" => "glyphicon glyphicon-list",
-			"label" => "Открыть направление"
+		"direction-repeat-icon" => [
+			"icon" => "glyphicon glyphicon-repeat",
+			"label" => "Отправить на повторный забор образца"
+		],
+		"direction-send-icon" => [
+			"icon" => "glyphicon glyphicon-arrow-right",
+			"label" => "Отправить на анализатор"
 		]
 	];
 
@@ -40,12 +37,12 @@ class DirectionTableTreatmentRepeat extends Table {
 	public $pageLimit = 25;
 
 	public function init() {
-		$this->provider = LDirection::model()->getSampleRepeatTableProvider();
+		$this->provider = LDirection::model()->getLaboratoryTableProvider();
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
 		}
 		$this->criteria->addColumnCondition([
-			"status" => LDirection::STATUS_TREATMENT_REPEAT
+			"status" => LDirection::STATUS_LABORATORY
 		]);
 	}
 

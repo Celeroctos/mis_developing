@@ -98,7 +98,7 @@ $this->widget("Modal", [
 		]
 	],
 	"id" => "direction-search-modal"
-]);?>
+]); ?>
 
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">

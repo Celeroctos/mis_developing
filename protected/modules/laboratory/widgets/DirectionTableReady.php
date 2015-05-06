@@ -1,6 +1,6 @@
 <?php
 
-class DirectionTableTreatmentRepeat extends Table {
+class DirectionTableReady extends DirectionTableTreatment {
 
 	public $header = [
 		"id" => [
@@ -11,13 +11,13 @@ class DirectionTableTreatmentRepeat extends Table {
 			"label" => "Фамилия И.О",
 			"style" => "30%"
 		],
-		"sending_date" => [
-			"label" => "Время анализа",
-			"style" => "30%"
-		],
 		"card_number" => [
 			"label" => "Номер карты",
 			"style" => "width: 25%"
+		],
+		"sending_date" => [
+			"label" => "Время анализа",
+			"style" => "30%"
 		],
 		"sender_id" => [
 			"label" => "Направитель",
@@ -28,25 +28,19 @@ class DirectionTableTreatmentRepeat extends Table {
 		]
 	];
 
-	public $controls = [
-		"direction-show-icon" => [
-			"icon" => "glyphicon glyphicon-list",
-			"label" => "Открыть направление"
-		]
-	];
-
-	public $textNoData = "На этот день нет направлений";
-	public $orderBy = "id desc";
-	public $pageLimit = 25;
-
 	public function init() {
-		$this->provider = LDirection::model()->getSampleRepeatTableProvider();
+		$this->provider = LDirection::model()->getJustCreatedTableProvider();
+		if ($this->date == null) {
+			$this->date = date("Y-m-d");
+		}
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
 		}
 		$this->criteria->addColumnCondition([
-			"status" => LDirection::STATUS_TREATMENT_REPEAT
+			"status" => LDirection::STATUS_READY,
+			"cast(sending_date as date)" => $this->date
 		]);
+		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_READY);
 	}
 
 	public function getSerializedAttributes($attributes = null, $excepts = []) {

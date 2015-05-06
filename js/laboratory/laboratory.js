@@ -139,52 +139,6 @@ var Message = {
     }
 };
 
-var MedcardSearch = {
-	construct: function() {
-		$(document).on("click", "[id='medcard-search-button']", function() {
-			MedcardSearch.search($(this).parents(".medcard-search-wrapper:eq(0)"));
-		});
-		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
-			MedcardSearch.reset();
-		});
-	},
-	search: function(wrapper) {
-		var table = wrapper.find("#medcard-search-button").button("loading")
-			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
-		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
-			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
-		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
-		$.post(url("/laboratory/medcard/search"), data, function(json) {
-			if (!Message.display(json)) {
-				return void 0;
-			}
-			table.replaceWith($(json["component"]));
-			Core.createMessage({
-				message: "Таблица обновлена",
-				sign: "ok",
-				type: "success",
-				delay: 2000
-			});
-		}, "json").always(function() {
-			wrapper.find("#medcard-search-button").button("reset");
-		});
-	},
-	click: function(tr, id) {
-		this.active && this.active.removeClass("medcard-table-active");
-		this.active = $(tr).addClass("medcard-table-active");
-		if (this.active) {
-			$("#medcard-edit-button").removeClass("disabled");
-		}
-		this.id = id;
-	},
-	reset: function() {
-		this.active = this.id = null;
-		$("#medcard-edit-button").addClass("disabled");
-	},
-	active: null,
-	id: null
-};
-
 var LogoutButton = {
 	construct: function() {
 		var form = $("#logout-form");
@@ -243,7 +197,6 @@ $(document).ready(function() {
 
 	ConfirmDelete.construct();
 	Panel.construct();
-	MedcardSearch.construct();
 	LogoutButton.construct();
 	MedcardSearchModal.construct();
 

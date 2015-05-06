@@ -28,7 +28,7 @@ class MedcardTable extends Table {
 	public $orderBy = "card_number";
 	public $id = "medcard-table";
 	public $pageLimit = 10;
-	public $click = "MedcardSearch.click";
+	public $click = "Laboratory_MedcardSearch_Widget.click";
 
 	/**
 	 * Initialize table widget

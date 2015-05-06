@@ -140,7 +140,8 @@ class SideMenu extends CWidget {
 			"items" => [
 				"treatment" => [
 					"label" => "Процедурный кабинет",
-					"image" => "treatment.png",
+//					"image" => "treatment.png",
+					"image" => "injection5.png",
 					"href" => "/laboratory/treatment/view"
 				],
 				"laboratory" => [
@@ -150,7 +151,8 @@ class SideMenu extends CWidget {
 				],
 				"guides" => [
 					"label" => "Справочники",
-					"image" => "notepad.png",
+					"image" => "medical50.png",
+//					"image" => "notepad.png",
 					"privilege" => [ "menuAdmin", "menuOrgGuides", "menuGuides" ],
 					"href" => "/guides/laboratory/analysisType"
 				]
