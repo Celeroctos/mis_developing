@@ -12,7 +12,7 @@ class LDirectionFormEx extends FormModel {
 	public $history;
 	public $comment;
 	public $medcard_id;
-	public $mis_medcard_id;
+	public $mis_medcard;
 
 	/**
 	 * Override that method to return config. Config should return array associated with
