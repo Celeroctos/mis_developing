@@ -221,7 +221,8 @@ var Laboratory_DirectionTable_Widget = {
 			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
 		}).on("click", ".direction-show-icon", function () {
 			me.show($(this).parents("tr:eq(0)").attr("data-id"), this);
-		}).on("dblclick", "tr[data-id]", function () {
+		});
+		$("#treatment-direction-grid-wrapper").on("dblclick", "tr[data-id]", function () {
 			me.show($(this).attr("data-id"));
 		});
 		$(".panel-date-button").each(function (i, p) {

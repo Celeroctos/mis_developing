@@ -29,10 +29,19 @@ class AboutMedcard extends Widget {
 				$medcard->setAttribute($key, "Нет");
 			}
 		}
-		if ($address = LAddress::model()->findByPk($patient->{"address_id"}) == null) {
+		if (empty($patient->{"contact"})) {
+			$patient->{"contact"} = "Нет";
+		}
+		if (empty($patient->{"work_place"})) {
+			$patient->{"work_place"} = "Нет";
+		}
+		if (empty($medcard->{"mis_medcard"})) {
+			$medcard->{"mis_medcard"} = "Нет";
+		}
+		if (!$address = LAddress::model()->findByPk($patient->{"address_id"})) {
 			throw new CException("Unresolved address identification number \"{$this->{"address_id"}}\"");
 		}
-		if ($registerAddress = LAddress::model()->findByPk($patient->{"register_address_id"}) == null) {
+		if (!$registerAddress = LAddress::model()->findByPk($patient->{"register_address_id"})) {
 			throw new CException("Unresolved address identification number \"{$this->{"register_address_id"}}\"");
 		}
 		$this->render(__CLASS__, [
