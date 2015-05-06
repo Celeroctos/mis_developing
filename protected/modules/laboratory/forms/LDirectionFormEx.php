@@ -79,8 +79,7 @@ class LDirectionFormEx extends FormModel {
 			],
 			"medcard_id" => [
 				"label" => "Номер медкарты",
-				"type" => "hidden",
-				"rules" => "required"
+				"type" => "hidden"
 			]
 		];
 	}

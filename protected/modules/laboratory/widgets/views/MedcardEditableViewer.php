@@ -25,8 +25,8 @@
 	<div class="col-xs-6 text-center">
 		<b>Направление</b>
 		<br><br>
-		<?php $this->widget("AutoForm", [
-			"model" => new LDirectionForm("treatment")
+		<?php $this->widget("DirectionCreator", [
+			"disableControls" => true
 		]) ?>
 	</div>
 </div>
