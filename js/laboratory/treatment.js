@@ -1,7 +1,7 @@
 
 var TreatmentHeader = {
 	ready: function() {
-		$("button.treatment-header-rounded:not([data-toggle])").click(function() {
+		$("button.treatment-header-rounded:not([data-target])").click(function() {
 			TreatmentHeader.active && TreatmentHeader.active.removeClass("treatment-header-wrapper-active");
 			TreatmentHeader.active = $(this).addClass("treatment-header-wrapper-active");
 		});
@@ -16,6 +16,19 @@ var TreatmentHeader = {
 			$($(this).data("tab")).removeClass("no-display")
 				.trigger("change");
 			/* $(".panel[data-widget]").panel("update"); */
+		});
+		$("#header-register-direction-button").click(function() {
+			var me = $(this);
+			me.loading({
+				image: url("images/ajax-loader.gif"),
+				width: 30,
+				height: 30
+			}).loading("render");
+			Core.sendQuery("laboratory/medcard/generate", {}, function() {
+				$(me.attr("data-target")).modal("show");
+			}).always(function() {
+				me.loading("reset");
+			});
 		});
 	},
 	active: null

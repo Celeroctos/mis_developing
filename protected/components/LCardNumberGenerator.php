@@ -16,7 +16,7 @@ class LCardNumberGenerator {
 
 	public function generate() {
 		$row = Yii::app()->getDb()->createCommand()
-			->select("count(1) as index, extract(year from now()) as year")
+			->select("max(id) + 1 as index, extract(year from now()) as year")
 			->from("lis.medcard as m")
 			->group("m.year")
 			->where("m.year = year")

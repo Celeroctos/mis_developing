@@ -105,7 +105,7 @@ class MedcardController extends Controller2 {
 	 *
 	 * @throws Exception
 	 */
-	public function actionGenerateCardNumber() {
+	public function actionGenerate() {
 		try {
 			$this->leave([
 				"message" => "Номер карты был успешно сгенерирован",
