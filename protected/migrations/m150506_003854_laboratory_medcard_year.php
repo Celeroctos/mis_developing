@@ -12,11 +12,6 @@ SQL;
 	}
 
 	public function safeDown() {
-		$sql = <<< SQL
-		ALTER TABLE "lis"."medcard" DROP "year"
-SQL;
-		foreach (explode(";", $sql) as $s) {
-			$this->execute($s);
-		}
+		$this->execute("ALTER TABLE lis.medcard DROP year");
 	}
 }

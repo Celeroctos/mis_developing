@@ -12,11 +12,6 @@ SQL;
 	}
 
 	public function safeDown() {
-		$sql = <<< SQL
-		ALTER TABLE "lis"."direction" DROP "sample_type_id"
-SQL;
-		foreach (explode(";", $sql) as $s) {
-			$this->execute($s);
-		}
+		$this->execute("ALTER TABLE lis.direction DROP sample_type_id");
 	}
 }

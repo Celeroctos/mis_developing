@@ -7,6 +7,7 @@ class m150505_213902_laboratory_fixes extends CDbMigration
 
 		DELETE FROM "lis"."analysis";
 		DELETE FROM "lis"."direction";
+		DELETE FROM "lis"."medcard";
 
 		ALTER TABLE "lis"."direction" ADD "patient_category_id" INT REFERENCES "lis"."patient_category"("id") ON DELETE CASCADE;
 
@@ -36,7 +37,9 @@ SQL;
 		ALTER TABLE "lis"."direction" DROP "patient_category_id";
 SQL;
 		foreach (explode(";", $sql) as $s) {
-			$this->execute($s);
+			if (strlen($s = trim($s)) > 0) {
+				$this->execute($s);
+			}
 		}
 	}
 }
