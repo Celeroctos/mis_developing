@@ -1,9 +1,10 @@
 
-var TreatmentHeader = {
+var Laboratory_Treatment_Header = {
 	ready: function() {
+		var me = this;
 		$("button.treatment-header-rounded:not([data-target])").click(function() {
-			TreatmentHeader.active && TreatmentHeader.active.removeClass("treatment-header-wrapper-active");
-			TreatmentHeader.active = $(this).addClass("treatment-header-wrapper-active");
+			me.active && me.active.removeClass("treatment-header-wrapper-active");
+			me.active = $(this).addClass("treatment-header-wrapper-active");
 		});
 		this.active = $(".treatment-header").find(".treatment-header-wrapper-active");
 		if (!this.active.length) {
@@ -35,7 +36,7 @@ var TreatmentHeader = {
 	active: null
 };
 
-var TreatmentMedcardEditableViewerModal = {
+var Laboratory_MedcardEditableViewer_Modal = {
 	check: function() {
 		if (this.copied !== false) {
 			$("#medcard-editable-viewer-modal #insert-button").removeProp("disabled");
@@ -108,7 +109,7 @@ var TreatmentMedcardEditableViewerModal = {
 				if (json["status"]) {
 					$("#treatment-laboratory-medcard-table-panel .table:eq(0)").table("update");
 					modal.modal("hide");
-					TreatmentDirectionTable.show(json["direction"]);
+					Laboratory_DirectionTable_Widget.show(json["direction"]);
 				}
 			}, "json");
 		});
@@ -162,7 +163,7 @@ var TreatmentMedcardEditableViewerModal = {
 	copied: false
 };
 
-var TreatmentDirectionTable = {
+var Laboratory_DirectionTable_Widget = {
 	ready: function() {
 		var me = this;
 		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function() {
@@ -313,7 +314,7 @@ var TreatmentDirectionTable = {
 	}
 };
 
-var TreatmentLaboratoryMedcardTable = {
+var Laboratory_Medcard_Table = {
 	ready: function() {
 		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
 			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionFormEx[medcard_id]']").val(
@@ -322,14 +323,14 @@ var TreatmentLaboratoryMedcardTable = {
 		}).on("click", "#medcard-search-table-wrapper .medcard-show-icon", function() {
 			var loading = $("#treatment-laboratory-medcard-table-panel")
 				.find(".table").loading("render");
-			TreatmentAboutMedcard.load($(this).parents("tr:eq(0)").attr("data-id")).always(function() {
+			Laboratory_AboutMedcard_Widget.load($(this).parents("tr:eq(0)").attr("data-id")).always(function() {
 				loading.loading("reset");
 			});
 		});
 	}
 };
 
-var TreatmentAboutMedcard = {
+var Laboratory_AboutMedcard_Widget = {
 	ready: function() {
 		$(document).on("click", ".direction-creator-cancel", function() {
 			$(this).parents(".direction-history-wrapper").find(".nav > li:first > a").tab("show");
@@ -352,10 +353,10 @@ var TreatmentAboutMedcard = {
 	}
 };
 
-var TreatmentAboutDirection = {
+var Laboratoyr_AboutDirection_Widget = {
 	ready: function() {
 		$("#treatment-about-direction-modal").on("click", "#open-medcard-button", function() {
-			TreatmentAboutMedcard.load($("#treatment-about-direction-medcard-id").val());
+			Laboratory_AboutMedcard_Widget.load($("#treatment-about-direction-medcard-id").val());
 		}).on("click", "#print-barcode-button", function() {
 			Core.createMessage({
 				message: "Печатаем или как-то так...",
@@ -367,9 +368,9 @@ var TreatmentAboutDirection = {
 			me.parents(".panel").loading("render");
 			me.parents(".about-direction").find(".direction-info-wrapper").form({
 				success: function(response) {
-					TreatmentDirectionTable.refreshDatePicker(response["dates"]);
+					Laboratory_DirectionTable_Widget.refreshDatePicker(response["dates"]);
 					$("#treatment-repeat-counts").text(response["repeats"]);
-					TreatmentDirectionTable.update();
+					Laboratory_DirectionTable_Widget.update();
 					$("#treatment-about-direction-modal").modal("hide");
 				}
 			}).form("send").always(function() {
@@ -387,7 +388,7 @@ var TreatmentAboutDirection = {
 	}
 };
 
-var TreatmentDirectionCreatorModal = {
+var Laboratory_DirectionCreator_Modal = {
 	ready: function() {
 		$("#treatment-register-direction-modal-save-button").click(function() {
 			var modal = $(this).parents(".modal");
@@ -403,7 +404,7 @@ var TreatmentDirectionCreatorModal = {
 	}
 };
 
-var LDirectionFormEx = {
+var Laboratory_DirectionFormEx_Form = {
 	ready: function() {
 		$(document).on("change", "[name='LDirectionFormEx[analysis_type_id]']", function() {
 			var me = $(this), form = me.parents("form:eq(0)");
@@ -450,12 +451,12 @@ var LDirectionFormEx = {
 };
 
 $(document).ready(function() {
-	TreatmentMedcardEditableViewerModal.ready();
-	TreatmentHeader.ready();
-	TreatmentLaboratoryMedcardTable.ready();
-	TreatmentDirectionTable.ready();
-	TreatmentAboutMedcard.ready();
-	TreatmentAboutDirection.ready();
-	TreatmentDirectionCreatorModal.ready();
-	LDirectionFormEx.ready();
+	Laboratory_MedcardEditableViewer_Modal.ready();
+	Laboratory_Treatment_Header.ready();
+	Laboratory_Medcard_Table.ready();
+	Laboratory_DirectionTable_Widget.ready();
+	Laboratory_AboutMedcard_Widget.ready();
+	Laboratoyr_AboutDirection_Widget.ready();
+	Laboratory_DirectionCreator_Modal.ready();
+	Laboratory_DirectionFormEx_Form.ready();
 });

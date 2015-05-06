@@ -220,7 +220,7 @@ var MedcardSearchModal = {
 				if (!Message.display(json)) {
 					return void 0;
 				}
-				TreatmentMedcardEditableViewerModal.load(json["model"]);
+				Laboratory_MedcardEditableViewer_Modal.load(json["model"]);
 				modal.modal("hide");
 			}, "json")
 				.always(function() {
