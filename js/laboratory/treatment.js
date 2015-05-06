@@ -110,7 +110,6 @@ var Laboratory_MedcardEditableViewer_Modal = {
 					$("#treatment-laboratory-medcard-table-panel .table:eq(0)").table("update");
 					modal.modal("hide");
 					Laboratory_DirectionTable_Widget.show(json["direction"]);
-					$("#treatment-direction-grid-wrapper > .panel").panel("update");
 				}
 			}, "json");
 		});
@@ -325,6 +324,7 @@ var Laboratory_DirectionTable_Widget = {
 		}, function (component) {
 			$("#treatment-about-direction-modal").modal().find(".modal-body")
 				.empty().append(component);
+		}).always(function() {
 			panel.panel("after");
 		});
 	},
