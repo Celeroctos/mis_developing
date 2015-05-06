@@ -5,62 +5,61 @@
  */
 ?>
 
-<input id="laboratory-medcard-number" type="hidden" value="<?= $number ?>" data-cleanup="false">
+<input id="laboratory-medcard-number" type="hidden" data-cleanup="false">
 <div class="row">
 	<div class="col-xs-6 text-center">
-		<b>Медицинская карта</b>
-		<br><br>
-		<?php $this->widget("AutoForm", [
-			"model" => new LMedcardForm("treatment", [
-				"card_number" => $number
-			])
+		<?php $this->widget("Panel", [
+			"title" => "Медицинская карта",
+			"body" => $this->createWidget("AutoForm", [
+				"model" => new LMedcardForm("treatment", [
+					"card_number" => $number
+				])
+			]),
+			"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+			"collapsible" => true,
+			"controlMode" => ControlMenu::MODE_NONE
 		]) ?>
-		<hr>
-		<b>Пациент</b>
-		<br><br>
-		<?php $this->widget("AutoForm", [
-			"model" => new LPatientForm("treatment")
+		<?php $this->widget("Panel", [
+			"title" => "Пациент",
+			"body" => $this->createWidget("AutoForm", [
+				"model" => new LPatientForm("treatment")
+			]),
+			"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+			"collapsible" => true,
+			"controlMode" => ControlMenu::MODE_NONE
 		]) ?>
+		<form name="PropertyForm">
+			<?php $this->widget("CheckPanel", [
+				"title" => "Паспорт",
+				"body" => $this->createWidget("AutoForm", [
+					"model" => new LPolicyForm("treatment")
+				]),
+				"name" => "PropertyForm[policy]",
+				"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+				"controlMode" => ControlMenu::MODE_NONE,
+				"checked" => false
+			]) ?>
+			<?php $this->widget("CheckPanel", [
+				"title" => "Страховой полис",
+				"body" => $this->createWidget("AutoForm", [
+					"model" => new LPolicyForm("treatment")
+				]),
+				"name" => "PropertyForm[policy]",
+				"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+				"controlMode" => ControlMenu::MODE_NONE,
+				"checked" => false
+			]) ?>
+		</form>
 	</div>
 	<div class="col-xs-6 text-center">
-		<b>Направление</b>
-		<br><br>
-		<?php $this->widget("DirectionCreator", [
-			"disableControls" => true
+		<?php $this->widget("Panel", [
+			"title" => "Направление",
+			"body" => $this->createWidget("DirectionCreator", [
+				"disableControls" => true
+			]),
+			"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+			"collapsible" => true,
+			"controlMode" => ControlMenu::MODE_NONE
 		]) ?>
-	</div>
-</div>
-<div class="col-xs-12 text-center">
-	<hr>
-	<form class="col-xs-12" name="PropertyForm">
-		<div class="btn-group" id="treatment-document-control-wrapper" data-toggle="buttons">
-			<label class="btn btn-default" data-target="#treatment-direction-passport-form">
-				<input type="checkbox" name="PropertyForm[passport]" autocomplete="off"><b>Паспорт&nbsp;</b>
-				<span class="glyphicon glyphicon-chevron-down"></span>
-			</label>
-			<label class="btn btn-default" data-target="#treatment-direction-policy-form">
-				<input type="checkbox" name="PropertyForm[policy]" autocomplete="off"><b>Полис&nbsp;</b>
-				<span class="glyphicon glyphicon-chevron-down"></span>
-			</label>
-		</div>
-	</form>
-	<hr>
-	<div class="col-xs-6">
-		<div id="treatment-direction-passport-form">
-			<b>Паспорт</b>
-			<br><br>
-			<?php $this->widget("AutoForm", [
-				"model" => new LPassportForm("treatment")
-			]) ?>
-		</div>
-	</div>
-	<div class="col-xs-6">
-		<div id="treatment-direction-policy-form">
-			<b>Полис</b>
-			<br><br>
-			<?php $this->widget("AutoForm", [
-				"model" => new LPolicyForm("treatment")
-			]) ?>
-		</div>
 	</div>
 </div>

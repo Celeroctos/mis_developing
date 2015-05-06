@@ -80,6 +80,12 @@ class Panel extends Widget {
     public $collapsible = false;
 
 	/**
+	 * @var bool - Should panel be pre-collapsed after
+	 * 	render?
+	 */
+	public $collapsed = false;
+
+	/**
 	 * @var bool - Should panel be upgradable with refresh button, it
 	 * 	will take any effects only if [body] is widget object, which
 	 * 	has bee created via [@see Widget::createWidget] method
@@ -161,11 +167,23 @@ class Panel extends Widget {
 	 */
     public function run() {
 		$this->render("application.widgets.views.Panel", [
-			"content" => $this->body ? $this->body : ob_get_clean(),
-			"parameters" => $this->attributes,
-			"widget" => $this->_widget,
+			"content" => $this->body ? $this->body : ob_get_clean()
 		]);
     }
+
+	public function renderAttributes() {
+		$attributes = [
+			"id" => $this->id
+		];
+		if (!empty($this->_widget)) {
+			$attributes["data-widget"] = $this->_widget;
+		}
+		$str = CHtml::renderAttributes($attributes);
+		if (!empty($this->attributes)) {
+			$str .= " data-attributes=\"{$this->attributes}\"";
+		}
+		return $str;
+	}
 
 	public function renderControls() {
 		$this->widget("ControlMenu", [

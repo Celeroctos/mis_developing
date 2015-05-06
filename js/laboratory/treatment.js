@@ -24,7 +24,8 @@ var TreatmentHeader = {
 				width: 30,
 				height: 30
 			}).loading("render");
-			Core.sendQuery("laboratory/medcard/generate", {}, function() {
+			Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
+				$("#laboratory-medcard-number, span[id='card_number']").val(response["number"]);
 				$(me.attr("data-target")).modal("show");
 			}).always(function() {
 				me.loading("reset");
@@ -187,7 +188,7 @@ var TreatmentDirectionTable = {
 			Core.Common.cleanup(this);
 		});
 		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function() {
-			setTimeout(function() { me.refreshDatePicker() }, 100);
+			setTimeout(function() { me.refreshDatePicker() }, 250);
 		});
 	},
 	refreshDatePicker: function(dates) {

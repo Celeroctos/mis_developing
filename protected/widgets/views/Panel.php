@@ -7,7 +7,7 @@
  */
 ?>
 
-<div class="<?= $this->panelClass ?>" id="<?= $this->id ?>" <?= !empty($widget) ? "data-widget=\"$widget\"" : "" ?> <?= !empty($parameters) ? "data-attributes=\"$parameters\"" : "" ?>>
+<div class="<?= $this->panelClass ?>" <?= $this->renderAttributes() ?>>
     <div class="<?= $this->headingClass ?>">
 		<div class="<?= $this->titleWrapperClass ?>">
 			<span <?= $this->collapsible ? "onclick=\"$(this).panel('toggle')\"" : "" ?> class="<?= $this->titleClass ?>"><?= $this->title ?></span>
@@ -16,7 +16,7 @@
 			<?php $this->renderControls() ?>
 		</div>
     </div>
-    <div class="<?= $this->bodyClass ?>">
+    <div class="<?= $this->bodyClass ?>" <?= $this->collapsed ? "style=\"display: none\"" : "" ?>>
 		<div class="row no-padding no-margin">
 			<div class="<?= $this->contentClass ?>">
 				<?= $content ?>

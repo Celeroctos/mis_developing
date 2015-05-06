@@ -7,8 +7,8 @@ class DirectionPanel extends Panel {
 	 */
 	public $date = null;
 
-	public $controlsWrapperClass = "col-xs-8 text-right no-padding";
-	public $titleWrapperClass = "col-xs-4 text-left no-padding";
+	public $controlsWrapperClass = "col-xs-6 text-right no-padding";
+	public $titleWrapperClass = "col-xs-6 text-left no-padding";
 
 	/**
 	 * @var int - Default panel's control mode is button, don't
