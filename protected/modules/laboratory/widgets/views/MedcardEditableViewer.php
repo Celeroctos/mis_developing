@@ -5,6 +5,7 @@
  */
 ?>
 
+<form name="PropertyForm">
 <input id="laboratory-medcard-number" type="hidden" data-cleanup="false">
 <div class="row">
 	<div class="col-xs-6 text-center">
@@ -28,28 +29,26 @@
 			"collapsible" => true,
 			"controlMode" => ControlMenu::MODE_NONE
 		]) ?>
-		<form name="PropertyForm">
-			<?php $this->widget("CheckPanel", [
-				"title" => "Паспорт",
-				"body" => $this->createWidget("AutoForm", [
-					"model" => new LPolicyForm("treatment")
-				]),
-				"name" => "PropertyForm[policy]",
-				"headingClass" => "panel-heading panel-heading-narrow row no-margin",
-				"controlMode" => ControlMenu::MODE_NONE,
-				"checked" => false
-			]) ?>
-			<?php $this->widget("CheckPanel", [
-				"title" => "Страховой полис",
-				"body" => $this->createWidget("AutoForm", [
-					"model" => new LPolicyForm("treatment")
-				]),
-				"name" => "PropertyForm[policy]",
-				"headingClass" => "panel-heading panel-heading-narrow row no-margin",
-				"controlMode" => ControlMenu::MODE_NONE,
-				"checked" => false
-			]) ?>
-		</form>
+		<?php $this->widget("CheckPanel", [
+			"title" => "Паспорт",
+			"body" => $this->createWidget("AutoForm", [
+				"model" => new LPassportForm("treatment")
+			]),
+			"name" => "PropertyForm[passport]",
+			"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+			"controlMode" => ControlMenu::MODE_NONE,
+			"checked" => false
+		]) ?>
+		<?php $this->widget("CheckPanel", [
+			"title" => "Страховой полис",
+			"body" => $this->createWidget("AutoForm", [
+				"model" => new LPolicyForm("treatment")
+			]),
+			"name" => "PropertyForm[policy]",
+			"headingClass" => "panel-heading panel-heading-narrow row no-margin",
+			"controlMode" => ControlMenu::MODE_NONE,
+			"checked" => false
+		]) ?>
 	</div>
 	<div class="col-xs-6 text-center">
 		<?php $this->widget("Panel", [
@@ -63,3 +62,4 @@
 		]) ?>
 	</div>
 </div>
+</form>
