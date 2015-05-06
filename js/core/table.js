@@ -22,8 +22,16 @@ var Core = Core || {};
 		}, parameters || {});
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
-			if (!Message.display(json)) {
-				return void 0;
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					type: "success",
+					sign: "ok",
+					message: json["message"]
+				});
 			}
 			me.after();
 			me.selector().replaceWith(
