@@ -2,6 +2,10 @@
 
 class LCardNumberGenerator {
 
+	const PREFIX = "";
+	const DELIMITER = "/";
+	const POSTFIX = "#Л";
+
 	public static function getGenerator() {
 		if (self::$_generator == null) {
 			return self::$_generator = new LCardNumberGenerator();
@@ -12,26 +16,12 @@ class LCardNumberGenerator {
 
 	public function generate() {
 		$row = Yii::app()->getDb()->createCommand()
-			->select("card_number")
-			->from("lis.medcard")
-			->order("card_number desc")
-			->limit(1)
+			->select("count(1) as index, extract(year from now()) as year")
+			->from("lis.medcard as m")
+			->group("m.year")
+			->where("m.year = year")
 			->queryRow();
-		$generator = new CardnumberGenerator();
-		$rule = MedcardRule::model()->find("name = :name", [
-			":name" => "ЛКП"
-		]);
-		if ($row !== null) {
-			$generator->setPrevNumber($row["card_number"]);
-		} else {
-			$generator->setPrevNumber("");
-		}
-		if ($rule != null) {
-			$number = $generator->generateNumber($rule["id"]);
-		} else {
-			throw new CException("Can't resolve medcard rule for laboratory, required name is \"ЛКП\"");
-		}
-		return $number;
+		return static::PREFIX.$row["index"].static::DELIMITER.$row["year"].static::POSTFIX;
 	}
 
 	private static $_generator = null;
