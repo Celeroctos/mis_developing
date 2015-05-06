@@ -5,6 +5,7 @@ class m150505_213902_laboratory_fixes extends CDbMigration
 	public function safeUp() {
 		$sql = <<< SQL
 
+		DELETE FROM "lis"."analysis";
 		DELETE FROM "lis"."direction";
 
 		ALTER TABLE "lis"."direction" ADD "patient_category_id" INT REFERENCES "lis"."patient_category"("id") ON DELETE CASCADE;

@@ -54,6 +54,9 @@ var Core = Core || {};
 		this.update();
 	};
 
+	// dtctksqikzgybr
+	// веселыйшляпник
+
 	Table.prototype.fetch = function(properties) {
 		for (var key in properties) {
 			this.property(key, properties[key]);
