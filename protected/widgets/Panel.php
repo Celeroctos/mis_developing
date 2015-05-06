@@ -101,12 +101,14 @@ class Panel extends Widget {
 		"panel-update-button" => [
 			"icon" => "glyphicon glyphicon-refresh",
 			"onclick" => "$(this).panel('update')",
-			"label" => "Обновить"
+			"label" => "Обновить",
+			"class" => "btn btn-default"
 		],
 		"panel-collapse-button" => [
 			"icon" => "glyphicon glyphicon-asterisk",
 			"label" => "Свернуть/Развернуть",
-			"onclick" => "$(this).panel('toggle')"
+			"onclick" => "$(this).panel('toggle')",
+			"class" => "btn btn-default"
 		]
 	];
 
@@ -115,7 +117,7 @@ class Panel extends Widget {
 	 * 	to CONTROL_MODE_NONE to disable control elements
 	 * @see ControlMenu
 	 */
-	public $controlMode = ControlMenu::MODE_ICON;
+	public $controlMode = ControlMenu::MODE_BUTTON;
 
 	/**
 	 * @var string - String with serialized parameters

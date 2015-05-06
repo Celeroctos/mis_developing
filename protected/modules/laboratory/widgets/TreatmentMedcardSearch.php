@@ -30,7 +30,7 @@ class TreatmentMedcardSearch extends MedcardSearch {
 				"treatment-register-direction-modal-save-button" => [
 					"text" => "Сохранить",
 					"class" => "btn btn-primary",
-					"type" => "button"
+					"type" => "button",
 				],
 			],
 			"id" => "register-direction-modal"

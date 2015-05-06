@@ -31,6 +31,9 @@ $view = UniqueGenerator::generate("direction-history-view");
 						<div class="col-xs-6"><?= $direction["analysis_type_short_name"] ?></div>
 					</div>
 				<?php endforeach ?>
+				<?php if (empty($directions)): ?>
+					<h3 class="text-center no-margin no-padding">Нет направлений</h3>
+				<?php endif ?>
 			</div>
 		</div>
 		<div class="tab-pane fade" id="<?= $register ?>">

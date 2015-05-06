@@ -41,3 +41,17 @@ button.panel-control-button:not(:last-child) {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.panel-title-checkbox {
+    margin-right: 5px !important;
+    margin-top: -3px !important;
+    width: 20px;
+    height: 20px;
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+
+.panel-title-checkbox ~ label {
+    font-weight: normal;
+}
