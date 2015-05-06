@@ -351,9 +351,9 @@ var Core = Core || {};
 					return r;
 				}
 			} else {
-				if (!!me.data(attr)) {
+				/* if (!!me.data(attr)) {
 					return void 0;
-				}
+				} */
 				if (typeof me != "function") {
 					if (me.length) {
 						s = me[0];

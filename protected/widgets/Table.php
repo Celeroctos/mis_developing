@@ -111,6 +111,15 @@ class Table extends Widget {
 	public $click = null;
 
 	/**
+	 * @var string - Custom onDblClick action for table row, you have to
+	 * 	set only function or method name without any arguments, cuz it
+	 * 	converts it to next format [{$dblclick}.call(this, id)], where
+	 * 	id is primary key value of your row from database
+	 * @see primaryKey
+	 */
+	public $dblclick = null;
+
+	/**
 	 * @var bool - Should table be empty after first page load, set
 	 * 	it to true if your table contains big amount of rows and
 	 * 	it's initial render will slow down all render processes, also
@@ -202,6 +211,12 @@ class Table extends Widget {
 		}
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
+		} else if ($this->criteria instanceof CDbCriteria) {
+			if (!empty($this->searchCriteria)) {
+				$this->searchCriteria .= " ".strtr($this->criteria->condition, $this->criteria->params);
+			} else {
+				$this->searchCriteria = strtr($this->criteria->condition, $this->criteria->params);
+			}
 		}
 		if (is_string($this->condition) && !empty($this->condition) && is_array($this->parameters)) {
 			$this->criteria->condition = $this->condition;
@@ -330,7 +345,10 @@ class Table extends Widget {
 				"class" => "core-table-row"
 			];
 			if (is_string($this->click)) {
-				$options["onclick"] = $this->click . "(this, '{$value[$this->primaryKey]}')";
+				$options["onclick"] = $this->click . ".call(this, '{$value[$this->primaryKey]}')";
+			}
+			if (is_string($this->dblclick)) {
+				$options["ondblclick"] = $this->dblclick . ".call(this, '{$value[$this->primaryKey]}')";
 			}
 			print CHtml::openTag("tr", $options);
 			foreach ($this->header as $k => $v) {

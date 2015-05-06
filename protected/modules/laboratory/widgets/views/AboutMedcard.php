@@ -20,6 +20,7 @@
 			"onclick" => "",
 		],
 	],
+	"controlMode" => ControlMenu::MODE_NONE,
 	"collapsible" => true
 ]); ?>
 <span class="medcard-info">

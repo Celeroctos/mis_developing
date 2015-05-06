@@ -165,16 +165,18 @@ var Laboratory_MedcardEditableViewer_Modal = {
 };
 
 var Laboratory_DirectionTable_Widget = {
-	ready: function() {
+	ready: function () {
 		var me = this;
-		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function() {
+		$(".treatment-table-wrapper").on("click", ".direction-repeat-icon", function () {
 			me.repeat($(this).parents("tr:eq(0)").attr("data-id"));
-		}).on("click", ".direction-restore-icon", function() {
+		}).on("click", ".direction-restore-icon", function () {
 			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
-		}).on("click", ".direction-show-icon", function() {
+		}).on("click", ".direction-show-icon", function () {
 			me.show($(this).parents("tr:eq(0)").attr("data-id"), this);
+		}).on("dblclick", "tr[data-id]", function () {
+			me.show($(this).attr("data-id"));
 		});
-		$(".panel-date-button").each(function(i, p) {
+		$(".panel-date-button").each(function (i, p) {
 			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");
 			if (dates) {
 				dates = $.parseJSON(dates);
@@ -183,19 +185,21 @@ var Laboratory_DirectionTable_Widget = {
 			}
 			me.createDatePicker(p, dates);
 		});
-		$(".panel-today-button").click(function() {
+		$(".panel-today-button").click(function () {
 			me.updateByDate($(this).parents(".panel:eq(0)").find(".table:eq(0)"), $(this).attr("data-date"));
 		});
-		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function() {
+		$("#direction-register-modal, #medcard-editable-viewer-modal").on("show.bs.modal", function () {
 			Core.Common.cleanup(this);
 		});
-		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function() {
-			setTimeout(function() { me.refreshDatePicker() }, 250);
+		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function () {
+			setTimeout(function () {
+				me.refreshDatePicker()
+			}, 250);
 		});
 	},
-	refreshDatePicker: function(dates) {
+	refreshDatePicker: function (dates) {
 		var me = this;
-		$(".panel-date-button").each(function(i, p) {
+		$(".panel-date-button").each(function (i, p) {
 			dates = dates || $(p).parents(".panel:eq(0)")
 				.find(".table:eq(0)")
 				.attr("data-dates");
@@ -208,14 +212,14 @@ var Laboratory_DirectionTable_Widget = {
 			me.createDatePicker(p, dates || []);
 		});
 	},
-	updateByDate: function(table, date, success) {
+	updateByDate: function (table, date, success) {
 		var me = this;
 		var panel = $(table).parents(".panel:eq(0)").panel("before");
 		$.get(url("laboratory/direction/getTable"), {
 			class: table.attr("data-class"),
 			attributes: table.attr("data-attributes"),
 			date: date
-		}, function(json) {
+		}, function (json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
@@ -227,12 +231,12 @@ var Laboratory_DirectionTable_Widget = {
 			success && success(json);
 		}, "json");
 	},
-	createDatePicker: function(element, dates) {
+	createDatePicker: function (element, dates) {
 		var me = this;
 		if ($(element).data("datepicker")) {
 			$(element).datepicker("remove");
 		}
-		var handler = function() {
+		var handler = function () {
 			$(this).find(".direction-date").text($(this).panel("attr", "date"));
 		};
 		$(element).datepicker({
@@ -240,42 +244,42 @@ var Laboratory_DirectionTable_Widget = {
 			orientation: "top",
 			todayBtn: "linked",
 			container: $(element).parents(".panel:eq(0)"),
-			beforeShowDay: function(date) {
+			beforeShowDay: function (date) {
 				if ($.inArray($.datepicker.formatDate("yy-mm-dd", date), dates) != -1) {
 					return "treatment-marked-day";
 				} else {
 					return void 0;
 				}
 			}
-		}).unbind("changeDate").on("changeDate", function() {
+		}).unbind("changeDate").on("changeDate", function () {
 			var $this = $(this);
 			me.updateByDate($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
-				function() {
+				function () {
 					$this.datepicker("hide");
 				});
 		}).parents(".panel:eq(0)").unbind("panel.updated", handler)
 			.bind("panel.updated", handler);
 	},
-	update: function(success) {
+	update: function (success) {
 		$(".treatment-table-wrapper .panel").panel("update", success);
 	},
-	show: function(id, from) {
+	show: function (id, from) {
 		var panel = from ? $(from).parents(".panel:eq(0)") :
 			$(".treatment-table-wrapper .panel:eq(0)");
 		panel.panel("before");
 		Core.Common.loadWidget("AboutDirection", {
 			direction: id
-		}, function(component) {
+		}, function (component) {
 			$("#treatment-about-direction-modal").modal().find(".modal-body")
 				.empty().append(component);
 			panel.panel("after");
 		});
 	},
-	repeat: function(id) {
+	repeat: function (id) {
 		var me = this;
 		$.post(url("laboratory/direction/repeat"), {
 			id: id
-		}, function(json) {
+		}, function (json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
@@ -292,11 +296,11 @@ var Laboratory_DirectionTable_Widget = {
 			me.update();
 		}, "json");
 	},
-	cancel: function(id) {
+	cancel: function (id) {
 		var me = this;
 		$.post(url("laboratory/direction/restore"), {
 			id: id
-		}, function(json) {
+		}, function (json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
@@ -422,10 +426,7 @@ var Laboratory_DirectionFormEx_Form = {
 				c.children().remove();
 				return void 0;
 			}
-			me.loading({
-				width: 100,
-				height: 15
-			}).loading("render");
+			me.loading({ width: 100, height: 15 }).loading("render");
 			Core.sendQuery("laboratory/direction/params", {
 				id: me.val()
 			}, function(response) {
@@ -455,6 +456,26 @@ var Laboratory_DirectionFormEx_Form = {
 	}
 };
 
+var Laboratory_DirectionSearchForm_Modal = {
+	ready: function() {
+		$("#direction-search-modal-search-button").click(function() {
+			$("#direction-search-form").form({
+				success: function(response) {
+					$(".treatment-table-wrapper > div:visible > .panel").panel(
+						"replace", response["component"]
+					);
+					$("#direction-search-modal").modal("hide");
+				}
+			}).form("send");
+		});
+		$("#direction-search-modal").on("show.bs.modal", function() {
+			$(this).cleanup().find("[name='LDirectionSearchForm[class]']").val(
+				$(".treatment-table-wrapper > div:visible > .panel").attr("data-widget")
+			);
+		});
+	}
+};
+
 $(document).ready(function() {
 	Laboratory_MedcardEditableViewer_Modal.ready();
 	Laboratory_Treatment_Header.ready();
@@ -464,4 +485,5 @@ $(document).ready(function() {
 	Laboratory_AboutDirection_Widget.ready();
 	Laboratory_DirectionCreator_Modal.ready();
 	Laboratory_DirectionFormEx_Form.ready();
+	Laboratory_DirectionSearchForm_Modal.ready();
 });

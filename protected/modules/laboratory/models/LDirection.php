@@ -122,9 +122,7 @@ class LDirection extends ActiveRecord {
 			")->from("lis.direction as d")
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
-			->where("d.status = :status", [
-				":status" => LDirection::STATUS_TREATMENT_ROOM
-			])
+			->where("d.status = ".LDirection::STATUS_TREATMENT_ROOM)
 		);
 	}
 
@@ -136,9 +134,7 @@ class LDirection extends ActiveRecord {
 			")->from("lis.direction as d")
 			->join("lis.medcard as m", "d.medcard_id = m.id")
 			->join("lis.patient as p", "m.patient_id = p.id")
-			->where("d.status = :status", [
-				":status" => LDirection::STATUS_TREATMENT_REPEAT
-			])
+			->where("d.status = :".LDirection::STATUS_TREATMENT_REPEAT)
 		);
 	}
 

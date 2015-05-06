@@ -26,7 +26,9 @@ class DirectionPanel extends Panel {
 		"panel-search-button" => [
 			"class" => "btn btn-default",
 			"icon" => "glyphicon glyphicon-search",
-			"label" => "Поиск"
+			"label" => "Поиск",
+			"data-target" => "#direction-search-modal",
+			"data-toggle" => "modal",
 		],
 	];
 

@@ -451,6 +451,39 @@ class DirectionController extends Controller2 {
 		}
 	}
 
+	public function actionSearch() {
+		try {
+			if (!$form = Yii::app()->getRequest()->getPost("LDirectionSearchForm")) {
+				throw new CException("Direction search required [LDirectionSearchForm] form");
+			}
+			$criteria = new CDbCriteria();
+			if (isset($form["fio"]) && !empty($form["fio"])) {
+				$criteria->addSearchCondition("surname", $form["fio"]);
+				$criteria->addSearchCondition("name", $form["fio"]);
+			}
+			if (isset($form["card_number"]) && !empty($form["card_number"])) {
+				$criteria->addSearchCondition("card_number", $form["card_number"]);
+			}
+			if (isset($form["sender_id"]) && $form["sender_id"] != -1) {
+				$criteria->addColumnCondition([
+					"sender_id" => $form["sender_id"]
+				]);
+			}
+			if (isset($form["analysis_type_id"]) && $form["analysis_type_id"] != -1) {
+				$criteria->addColumnCondition([
+					"analysis_type_id" => $form["analysis_type_id"]
+				]);
+			}
+			$this->leave([
+				"component" => $this->getWidget($form["class"], [
+					"criteria" => $criteria
+				])
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
 	/**
      * Override that method to return controller's model
      * @return ActiveRecord - Controller's model instance

@@ -45,7 +45,6 @@ class DirectionTableTreatment extends Table {
 
 	public $textNoData = "На этот день нет направлений";
 	public $orderBy = "id desc";
-	public $searchCriteria = "status = 1";
 	public $pageLimit = 25;
 
 	public function renderExtra() {
@@ -60,11 +59,13 @@ class DirectionTableTreatment extends Table {
 		if ($this->date == null) {
 			$this->date = date("Y-m-d");
 		}
-		if (empty($this->searchCriteria)) {
-			$this->searchCriteria = "cast(sending_date as date) = '{$this->date}'";
-		} else {
-			$this->searchCriteria .= " and cast(sending_date as date) = '{$this->date}'";
+		if (empty($this->criteria)) {
+			$this->criteria = new CDbCriteria();
 		}
+		$this->criteria->addColumnCondition([
+			"status" => LDirection::STATUS_TREATMENT_ROOM,
+			"cast(sending_date as date)" => $this->date
+		]);
 		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM);
 	}
 
