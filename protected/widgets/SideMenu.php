@@ -143,6 +143,11 @@ class SideMenu extends CWidget {
 					"image" => "treatment.png",
 					"href" => "/laboratory/treatment/view"
 				],
+				"laboratory" => [
+					"label" => "Лаборатория",
+					"image" => "pill.png",
+					"href" => "/laboratory/laboratory/view"
+				],
 				"guides" => [
 					"label" => "Справочники",
 					"image" => "notepad.png",

@@ -2,11 +2,8 @@
 
 class LaboratoryController extends Controller2 {
 
-	public function actionRegister() {
-		print json_encode([
-			"model" => $this->getFormModel("model", "post"),
-			"status" => true
-		]);
+	public function actionView() {
+		return $this->render("view", []);
 	}
 
 	/**
