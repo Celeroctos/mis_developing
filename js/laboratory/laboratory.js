@@ -469,11 +469,7 @@ var Laboratory_AboutDirection_Widget = {
 		$("#treatment-about-direction-modal").on("click", "#open-medcard-button", function() {
 			Laboratory_AboutMedcard_Widget.load($("#treatment-about-direction-medcard-id").val());
 		}).on("click", "#print-barcode-button", function() {
-			Core.createMessage({
-				message: "Печатаем или как-то так...",
-				sign: "ok",
-				type: "info"
-			});
+			Laboratory_Printer.print('.barcode-wrapper')
 		}).on("click", "#send-to-laboratory-button", function() {
 			var me = $(this);
 			me.parents(".panel").loading("render");
@@ -593,7 +589,7 @@ var Laboratory_Printer = {
 	},
 	popup: function(data) {
 		var win = window.open('', 'my div', 'width=800,height=600');
-		win.document.write('<html><head><title>my div</title>');
+		win.document.write('<html><head><title></title>');
 		win.document.write('</head><body >');
 		win.document.write(data);
 		win.document.write('</body></html>');

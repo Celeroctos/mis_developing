@@ -100,7 +100,7 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 	<button id="send-to-laboratory-button" class="btn btn-default">
 		<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
 	</button>
-	<button id="print-barcode-button" class="btn btn-primary" onclick="Laboratory_Printer.print('.barcode-wrapper')">
+	<button id="print-barcode-button" class="btn btn-primary">
 		<span class="glyphicon glyphicon-print"></span> Печать штрих-кода
 	</button>
 </div>
