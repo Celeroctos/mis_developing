@@ -4,6 +4,7 @@ class LaboratoryAsset extends AssetBundle {
 
     public $js = [
         "js/laboratory/laboratory.js",
+		"js/laboratory/printer.js",
     ];
 
     public $css = [

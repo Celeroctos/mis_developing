@@ -498,7 +498,6 @@ var Laboratory_AboutDirection_Widget = {
 		});
 	},
 	register: function(form) {
-
 	}
 };
 
@@ -585,6 +584,25 @@ var Laboratory_DirectionSearchForm_Modal = {
 var Laboratory_AnalyzerTask_Menu = {
 	ready: function() {
 		$("#analyzer-task-viewer").on("click", ".analyzer-task-menu-item", function() {});
+	}
+};
+
+var Laboratory_Printer = {
+	print: function(selector) {
+		this.popup($(selector).clone().html());
+	},
+	popup: function(data) {
+		var win = window.open('', 'my div', 'width=800,height=600');
+		win.document.write('<html><head><title>my div</title>');
+		win.document.write('</head><body >');
+		win.document.write(data);
+		win.document.write('</body></html>');
+		// necessary for IE >= 10
+		win.document.close();
+		// necessary for IE >= 10
+		win.focus();
+		win.print();
+		win.close();
 	}
 };
 

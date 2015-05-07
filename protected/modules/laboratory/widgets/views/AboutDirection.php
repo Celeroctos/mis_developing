@@ -10,7 +10,7 @@ $sendingDate = substr($direction->{"sending_date"}, 0, strpos($direction->{"send
 $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending_date"}, " ") + 1);
 ?>
 
-<?= CHtml::openTag("dic", [
+<?= CHtml::openTag("div", [
 	"class" => "about-direction"
 ]) ?>
 <?php $this->beginWidget("Panel", [
@@ -92,11 +92,15 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 	</div>
 </form>
 <hr>
+<div class="col-xs-12 no-padding text-center barcode-wrapper">
+	<?= BarcodeGenerator::getGenerator()->generateImage($direction->{"barcode"}) ?>
+</div>
+<hr>
 <div class="col-xs-12 text-center">
 	<button id="send-to-laboratory-button" class="btn btn-default">
 		<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
 	</button>
-	<button id="print-barcode-button" class="btn btn-primary">
+	<button id="print-barcode-button" class="btn btn-primary" onclick="Laboratory_Printer.print('.barcode-wrapper')">
 		<span class="glyphicon glyphicon-print"></span> Печать штрих-кода
 	</button>
 </div>
