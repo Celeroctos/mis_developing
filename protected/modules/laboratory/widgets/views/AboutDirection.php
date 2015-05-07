@@ -93,7 +93,7 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 </form>
 <hr>
 <div class="col-xs-12 no-padding text-center barcode-wrapper">
-	<?= BarcodeGenerator::getGenerator()->generateImage($direction->{"barcode"}) ?>
+	<?= BarcodeGenerator::createGenerator($direction->{"barcode"})->getImage() ?>
 </div>
 <hr>
 <div class="col-xs-12 text-center">
