@@ -14,18 +14,20 @@ class BarcodeGenerator {
 		}
 	}
 
-	/**
-	 * Generate barcode for direction or something else
-	 * @param int $degree - Value's range via it's degree
-	 * @return int - Generated random value
-	 * @throws CException
-	 */
-	public function generate($degree = 33) {
-		if (($bytes = Yii::app()->getSecurityManager()->generateRandomBytes($degree / 8 + 1)) === false) {
-		 	throw new CException("Can't generate barcode number \"" .openssl_error_string(). "\"");
-		} else {
-			return $bytes & (1 << $degree);
-		}
+	public function generate($text) {
+		$colorBack = new BCGColor(255, 255, 255);
+		$code = new BCGcode39(); // Or another class name from the manual
+		$code->setScale(2); // Resolution
+		$code->setThickness(30); // Thickness
+		$code->setBackgroundColor($colorBack); // Color of spaces
+		$code->parse($text); // Text
+		$drawing = new BCGDrawing('', $colorBack);
+		$drawing->setBarcode($code);
+		$drawing->draw();
+		ob_start();
+		$drawing->finish(BCGDrawing::IMG_FORMAT_PNG);
+		$bin = ob_get_clean();
+		return CHtml::image("data:image/png;base64,".base64_encode($bin));
 	}
 
 	private static $_barcodeGenerator = null;

@@ -116,6 +116,8 @@ return array(
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
+				'application.vendor.barcodegen.*',
+				'application.vendor.barcodegen.drawer.*',
             )
         )
 	),

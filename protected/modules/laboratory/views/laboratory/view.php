@@ -65,3 +65,4 @@ $this->widget("Modal", [
 		</div>
 	</div>
 </div>
+<?= BarcodeGenerator::getGenerator()->generate("hello") ?>
