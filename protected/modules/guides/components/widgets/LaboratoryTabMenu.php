@@ -19,6 +19,10 @@ class LaboratoryTabMenu extends CWidget {
 			"label" => "Типы анализаторов",
 			"privilege" => "guideEditAnalyzerType"
 		],
+		"analyzer" => [
+			"label" => "Анализаторы",
+			"privilege" => "guideEditAnalyzerType"
+		],
 		"doctor" => [
 			"label" => "Врачи лаборатории",
 			"privilege" => "guideEditAnalyzerType",

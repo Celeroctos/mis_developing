@@ -3,17 +3,14 @@
 class Analyzer extends GActiveRecord {
 
 	public function getForm() {
-
+		return new AnalyzerForm();
 	}
 
 	public function rules() {
-		return [
-			[ "short_name", "length", "max" => 20 ],
-			[ "name", "length", "max" => 255 ]
-		];
+		return $this->getForm()->backward();
 	}
 
 	public function tableName() {
-		return "lis.analysis_type_parameter";
+		return "lis.analyzer";
 	}
 }
