@@ -305,7 +305,10 @@
     padding: 10px;
 }
 
+#analyzer-task-viewer .panel-body hr {
+    margin: 10px;
+}
+
 .analyzer-task-menu-item {
-    border: 1px solid #428ac9;
     border-radius: 5px;
 }

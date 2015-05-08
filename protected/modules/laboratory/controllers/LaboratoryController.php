@@ -3,7 +3,9 @@
 class LaboratoryController extends Controller2 {
 
 	public function actionView() {
-		return $this->render("view", []);
+		return $this->render("view", [
+			"ready" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+		]);
 	}
 
 	/**

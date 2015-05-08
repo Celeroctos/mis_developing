@@ -1,6 +1,7 @@
 <?php
 /**
- * @var @this LaboratoryController
+ * @var $this LaboratoryController
+ * @var $ready int
  */
 
 $this->widget("Modal", [
@@ -30,7 +31,7 @@ $this->widget("Modal", [
 		<div class="col-xs-6 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#laboratory-ready-grid-wrapper" type="button">
 				<span>Готовые результаты</span>
-				<span class="badge" id="laboratory-ready-counts">12</span>
+				<span class="badge" id="laboratory-ready-counts"><?= $ready ?></span>
 			</button>
 		</div>
 	</div>
@@ -48,6 +49,9 @@ $this->widget("Modal", [
 				<?php $this->widget("Panel", [
 					"title" => "Анализаторы",
 					"body" => $this->createWidget("AnalyzerTaskViewer"),
+					"controls" => [],
+//					"controlMode" => ControlMenu::MODE_MENU,
+//					"controlMenuTrigger" => "Анализаторы",
 					"id" => "analyzer-task-viewer",
 				]); ?>
 			</div>

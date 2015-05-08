@@ -377,7 +377,7 @@ class DirectionController extends Controller2 {
 			} else {
 				$this->leave([
 					"message" => "Направление отправлено на повторный забор образца",
-					"repeats" => LDirection::model()->getCountOfRepeats(),
+					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
 					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 				]);
 			}
@@ -396,7 +396,7 @@ class DirectionController extends Controller2 {
 			} else {
 				$this->leave([
 					"message" => "Направление восстановлено как новое",
-					"repeats" => LDirection::model()->getCountOfRepeats(),
+					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
 					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
 				]);
 			}
@@ -444,7 +444,7 @@ class DirectionController extends Controller2 {
 			$this->leave([
 				"message" => "Направление успешно отправлено в лабораторию",
 				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM),
-				"repeats" => LDirection::model()->getCountOfRepeats(),
+				"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);

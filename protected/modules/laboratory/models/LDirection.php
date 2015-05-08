@@ -78,6 +78,21 @@ class LDirection extends ActiveRecord {
 		return $dates;
 	}
 
+	public function getCountOf($status) {
+		$row = $this->getDbConnection()->createCommand()
+			->select("count(1) as count")
+			->from("lis.direction")
+			->where("status = :status", [
+				":status" => $status
+			])
+			->queryRow();
+		if ($row) {
+			return $row["count"];
+		} else {
+			return 0;
+		}
+	}
+
 	/**
 	 * Override that method to return data for grid view
 	 * @return CDbCommand - Command with query
@@ -89,24 +104,6 @@ class LDirection extends ActiveRecord {
             ->from("lis.direction as d")
             ->leftJoin("lis.analysis_type as at", "at.id = d.analysis_type_id")
             ->leftJoin("lis.medcard as m", "m.id = d.medcard_id");
-    }
-
-    /**
-     * Get count of repeated directions
-     * @return int - Count of repeats
-     * @throws CDbException
-     */
-    public function getCountOfRepeats() {
-        $row = $this->getDbConnection()->createCommand()
-            ->select("count(1) as count")
-            ->from("lis.direction")
-            ->where("status = 4")
-            ->queryRow();
-        if ($row) {
-            return $row["count"];
-        } else {
-            return 0;
-        }
     }
 
 	/**

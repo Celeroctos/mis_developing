@@ -579,8 +579,17 @@ var Laboratory_DirectionSearchForm_Modal = {
 
 var Laboratory_AnalyzerTask_Menu = {
 	ready: function() {
-		$("#analyzer-task-viewer").on("click", ".analyzer-task-menu-item", function() {});
-	}
+		var me = this;
+		$("#analyzer-task-viewer").on("click", ".analyzer-task-menu-item", function() {
+			if (me.active != null) {
+				me.active.removeClass("active");
+			}
+			me.active = $(this).addClass("active");
+			$(".analyzer-task-tab").hide();
+			console.log($("#" + $(this).children("a").attr("data-tab")).show());
+		});
+	},
+	active: null
 };
 
 var Laboratory_Printer = {

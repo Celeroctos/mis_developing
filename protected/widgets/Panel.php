@@ -57,13 +57,13 @@ class Panel extends Widget {
 	 * @var string - Classes for heading's title
 	 * 	div container
 	 */
-	public $titleWrapperClass = "col-xs-9 text-left no-padding";
+	public $titleWrapperClass = "col-xs-8 text-left no-padding";
 
 	/**
 	 * @var string - Classes for control container which
 	 * 	separated after title container
 	 */
-	public $controlsWrapperClass = "col-xs-3 text-right no-padding";
+	public $controlsWrapperClass = "col-xs-4 text-right no-padding";
 
 	/**
 	 * @var string - Classes for panel's title, which separated
@@ -124,6 +124,13 @@ class Panel extends Widget {
 	 * @see ControlMenu
 	 */
 	public $controlMode = ControlMenu::MODE_BUTTON;
+
+	/**
+	 * @var string - String with text for menu trigger, it can be used
+	 * 	only for [MODE_MENU] mode
+	 * @see ControlMenu::menuTrigger
+	 */
+	public $controlMenuTrigger = null;
 
 	/**
 	 * @var string - String with serialized parameters
@@ -188,7 +195,8 @@ class Panel extends Widget {
 	public function renderControls() {
 		$this->widget("ControlMenu", [
 			"controls" => $this->controls,
-			"mode" => $this->controlMode
+			"mode" => $this->controlMode,
+			"menuTrigger" => $this->controlMenuTrigger
 		]);
 	}
 

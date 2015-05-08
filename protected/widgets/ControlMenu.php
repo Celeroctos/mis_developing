@@ -69,6 +69,12 @@ class ControlMenu extends Widget {
 	public $buttonRegexp = "/btn\\-*[a-z]* /";
 
 	/**
+	 * @var string with text for menu trigger, it can be used
+	 * 	only for [MODE_MENU] mode
+	 */
+	public $menuTrigger = null;
+
+	/**
 	 * Run widget to render control elements
 	 */
 	public function run() {
@@ -160,6 +166,15 @@ class ControlMenu extends Widget {
 		print CHtml::openTag("div", [
 			"class" => "dropdown"
 		]);
+		if (!empty($this->menuTrigger)) {
+			$span = $this->menuTrigger.CHtml::tag("span", [
+				"class" => "caret"
+			], "");
+		} else {
+			$span = CHtml::tag("span", [
+				"class" => "glyphicon glyphicon-list"
+			], "");
+		}
 		print CHtml::tag("div", [
 			"href" => "javascript:void(0)",
 			"class" => "dropdown-toggle",
@@ -168,9 +183,7 @@ class ControlMenu extends Widget {
 			"role" => "button",
 			"aria-expanded" => "false",
 			"style" => "cursor: pointer",
-		], CHtml::tag("span", [
-			"class" => "glyphicon glyphicon-list"
-		], ""));
+		], $span);
 		print CHtml::openTag("ul", [
 			"class" => "dropdown-menu",
 			"role" => "menu"
