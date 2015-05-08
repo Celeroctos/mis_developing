@@ -8,6 +8,7 @@ class AnalyzerForm extends FormModel {
 	public $serial_number;
 	public $model;
 	public $software_version;
+	public $working_time;
 
 	public function backward() {
 		return [
@@ -50,6 +51,10 @@ class AnalyzerForm extends FormModel {
 			"software_version" => [
 				"label" => "Версия ПО",
 				"type" => "text"
+			],
+			"working_time" => [
+				"label" => "Время обработки заказа",
+				"type" => "number"
 			]
 		];
 	}

@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var $this GuidesTabMenu
+ * @var $controller string
+ * @var $module string
+ * @var $action string
+ */
+?>
 <ul class="nav nav-tabs  default-margin-bottom">
     <?php
     if (Yii::app()->user->checkAccess('guideEditEnterprise') ||
@@ -114,7 +122,7 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')||
     ?>
         <li <?php echo
     (
-    ($controller == 'analysissampletype')||
+    ($module == 'guides/laboratory')||
     ($controller == 'analysisparam')||
     ($controller == 'analysistype')||
     ($controller == 'analysistypeparam')||
