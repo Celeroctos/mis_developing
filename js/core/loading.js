@@ -7,7 +7,6 @@ var Core = Core || {};
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
 			image: url("/images/ajax-loader2.gif"),
-			depth: 1000,
 			width: 150,
 			height: 25,
 			velocity: "fast",
@@ -22,22 +21,26 @@ var Core = Core || {};
 			height = this.selector().outerHeight(false),
 			width = this.selector().outerWidth(false);
 		var index;
-		if (!(index = parseInt(this.selector().css("z-index")))) {
+		if (this.property("depth")) {
 			index = this.property("depth");
-		} else {
-			index += 1;
+		} else if (!(index = parseInt(this.selector().css("z-index")))) {
+			index = 1;
 		}
-		this.image = $("<img>", {
-			css: {
-				"position": "absolute",
-				"height": imageHeight,
-				"width": imageWidth,
-				"left": "calc(50% - " + (imageWidth / 2) + "px)",
-				"margin-top": height / 2 - imageHeight / 2,
-				"z-index": index
-			},
-			src: this.property("image")
-		});
+		if (this.property("image")) {
+			this.image = $("<img>", {
+				css: {
+					"position": "absolute",
+					"height": imageHeight,
+					"width": imageWidth,
+					"left": "calc(50% - " + (imageWidth / 2) + "px)",
+					"margin-top": height / 2 - imageHeight / 2,
+					"z-index": index + 1
+				},
+				src: this.property("image")
+			});
+		} else {
+			this.image = $("<div>");
+		}
 		this.selector().before(this.back = $("<div>", {
 			css: {
 				"width": width,
@@ -45,7 +48,7 @@ var Core = Core || {};
 				"position": "absolute",
 				"background-color": this.property("color"),
 				"opacity": "0.5",
-				"z-index": "100"
+				"z-index": index
 			}
 		}).addClass(this.selector().attr("class")).fadeIn(this.property("velocity"))).before(
 			this.image.fadeIn(this.property("velocity"))

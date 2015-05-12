@@ -37,7 +37,9 @@ $this->widget("Modal", [
 				<?php $this->widget("DirectionPanel", [
 					"title" => "Направления на анализ",
 					"body" => $this->createWidget("DirectionTableLaboratory"),
-					"status" => LDirection::STATUS_LABORATORY
+					"status" => LDirection::STATUS_LABORATORY,
+					"controls" => [],
+					"upgradeable" => false
 				]) ?>
 			</div>
 			<div class="col-xs-6 no-padding">

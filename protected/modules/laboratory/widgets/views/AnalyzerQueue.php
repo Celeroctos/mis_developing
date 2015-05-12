@@ -29,7 +29,7 @@
 	<div class="col-xs-6 no-padding text-right">
 		<?php $this->widget("ControlMenu", [
 			"controls" => [
-				"analyzer-task-start" => [
+				"analyzer-task-clear" => [
 					"label" => "Очистить",
 					"icon" => "glyphicon glyphicon-refresh",
 					"class" => "btn btn-warning btn-sm",

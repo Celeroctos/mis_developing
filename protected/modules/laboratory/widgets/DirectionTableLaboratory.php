@@ -26,10 +26,10 @@ class DirectionTableLaboratory extends Table {
 			"icon" => "glyphicon glyphicon-repeat",
 			"label" => "Отправить на повторный забор образца"
 		],
-		"direction-send-icon" => [
-			"icon" => "glyphicon glyphicon-arrow-right",
-			"label" => "Отправить на анализатор"
-		]
+//		"direction-send-icon" => [
+//			"icon" => "glyphicon glyphicon-arrow-right",
+//			"label" => "Отправить на анализатор"
+//		]
 	];
 
 	public $id = "laboratory-direction-table";

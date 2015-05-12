@@ -273,6 +273,10 @@ var Laboratory_DirectionTable_Widget = {
 			me.cancel($(this).parents("tr:eq(0)").attr("data-id"));
 		}).on("click", ".direction-show-icon", function () {
 			me.show($(this).parents("tr:eq(0)").attr("data-id"), this);
+		}).on("click", ".direction-send-icon", function() {
+			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.send(
+				$(this).parents("tr:eq(0)").attr("data-id")
+			);
 		});
 		$("#treatment-direction-grid-wrapper").on("dblclick", "tr[data-id]", function () {
 			me.show($(this).attr("data-id"));
