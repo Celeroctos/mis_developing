@@ -22,17 +22,23 @@ class DirectionPanel extends Panel {
 	 */
 	public $status = LDirection::STATUS_TREATMENT_ROOM;
 
-	public $controls = [
-		"panel-search-button" => [
-			"class" => "btn btn-default",
-			"icon" => "glyphicon glyphicon-search",
-			"label" => "Поиск",
-			"data-target" => "#direction-search-modal",
-			"data-toggle" => "modal",
-		],
-	];
-
 	public function init() {
+		$this->controls = [
+			"panel-search-button" => [
+				"class" => "btn btn-default",
+				"icon" => "glyphicon glyphicon-search",
+				"label" => "Поиск",
+				"title" => "Поиск направления",
+				"data-container" => "body",
+				"data-trigger" => "click",
+				"data-toggle" => "popover",
+				"data-placement" => "bottom",
+				"data-html" => "true",
+				"data-content" => $this->getWidget("DirectionSearch", [
+					"widget" => get_class($this->body)
+				])
+			],
+		];
 		if ($this->status == LDirection::STATUS_TREATMENT_ROOM ||
 			$this->status == LDirection::STATUS_READY
 		) {

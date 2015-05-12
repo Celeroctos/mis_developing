@@ -3,24 +3,7 @@
  * @var $this LaboratoryController
  * @var $ready int
  */
-
-$this->widget("Modal", [
-	"title" => "Поиск направления",
-	"body" => $this->createWidget("AutoForm", [
-		"id" => "direction-search-form",
-		"url" => Yii::app()->createUrl("laboratory/direction/search"),
-		"model" => new LDirectionSearchForm()
-	]),
-	"buttons" => [
-		"direction-search-modal-search-button" => [
-			"text" => CHtml::tag("span", [
-					"class" => "glyphicon glyphicon-search"
-				], "")."&nbsp;Найти направление&nbsp;",
-			"class" => "btn btn-success"
-		]
-	],
-	"id" => "direction-search-modal"
-]); ?>
+?>
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
 		<div class="col-xs-6 no-padding">
@@ -69,3 +52,8 @@ $this->widget("Modal", [
 		</div>
 	</div>
 </div>
+<br>
+<input type="text" class="form-control" title="">
+<button type="button" title="Поиск направления" class="btn btn-default" data-container="body" data-trigger="click" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<?= htmlspecialchars($this->getWidget("DirectionSearch")) ?>">
+	Popover on top
+</button>

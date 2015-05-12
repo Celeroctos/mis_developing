@@ -17,15 +17,15 @@ class LDirectionSearchForm extends FormModel {
 				]
 			],
 			"fio" => [
-				"label" => "ФИО пациента",
+				"label" => "Пациент",
 				"type" => "text"
 			],
 			"card_number" => [
-				"label" => "Номер карты",
+				"label" => "Карта",
 				"type" => "text"
 			],
 			"sender_id" => [
-				"label" => "Врач направитель",
+				"label" => "Направитель",
 				"type" => "DropDown",
 				"table" => [
 					"name" => "lis.doctor",

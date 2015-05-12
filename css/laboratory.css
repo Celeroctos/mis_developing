@@ -312,3 +312,11 @@
 .analyzer-task-menu-item {
     border-radius: 5px;
 }
+
+/* Popover hide fix */
+.popover.fade {
+    z-index: -1;
+}
+.popover.fade.in {
+    z-index: 2;
+}

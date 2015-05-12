@@ -557,22 +557,17 @@ var Laboratory_DirectionFormEx_Form = {
 	}
 };
 
-var Laboratory_DirectionSearchForm_Modal = {
+var Laboratory_DirectionSearchForm_Popover = {
 	ready: function() {
-		$("#direction-search-modal-search-button").click(function() {
+		$("body").on("click", ".direction-search-button", function() {
 			$("#direction-search-form").form({
 				success: function(response) {
-					$(".treatment-table-wrapper > div:visible > .panel").panel(
+					$(".panel[data-widget='"+ $("#direction-search-form #class").val() +"']").panel(
 						"replace", response["component"]
 					);
-					$("#direction-search-modal").modal("hide");
 				}
 			}).form("send");
-		});
-		$("#direction-search-modal").on("show.bs.modal", function() {
-			$(this).cleanup().find("[name='LDirectionSearchForm[class]']").val(
-				$(".treatment-table-wrapper > div:visible > .panel").attr("data-widget")
-			);
+			$(".panel-search-button").popover("hide");
 		});
 	}
 };
@@ -602,13 +597,57 @@ var Laboratory_Printer = {
 		win.document.write('</head><body >');
 		win.document.write(data);
 		win.document.write('</body></html>');
-		// necessary for IE >= 10
 		win.document.close();
-		// necessary for IE >= 10
 		win.focus();
 		win.print();
 		win.close();
 	}
+};
+
+const BARCODE_RESET_INTERVAL = 120;
+const BARCODE_SEQUENCE_LENGTH = 8;
+
+var Laboratory_BarcodeReader = {
+	ready: function() {
+		var me = this;
+		$(document).on("keydown", function(e) {
+			if (!(e.keyCode >= 48 && e.keyCode <= 57) &&
+				!(e.keyCode >= 97 && e.keyCode <= 105)
+			) {
+				return void 0;
+			}
+			if (me.timer == -1) {
+				me.timer = setTimeout(function() {
+					me.reset();
+				}, BARCODE_RESET_INTERVAL);
+				me.time = new Date().getMilliseconds();
+			}
+			if (e.keyCode >= 48 && e.keyCode <= 57) {
+				me.sequence.push(e.keyCode - 48);
+			} else {
+				me.sequence.push(e.keyCode - 97);
+			}
+			//console.log("catch : " + (e.keyCode - 48) +" - "+ me.sequence.length + "/6");
+			if (me.sequence.length == BARCODE_SEQUENCE_LENGTH) {
+				me.last = parseInt(me.sequence.join(""));
+				console.log("captured barcode sequence : " + me.last);
+				console.log("elapsed time: " + (new Date().getMilliseconds() - me.time));
+				me.reset();
+				$(document).trigger("barcode.catpured");
+			}
+		});
+	},
+	reset: function() {
+		console.log("timer has been restarted");
+		if (this.timer >= 0) {
+			clearInterval(this.timer);
+		}
+		this.timer = -1;
+		this.sequence = [];
+	},
+	timer: -1,
+	sequence: [],
+	last: -1
 };
 
 $(document).ready(function() {
@@ -623,8 +662,9 @@ $(document).ready(function() {
 	Laboratory_AboutDirection_Widget.ready();
 	Laboratory_DirectionCreator_Modal.ready();
 	Laboratory_DirectionFormEx_Form.ready();
-	Laboratory_DirectionSearchForm_Modal.ready();
+	Laboratory_DirectionSearchForm_Popover.ready();
 	Laboratory_AnalyzerTask_Menu.ready();
+	Laboratory_BarcodeReader.ready();
 
 	// fix for modal window backdrop
 	$(document).on('show.bs.modal', '.modal', function(e) {
@@ -637,4 +677,6 @@ $(document).ready(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
 	});
+
+	$('[data-toggle="popover"]').popover()
 });

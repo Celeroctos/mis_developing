@@ -80,26 +80,7 @@ $this->widget("Modal", [
 		]
 	],
 	"id" => "treatment-about-direction-modal"
-]);
-
-$this->widget("Modal", [
-	"title" => "Поиск направления",
-	"body" => $this->createWidget("AutoForm", [
-		"id" => "direction-search-form",
-		"url" => Yii::app()->createUrl("laboratory/direction/search"),
-		"model" => new LDirectionSearchForm()
-	]),
-	"buttons" => [
-		"direction-search-modal-search-button" => [
-			"text" => CHtml::tag("span", [
-					"class" => "glyphicon glyphicon-search"
-				], "")."&nbsp;Найти направление&nbsp;",
-			"class" => "btn btn-success"
-		]
-	],
-	"id" => "direction-search-modal"
 ]); ?>
-
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
 		<div class="col-xs-4 no-padding">
