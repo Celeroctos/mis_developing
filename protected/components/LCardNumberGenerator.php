@@ -22,7 +22,7 @@ class LCardNumberGenerator {
 			->where("m.year = year")
 			->queryRow();
 		if (!$row) {
-			$row = [ "index" => 1, "year" => date("Y") ];
+			$row = [ "index" => 1, "year" => substr(date("Y"), 2, 2) ];
 		}
 		return static::PREFIX.$row["index"].static::DELIMITER.$row["year"].static::POSTFIX;
 	}

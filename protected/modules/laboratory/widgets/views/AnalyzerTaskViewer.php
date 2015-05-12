@@ -7,7 +7,7 @@
 $this->widget("TabMenu", [
 	"items" => $analyzers,
 	"special" => "analyzer-task-menu-item",
-	"style" => TabMenu::STYLE_TABS_JUSTIFIED
+	"style" => TabMenu::STYLE_PILLS_JUSTIFIED
 ]);
 ?>
 <div class="analyzer-queue-wrapper">

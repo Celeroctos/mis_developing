@@ -28,6 +28,14 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 	<div class="col-xs-12 no-padding">
 		<div class="row no-padding">
 			<div class="col-xs-4 text-right">
+				<label><b>Состояние: </b></label>
+			</div>
+			<div class="col-xs-8 text-left">
+				<span><?= LDirection::listStatuses()[$direction->status] ?></span>
+			</div>
+		</div>
+		<div class="row no-padding">
+			<div class="col-xs-4 text-right">
 				<label><b>Требуемый анализ: </b></label>
 			</div>
 			<div class="col-xs-8 text-left">
@@ -98,7 +106,11 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 <hr>
 <div class="col-xs-12 text-center">
 	<button id="send-to-laboratory-button" class="btn btn-default">
-		<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
+		<?php if ($direction->status == LDirection::STATUS_TREATMENT_ROOM): ?>
+			<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
+		<?php else: ?>
+			<span class="glyphicon glyphicon-save"></span> Сохранить
+		<?php endif ?>
 	</button>
 	<button id="print-barcode-button" class="btn btn-primary">
 		<span class="glyphicon glyphicon-print"></span> Печать штрих-кода

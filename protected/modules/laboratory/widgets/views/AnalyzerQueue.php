@@ -5,6 +5,10 @@
 ?>
 <hr>
 <div class="col-xs-12 no-padding">
+	<div class="analyzer-queue-container">
+		<h4 class="text-center">Направления отсутствуют</h4>
+	</div>
+	<hr>
 	<div class="col-xs-6 no-padding text-left">
 		<?php $this->widget("ControlMenu", [
 			"controls" => [

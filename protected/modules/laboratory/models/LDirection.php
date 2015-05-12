@@ -6,6 +6,7 @@ class LDirection extends ActiveRecord {
 	const STATUS_LABORATORY = 2;
 	const STATUS_READY = 3;
 	const STATUS_TREATMENT_REPEAT = 4;
+	const STATUS_CLOSED = 5;
 
 	public function getWithAnalysis($where = "", $params = []) {
 		return $this->getDbConnection()->createCommand()
@@ -91,6 +92,16 @@ class LDirection extends ActiveRecord {
 		} else {
 			return 0;
 		}
+	}
+
+	public static function listStatuses() {
+		return [
+			static::STATUS_TREATMENT_ROOM => "Находится в процедурном кабинете",
+			static::STATUS_LABORATORY => "Находится в лаборатории",
+			static::STATUS_READY => "Анализ произведен",
+			static::STATUS_TREATMENT_REPEAT => "Отправлено на повторный забор образца",
+			static::STATUS_CLOSED => "Выполнено",
+		];
 	}
 
 	/**

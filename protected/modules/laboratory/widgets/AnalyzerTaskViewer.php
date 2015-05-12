@@ -13,7 +13,8 @@ class AnalyzerTaskViewer extends Widget {
 		foreach (Analyzer::model()->findAll() as $analyzer) {
 			$items[$analyzer->{"id"}] = [
 				"label" => $analyzer->{"name"},
-				"data-tab" => UniqueGenerator::generate("tab")
+				"data-tab" => UniqueGenerator::generate("tab"),
+				"data-id" => $analyzer->{"id"}
 			];
 		}
 		return $items;

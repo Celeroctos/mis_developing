@@ -3,7 +3,19 @@
  * @var $this LaboratoryController
  * @var $ready int
  */
-?>
+$this->widget("Modal", [
+	"title" => "Информация о направлении",
+	"body" => CHtml::tag("h1", [], "Направление не выбрано"),
+	"buttons" => [
+		"open-medcard-button" => [
+			"text" => "Открыть медкарту",
+			"class" => "btn btn-success",
+			"align" => "left"
+		]
+	],
+	"id" => "treatment-about-direction-modal"
+]); ?>
+<script type="text/javascript" src="<?= Yii::app()->createUrl("js/laboratory/laboratory.js") ?>"></script>
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
 		<div class="col-xs-6 no-padding">
@@ -18,7 +30,7 @@
 			</button>
 		</div>
 	</div>
-	<div class="laboratory-table-wrapper">
+	<div class="laboratory-table-wrapper table-wrapper">
 		<hr>
 		<div id="laboratory-direction-grid-wrapper" class="col-xs-12 no-padding">
 			<div class="col-xs-6 no-padding">
@@ -33,8 +45,6 @@
 					"title" => "Анализаторы",
 					"body" => $this->createWidget("AnalyzerTaskViewer"),
 					"controls" => [],
-//					"controlMode" => ControlMenu::MODE_MENU,
-//					"controlMenuTrigger" => "Анализаторы",
 					"id" => "analyzer-task-viewer",
 				]); ?>
 			</div>
@@ -52,8 +62,3 @@
 		</div>
 	</div>
 </div>
-<br>
-<input type="text" class="form-control" title="">
-<button type="button" title="Поиск направления" class="btn btn-default" data-container="body" data-trigger="click" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<?= htmlspecialchars($this->getWidget("DirectionSearch")) ?>">
-	Popover on top
-</button>

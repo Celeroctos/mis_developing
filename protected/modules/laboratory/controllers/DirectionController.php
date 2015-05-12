@@ -411,12 +411,18 @@ class DirectionController extends Controller2 {
 			if ($form->hasErrors()) {
 				$this->postValidationError($form->errors);
 			}
-			$r = LDirection::model()->updateByPk($form->{"direction_id"}, [
+			$direction = LDirection::model()->findByPk($form->{"direction_id"});
+			$parameters = [
 				"sample_type_id" => $form->{"sample_type_id"},
 				"sending_date" => $form->{"sending_date"}." ".$form->{"sending_time"}.".000000",
-				"comment" => $form->{"comment"},
-				"status" => LDirection::STATUS_LABORATORY
-			]);
+				"comment" => $form->{"comment"}
+			];
+			if ($direction == LDirection::STATUS_TREATMENT_ROOM) {
+				$parameters += [
+					"status" => LDirection::STATUS_LABORATORY
+				];
+			}
+			$r = LDirection::model()->updateByPk($form->{"direction_id"}, $parameters);
 			if (!$r) {
 				throw new CException("Can't refresh direction");
 			}
@@ -441,8 +447,13 @@ class DirectionController extends Controller2 {
 					":d" => $form->{"direction_id"}, ":a" => $id
 				]);
 			}
+			if ($direction == LDirection::STATUS_TREATMENT_ROOM) {
+				$msg = "Направление успешно отправлено в лабораторию";
+			} else {
+				$msg = "Направление сохранено";
+			}
 			$this->leave([
-				"message" => "Направление успешно отправлено в лабораторию",
+				"message" => $msg,
 				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM),
 				"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
 			]);

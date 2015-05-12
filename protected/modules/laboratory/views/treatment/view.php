@@ -102,7 +102,7 @@ $this->widget("Modal", [
 			</button>
 		</div>
 	</div>
-	<div class="treatment-table-wrapper">
+	<div class="treatment-table-wrapper table-wrapper">
 		<hr>
 		<div id="treatment-direction-grid-wrapper">
 			<?php $this->widget("DirectionPanel", [
@@ -127,3 +127,10 @@ $this->widget("Modal", [
 		"collapsible" => false
 	]) ?>
 </div>
+<script>
+$(document).ready(function() {
+	$(document).on("barcode.captured", function(e, p) {
+		Laboratory_DirectionTable_Widget.show(p.barcode);
+	});
+});
+</script>
