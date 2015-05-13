@@ -41,7 +41,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		this.createDraggable();
 		$("#analyzer-task-viewer .panel-body").droppable({
 			drop: function(e, item) {
-				me.drop(this, item.draggable);
+				me.drop(item.draggable);
 			}
 		});
 		$(".analyzer-task-clear").click(function() {
@@ -55,7 +55,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 			);
 		});
 	},
-	drop: function(body, item) {
+	drop: function(item) {
 		if (!this.current()) {
 			Core.createMessage({
 				message: "Анализатор не выбран"
@@ -67,7 +67,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		var tr = item.clone(false);
 		this.lock(tr.attr("data-id"));
 		tr.find("td:last").remove();
-		var container = $(body).find(".analyzer-queue-container:visible").sortable({
+		var container = $("#analyzer-task-viewer .panel-body").find(".analyzer-queue-container:visible").sortable({
 			/* sortable config */
 		}).append(tr);
 		container.children("*:not(tr)").remove();
@@ -133,14 +133,22 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy");
 	},
 	send: function(id) {
-		var queue = this.current();
-		if (queue == null) {
+		if (Laboratory_AnalyzerTask_Menu.current == -1) {
 			return Core.createMessage({
 				message: "Анализатор не выбран"
 			});
 		}
-		this.lock(id);
-		queue.push(id);
+		var tr = $("#laboratory-direction-table > tbody tr[data-id='"+ id +"']");
+		if (!tr.length) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") не направлялось в лабораторию"
+			});
+		} else if (tr.data("core-loading")) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") уже стоит в очереди на анализ"
+			});
+		}
+		this.drop(tr);
 	},
 	queue: {}
 };
@@ -161,5 +169,6 @@ $(document).ready(function() {
 				delay: 5000
 			});
 		}
+		Laboratory_AnalyzerQueue_Widget.send(p.barcode);
 	});
 });

@@ -383,6 +383,10 @@ var Laboratory_DirectionTable_Widget = {
 				.empty().append(component);
 		}).always(function() {
 			panel.panel("after");
+		}).fail(function() {
+			Core.createMessage({
+				message: "Невозможно открыть направление"
+			});
 		});
 	},
 	repeat: function (id) {
