@@ -597,7 +597,7 @@ var Laboratory_Printer = {
 	}
 };
 
-const BARCODE_RESET_INTERVAL = 120;
+const BARCODE_RESET_INTERVAL = 200;
 const BARCODE_SEQUENCE_LENGTH = 8;
 
 var Laboratory_BarcodeReader = {
@@ -626,14 +626,17 @@ var Laboratory_BarcodeReader = {
 			me.sequence.push(code - 97);
 		}
 		if (me.sequence.length == BARCODE_SEQUENCE_LENGTH) {
-			me.last = parseInt(me.sequence.join(""));
-			console.log("captured barcode sequence: " + me.last );
-			console.log("elapsed time: " + (new Date().getMilliseconds() - me.time));
-			me.reset();
-			$(document).trigger("barcode.captured", {
-				barcode: me.last
-			});
+			this.finalize(parseInt(this.sequence.join("")));
 		}
+	},
+	finalize: function(sequence) {
+		this.last = sequence;
+		console.log("captured barcode sequence: " + this.last );
+		console.log("elapsed time: " + (new Date().getMilliseconds() - this.time));
+		this.reset();
+		$(document).trigger("barcode.captured", {
+			barcode: this.last
+		});
 	},
 	reset: function() {
 		console.log("timer is reset");
