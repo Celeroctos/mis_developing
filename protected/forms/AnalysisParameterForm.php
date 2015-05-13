@@ -1,6 +1,6 @@
 <?php
 
-class AnalysisTypeParameterForm extends FormModel {
+class AnalysisParameterForm extends FormModel {
 
 	public $id;
 	public $short_name;

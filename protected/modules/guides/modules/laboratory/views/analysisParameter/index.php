@@ -6,6 +6,6 @@ $this->widget("LaboratoryTabMenu");
 
 $this->widget("GGridView", [
 	"title" => "Параметры анализов",
-	"url" => "guides/laboratory/analysisTypeParameter",
-	"model" => new AnalysisTypeParameter()
+	"url" => "guides/laboratory/analysisParameter",
+	"model" => new AnalysisParameter()
 ]);

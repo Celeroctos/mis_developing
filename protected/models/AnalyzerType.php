@@ -34,4 +34,40 @@ class AnalyzerType extends GActiveRecord {
 			],
 		];
     }
+
+	public function findAnalysisTypes($id) {
+		$rows = $this->getDbConnection()->createCommand()
+			->select("ats.*")
+			->from("lis.analyzer_type as at")
+			->join("lis.analyzer_type_to_analysis_type as at_at", "at_at.analyzer_type_id = at.id")
+			->join("lis.analysis_type as ats", "at_at.analysis_type_id = ats.id")
+			->where("at.id = :id", [
+				":id" => $id
+			])->queryAll();
+		return $rows;
+	}
+
+	public function saveAnalysisTypes($id, array $ids) {
+		$rows = 0;
+		foreach ($ids as $i) {
+			$rows += $this->getDbConnection()->createCommand()
+				->insert("lis.analyzer_type_to_analysis_type", [
+					"analyzer_type_id" => $id,
+					"analysis_type_id" => $i
+				]);
+		}
+		return $rows;
+	}
+
+	public function dropAnalysisTypes($id, array $ids) {
+		$rows = 0;
+		foreach ($ids as $i) {
+			$rows += $this->getDbConnection()->createCommand()
+				->delete("lis.analyzer_type_to_analysis_type", "analyzer_type_id = :at and analysis_type_id = :as", [
+					":at" => $id,
+					":as" => $i
+				]);
+		}
+		return $rows;
+	}
 }

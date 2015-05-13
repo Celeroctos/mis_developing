@@ -153,10 +153,24 @@ var Laboratory_AnalyzerQueue_Widget = {
 	queue: {}
 };
 
+var Laboratory_Analyzer_TabMenu = {
+	ready: function() {
+		var menu = $("#analyzer-tab-menu"),
+			me = this;
+		menu.find(".analyzer-task-menu-item:not(.disabled)").click(function() {
+			menu.find(".analyzer-task-menu-item.active").removeClass("active");
+			$(this).addClass("active");
+			$(".laboratory-tab-container").hide();
+			$("#" + $(this).children().attr("data-tab")).show();
+		});
+	}
+};
+
 $(document).ready(function() {
 
 	Laboratory_AnalyzerTask_Menu.ready();
 	Laboratory_AnalyzerQueue_Widget.ready();
+	Laboratory_Analyzer_TabMenu.ready();
 
 	$(document).on("barcode.captured", function(e, p) {
 		var tr = $("#laboratory-direction-table").find("tr[data-id='"+ p.barcode +"']");

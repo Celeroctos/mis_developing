@@ -36,6 +36,7 @@ class DirectionTableLaboratory extends Table {
 	public $textNoData = "На этот день нет направлений";
 	public $orderBy = "id desc";
 	public $pageLimit = 25;
+	public $analyzerType = null;
 
 	public function init() {
 		$this->provider = LDirection::model()->getLaboratoryTableProvider();
@@ -45,6 +46,14 @@ class DirectionTableLaboratory extends Table {
 		$this->criteria->addColumnCondition([
 			"status" => LDirection::STATUS_LABORATORY
 		]);
+		if ($this->analyzerType !== null) {
+			$analyzerType = AnalyzerType::model()->findByAttributes([
+
+			]);
+			$this->criteria->addColumnCondition([
+				"analysis_type_id"
+			]);
+		}
 	}
 
 	public function getSerializedAttributes($attributes = null, $excepts = []) {

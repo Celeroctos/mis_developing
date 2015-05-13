@@ -158,6 +158,10 @@ return array(
 					'header' => '',
 					'selectedPageCssClass' => 'active',
 				],
+				'CButtonColumn' => [
+					'deleteConfirmation' => false,
+					'deleteButtonUrl' => false
+				]
 			],
 		],
         'clientScript' => array(

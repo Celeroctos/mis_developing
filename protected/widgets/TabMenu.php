@@ -10,6 +10,12 @@ class TabMenu extends Widget {
 	const STYLE_PILLS_STACKED = "nav nav-pills nav-stacked";
 
 	/**
+	 * @var string identification number of current
+	 * 	tab menu widget
+	 */
+	public $id = null;
+
+	/**
 	 * @var array - Array with items, where key is class and
 	 * 	item is array with href, label, options and sub items
 	 * + label - Displayable item label
@@ -47,7 +53,8 @@ class TabMenu extends Widget {
 	public function renderItems($items, $root = true) {
 		print Html::openTag("ul", [
 			"class" => ($root ? $this->style : "dropdown-menu"),
-			"role" => "menu"
+			"role" => "menu",
+			"id" => $this->getId()
 		]);
 		foreach ($items as $class => $item) {
 			if (isset($item["href"])) {
@@ -65,6 +72,12 @@ class TabMenu extends Widget {
 					$options["class"] = $this->special;
 				}
 			}
+			if (isset($item["disabled"]) && $item["disabled"] == true) {
+				$options["class"] .= " disabled";
+			}
+			if (isset($item["active"]) && $item["active"] == true) {
+				$options["class"] .= " active";
+			}
 			if (isset($item["items"]) && count($item["items"]) > 0) {
 				$options["class"] .= " dropdown";
 			}
@@ -72,6 +85,9 @@ class TabMenu extends Widget {
 				$label = $item["label"];
 			} else {
 				$label = "";
+			}
+			if (isset($item["icon"])) {
+				$label = CHtml::tag("span", [ "class" => $item["icon"] ], "") ."&nbsp;". $label;
 			}
 			unset($item["label"]);
 			print Html::openTag("li", $options);

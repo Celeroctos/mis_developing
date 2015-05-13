@@ -1,7 +1,9 @@
 <?php
 /**
  * @var $this LaboratoryController
+ * @var $total int
  * @var $ready int
+ * @var $analyzers array
  */
 $this->widget("Modal", [
 	"title" => "Информация о направлении",
@@ -20,7 +22,8 @@ $this->widget("Modal", [
 	<div class="treatment-header">
 		<div class="col-xs-6 no-padding">
 			<button class="btn btn-default btn-block treatment-header-rounded treatment-header-wrapper-active" data-tab="#laboratory-direction-grid-wrapper" type="button">
-				<span>Анализатор</span>
+				<span>Направления и Анализаторы</span>
+<!--				<span class="badge" id="laboratory-ready-counts">--><?//= $total ?><!--</span>-->
 			</button>
 		</div>
 		<div class="col-xs-6 no-padding treatment-center-block">
@@ -31,27 +34,48 @@ $this->widget("Modal", [
 		</div>
 	</div>
 	<div class="laboratory-table-wrapper table-wrapper">
-		<hr>
 		<div id="laboratory-direction-grid-wrapper" class="col-xs-12 no-padding">
-			<div class="col-xs-6 no-padding">
+			<?php $this->widget("TabMenu", [
+				"style" => TabMenu::STYLE_PILLS_JUSTIFIED,
+				"id" => "analyzer-tab-menu",
+				"items" => $analyzers,
+				"special" => "analyzer-task-menu-item",
+			]) ?>
+			<hr>
+			<?php foreach ($analyzers as $class => $analyzer): ?>
+				<?php if ($class == "list"): ?>
+			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>">
 				<?php $this->widget("DirectionPanel", [
-					"title" => "Направления на анализ",
+					"title" => "Все направления",
 					"body" => $this->createWidget("DirectionTableLaboratory"),
-					"status" => LDirection::STATUS_LABORATORY,
-					"controls" => [],
-					"upgradeable" => false
+					"status" => LDirection::STATUS_LABORATORY
 				]) ?>
 			</div>
-			<div class="col-xs-6 no-padding">
-				<?php $this->widget("Panel", [
-					"title" => "Анализаторы",
-					"body" => $this->createWidget("AnalyzerTaskViewer"),
-					"controls" => [],
-					"id" => "analyzer-task-viewer",
-				]); ?>
+				<?php else: ?>
+			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>" style="display: none;">
+				<div class="col-xs-6 no-padding">
+					<?php $this->widget("DirectionPanel", [
+						"title" => "Направления на анализ",
+						"body" => $this->createWidget("DirectionTableLaboratory"),
+						"status" => LDirection::STATUS_LABORATORY,
+						"controls" => [],
+						"upgradeable" => false
+					]) ?>
+				</div>
+				<div class="col-xs-6 no-padding">
+					<?php $this->widget("Panel", [
+						"title" => "Анализаторы",
+						"body" => $this->createWidget("AnalyzerTaskViewer"),
+						"controls" => [],
+						"id" => "analyzer-task-viewer",
+					]); ?>
+				</div>
 			</div>
+				<?php endif ?>
+			<?php endforeach ?>
 		</div>
 		<div id="laboratory-ready-grid-wrapper" class="no-display text-left">
+			<hr>
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Завершенные направления",
 				"body" => $this->createWidget("DirectionTableReady"),

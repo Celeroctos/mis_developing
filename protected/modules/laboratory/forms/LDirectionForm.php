@@ -149,12 +149,12 @@ class LDirectionForm extends FormModel {
 			"enterprise_id" => [
 				"label" => "Направитель",
 				"type" => "DropDown",
-				"rules" => "required",
 				"table" => [
 					"name" => "lis.enterprise",
 					"key" => "id",
 					"value" => "shortname"
-				]
+				],
+				"rules" => "required",
 			],
 		];
 	}

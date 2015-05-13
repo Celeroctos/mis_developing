@@ -2,10 +2,10 @@
 /**
  * Класс для работы с отделениями
  */
-class AnalysisTypeParameter extends GActiveRecord {
+class AnalysisParameter extends GActiveRecord {
 
 	public function getForm() {
-		return new AnalysisTypeParameterForm();
+		return new AnalysisParameterForm();
 	}
 
 	public function rules() {
