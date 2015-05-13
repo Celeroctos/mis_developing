@@ -94,6 +94,17 @@ class LDirection extends ActiveRecord {
 		}
 	}
 
+	public function getAnalyzer($id) {
+		return $this->getDbConnection()->createCommand()
+			->select("a.*")
+			->from("lis.direction as d")
+			->join("lis.analyzer_type_to_analysis_type as at_at", "at_at.analysis_type_id = d.analysis_type_id")
+			->join("lis.analyzer as a", "at_at.analyzer_type_id = a.analyzer_type_id")
+			->where("d.id = :id", [
+				":id" => $id
+			])->queryRow();
+	}
+
 	public static function listStatuses() {
 		return [
 			static::STATUS_TREATMENT_ROOM => "Находится в процедурном кабинете",

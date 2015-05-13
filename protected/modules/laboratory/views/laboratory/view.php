@@ -23,7 +23,6 @@ $this->widget("Modal", [
 		<div class="col-xs-6 no-padding">
 			<button class="btn btn-default btn-block treatment-header-rounded treatment-header-wrapper-active" data-tab="#laboratory-direction-grid-wrapper" type="button">
 				<span>Направления и Анализаторы</span>
-<!--				<span class="badge" id="laboratory-ready-counts">--><?//= $total ?><!--</span>-->
 			</button>
 		</div>
 		<div class="col-xs-6 no-padding treatment-center-block">
@@ -46,26 +45,27 @@ $this->widget("Modal", [
 				<?php if ($class == "list"): ?>
 			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>">
 				<?php $this->widget("DirectionPanel", [
-					"title" => "Все направления",
+					"title" => "Все направления на анализ",
 					"body" => $this->createWidget("DirectionTableLaboratory"),
 					"status" => LDirection::STATUS_LABORATORY
 				]) ?>
 			</div>
 				<?php else: ?>
 			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>" style="display: none;">
-				<div class="col-xs-6 no-padding">
+				<div class="col-xs-6">
 					<?php $this->widget("DirectionPanel", [
 						"title" => "Направления на анализ",
-						"body" => $this->createWidget("DirectionTableLaboratory"),
+						"body" => $this->createWidget("DirectionTableLaboratory", [
+							"analyzerType" => $analyzer["data-type"]
+						]),
 						"status" => LDirection::STATUS_LABORATORY,
-						"controls" => [],
 						"upgradeable" => false
 					]) ?>
 				</div>
-				<div class="col-xs-6 no-padding">
+				<div class="col-xs-6">
 					<?php $this->widget("Panel", [
-						"title" => "Анализаторы",
-						"body" => $this->createWidget("AnalyzerTaskViewer"),
+						"title" => "Очередь на выполнение",
+						"body" => "",
 						"controls" => [],
 						"id" => "analyzer-task-viewer",
 					]); ?>

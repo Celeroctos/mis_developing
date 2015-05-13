@@ -50,6 +50,9 @@ var Laboratory_MedcardEditableViewer_Modal = {
 			modal.find("input#card_number").val(v = $("#laboratory-medcard-number").val());
 			modal.find("span#card_number").text(v);
 			me.check();
+			$("#medcard-editable-viewer-modal select#analysis_type_id").trigger("change");
+		}).on("shown.bs.modal", function() {
+			$("#medcard-editable-viewer-modal select#analysis_type_id").trigger("change");
 		});
 		modal.find("#copy-button").click(function() {
 			var json = [];

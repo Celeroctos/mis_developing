@@ -47,12 +47,10 @@ class DirectionTableLaboratory extends Table {
 			"status" => LDirection::STATUS_LABORATORY
 		]);
 		if ($this->analyzerType !== null) {
-			$analyzerType = AnalyzerType::model()->findByAttributes([
-
-			]);
-			$this->criteria->addColumnCondition([
-				"analysis_type_id"
-			]);
+			$types = AnalyzerType::model()->findAnalysisTypes($this->analyzerType);
+			if (count($types = ActiveRecord::getIds($types)) > 0) {
+				$this->criteria->addCondition("analysis_type_id in (".implode(",", $types).")");
+			}
 		}
 	}
 

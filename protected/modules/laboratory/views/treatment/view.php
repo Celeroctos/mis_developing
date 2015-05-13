@@ -83,7 +83,7 @@ $this->widget("Modal", [
 ]); ?>
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
-		<div class="col-xs-4 no-padding">
+		<div class="col-xs-4 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded treatment-header-wrapper-active" data-tab="#treatment-direction-grid-wrapper" type="button">
 				<span>Направления</span>
 			</button>
@@ -96,7 +96,7 @@ $this->widget("Modal", [
 				</span>
 			</button>
 		</div>
-		<div class="col-xs-4 no-padding">
+		<div class="col-xs-4 no-padding treatment-center-block">
 			<button id="header-register-direction-button" class="btn btn-default btn-block treatment-header-rounded" type="button" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
 				<span>Создать направление</span>
 			</button>

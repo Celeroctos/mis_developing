@@ -8,7 +8,7 @@ class LaboratoryController extends Controller2 {
 			"icon" => "glyphicon glyphicon-list",
 			"active" => "true"
 		]);
-		if (count($analyzers) == 1) {
+		if (count($analyzers) == 0) {
 			$analyzers += [
 				"empty" => [
 					"label" => "Нет доступных анализаторов",
