@@ -65,7 +65,9 @@ $this->widget("Modal", [
 				<div class="col-xs-6">
 					<?php $this->widget("Panel", [
 						"title" => "Очередь на выполнение",
-						"body" => "",
+						"body" => CHtml::tag("h3", [
+							"class" => "text-center"
+						], "Пусто"),
 						"controls" => [],
 						"id" => "analyzer-task-viewer",
 					]); ?>

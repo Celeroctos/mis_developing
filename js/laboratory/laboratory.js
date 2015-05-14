@@ -12,23 +12,6 @@ AnalyzerQueueManager.prototype.clear = function() {
 	this._queue = [];
 };
 
-var Laboratory_AnalyzerTask_Menu = {
-	ready: function() {
-		var me = this;
-		$("#analyzer-task-viewer").on("click", ".analyzer-task-menu-item", function() {
-			if (me.active != null) {
-				me.active.removeClass("active");
-			}
-			me.current = $(this).children("a").attr("data-id");
-			me.active = $(this).addClass("active");
-			$(".analyzer-task-tab").hide();
-			$("#" + $(this).children("a").attr("data-tab")).show();
-		});
-	},
-	current: -1,
-	active: null
-};
-
 var Laboratory_AnalyzerQueue_Widget = {
 	ready: function() {
 		var me = this;
@@ -39,7 +22,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 			me.createDraggable();
 		});
 		this.createDraggable();
-		$("#analyzer-task-viewer .panel-body").droppable({
+		$("#analyzer-task-viewer .panel-content").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
 			}
@@ -74,10 +57,10 @@ var Laboratory_AnalyzerQueue_Widget = {
 	},
 	createDraggable: function() {
 		try {
-			$("#laboratory-direction-table tr").draggable("destroy");
+			$("#laboratory-direction-table tbody > tr").draggable("destroy");
 		} catch (ignored) {
 		}
-		$("#laboratory-direction-table tr").draggable({
+		$("#laboratory-direction-table tbody > tr").draggable({
 			helper: function() {
 				var item = $(this).clone(false).css({
 					"background-color": "whitesmoke",
@@ -121,7 +104,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		return pane.find(".analyzer-queue-container:eq(0)");
 	},
 	lock: function(id) {
-		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']")
+		$("table > tbody > tr[data-id='"+ id +"']")
 			.loading({
 				image: url("images/locked59.png"),
 				width: 15,
@@ -168,7 +151,6 @@ var Laboratory_Analyzer_TabMenu = {
 
 $(document).ready(function() {
 
-	Laboratory_AnalyzerTask_Menu.ready();
 	Laboratory_AnalyzerQueue_Widget.ready();
 	Laboratory_Analyzer_TabMenu.ready();
 

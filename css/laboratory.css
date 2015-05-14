@@ -347,6 +347,11 @@
     margin-bottom: 15px;
 }
 
+#laboratory-direction-grid-wrapper .panel-content > h3 {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
 .analyzer-task-menu-item:first-child > a {
     margin-left: 0;
 }
