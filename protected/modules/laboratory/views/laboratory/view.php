@@ -35,7 +35,7 @@ $this->widget("Modal", [
 	<div class="laboratory-table-wrapper table-wrapper">
 		<div id="laboratory-direction-grid-wrapper" class="col-xs-12 no-padding">
 			<?php $this->widget("TabMenu", [
-				"style" => TabMenu::STYLE_PILLS_JUSTIFIED,
+				"style" => TabMenu::STYLE_PILLS,
 				"id" => "analyzer-tab-menu",
 				"items" => $analyzers,
 				"special" => "analyzer-task-menu-item",
@@ -64,11 +64,37 @@ $this->widget("Modal", [
 				</div>
 				<div class="col-xs-6">
 					<?php $this->widget("Panel", [
-						"title" => "Очередь на выполнение",
+						"title" => $this->getWidget("ControlMenu", [
+							"controls" => [
+								"analyzer-queue-start-button" => [
+									"label" => "Начать",
+									"icon" => "glyphicon glyphicon-play",
+									"class" => "btn btn-default"
+								],
+								"analyzer-queue-stop-button" => [
+									"label" => "Остановить",
+									"icon" => "glyphicon glyphicon-stop",
+									"class" => "btn btn-default"
+								],
+							],
+							"mode" => ControlMenu::MODE_BUTTON
+						]),
 						"body" => CHtml::tag("h3", [
 							"class" => "text-center"
-						], "Пусто"),
-						"controls" => [],
+						], "Пусто") . CHtml::tag("table", [
+								"class" => "table table-striped table-bordered analyzer-queue-container"
+							], ""),
+						"controls" => [
+							"analyzer-queue-clear-button" => [
+								"label" => "Очистить",
+								"icon" => "glyphicon glyphicon-refresh",
+								"class" => "btn btn-warning"
+							],
+						],
+						"controlMode" => ControlMenu::MODE_BUTTON,
+						"titleWrapperClass" => "col-xs-6 text-left no-padding",
+						"controlsWrapperClass" => "col-xs-6 text-right no-padding",
+						"contentClass" => "col-xs-12 no-padding no-margin panel-content",
 						"id" => "analyzer-task-viewer",
 					]); ?>
 				</div>

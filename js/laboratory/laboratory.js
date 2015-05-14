@@ -1,17 +1,4 @@
 
-var AnalyzerQueueManager = function(container) {
-	this._container = container;
-	this._queue = [];
-};
-
-AnalyzerQueueManager.prototype.push = function(id) {
-	this._queue.push(id);
-};
-
-AnalyzerQueueManager.prototype.clear = function() {
-	this._queue = [];
-};
-
 var Laboratory_AnalyzerQueue_Widget = {
 	ready: function() {
 		var me = this;
@@ -22,38 +9,39 @@ var Laboratory_AnalyzerQueue_Widget = {
 			me.createDraggable();
 		});
 		this.createDraggable();
-		$("#analyzer-task-viewer .panel-content").droppable({
+		$("#analyzer-task-viewer .panel-body").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
 			}
 		});
-		$(".analyzer-task-clear").click(function() {
-			var container = $(this).parents(".analyzer-task-tab:eq(0)")
-				.find(".analyzer-queue-container");
-			container.children("tr[data-id]").each(function(i, tr) {
-				me.unlock($(tr).attr("data-id"));
-			});
-			container.empty().append(
-				"<h4 class=\"text-center\">Направления отсутствуют</h4>"
-			);
+		$(".analyzer-queue-clear-button").click(function() {
+			me.clear();
 		});
 	},
+	clear: function() {
+		var me = this,
+			container = $(".laboratory-tab-container:visible .analyzer-queue-container");
+		container.find("tr[data-id]").each(function(i, tr) {
+			console.log($(tr).attr("data-id"));
+			me.unlock($(tr).attr("data-id"));
+		});
+		container.empty();
+		$(".laboratory-tab-container:visible > div:eq(1) .panel-content").append(
+			"<h3 class=\"text-center\">Пусто</h3>"
+		).children("h3:not(:first)").remove();
+	},
 	drop: function(item) {
-		if (!this.current()) {
-			Core.createMessage({
-				message: "Анализатор не выбран"
-			});
-			return false;
-		} else if (!item.parent().is("tbody")) {
+		if (!item.parent().is("tbody")) {
 			return false;
 		}
 		var tr = item.clone(false);
 		this.lock(tr.attr("data-id"));
 		tr.find("td:last").remove();
-		var container = $("#analyzer-task-viewer .panel-body").find(".analyzer-queue-container:visible").sortable({
+		var container = $(".laboratory-tab-container:visible .analyzer-queue-container")
+			.sortable({
 			/* sortable config */
-		}).append(tr);
-		container.children("*:not(tr)").remove();
+			}).append(tr);
+		container.parent().children("h3").remove();
 	},
 	createDraggable: function() {
 		try {
@@ -76,13 +64,6 @@ var Laboratory_AnalyzerQueue_Widget = {
 			appendTo: "body"
 		});
 	},
-	current: function() {
-		if (Laboratory_AnalyzerTask_Menu.current > 0) {
-			return this.getQueue(Laboratory_AnalyzerTask_Menu.current);
-		} else {
-			return null;
-		}
-	},
 	getQueue: function(id) {
 		if (!this.queue.hasOwnProperty(id)) {
 			return this.queue[id] = new AnalyzerQueueManager(
@@ -104,7 +85,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		return pane.find(".analyzer-queue-container:eq(0)");
 	},
 	lock: function(id) {
-		$("table > tbody > tr[data-id='"+ id +"']")
+		$(".laboratory-tab-container:not(:first) table > tbody > tr[data-id='"+ id +"']")
 			.loading({
 				image: url("images/locked59.png"),
 				width: 15,
@@ -116,11 +97,6 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy");
 	},
 	send: function(id) {
-		if (Laboratory_AnalyzerTask_Menu.current == -1) {
-			return Core.createMessage({
-				message: "Анализатор не выбран"
-			});
-		}
 		var tr = $("#laboratory-direction-table > tbody tr[data-id='"+ id +"']");
 		if (!tr.length) {
 			return Core.createMessage({
