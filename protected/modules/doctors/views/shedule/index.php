@@ -709,7 +709,8 @@
                 'id' => 'add-greeting-value-form',
                 'enableAjaxValidation' => true,
                 'enableClientValidation' => true,
-                'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/doctors/patient/addvalueinguide'),
+				 // --> /doctors/patient/addvalueinguide
+                'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/admin/guides/addinguide'),
                 'htmlOptions' => array(
                     'class' => 'form-horizontal col-xs-12',
                     'role' => 'form',
@@ -755,7 +756,8 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 <?php echo CHtml::ajaxSubmitButton(
                     'Добавить',
-                    CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/doctors/patient/addvalueinguide'),
+					// --> /doctors/patient/addvalueinguide
+                    CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/admin/guides/addinguide'),
                     array(
                         'success' => 'function(data, textStatus, jqXHR) {
                             $("#add-greeting-value-form").trigger("success", [data, textStatus, jqXHR])

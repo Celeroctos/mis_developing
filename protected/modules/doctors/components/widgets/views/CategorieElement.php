@@ -247,16 +247,9 @@ foreach($categorie['childrenElementsOrder'] as $item) {
             }
             if($element['allow_add'] && $canEditMedcard) {
                 ?>
-            <?php
-            }
-            if($element['allow_add'] && $canEditMedcard) {
-                ?>
-                <!--<button type="button" id="ba<?php
-                //echo '_'.$prefix.'_'.$element['guide_id'];
-                echo '_'.$prefix.'_'.$element['id'];
-                ?>" class="btnAddValue btn btn-default btn-sm">
+				<button type="button" id="ba<?php echo '_'.$prefix.'_'.$element['undotted_path'].'_'.$element['id'];  ?>" class="btnAddValue btn btn-default btn-sm">
                     <span class="glyphicon glyphicon-plus"></span>
-                </button>-->
+                </button>
             <?php
             }
         } elseif($element['type'] == 4) {

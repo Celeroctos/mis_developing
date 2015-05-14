@@ -246,9 +246,8 @@ class PrintController extends Controller {
         $dateFormatter = new DateFormatterMis($patient['birthday']);
         $greetingInfo['full_age'] = $dateFormatter->getFullAge();
 
-        $greetingInfo['full_years'] = date('Y') - $parts[0];
-        //var_dump($greetingInfo['full_years'] );
-        // exit();
+        $greetingInfo['full_years'] =  trim(explode(' ', $greetingInfo['full_age'])[0]);
+
         $enterprise = Enterprise::model()->findByPk($medcard->enterprise_id);
         $greetingInfo['patient_fio'] = $patient['last_name'].' '.$patient['first_name'].' '.$patient['middle_name'];
 

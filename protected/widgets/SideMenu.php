@@ -130,7 +130,17 @@ class SideMenu extends CWidget {
 					"label" => "Коечный фонд",
 					"image" => "greeting_patient.png",
 					"href" => "/hospital/bedsstock/view"
-				]
+				],
+                "arm-d" => [
+                    "label" => "АРМ врача",
+                    "image" => "greeting_patient.png",
+                    "href" => "/hospital/armd/view"
+                ],
+                "arm-n" => [
+                    "label" => "АРМ медсестры",
+                    "image" => "greeting_patient.png",
+                    "href" => "/hospital/armn/view"
+                ]
 			]
 		],
 		"laboratory" => [
