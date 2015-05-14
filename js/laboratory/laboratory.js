@@ -1,261 +1,170 @@
-var ConfirmDelete = {
-    construct: function() {
-        $(document).on("click", ".confirm-delete", function(e) {
-            if (ConfirmDelete.lock) {
-                return void 0;
-            }
-            ConfirmDelete.item = $(e.target);
-            $("#confirm-delete-modal").modal();
-            e.stopImmediatePropagation();
-            return false;
-        });
-        $("#confirm-delete-button").click(function() {
-            ConfirmDelete.lock = true;
-            if (ConfirmDelete.item != null) {
-                ConfirmDelete.item.trigger("click");
-            }
-            setTimeout(function() {
-                ConfirmDelete.lock = false;
-            }, 250);
-        });
-    },
-    item: null,
-    lock: false
+
+var AnalyzerQueueManager = function(container) {
+	this._container = container;
+	this._queue = [];
 };
 
-var Panel = {
-    construct: function() {
-        $(document).on("click", ".collapse-button", function() {
-            var me = $(this);
-            var body = $(me.parents(".panel")[0]).children(".panel-body");
-            if ($(this).hasClass("glyphicon-chevron-up")) {
-                body.slideUp("normal", function() {
-                    me.removeClass("glyphicon-chevron-up")
-                        .addClass("glyphicon-chevron-down");
-                });
-            } else {
-                body.slideDown("normal", function() {
-                    me.removeClass("glyphicon-collapse-down")
-                        .addClass("glyphicon-chevron-up");
-                });
-            }
-        });
-    }
+AnalyzerQueueManager.prototype.push = function(id) {
+	this._queue.push(id);
 };
 
-var DropDown = {
-    change: function(animate, update) {
-        const DELAY = 100;
-        if (animate === undefined) {
-            animate = true;
-        }
-        if (update === undefined) {
-            update = true;
-        }
-        var hide = function(group) {
-            if (!group.hasClass("hidden")) {
-                if (animate) {
-                    group.slideUp(DELAY, function() {
-                        $(this).addClass("hidden");
-                    });
-                } else {
-                    group.addClass("hidden");
-                }
-            }
-        };
-        var show = function(group) {
-            if (group.hasClass("hidden")) {
-                if (animate) {
-                    group.removeClass("hidden").hide().slideDown(DELAY);
-                } else {
-                    group.removeClass("hidden");
-                }
-            }
-        };
-        var toggle = function(group, it, wait) {
-            setTimeout(function() {
-                if (it.val() == "dropdown" || it.val() == "multiple") {
-                    show(group);
-                } else {
-                    hide(group);
-                }
-            }, wait)
-        };
-        var group = function(that, id) {
-            return $(that).parents("form").find("#" + id).parents(".form-group");
-        };
-        if ($(this).attr("id") == "type" && !$(this).attr("data-update")) {
-            var fields = [
-                "lis_guide_id",
-                "display_id"
-            ];
-            if ($(this).val() != "dropdown" && $(this).val() != "multiple") {
-                fields = fields.reverse();
-            }
-            var i;
-            for (i in fields) {
-                toggle(group(this, fields[i]), $(this), i * DELAY);
-            }
-            if (update && $(this).attr("data-update") && !this.disable) {
-                var me = this;
-                setTimeout(function () {
-                    DropDown.update($(me));
-                }, i * DELAY);
-            }
-        } else if (update && $(this).attr("data-update") && !this.disable) {
-            DropDown.update($(this));
-        }
-    },
-    update: function(select, after) {
-        var f;
-        var form = $(select.parents("form")[0]);
-        if (!form.data("lab")) {
-            f = Core.createForm(form[0], {
-                url: url("/laboratory/guide/getWidget")
-            });
-        } else {
-            f = form.data("lab");
-        }
-        f.update(after);
-    },
-    disable: false
+AnalyzerQueueManager.prototype.clear = function() {
+	this._queue = [];
 };
 
-var Message = {
-    display: function(json) {
-        if (!json["status"]) {
-			Core.createMessage({
-				message: json["message"]
-			});
-            return false
-        } else if (json["message"]) {
-            Core.createMessage({
-                type: "success",
-                sign: "ok",
-                message: json["message"]
-            });
-        }
-        return true;
-    }
-};
-
-var MedcardSearch = {
-	construct: function() {
-		$(document).on("click", "[id='medcard-search-button']", function() {
-			MedcardSearch.search($(this).parents(".medcard-search-wrapper:eq(0)"));
+var Laboratory_AnalyzerQueue_Widget = {
+	ready: function() {
+		var me = this;
+		$(".laboratory-table-wrapper .panel:eq(0)").on("panel.updated", function() {
+			me.createDraggable();
 		});
-		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
-			MedcardSearch.reset();
+		$(".laboratory-table-wrapper .table").on("table.updated", function() {
+			me.createDraggable();
 		});
-	},
-	search: function(wrapper) {
-		var table = wrapper.find("#medcard-search-button").button("loading")
-			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
-		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
-			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
-		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
-		$.post(url("/laboratory/medcard/search"), data, function(json) {
-			if (!Message.display(json)) {
-				return void 0;
+		this.createDraggable();
+		$("#analyzer-task-viewer .panel-content").droppable({
+			drop: function(e, item) {
+				me.drop(item.draggable);
 			}
-			table.replaceWith($(json["component"]));
-			Core.createMessage({
-				message: "Таблица обновлена",
-				sign: "ok",
-				type: "success",
-				delay: 2000
+		});
+		$(".analyzer-task-clear").click(function() {
+			var container = $(this).parents(".analyzer-task-tab:eq(0)")
+				.find(".analyzer-queue-container");
+			container.children("tr[data-id]").each(function(i, tr) {
+				me.unlock($(tr).attr("data-id"));
 			});
-		}, "json").always(function() {
-			wrapper.find("#medcard-search-button").button("reset");
+			container.empty().append(
+				"<h4 class=\"text-center\">Направления отсутствуют</h4>"
+			);
 		});
 	},
-	click: function(tr, id) {
-		this.active && this.active.removeClass("medcard-table-active");
-		this.active = $(tr).addClass("medcard-table-active");
-		if (this.active) {
-			$("#medcard-edit-button").removeClass("disabled");
+	drop: function(item) {
+		if (!this.current()) {
+			Core.createMessage({
+				message: "Анализатор не выбран"
+			});
+			return false;
+		} else if (!item.parent().is("tbody")) {
+			return false;
 		}
-		this.id = id;
+		var tr = item.clone(false);
+		this.lock(tr.attr("data-id"));
+		tr.find("td:last").remove();
+		var container = $("#analyzer-task-viewer .panel-body").find(".analyzer-queue-container:visible").sortable({
+			/* sortable config */
+		}).append(tr);
+		container.children("*:not(tr)").remove();
 	},
-	reset: function() {
-		this.active = this.id = null;
-		$("#medcard-edit-button").addClass("disabled");
+	createDraggable: function() {
+		try {
+			$("#laboratory-direction-table tbody > tr").draggable("destroy");
+		} catch (ignored) {
+		}
+		$("#laboratory-direction-table tbody > tr").draggable({
+			helper: function() {
+				var item = $(this).clone(false).css({
+					"background-color": "whitesmoke",
+					"border": "1px solid lightgray"
+				});
+				item.find("td:last").remove();
+				item.find("td").css({
+					"padding": "10px",
+					"border": "1px solid lightgray"
+				});
+				return item;
+			},
+			appendTo: "body"
+		});
 	},
-	active: null,
-	id: null
+	current: function() {
+		if (Laboratory_AnalyzerTask_Menu.current > 0) {
+			return this.getQueue(Laboratory_AnalyzerTask_Menu.current);
+		} else {
+			return null;
+		}
+	},
+	getQueue: function(id) {
+		if (!this.queue.hasOwnProperty(id)) {
+			return this.queue[id] = new AnalyzerQueueManager(
+				this.getContainer(id)
+			);
+		} else {
+			return this.queue[id];
+		}
+	},
+	getContainer: function(id) {
+		var tab = $(".analyzer-task-menu-item > a[data-id='"+ id +"'][data-tab]");
+		if (!tab.length) {
+			throw new Error("Unresolved tab identification number ("+ id +")");
+		}
+		var pane = $("#" + tab.attr("data-tab"));
+		if (!pane.length) {
+			throw new Error("Unresolved tab pane identification number ("+ tab.attr("data-tab") +")");
+		}
+		return pane.find(".analyzer-queue-container:eq(0)");
+	},
+	lock: function(id) {
+		$("table > tbody > tr[data-id='"+ id +"']")
+			.loading({
+				image: url("images/locked59.png"),
+				width: 15,
+				height: 15,
+				depth: 1
+			}).loading("render");
+	},
+	unlock: function(id) {
+		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy");
+	},
+	send: function(id) {
+		if (Laboratory_AnalyzerTask_Menu.current == -1) {
+			return Core.createMessage({
+				message: "Анализатор не выбран"
+			});
+		}
+		var tr = $("#laboratory-direction-table > tbody tr[data-id='"+ id +"']");
+		if (!tr.length) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") не направлялось в лабораторию"
+			});
+		} else if (tr.data("core-loading")) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") уже стоит в очереди на анализ"
+			});
+		}
+		this.drop(tr);
+	},
+	queue: {}
 };
 
-var LogoutButton = {
-	construct: function() {
-		var form = $("#logout-form");
-		$(".logout-button").click(function() {
-			$.get(form.attr("action"), form.serialize(), function(json) {
-				if (json.success) {
-					window.location.href = url("");
-				}
-			}, "json");
+var Laboratory_Analyzer_TabMenu = {
+	ready: function() {
+		var menu = $("#analyzer-tab-menu"),
+			me = this;
+		menu.find(".analyzer-task-menu-item:not(.disabled)").click(function() {
+			menu.find(".analyzer-task-menu-item.active").removeClass("active");
+			$(this).addClass("active");
+			$(".laboratory-tab-container").hide();
+			$("#" + $(this).children().attr("data-tab")).show();
 		});
 	}
 };
 
-var MedcardSearchModal = {
-	ready: function(selector) {
-		var modal = $(selector);
-		modal.on("show.bs.modal", function() {
-			$(this).find("#load").prop("disabled", "disabled");
-		});
-		modal.on("click", "#medcard-table tr[data-id]", function() {
-			MedcardSearchModal.id = $(this).data("id");
-			$(modal.find("#load")[0]).text("Открыть (" + MedcardSearchModal.id + ")").removeProp("disabled");
-		});
-		modal.find("#load").click(function() {
-			if (!MedcardSearchModal.id) {
-				return void 0;
-			}
-			var text = $(this).text();
-			var btn = $(this).button("loading");
-			$.get(url("laboratory/medcard/load"), {
-				number: MedcardSearchModal.id
-			}, function(json) {
-				if (!Message.display(json)) {
-					return void 0;
-				}
-				MedcardEditableViewerModal.load(json["model"]);
-				modal.modal("hide");
-			}, "json")
-				.always(function() {
-					btn.button("reset").text(text);
-				}).fail(function() {
-					Core.createMessage({
-						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-					});
-				})
-		});
-	},
-	construct: function() {
-		this.ready("#mis-medcard-search-modal");
-		this.ready("#lis-medcard-search-modal");
-	},
-	id: null
-};
-
 $(document).ready(function() {
 
-	ConfirmDelete.construct();
-	Panel.construct();
-	MedcardSearch.construct();
-	LogoutButton.construct();
-	MedcardSearchModal.construct();
+	Laboratory_AnalyzerQueue_Widget.ready();
+	Laboratory_Analyzer_TabMenu.ready();
 
-	// fix for modal window backdrop
-	$(document).on('show.bs.modal', '.modal', function(e) {
-		if (!$(e.target).hasClass("modal")) {
-			return void 0;
+	$(document).on("barcode.captured", function(e, p) {
+		var tr = $("#laboratory-direction-table").find("tr[data-id='"+ p.barcode +"']");
+		if (!tr.length) {
+			setTimeout(function() {
+				Laboratory_DirectionTable_Widget.show(p.barcode);
+			}, 1000);
+			return Core.createMessage({
+				message: "Направление с номером ("+ p.barcode +") не направлялось в лабораторию",
+				delay: 5000
+			});
 		}
-		var depth = 1140 + (10 * $('.modal:visible').length);
-		$(this).css('z-index', depth);
-		setTimeout(function() {
-			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
-		}, 0);
+		Laboratory_AnalyzerQueue_Widget.send(p.barcode);
 	});
 });

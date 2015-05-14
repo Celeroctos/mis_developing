@@ -2,9 +2,6 @@
 
 class LDirectionForm extends FormModel {
 
-	/*
-	 * Basic defaults
-	 */
 	public $id;
 	public $barcode;
 	public $status;
@@ -18,10 +15,6 @@ class LDirectionForm extends FormModel {
 	public $history;
 	public $ward_id;
 	public $enterprise_id;
-
-	/*
-	 * In doctors module
-	 */
 	public $mis_medcard;
 
 	/**
@@ -34,8 +27,6 @@ class LDirectionForm extends FormModel {
 			$this->createFilter("treatment", [
 				"comment",
 				"analysis_type_id",
-				"treatment_room_employee_id",
-				"laboratory_employee_id",
 				"history",
 				"ward_id"
 			])
@@ -83,7 +74,7 @@ class LDirectionForm extends FormModel {
 			"comment" => [
 				"label" => "Комментарий",
 				"options" => [
-					"rows" => "7"
+					"rows" => "5"
 				],
 				"type" => "TextArea"
 			],
@@ -98,7 +89,14 @@ class LDirectionForm extends FormModel {
 			],
 			"sender_id" => [
 				"label" => "Врач направитель",
-				"type" => "number",
+				"type" => "dropdown",
+				"table" => [
+					"format" => "%{last_name} %{first_name}",
+					"name" => "mis.doctors",
+					"key" => "id",
+					"value" => "first_name, last_name",
+					"order" => "last_name, first_name"
+				],
 				"rules" => "required",
 				"hidden" => "true"
 			],
@@ -110,14 +108,14 @@ class LDirectionForm extends FormModel {
 			"treatment_room_employee_id" => [
 				"label" => "Сотрудник процедурного кабинета",
 				"type" => "DropDown",
-				"rules" => "required",
 				"table" => [
 					"format" => "%{last_name} %{first_name}",
 					"name" => "mis.doctors",
 					"key" => "id",
 					"value" => "first_name, last_name",
 					"order" => "last_name, first_name"
-				]
+				],
+				"rules" => "required"
 			],
 			"laboratory_employee_id" => [
 				"label" => "Сотрудник лаборатории",
@@ -134,7 +132,7 @@ class LDirectionForm extends FormModel {
             "history" => [
                 "label" => "Медикаментозный анамнез",
 				"options" => [
-					"rows" => "7"
+					"rows" => "5"
 				],
                 "type" => "TextArea"
             ],
@@ -151,12 +149,12 @@ class LDirectionForm extends FormModel {
 			"enterprise_id" => [
 				"label" => "Направитель",
 				"type" => "DropDown",
-				"rules" => "required",
 				"table" => [
 					"name" => "lis.enterprise",
 					"key" => "id",
 					"value" => "shortname"
-				]
+				],
+				"rules" => "required",
 			],
 		];
 	}

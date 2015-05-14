@@ -114,14 +114,6 @@
 					<div class="tab-pane fade" id="doctor-schedule-on-direction">
 						<br>
 						<?php $this->widget("application.modules.laboratory.widgets.DirectionCreator", [
-							"controls" => [
-								"direction-creator-cancel" => [
-									"label" => "Отменить",
-									"class" => "btn btn-default",
-									"type" => "button",
-									"style" => "margin-left: 10px"
-								],
-							],
 							"defaults" => [
 								"mis_medcard" => Yii::app()->getRequest()->getQuery("cardid")
 							]

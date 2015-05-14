@@ -107,8 +107,11 @@ abstract class Controller2 extends Controller {
 	 *
 	 * // look though each row in received data
 	 * foreach ($_GET['data'] as $row) {
-	 *     self::arrayInDrop($row, $rows);
-	 *     // provide your actions with row
+	 *     if(self::arrayInDrop($row, $rows)) {
+	 *         // update row
+	 * 	   } else {
+	 *         // insert row
+	 *     }
 	 * }
 	 *
 	 * // remove remaining rows
@@ -121,7 +124,7 @@ abstract class Controller2 extends Controller {
 	 * @param $rows array - Array with rows
 	 * @param string $id - Primary key name
 	 * @see LModel::findIds
-	 * @return bool - Is id have to be dropped
+	 * @return bool true if id has to be dropped or false
 	 */
     public static function arrayInDrop($row, array &$rows, $id = "id") {
         if (is_array($row)) {

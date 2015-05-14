@@ -70,37 +70,21 @@ $this->widget("Modal", [
 ]);
 
 $this->widget("Modal", [
-	"title" => "Медицинская карта",
-	"body" => "<h4 class=\"text-center no-margin\">Медкарта не выбрана</h4>",
+	"title" => "Информация о направлении",
+	"body" => CHtml::tag("h1", [], "Направление не выбрано"),
 	"buttons" => [
+		"open-medcard-button" => [
+			"text" => "Открыть медкарту",
+			"class" => "btn btn-success",
+			"align" => "left"
+		]
 	],
-	"id" => "show-medcard-modal"
-]);
-
-$this->widget("Modal", [
-	"title" => "Регистрация направления",
-	"body" => $this->createWidget("AutoForm", [
-		"url" => Yii::app()->getUrlManager()->createUrl("laboratory/direction/register"),
-		"model" => new LDirectionForm("treatment"),
-		"id" => "register-direction-form"
-	]),
-	"buttons" => [
-		"buttons" => [
-			"text" => "Сохранить",
-			"class" => "btn btn-primary",
-			"type" => "button",
-			"attributes" => [
-				"onclick" => "$('#register-direction-form').form('send', function(status) { if (status) $(this).parents('.modal').modal('hide'); })"
-			]
-		],
-	],
-	"id" => "register-direction-modal"
+	"id" => "treatment-about-direction-modal"
 ]); ?>
-
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
-		<div class="col-xs-4 no-padding">
-			<button class="btn btn-default btn-block treatment-header-rounded active" data-tab="#treatment-direction-grid-wrapper" type="button">
+		<div class="col-xs-4 no-padding treatment-center-block">
+			<button class="btn btn-default btn-block treatment-header-rounded treatment-header-wrapper-active" data-tab="#treatment-direction-grid-wrapper" type="button">
 				<span>Направления</span>
 			</button>
 		</div>
@@ -112,34 +96,26 @@ $this->widget("Modal", [
 				</span>
 			</button>
 		</div>
-		<div class="col-xs-4 no-padding">
-			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="modal" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
+		<div class="col-xs-4 no-padding treatment-center-block">
+			<button id="header-register-direction-button" class="btn btn-default btn-block treatment-header-rounded" type="button" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
 				<span>Создать направление</span>
 			</button>
 		</div>
 	</div>
-	<div class="treatment-table-wrapper">
+	<div class="treatment-table-wrapper table-wrapper">
 		<hr>
 		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget("DatePanel", [
+			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на анализ",
-				"body" => $this->createWidget("DirectionTable", [
-					"searchCriteria" => "status <> 4"
-				])
+				"body" => $this->createWidget("DirectionTableTreatment"),
+				"status" => LDirection::STATUS_TREATMENT_ROOM
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget("DatePanel", [
+			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на повторный забор образца",
-				"body" => $this->createWidget("DirectionTable", [
-					"searchCriteria" => "status = 4",
-					"controls" => [
-						"direction-restore-icon" => [
-							"class" => "glyphicon glyphicon-arrow-left",
-							"tooltip" => "Отменить"
-						]
-					]
-				])
+				"body" => $this->createWidget("DirectionTableTreatmentRepeat"),
+				"status" => LDirection::STATUS_TREATMENT_REPEAT
 			]) ?>
 		</div>
 	</div>
@@ -151,3 +127,10 @@ $this->widget("Modal", [
 		"collapsible" => false
 	]) ?>
 </div>
+<script>
+$(document).ready(function() {
+	$(document).on("barcode.captured", function(e, p) {
+		Laboratory_DirectionTable_Widget.show(p.barcode);
+	});
+});
+</script>

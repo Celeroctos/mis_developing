@@ -33,7 +33,31 @@ button.panel-control-button:not(:last-child) {
     margin-right: 0;
 }
 
+.panel-content {
+    text-align: left;
+}
+
 .panel-title-collapsible {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.panel-title-checkbox {
+    margin-right: 7px !important;
+    margin-top: -3px !important;
+    width: 15px;
+    height: 15px;
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+
+.panel-heading-narrow {
+    padding: 7px 10px;
+}
+
+.panel-title-checkbox ~ label {
+    font-weight: normal;
     text-decoration: underline;
     cursor: pointer;
 }

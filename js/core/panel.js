@@ -49,11 +49,9 @@ var Core = Core || {};
 		} else {
 			refresh.rotate(360, 500, "swing");
 		}
-		this.selector().trigger("panel.update");
 	};
 
 	Panel.prototype.after = function() {
-		this.selector().trigger("panel.updated");
 		this.selector().loading("destroy");
 	};
 
@@ -63,12 +61,15 @@ var Core = Core || {};
 		});
 	};
 
-	Panel.prototype.update = function() {
+	Panel.prototype.update = function(success) {
 		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
 			return void 0;
 		} else if (!Core.Common.getWidget()) {
 			throw new Error("Layout hasn't declared [doc::widget] field via [Widget::createUrl] method");
+		}
+		if (this.selector().trigger("panel.update") === false) {
+			return void 0;
 		}
 		this.before();
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
@@ -83,6 +84,8 @@ var Core = Core || {};
 			} else {
 				$(json["message"]).message();
 			}
+			me.selector().trigger("panel.updated");
+			success && success.call(me, json);
 		}, "json").always(function() {
 			me.after();
 		});

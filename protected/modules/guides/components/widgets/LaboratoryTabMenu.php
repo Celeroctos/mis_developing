@@ -7,7 +7,7 @@ class LaboratoryTabMenu extends CWidget {
 			"label" => "Типы анализов",
 			"privilege" => "guideEditAnalysisType"
 		],
-		"analysisTypeParameter" => [
+		"analysisParameter" => [
 			"label" => "Параметры анализов",
 			"privilege" => "guideEditAnalysisType"
 		],
@@ -17,6 +17,10 @@ class LaboratoryTabMenu extends CWidget {
 		],
 		"analyzerType" => [
 			"label" => "Типы анализаторов",
+			"privilege" => "guideEditAnalyzerType"
+		],
+		"analyzer" => [
+			"label" => "Анализаторы",
 			"privilege" => "guideEditAnalyzerType"
 		],
 		"doctor" => [
@@ -55,6 +59,13 @@ class LaboratoryTabMenu extends CWidget {
 	 */
     public function run() {
         $controller = strtolower($this->controller->getId());
+		# Fix for bootstrap tab double border. Hot! Hot! Hot!
+		print CHtml::tag("style", [], <<< CSS
+.nav-tabs > li > a {
+	  border: none;
+}
+CSS
+);
 		foreach ($this->list as $key => &$config) {
 			if (!isset($config["clef"])) {
 				continue;
@@ -75,6 +86,9 @@ class LaboratoryTabMenu extends CWidget {
 							"label" => $config["label"],
 							"type" => "multiple",
 							"value" => json_encode($values),
+							"options" => [
+								"data-cleanup" => "false"
+							],
 							"table" => $config["clef"],
 						]
 					]),

@@ -33,6 +33,6 @@ class RaceField extends DropDown {
 	 * @return String - Label
 	 */
 	public function name() {
-		return "Раса";
+		return "Расовая принадлежность";
 	}
 }

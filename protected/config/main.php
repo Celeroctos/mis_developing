@@ -116,6 +116,8 @@ return array(
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
+				'application.vendor.barcodegen.*',
+				'application.vendor.barcodegen.drawer.*',
             )
         )
 	),
@@ -156,6 +158,10 @@ return array(
 					'header' => '',
 					'selectedPageCssClass' => 'active',
 				],
+				'CButtonColumn' => [
+					'deleteConfirmation' => false,
+					'deleteButtonUrl' => false
+				]
 			],
 		],
         'clientScript' => array(

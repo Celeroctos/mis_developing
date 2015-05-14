@@ -2,10 +2,24 @@
 
 class LaboratoryController extends Controller2 {
 
-	public function actionRegister() {
-		print json_encode([
-			"model" => $this->getFormModel("model", "post"),
-			"status" => true
+	public function actionView() {
+		$analyzers = Analyzer::model()->listTabs([
+			"label" => "Все направления",
+			"icon" => "glyphicon glyphicon-list",
+			"active" => "true"
+		]);
+		if (count($analyzers) == 0) {
+			$analyzers += [
+				"empty" => [
+					"label" => "Нет доступных анализаторов",
+					"disabled" => "true"
+				]
+			];
+		}
+		return $this->render("view", [
+			"analyzers" => $analyzers,
+			"total" => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
+			"ready" => LDirection::model()->getCountOf(LDirection::STATUS_READY),
 		]);
 	}
 

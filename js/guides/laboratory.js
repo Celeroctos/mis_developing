@@ -10,7 +10,7 @@ var GuideGridView = {
 		};
 		$("#register-guide-modal").on("show.bs.modal", function() {
 			Core.resetFormErrors($(this));
-			Core.Common.cleanup($(this));
+			$(this).cleanup();
 		});
 		var me = this;
 		$("#register-guide-modal #register-button").click(function() {
@@ -67,6 +67,7 @@ var GuideGridView = {
 			});
 		}).on("show.bs.modal", function() {
 			$(this).find("select[multiple]").each(function(i, s) {
+				console.log($(s).data("clef-keys"));
 				$(s).multiple("clear").multiple("choose", $(s).data("clef-keys"));
 			});
 		});
@@ -145,5 +146,6 @@ var GuideGridView = {
 };
 
 $(document).ready(function() {
+	Core.prepareMultiple();
 	GuideGridView.ready();
 });

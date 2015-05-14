@@ -38,20 +38,20 @@ abstract class DropDown extends Field {
 	 * @return array - Array with drop down list
 	 */
 	public function getData($key = null) {
-		if ($this->data == null) {
-			$this->data = $this->data();
+		if ($this->_data == null) {
+			$this->_data = $this->data();
 		}
 		if ($key !== null) {
-			if (isset($this->data[$key])) {
-				return $this->data[$key];
+			if (isset($this->_data[$key])) {
+				return $this->_data[$key];
 			} else {
 				return null;
 			}
 		}
-		return $this->data;
+		return $this->_data;
 	}
 
-	private $data = null;
+	private $_data = null;
 
 	/**
 	 * @param CActiveForm $form
@@ -83,11 +83,17 @@ abstract class DropDown extends Field {
 		if (!$this->isBoolean() && !isset($data[-1])) {
 			$data = [ -1 => "Нет" ] + $data;
 		}
-		return $form->dropDownList($model, $this->getKey(), $data, [
+		if (isset($this->options["value"])) {
+			$value = $this->options["value"];
+			unset($this->options["value"]);
+		} else {
+			$value = $this->value;
+		}
+		return $form->dropDownList($model, $this->getKey(), $data, $this->options + [
 			'placeholder' => $this->getLabel(),
 			'id' => $this->getKey(),
 			'class' => 'form-control',
-			'options' => [ $this->getValue() => [ 'selected' => true ] ]
+			'options' => [ $value => [ 'selected' => true ] ]
 		]);
 	}
 

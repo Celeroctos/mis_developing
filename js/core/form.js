@@ -107,7 +107,7 @@ var Core = Core || {};
             });
         }
         var me = this;
-        $.post(this.property("url"), form.serialize(), function(json) {
+        return $.post(this.property("url"), form.serialize(), function(json) {
             me.after();
             if (!json["status"]) {
                 callback && callback.call(me.selector(), false);
@@ -132,8 +132,6 @@ var Core = Core || {};
 			});
 			callback && callback.call(me.selector(), false, arguments[2]);
 		});
-        form.serialize();
-		return void 0;
     };
 
 	Core.createPlugin("form", function(selector, properties) {

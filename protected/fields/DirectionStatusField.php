@@ -13,10 +13,10 @@ class DirectionStatusField extends DropDown {
 	 */
 	public function data() {
 		return [
-			LDirection::STATUS_JUST_CREATED => "Новое",
-			LDirection::STATUS_SAMPLE_DONE => "Произведен забор образца",
-			LDirection::STATUS_ANALYSIS_DONE => "Проведён анализ",
-			LDirection::STATUS_SAMPLE_REPEAT => "Повторный забор образца"
+			LDirection::STATUS_TREATMENT_ROOM => "Находится в процедурном кабинет",
+			LDirection::STATUS_LABORATORY => "Находится в лаборатории",
+			LDirection::STATUS_READY => "Анализ завершен",
+			LDirection::STATUS_TREATMENT_REPEAT => "Отправено на повторный забор образца"
 		];
 	}
 

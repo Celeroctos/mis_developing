@@ -6,7 +6,7 @@
 
 <div class="medcard-search-wrapper">
 	<div class="row">
-		<div class="col-xs-12" onkeydown="if (arguments[0].keyCode == 13) { MedcardSearch.search($(this).parents('.medcard-search-wrapper:eq(0)')); }">
+		<div class="col-xs-12" onkeydown="if (arguments[0].keyCode == 13) { Laboratory_MedcardSearch_Widget.search($(this).parents('.medcard-search-wrapper:eq(0)')); }">
 			<div class="col-xs-5">
 				<h4>Поиск</h4>
 				<br>

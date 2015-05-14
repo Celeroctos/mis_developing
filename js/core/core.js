@@ -131,7 +131,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute());
+		this.selector().data(this.getDataAttribute(), false);
     };
 
     /**
@@ -190,7 +190,7 @@ var Core = Core || {};
 			.removeClass("has-error")
 			.removeClass("has-warning")
 			.removeClass("has-success");
-		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
+		$(component).find("select:not([multiple])[data-cleanup!='false']").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
 		var filters = [ "input[type!='button'][type!='submit']", "textarea", "select[multiple]" ];
@@ -244,6 +244,35 @@ var Core = Core || {};
 			message: json["message"] + html.html(),
 			delay: 10000
 		});
+	};
+
+	var sendAjax = function(method, href, data, success) {
+		return $[method](url(href), data, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					message: json["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			success && success(json);
+		}, "json").fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.sendQuery = function(href, data, success) {
+		return sendAjax("get", href, data, success);
+	};
+
+	Core.sendPost = function(href, data, success) {
+		return sendAjax("post", href, data, success);
 	};
 
 	Core.resetFormErrors = function(where) {
@@ -322,9 +351,9 @@ var Core = Core || {};
 					return r;
 				}
 			} else {
-				if (me.data(attr) != void 0) {
+				/* if (!!me.data(attr)) {
 					return void 0;
-				}
+				} */
 				if (typeof me != "function") {
 					if (me.length) {
 						s = me[0];

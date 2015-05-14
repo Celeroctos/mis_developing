@@ -35,6 +35,14 @@ abstract class ActiveRecord extends CActiveRecord {
 		return $self;
 	}
 
+	public static function load($data = []) {
+		$self = new static();
+		foreach ($data as $key => $value) {
+			$self->$key = $value;
+		}
+		return $self;
+	}
+
 	/**
 	 * This method is invoked after saving a record successfully.
 	 * The default implementation raises the {@link onAfterSave} event.

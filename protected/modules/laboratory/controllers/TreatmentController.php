@@ -7,8 +7,12 @@ class TreatmentController extends Controller2 {
 	 */
 	public function actionView() {
 		$this->render("view", [
-			"directionRepeats" => LDirection::model()->getCountOfRepeats()
+			"directionRepeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT)
 		]);
+	}
+
+	public function actionGuide() {
+		$this->render("guide");
 	}
 
 	/**

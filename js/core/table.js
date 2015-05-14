@@ -22,8 +22,16 @@ var Core = Core || {};
 		}, parameters || {});
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
-			if (!Message.display(json)) {
-				return void 0;
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					type: "success",
+					sign: "ok",
+					message: json["message"]
+				});
 			}
 			me.after();
 			me.selector().replaceWith(
@@ -37,7 +45,7 @@ var Core = Core || {};
 	Table.prototype.before = function() {
 		var me = this;
 		setTimeout(function() {
-			me.selector().loading();
+			me.selector().loading("render");
 		}, this.property("updateDelay"));
 		this.selector().trigger("table.update");
 	};
@@ -53,6 +61,9 @@ var Core = Core || {};
 		this.property("searchCriteria", condition);
 		this.update();
 	};
+
+	// dtctksqikzgybr
+	// веселыйшляпник
 
 	Table.prototype.fetch = function(properties) {
 		for (var key in properties) {
