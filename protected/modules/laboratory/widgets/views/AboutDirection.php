@@ -106,7 +106,8 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 <hr>
 <div class="col-xs-12 text-center">
 	<button id="send-to-laboratory-button" class="btn btn-default">
-		<?php if ($direction->status == LDirection::STATUS_TREATMENT_ROOM): ?>
+		<?php if ($direction->status == LDirection::STATUS_TREATMENT_ROOM ||
+			$direction->status == LDirection::STATUS_TREATMENT_REPEAT): ?>
 			<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
 		<?php else: ?>
 			<span class="glyphicon glyphicon-save"></span> Сохранить

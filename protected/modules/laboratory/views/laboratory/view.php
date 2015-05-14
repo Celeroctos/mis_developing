@@ -46,7 +46,14 @@ $this->widget("Modal", [
 			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>">
 				<?php $this->widget("DirectionPanel", [
 					"title" => "Все направления на анализ",
-					"body" => $this->createWidget("DirectionTableLaboratory"),
+					"body" => $this->createWidget("DirectionTableLaboratory", [
+						"controls" => [
+							"direction-show-icon" => [
+								"icon" => "glyphicon glyphicon-list",
+								"label" => "Открыть направление"
+							],
+						]
+					]),
 					"status" => LDirection::STATUS_LABORATORY
 				]) ?>
 			</div>
@@ -58,8 +65,7 @@ $this->widget("Modal", [
 						"body" => $this->createWidget("DirectionTableLaboratory", [
 							"analyzerType" => $analyzer["data-type"]
 						]),
-						"status" => LDirection::STATUS_LABORATORY,
-						"upgradeable" => false
+						"status" => LDirection::STATUS_LABORATORY
 					]) ?>
 				</div>
 				<div class="col-xs-6">

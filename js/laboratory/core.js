@@ -281,8 +281,10 @@ var Laboratory_DirectionTable_Widget = {
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
 		});
-		$("#treatment-direction-grid-wrapper").on("dblclick", "tr[data-id]", function () {
-			me.show($(this).attr("data-id"));
+		$(document).on("dblclick", "table > tbody > tr[data-id]", function () {
+			if ($(this).parents("table:eq(0)").find(".direction-show-icon").length > 0) {
+				me.show($(this).attr("data-id"));
+			}
 		});
 		$(".panel-date-button").each(function (i, p) {
 			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");

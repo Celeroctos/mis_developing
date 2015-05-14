@@ -17,12 +17,28 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(".analyzer-queue-clear-button").click(function() {
 			me.clear();
 		});
+		var panels = {};
+		$(".panel").on("panel.update", function() {
+			var list = [];
+			$(this).find("tr[data-id]").each(function(i, tr) {
+				if ($(tr).data("core-loading")) {
+					list.push($(tr).attr("data-id"));
+				}
+			});
+			panels[$(this).attr("id")] = list;
+		});
+		$(".panel").on("panel.updated", function() {
+			for (var i in panels) {
+				for (var j in panels[i]) {
+					$("#" + i).find("tr[data-id='"+ panels[i][j] +"']");
+				}
+			}
+		});
 	},
 	clear: function() {
 		var me = this,
 			container = $(".laboratory-tab-container:visible .analyzer-queue-container");
 		container.find("tr[data-id]").each(function(i, tr) {
-			console.log($(tr).attr("data-id"));
 			me.unlock($(tr).attr("data-id"));
 		});
 		container.empty();
@@ -40,7 +56,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 		var container = $(".laboratory-tab-container:visible .analyzer-queue-container")
 			.sortable({
 			/* sortable config */
-			}).append(tr);
+			});
+		if (container.find("tr[data-id='"+ tr.attr("data-id") +"']").length > 0) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ tr.attr("data-id") +") уже стоит в очереди на анализ"
+			});
+		} else {
+			container.append(tr);
+		}
 		container.parent().children("h3").remove();
 	},
 	createDraggable: function() {
@@ -64,29 +87,9 @@ var Laboratory_AnalyzerQueue_Widget = {
 			appendTo: "body"
 		});
 	},
-	getQueue: function(id) {
-		if (!this.queue.hasOwnProperty(id)) {
-			return this.queue[id] = new AnalyzerQueueManager(
-				this.getContainer(id)
-			);
-		} else {
-			return this.queue[id];
-		}
-	},
-	getContainer: function(id) {
-		var tab = $(".analyzer-task-menu-item > a[data-id='"+ id +"'][data-tab]");
-		if (!tab.length) {
-			throw new Error("Unresolved tab identification number ("+ id +")");
-		}
-		var pane = $("#" + tab.attr("data-tab"));
-		if (!pane.length) {
-			throw new Error("Unresolved tab pane identification number ("+ tab.attr("data-tab") +")");
-		}
-		return pane.find(".analyzer-queue-container:eq(0)");
-	},
 	lock: function(id) {
-		$(".laboratory-tab-container:not(:first) table > tbody > tr[data-id='"+ id +"']")
-			.loading({
+		$(".laboratory-tab-container:not(:first) table:not(.analyzer-queue-container) > tbody > tr[data-id='"+ id +"']")
+			.loading("reset").loading({
 				image: url("images/locked59.png"),
 				width: 15,
 				height: 15,
@@ -97,7 +100,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy");
 	},
 	send: function(id) {
-		var tr = $("#laboratory-direction-table > tbody tr[data-id='"+ id +"']");
+		var tr = $(".table:not(:first):visible[id='laboratory-direction-table'] > tbody > tr[data-id='"+ id +"']");
 		if (!tr.length) {
 			return Core.createMessage({
 				message: "Направление с номером ("+ id +") не направлялось в лабораторию"
@@ -109,7 +112,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}
 		this.drop(tr);
 	},
-	queue: {}
+	panels: {}
 };
 
 var Laboratory_Analyzer_TabMenu = {
