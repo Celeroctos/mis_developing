@@ -42,11 +42,11 @@ var Core = Core || {};
 		});
 	};
 
-	Table.prototype.before = function() {
+	Table.prototype.before = function(delay) {
 		var me = this;
 		setTimeout(function() {
 			me.selector().loading("render");
-		}, this.property("updateDelay"));
+		}, delay || this.property("updateDelay"));
 		this.selector().trigger("table.update");
 	};
 

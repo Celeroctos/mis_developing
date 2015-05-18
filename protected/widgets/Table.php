@@ -409,7 +409,7 @@ class Table extends Widget {
 		if (is_array($this->controls) && !empty($this->controls)) {
 			print CHtml::tag("td", [
 				"align" => "middle",
-				"style" => "width: 50px"
+				"style" => "width: 90px"
 			]);
 		}
 		print CHtml::closeTag("tr");
@@ -461,7 +461,7 @@ class Table extends Widget {
 	 * or search
 	 */
 	public function renderFooter() {
-		if ($this->emptyData !== false) {
+		if ($this->emptyData !== false || $this->pageLimit == -1) {
 			return ;
 		}
 		print CHtml::openTag("tr", [

@@ -499,6 +499,25 @@ class DirectionController extends Controller2 {
 		}
 	}
 
+	public function actionTest() {
+		try {
+			if (!$id = Yii::app()->getRequest()->getQuery("id")) {
+				throw new CException("Test action requires direction identification number");
+			} else if (!$direction = LDirection::model()->findByAttributes([ "id" => $id ])) {
+				throw new CHttpException(404, "Направление с номером ($id) не зарегистрировано в системе");
+			} else {
+				$status = Yii::app()->getRequest()->getQuery("status", LDirection::STATUS_LABORATORY);
+			}
+			if ($direction->{"status"} != $status) {
+				$this->error("Направление с номером ($id) не отправлялось в лабораторию");
+			} else {
+				$this->leave();
+			}
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
 	/**
      * Override that method to return controller's model
      * @return ActiveRecord - Controller's model instance

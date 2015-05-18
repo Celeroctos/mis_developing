@@ -16,7 +16,7 @@ $this->widget("Modal", [
 		]
 	],
 	"id" => "treatment-about-direction-modal"
-]); ?>
+]) ?>
 <script type="text/javascript" src="<?= Yii::app()->createUrl("js/laboratory/laboratory.js") ?>"></script>
 <div class="treatment-header-wrapper row">
 	<div class="treatment-header">
@@ -61,7 +61,9 @@ $this->widget("Modal", [
 			<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>" style="display: none;">
 				<div class="col-xs-6">
 					<?php $this->widget("DirectionPanel", [
-						"title" => "Направления на анализ",
+						"title" => "Направления для (".CHtml::tag("b", [
+								"style" => "font-size: 14px"
+							], $analyzer["label"]).")",
 						"body" => $this->createWidget("DirectionTableLaboratory", [
 							"analyzerType" => $analyzer["data-type"]
 						]),

@@ -511,7 +511,7 @@ abstract class Controller2 extends Controller {
      * Leave script execution and print server's response
      * @param $parameters array - Array with parameters to return
      */
-    public function leave(array $parameters) {
+    public function leave(array $parameters = []) {
         if (!isset($parameters["status"])) {
             $parameters["status"] = true;
         }
@@ -527,6 +527,13 @@ abstract class Controller2 extends Controller {
 	 * @throws Exception - It will be thrown for not ajax requests
 	 */
     public function exception($exception) {
+		if ($exception instanceof CHttpException) {
+			if (Yii::app()->getRequest()->getIsAjaxRequest()) {
+				$this->error($exception->getMessage());
+			} else {
+				throw $exception;
+			}
+		}
         $method = $exception->getTrace()[0];
 		if (!Yii::app()->getRequest()->getIsAjaxRequest() || true) {
 			throw $exception;

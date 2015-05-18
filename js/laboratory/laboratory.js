@@ -35,16 +35,21 @@ var Laboratory_AnalyzerQueue_Widget = {
 			}
 		});
 	},
+	remove: function(id) {
+		var container = $(".laboratory-tab-container:visible .analyzer-queue-container");
+		this.unlock(id);
+		container.find("tr[data-id='"+ id +"']").remove();
+		if (!container.find("tr[data-id]").length) {
+			$(".laboratory-tab-container:visible > div:eq(1) .panel-content").append(
+				"<h3 class=\"text-center\">Пусто</h3>"
+			).children("h3:not(:first)").remove();
+		}
+	},
 	clear: function() {
-		var me = this,
-			container = $(".laboratory-tab-container:visible .analyzer-queue-container");
-		container.find("tr[data-id]").each(function(i, tr) {
-			me.unlock($(tr).attr("data-id"));
+		var me = this;
+		$(".laboratory-tab-container:visible .analyzer-queue-container").find("tr[data-id]").each(function(i, tr) {
+			me.remove($(tr).attr("data-id"));
 		});
-		container.empty();
-		$(".laboratory-tab-container:visible > div:eq(1) .panel-content").append(
-			"<h3 class=\"text-center\">Пусто</h3>"
-		).children("h3:not(:first)").remove();
 	},
 	drop: function(item) {
 		if (!item.parent().is("tbody")) {
@@ -52,7 +57,16 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}
 		var tr = item.clone(false);
 		this.lock(tr.attr("data-id"));
-		tr.find("td:last").remove();
+		tr.find("td:last").replaceWith(
+			$("<td>", {
+				"width": "15px"
+			}).append($("<span>", {
+				"class": "glyphicon glyphicon-remove panel-control-button direction-remove-icon",
+				"data-original-title": "Удалить",
+				"onmouseenter": "$(this).tooltip('show')",
+				"data-placement": "left"
+			}))
+		);
 		var container = $(".laboratory-tab-container:visible .analyzer-queue-container")
 			.sortable({
 			/* sortable config */
@@ -124,7 +138,16 @@ var Laboratory_Analyzer_TabMenu = {
 			$(this).addClass("active");
 			$(".laboratory-tab-container").hide();
 			$("#" + $(this).children().attr("data-tab")).show();
+			if ($(this).children("a").attr("data-id")) {
+				window.location.hash = $(this).children("a").attr("data-id");
+			} else {
+				window.location.hash = "";
+			}
 		});
+		if (/^#\d$/.test(window.location.hash || "")) {
+			var a = menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']");
+			a.parent("li").trigger("click");
+		}
 	}
 };
 
@@ -134,16 +157,26 @@ $(document).ready(function() {
 	Laboratory_Analyzer_TabMenu.ready();
 
 	$(document).on("barcode.captured", function(e, p) {
-		var tr = $("#laboratory-direction-table").find("tr[data-id='"+ p.barcode +"']");
-		if (!tr.length) {
-			setTimeout(function() {
+		var table = $("#laboratory-direction-table").table("before", 1);
+		$.get(url("laboratory/direction/test"), {
+			id: p.barcode, status: 2 /* LDirection::STATUS_LABORATORY */
+		}, function(response) {
+			if (!response["status"]) {
+				Core.createMessage({
+					message: response["message"]
+				});
 				Laboratory_DirectionTable_Widget.show(p.barcode);
-			}, 1000);
-			return Core.createMessage({
-				message: "Направление с номером ("+ p.barcode +") не направлялось в лабораторию",
-				delay: 5000
-			});
-		}
-		Laboratory_AnalyzerQueue_Widget.send(p.barcode);
+				return void 0;
+			} else if (response["message"]) {
+				return Core.createMessage({
+					message: response["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			Laboratory_AnalyzerQueue_Widget.send(p.barcode);
+		}, "json").always(function() {
+			table.table("after");
+		});
 	});
 });

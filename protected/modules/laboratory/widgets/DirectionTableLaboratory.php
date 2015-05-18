@@ -31,7 +31,7 @@ class DirectionTableLaboratory extends Table {
 	public $id = "laboratory-direction-table";
 	public $textNoData = "На этот день нет направлений";
 	public $orderBy = "id desc";
-	public $pageLimit = 25;
+	public $pageLimit = -1;
 	public $analyzerType = null;
 
 	public function init() {

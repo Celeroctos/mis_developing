@@ -280,6 +280,10 @@ var Laboratory_DirectionTable_Widget = {
 			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.send(
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
+		}).on("click", ".direction-remove-icon", function() {
+			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.remove(
+				$(this).parents("tr:eq(0)").attr("data-id")
+			);
 		});
 		$(document).on("dblclick", "table > tbody > tr[data-id]", function () {
 			if ($(this).parents("table:eq(0)").find(".direction-show-icon").length > 0) {
