@@ -185,6 +185,31 @@ var Laboratory_Analyzer_TabMenu = {
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
 			activate();
 		});
+		var fetch = function() {
+			var menu = $("#analyzer-tab-menu");
+			/* We must lock table and panel update to fetch extra tab information */
+			$.ajax({
+				url: url("laboratory/laboratory/tabs"),
+				async: false,
+				dataType: "json"
+			}).done(function(response) {
+				if (!response["status"]) {
+					return Core.createMessage({
+						message: response["message"]
+					});
+				}
+				var dirs = response["result"];
+				for (var i in dirs) {
+					menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
+				}
+			});
+		};
+		$(".panel").on("panel.update", function() {
+			fetch();
+		});
+		$(document).on("table.update", "#laboratory-direction-table", function() {
+			fetch();
+		});
 	}
 };
 

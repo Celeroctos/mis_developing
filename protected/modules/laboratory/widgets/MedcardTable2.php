@@ -2,6 +2,9 @@
 
 class MedcardTable2 extends MedcardTable {
 
+	public $primaryKey = "card_number";
+	public $orderBy = "card_number";
+
 	/**
 	 * Initialize medcard table for MIS
 	 */

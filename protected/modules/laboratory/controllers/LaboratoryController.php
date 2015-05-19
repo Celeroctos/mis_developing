@@ -3,20 +3,42 @@
 class LaboratoryController extends Controller2 {
 
 	public function actionView() {
-		$analyzers = Analyzer::model()->listTabs();
-		if (count($analyzers) == 0) {
-			$analyzers += [
-				"empty" => [
-					"label" => "Нет доступных анализаторов",
-					"disabled" => "true"
-				]
-			];
-		}
 		return $this->render("view", [
-			"analyzers" => $analyzers,
+			"analyzers" => $this->getAnalyzerTabs(),
 			"total" => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
 			"ready" => LDirection::model()->getCountOf(LDirection::STATUS_READY),
 		]);
+	}
+
+	public function actionTabs() {
+		try {
+			$analyzers = $this->getAnalyzerTabs();
+			$result = [];
+			foreach ($analyzers as $i => $analyzer) {
+				$result[] = [
+					"id" => $analyzer["data-id"],
+					"directions" => $analyzer["data-directions"]
+				];
+			}
+			$this->leave([
+				"result" => $result
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function getAnalyzerTabs() {
+		$analyzers = Analyzer::model()->listTabs();
+		if (count($analyzers) != 0) {
+			return $analyzers;
+		};
+		return $analyzers + [
+			"empty" => [
+				"label" => "Нет доступных анализаторов",
+				"disabled" => "true"
+			]
+		];
 	}
 
 	/**

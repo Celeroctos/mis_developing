@@ -58,7 +58,9 @@ var Core = Core || {};
 	Table.prototype.before = function(delay) {
 		var me = this;
 		setTimeout(function() {
-			me.selector().loading("render");
+			if (!me.selector().data("core-loading")) {
+				me.selector().loading("render");
+			}
 		}, delay || this.property("updateDelay"));
 	};
 

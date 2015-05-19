@@ -43,6 +43,9 @@ var Core = Core || {};
 	};
 
 	Panel.prototype.before = function() {
+		if (this.selector().data("core-loading")) {
+			return void 0;
+		}
 		var refresh = this.selector().loading("render").find(".panel-update-button");
 		if (refresh[0].tagName != "SPAN") {
 			refresh.children(".glyphicon").rotate(360, 500, "swing");
