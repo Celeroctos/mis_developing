@@ -34,14 +34,14 @@ $this->widget("Modal", [
 		<td>Недоступно для этого типа анализаторов</td>
 	</tr>
 	<tr>
-		<td class="success" width="100"></td>
+		<td class="warning" width="100"></td>
 		<td>Анализ завершен</td>
 	</tr>
 	<tr>
 		<td class="default" width="100" align="middle">
 			<img src="/images/locked59.png" style="height: 15px; width: 15px;">
 		</td>
-		<td>Направление уже отправлено на анализатор</td>
+		<td>Уже отправлено на анализатор</td>
 	</tr>
 	</tbody>
 </table>
@@ -76,16 +76,17 @@ $this->widget("Modal", [
 					"title" => "Все направления на анализ",
 					"body" => $this->createWidget("DirectionTableLaboratory", [
 						"controls" => [
-							"direction-show-icon" => [
+							/* "direction-show-icon" => [
 								"icon" => "glyphicon glyphicon-list",
 								"label" => "Открыть направление"
-							],
+							], */
 							"direction-send-icon" => [
 								"icon" => "glyphicon glyphicon-arrow-right",
 								"label" => "Отправить на анализатор"
 							]
 						]
 					]),
+					"panelClass" => "panel panel-default no-select",
 					"status" => LDirection::STATUS_LABORATORY
 				]) ?>
 			</div>
@@ -111,8 +112,8 @@ $this->widget("Modal", [
 					]),
 					"body" => CHtml::tag("h3", [
 						"class" => "text-center"
-					], "Пусто") . CHtml::tag("table", [
-							"class" => "table table-striped table-bordered analyzer-queue-container"
+					], "Пусто") . CHtml::tag("ul", [
+							"class" => "nav nav-pills nav-stacked analyzer-queue-container"
 						], ""),
 					"controls" => [
 						"analyzer-queue-clear-button" => [
@@ -156,3 +157,4 @@ $this->widget("Modal", [
 		</div>
 	</div>
 </div>
+<span class="glyphicon glyphicon-arrow-right laboratory-tr-pointer" style="display: none"></span>

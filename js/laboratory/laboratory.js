@@ -22,14 +22,15 @@ var Laboratory_AnalyzerQueue_Widget = {
 		this.createDraggable();
 	},
 	remove: function(id) {
-		var container = $(".laboratory-tab-container:visible .analyzer-queue-container");
-		this.unlock(id);
-		container.find("tr[data-id='"+ id +"']").remove();
-		if (!container.find("tr[data-id]").length) {
+		var container = $(".analyzer-queue-container:visible");
+		container.children("li[data-id='"+ id +"']").trigger("mouseleave").remove();
+		if (!container.children("li").length) {
 			$(".laboratory-tab-container:visible .panel-content").append(
 				"<h3 class=\"text-center\">Пусто</h3>"
 			).children("h3:not(:first)").remove();
 		}
+		this.unlock(id);
+		this.calculateIndexes(container);
 	},
 	clear: function() {
 		var me = this;
@@ -37,41 +38,80 @@ var Laboratory_AnalyzerQueue_Widget = {
 			me.remove($(tr).attr("data-id"));
 		});
 	},
-	drop: function(item) {
-		if (!item.parent().is("tbody")) {
+	calculateIndexes: function(container) {
+		container = (container || $(".analyzer-queue-container:visible"));
+		var k = 1;
+		container.children("li").each(function(i, li) {
+			$(li).attr("data-index", i).find(".queue-index").text("№ " + (k++));
+		});
+	},
+	drop: function(tr) {
+		var me = this;
+		if (tr.parents(".analyzer-queue-container").length > 0) {
 			return false;
 		}
-		var tr = item.clone(false);
 		this.lock(tr.attr("data-id"));
-		tr.find("td:last").replaceWith(
-			$("<td>", {
-				"width": "15px"
-			}).append($("<span>", {
-				"class": "glyphicon glyphicon-remove panel-control-button direction-remove-icon",
+		var string = tr.children("td:eq(1)").text() + ", В: " +
+			tr.children("td:eq(2)").text() + ", Н: "+
+			tr.children("td:eq(3)").text();
+		var container = $(".analyzer-queue-container:visible"),
+			index = container.children("li").length + 1;
+		var a = $("<a></a>", {
+			"class": "col-xs-12"
+		}).append($("<div></div>", {
+			"class": "col-xs-2 text-left no-padding"
+		}).append($("<b></b>", {
+			"class": "queue-index",
+			"text": "№ " + index
+		})).append($("<span></span>", {
+			/* "class": "glyphicon glyphicon-sort" */
+		}))).append($("<div></div>", {
+			"html": string,
+			"class": "col-xs-8 text-left no-padding"
+		})).append($("<div></div>", {
+			"html": $("<span></span>", {
+				"class": "glyphicon glyphicon-remove",
 				"data-original-title": "Удалить",
 				"onmouseenter": "$(this).tooltip('show')",
-				"data-placement": "left"
-			}))
-		);
-		var container = $(".laboratory-tab-container:visible .analyzer-queue-container")
-			.sortable({
-			/* sortable config */
-			});
-		if (container.find("tr[data-id='"+ tr.attr("data-id") +"']").length > 0) {
-			return Core.createMessage({
-				message: "Направление с номером ("+ tr.attr("data-id") +") уже стоит в очереди на анализ"
-			});
-		} else {
-			container.append(tr);
-		}
+				"data-placement": "right"
+			}).click(function() {
+				me.remove($(this).parents("li:eq(0)").attr("data-id"));
+			}),
+			"class": "col-xs-2 text-right no-padding"
+		}));
+		container.append($("<li></li>", {
+			"data-id": tr.attr("data-id"),
+			"data-index": index,
+			"hover": function() {
+				var tr =$("#laboratory-direction-table")
+					.find("> tbody > tr[data-id='"+ $(this).attr("data-id") +"']");
+				$(".laboratory-tr-pointer").css({
+					"left": tr.position().left - 20,
+					"top": tr.position().top + 205
+				}).show();
+				tr.addClass("success");
+			},
+			"mouseleave": function() {
+				var tr =$("#laboratory-direction-table")
+					.find("> tbody > tr[data-id='"+ $(this).attr("data-id") +"']");
+				$(".laboratory-tr-pointer").hide();
+				tr.removeClass("success");
+			}
+		}).append(a));
 		container.parent().children("h3").remove();
+		container.sortable({
+			appendTo: container,
+			stop: function() {
+				me.calculateIndexes();
+			}
+		}).disableSelection();
 	},
 	createDraggable: function() {
 		try {
-			$("#laboratory-direction-table:visible tbody > tr").draggable("destroy");
+			$("#laboratory-direction-table tbody > tr").draggable("destroy");
 		} catch (ignored) {
 		}
-		$("#laboratory-direction-table:visible tbody > tr").draggable({
+		$("#laboratory-direction-table tbody > tr").draggable({
 			helper: function() {
 				var item = $(this).clone(false).css({
 					"background-color": "whitesmoke",
