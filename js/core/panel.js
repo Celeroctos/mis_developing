@@ -51,8 +51,8 @@ var Core = Core || {};
 		}
 	};
 
-	Panel.prototype.after = function() {
-		this.selector().loading("destroy");
+	Panel.prototype.after = function(success) {
+		this.selector().loading("destroy", success);
 	};
 
 	Panel.prototype.replace = function(component) {
@@ -84,7 +84,19 @@ var Core = Core || {};
 			} else {
 				$(json["message"]).message();
 			}
-			me.selector().trigger("panel.updated");
+			var back;
+			if (me.selector().data("core-loading")) {
+				back = me.selector().data("core-loading").back;
+			} else {
+				back = null;
+			}
+			if (back) {
+				$.when(back).done(function() {
+					me.selector().trigger("panel.updated");
+				});
+			} else {
+				me.selector().trigger("panel.updated");
+			}
 			success && success.call(me, json);
 		}, "json").always(function() {
 			me.after();

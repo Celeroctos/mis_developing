@@ -194,6 +194,8 @@ class Table extends Widget {
 	 */
 	public $optimizedPagination = false;
 
+	public $menuWidth = "90px";
+
 	/**
 	 * Run widget and return just rendered content
 	 * @return string - Just rendered content
@@ -409,7 +411,7 @@ class Table extends Widget {
 		if (is_array($this->controls) && !empty($this->controls)) {
 			print CHtml::tag("td", [
 				"align" => "middle",
-				"style" => "width: 90px"
+				"style" => "width: ".$this->menuWidth
 			]);
 		}
 		print CHtml::closeTag("tr");

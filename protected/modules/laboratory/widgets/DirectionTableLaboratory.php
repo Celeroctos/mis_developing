@@ -28,11 +28,14 @@ class DirectionTableLaboratory extends Table {
 		]
 	];
 
+	public $tableClass = "table table-bordered";
 	public $id = "laboratory-direction-table";
 	public $textNoData = "На этот день нет направлений";
 	public $orderBy = "id desc";
 	public $pageLimit = -1;
 	public $analyzerType = null;
+	public $menuWidth = "50px";
+	public $controlMode = ControlMenu::MODE_MENU;
 
 	public function init() {
 		$this->provider = LDirection::model()->getLaboratoryTableProvider();

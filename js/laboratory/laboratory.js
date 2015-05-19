@@ -1,14 +1,16 @@
 
+const WEAK_LOCK = 1;
+const STRONG_LOCK = 2;
+
 var Laboratory_AnalyzerQueue_Widget = {
 	ready: function() {
 		var me = this;
 		$(".laboratory-table-wrapper .panel:eq(0)").on("panel.updated", function() {
 			me.createDraggable();
 		});
-		$(".laboratory-table-wrapper .table").on("table.updated", function() {
+		$("#laboratory-direction-table").on("table.updated", function() {
 			me.createDraggable();
 		});
-		this.createDraggable();
 		$("#analyzer-task-viewer .panel-body").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
@@ -17,30 +19,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(".analyzer-queue-clear-button").click(function() {
 			me.clear();
 		});
-		var panels = {};
-		$(".panel").on("panel.update", function() {
-			var list = [];
-			$(this).find("tr[data-id]").each(function(i, tr) {
-				if ($(tr).data("core-loading")) {
-					list.push($(tr).attr("data-id"));
-				}
-			});
-			panels[$(this).attr("id")] = list;
-		});
-		$(".panel").on("panel.updated", function() {
-			for (var i in panels) {
-				for (var j in panels[i]) {
-					$("#" + i).find("tr[data-id='"+ panels[i][j] +"']");
-				}
-			}
-		});
+		this.createDraggable();
 	},
 	remove: function(id) {
 		var container = $(".laboratory-tab-container:visible .analyzer-queue-container");
 		this.unlock(id);
 		container.find("tr[data-id='"+ id +"']").remove();
 		if (!container.find("tr[data-id]").length) {
-			$(".laboratory-tab-container:visible > div:eq(1) .panel-content").append(
+			$(".laboratory-tab-container:visible .panel-content").append(
 				"<h3 class=\"text-center\">Пусто</h3>"
 			).children("h3:not(:first)").remove();
 		}
@@ -82,10 +68,10 @@ var Laboratory_AnalyzerQueue_Widget = {
 	},
 	createDraggable: function() {
 		try {
-			$("#laboratory-direction-table tbody > tr").draggable("destroy");
+			$("#laboratory-direction-table:visible tbody > tr").draggable("destroy");
 		} catch (ignored) {
 		}
-		$("#laboratory-direction-table tbody > tr").draggable({
+		$("#laboratory-direction-table:visible tbody > tr").draggable({
 			helper: function() {
 				var item = $(this).clone(false).css({
 					"background-color": "whitesmoke",
@@ -101,17 +87,30 @@ var Laboratory_AnalyzerQueue_Widget = {
 			appendTo: "body"
 		});
 	},
-	lock: function(id) {
-		$(".laboratory-tab-container:not(:first) table:not(.analyzer-queue-container) > tbody > tr[data-id='"+ id +"']")
+	lock: function(id, mode) {
+		mode = mode || STRONG_LOCK;
+		var tr = $("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']")
 			.loading("reset").loading({
-				image: url("images/locked59.png"),
+				image: mode === WEAK_LOCK ? false : url("images/locked59.png"),
 				width: 15,
 				height: 15,
-				depth: 1
+				depth: 1,
+				color: mode === WEAK_LOCK ? "white" : "white",
+				opacity: mode === WEAK_LOCK ? 0.10 : 0.5,
+				fade: false,
+				velocity: 0
 			}).loading("render");
+		if (mode == WEAK_LOCK || this.locked[id] == WEAK_LOCK) {
+			tr.addClass("danger");
+		}
+		this.locked[id] = mode;
+		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */
 	},
 	unlock: function(id) {
-		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy");
+		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy")
+			.removeClass("danger");
+		delete this.locked[id];
+		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */
 	},
 	send: function(id) {
 		var tr = $(".table:not(:first):visible[id='laboratory-direction-table'] > tbody > tr[data-id='"+ id +"']");
@@ -126,13 +125,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}
 		this.drop(tr);
 	},
-	panels: {}
+	panels: {},
+	locked: {}
 };
 
 var Laboratory_Analyzer_TabMenu = {
 	ready: function() {
 		var menu = $("#analyzer-tab-menu"),
-			me = this;
+			directions;
 		menu.find(".analyzer-task-menu-item:not(.disabled)").click(function() {
 			menu.find(".analyzer-task-menu-item.active").removeClass("active");
 			$(this).addClass("active");
@@ -143,11 +143,48 @@ var Laboratory_Analyzer_TabMenu = {
 			} else {
 				window.location.hash = "";
 			}
+			try {
+				directions = $.parseJSON($(this).children("a").attr("data-directions"));
+			} catch (ignored) {
+				directions = [];
+			}
+			var locked = $.extend(true, {}, Laboratory_AnalyzerQueue_Widget.locked);
+			$("#laboratory-direction-table").find("tr[data-id]").each(function(i, tr) {
+				var id = $(tr).attr("data-id");
+				if ($.inArray(+id, directions) == -1) {
+					if (!$(tr).data("core-loading")) {
+						Laboratory_AnalyzerQueue_Widget.lock(id, WEAK_LOCK);
+					} else {
+						$(tr).addClass("danger");
+					}
+				} else {
+					Laboratory_AnalyzerQueue_Widget.unlock(id);
+				}
+			});
+			for (var i in locked) {
+				if (locked[i] != WEAK_LOCK && $.inArray(+i, directions) != -1) {
+					Laboratory_AnalyzerQueue_Widget.lock(i);
+				} else if (locked[i] == STRONG_LOCK && Laboratory_AnalyzerQueue_Widget.locked[i] == WEAK_LOCK) {
+					Laboratory_AnalyzerQueue_Widget.lock(i);
+				}
+			}
 		});
-		if (/^#\d$/.test(window.location.hash || "")) {
-			var a = menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']");
-			a.parent("li").trigger("click");
-		}
+		var activate = function() {
+			if (/^#\d$/.test(window.location.hash || "")) {
+				menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']")
+					.parent("li").trigger("click");
+			} else {
+				menu.find("li:first-child > a[data-id]")
+					.parent("li").trigger("click");
+			}
+		};
+		activate();
+		$(".panel").on("panel.updated", function() {
+			activate();
+		});
+		$(document).on("table.updated", "#laboratory-direction-table", function() {
+			activate();
+		});
 	}
 };
 
@@ -157,7 +194,10 @@ $(document).ready(function() {
 	Laboratory_Analyzer_TabMenu.ready();
 
 	$(document).on("barcode.captured", function(e, p) {
-		var table = $("#laboratory-direction-table").table("before", 1);
+		var table = $("#laboratory-direction-table");
+		if (!table.data("core-loading")) {
+			table.table("before", 1);
+		}
 		$.get(url("laboratory/direction/test"), {
 			id: p.barcode, status: 2 /* LDirection::STATUS_LABORATORY */
 		}, function(response) {
@@ -165,7 +205,6 @@ $(document).ready(function() {
 				Core.createMessage({
 					message: response["message"]
 				});
-				Laboratory_DirectionTable_Widget.show(p.barcode);
 				return void 0;
 			} else if (response["message"]) {
 				return Core.createMessage({
@@ -174,9 +213,40 @@ $(document).ready(function() {
 					sign: "ok"
 				});
 			}
-			Laboratory_AnalyzerQueue_Widget.send(p.barcode);
+			var l = Laboratory_AnalyzerQueue_Widget.locked[p.barcode];
+			if (l == STRONG_LOCK) {
+				return Core.createMessage({
+					message: "Направление уже отправлено на анализатор",
+					type: "warning",
+					delay: 7000
+				});
+			} else if (l == WEAK_LOCK) {
+				return Core.createMessage({
+					message: "Тип анализа направления не доступен для этого анализатора",
+					type: "warning",
+					delay: 7000
+				});
+			} else {
+				Laboratory_AnalyzerQueue_Widget.send(p.barcode);
+			}
 		}, "json").always(function() {
-			table.table("after");
+			if (table.data("core-loading")) {
+				table.table("after");
+			}
 		});
 	});
+
+	/* if (localStorage.getItem("locked") != null) {
+		var locked = localStorage.getItem("locked");
+		try {
+			locked = $.parseJSON(locked);
+			for (var i in locked) {
+				if (locked[i] == STRONG_LOCK) {
+					Laboratory_AnalyzerQueue_Widget.send(i);
+				}
+			}
+			Laboratory_AnalyzerQueue_Widget.locked = locked;
+		} catch (ignore) {
+		}
+	} */
 });
