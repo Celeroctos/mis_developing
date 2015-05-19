@@ -22,24 +22,29 @@ class DirectionTableLaboratory extends Table {
 	];
 
 	public $controls = [
-		"direction-repeat-icon" => [
-			"icon" => "glyphicon glyphicon-repeat",
-			"label" => "Отправить на повторный забор образца"
-		],
-//		"direction-send-icon" => [
-//			"icon" => "glyphicon glyphicon-arrow-right",
-//			"label" => "Отправить на анализатор"
-//		]
+		"direction-send-icon" => [
+			"icon" => "glyphicon glyphicon-arrow-right",
+			"label" => "Отправить на анализатор"
+		]
 	];
 
+	public $tableClass = "table table-bordered";
 	public $id = "laboratory-direction-table";
 	public $textNoData = "На этот день нет направлений";
 	public $orderBy = "id desc";
-	public $pageLimit = 25;
+	public $pageLimit = -1;
 	public $analyzerType = null;
+	public $menuWidth = "50px";
+	public $controlMode = ControlMenu::MODE_MENU;
 
 	public function init() {
 		$this->provider = LDirection::model()->getLaboratoryTableProvider();
+		$this->controls = [
+			"direction-repeat-icon" => [
+				"icon" => "glyphicon glyphicon-repeat",
+				"label" => "Отправить на повторный забор образца"
+			],
+		] + $this->controls;
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
 		}
@@ -59,7 +64,6 @@ class DirectionTableLaboratory extends Table {
 			"directionDates",
 			"header",
 			"textNoData",
-			"controls",
 		], $excepts));
 	}
 }

@@ -417,7 +417,9 @@ class DirectionController extends Controller2 {
 				"sending_date" => $form->{"sending_date"}." ".$form->{"sending_time"}.".000000",
 				"comment" => $form->{"comment"}
 			];
-			if ($direction == LDirection::STATUS_TREATMENT_ROOM) {
+			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
+				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
+			) {
 				$parameters += [
 					"status" => LDirection::STATUS_LABORATORY
 				];
@@ -447,7 +449,9 @@ class DirectionController extends Controller2 {
 					":d" => $form->{"direction_id"}, ":a" => $id
 				]);
 			}
-			if ($direction == LDirection::STATUS_TREATMENT_ROOM) {
+			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
+				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
+			) {
 				$msg = "Направление успешно отправлено в лабораторию";
 			} else {
 				$msg = "Направление сохранено";
@@ -490,6 +494,25 @@ class DirectionController extends Controller2 {
 					"criteria" => $criteria
 				])
 			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function actionTest() {
+		try {
+			if (!$id = Yii::app()->getRequest()->getQuery("id")) {
+				throw new CException("Test action requires direction identification number");
+			} else if (!$direction = LDirection::model()->findByAttributes([ "id" => $id ])) {
+				throw new CHttpException(404, "Направление с номером ($id) не зарегистрировано в системе");
+			} else {
+				$status = Yii::app()->getRequest()->getQuery("status", LDirection::STATUS_LABORATORY);
+			}
+			if ($direction->{"status"} != $status) {
+				$this->error("Направление с номером ($id) не отправлялось в лабораторию");
+			} else {
+				$this->leave();
+			}
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

@@ -37,6 +37,8 @@ class TabMenu extends Widget {
 	 */
 	public $special = false;
 
+	public $active = false;
+
 	/**
 	 * Run widget to return just rendered content
 	 */
@@ -88,6 +90,9 @@ class TabMenu extends Widget {
 			}
 			if (isset($item["icon"])) {
 				$label = CHtml::tag("span", [ "class" => $item["icon"] ], "") ."&nbsp;". $label;
+			}
+			if ($this->active !== false && $this->active == $class) {
+				$options["class"] .= " active";
 			}
 			unset($item["label"]);
 			print Html::openTag("li", $options);

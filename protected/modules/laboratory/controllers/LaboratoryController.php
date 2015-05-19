@@ -3,11 +3,7 @@
 class LaboratoryController extends Controller2 {
 
 	public function actionView() {
-		$analyzers = Analyzer::model()->listTabs([
-			"label" => "Все направления",
-			"icon" => "glyphicon glyphicon-list",
-			"active" => "true"
-		]);
+		$analyzers = Analyzer::model()->listTabs();
 		if (count($analyzers) == 0) {
 			$analyzers += [
 				"empty" => [

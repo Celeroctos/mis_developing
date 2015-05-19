@@ -128,9 +128,6 @@
     margin: 0;
 }
 
-.treatment-header {
-}
-
 .treatment-header-rounded {
     /*display: table;*/
     border: 1px #47a347 solid;
@@ -238,9 +235,11 @@
     margin-right: -1px;
 }
 
-.treatment-table-wrapper,
-.laboratory-table-wrapper {
+.treatment-table-wrapper {
     margin-top: 75px;
+}
+.laboratory-table-wrapper {
+    margin-top: 55px;
 }
 
 .treatment-table-wrapper .panel,
@@ -300,15 +299,24 @@
 }
 
 #analyzer-task-viewer .panel-body {
-    padding: 10px;
+    padding: 20px 10px;
 }
 
 #analyzer-task-viewer .panel-body hr {
     margin: 10px;
 }
 
+#analyzer-task-viewer .panel-content {
+    min-height: 76px;
+}
+
+#analyzer-tab-menu {
+    /*margin-top: -20px;*/
+}
+
 .analyzer-task-menu-item {
     border-radius: 5px;
+    margin-top: 15px;
 }
 
 /* Popover hide fix */
@@ -348,8 +356,8 @@
 }
 
 #laboratory-direction-grid-wrapper .panel-content > h3 {
-    margin-top: 20px !important;
-    margin-bottom: 20px !important;
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
 }
 
 .analyzer-task-menu-item:first-child > a {
@@ -380,4 +388,8 @@
 }
 
 .laboratory-tab-container:last-child {
+}
+
+.alert-warning > * {
+    color: #000000;
 }
