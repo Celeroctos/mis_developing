@@ -528,6 +528,9 @@ var Laboratory_DirectionCreator_Modal = {
 				modal.find(".modal-content").loading("reset");
 			});
 		});
+		$("#register-direction-modal").on("show.bs.modal", function() {
+			$(this).find("[name='LDirectionFormEx[analysis_type_id]']").trigger("change");
+		});
 	}
 };
 
@@ -676,7 +679,7 @@ $(document).ready(function() {
 	Laboratory_BarcodeReader.ready();
 
 	// fix for modal window backdrop
-	$(document).on('show.bs.modal', '.modal', function(e) {
+	$(document).on("show.bs.modal", ".modal", function(e) {
 		if (!$(e.target).hasClass("modal")) {
 			return void 0;
 		}
@@ -685,6 +688,8 @@ $(document).ready(function() {
 		setTimeout(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
+	}).on("show.bs.modal", ".modal", function() {
+		$(this).animate({ scrollTop: 0 }, 'slow');
 	});
 
 	$('[data-toggle="popover"]').popover()
