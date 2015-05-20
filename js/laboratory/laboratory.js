@@ -19,6 +19,9 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(".analyzer-queue-clear-button").click(function() {
 			me.clear();
 		});
+		$(".analyzer-queue-start-button").click(function() {
+			me.start();
+		});
 		this.createDraggable();
 	},
 	remove: function(id) {
@@ -34,8 +37,8 @@ var Laboratory_AnalyzerQueue_Widget = {
 	},
 	clear: function() {
 		var me = this;
-		$(".laboratory-tab-container:visible .analyzer-queue-container").find("tr[data-id]").each(function(i, tr) {
-			me.remove($(tr).attr("data-id"));
+		$(".analyzer-queue-container:visible").children("li").each(function(i, li) {
+			me.remove($(li).attr("data-id"));
 		});
 	},
 	calculateIndexes: function(container) {
@@ -165,6 +168,18 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}
 		this.drop(tr);
 	},
+	start: function() {
+		var container = $(".analyzer-queue-container:visible");
+		var table = $("#laboratory-direction-table").parents(".panel")
+			.loading({ image: false }).loading("render");
+		var queue = $(".analyzer-queue-container:visible").parents(".panel")
+			.loading({ image: false }).loading("render");
+		$(".laboratory-clock-wrapper").empty().append($(".clock-container").show());
+		Laboratory_Clock_Loading.ready(2000, 12, function() {
+			table.loading("reset");
+			queue.loading("reset");
+		});
+	},
 	panels: {},
 	locked: {}
 };
@@ -250,6 +265,33 @@ var Laboratory_Analyzer_TabMenu = {
 		$(document).on("table.update", "#laboratory-direction-table", function() {
 			fetch();
 		});
+	}
+};
+
+var Laboratory_Clock_Loading = {
+	ready: function(duration, steps, success) {
+		duration = duration || 2000;
+		steps = steps || 12;
+		var i = 0;
+		var h = function() {
+			if (i >= steps) {
+				success && success();
+				return false;
+			}
+			$(".clock-container > img:eq(2)").rotate(360 / steps * i + 360 / steps, duration / 8, "linear", 360 / steps * i);
+			++i;
+			return true;
+		};
+		var c = function() {
+			$(".clock-container > img:eq(1)").rotate(360, {
+				duration: duration,
+				easing: "linear",
+				complete: function() {
+					if (h()) { c(); }
+				}
+			});
+		};
+		c();
 	}
 };
 

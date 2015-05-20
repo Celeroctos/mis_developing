@@ -27,7 +27,8 @@ class Analyzer extends GActiveRecord {
 				"data-tab" => UniqueGenerator::generate("tab"),
 				"data-id" => $analyzer->{"id"},
 				"data-type" => $analyzer->{"analyzer_type_id"},
-				"data-directions" => htmlspecialchars(json_encode($directions))
+				"data-directions" => htmlspecialchars(json_encode($directions)),
+				"data-time" => $analyzer["working_time"] != null ? $analyzer["working_time"] : 60
 			];
 		}
 		return $items;

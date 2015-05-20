@@ -27,7 +27,7 @@ var Core = Core || {};
 		} else if (!(index = parseInt(this.selector().css("z-index")))) {
 			index = 1;
 		}
-		if (this.property("image")) {
+		if (this.property("image") && (typeof this.property("image") == "string")) {
 			this.image = $("<img>", {
 				css: {
 					"position": "absolute",
@@ -38,6 +38,15 @@ var Core = Core || {};
 					"z-index": index + 1
 				},
 				src: this.property("image")
+			});
+		} else if (this.property("image")) {
+			this.image = this.property("image").css({
+				"position": "absolute",
+				"height": imageHeight,
+				"width": imageWidth,
+				"left": "calc(50% - " + (imageWidth / 2) + "px)",
+				"margin-top": height / 2 - imageHeight / 2,
+				"z-index": index + 1
 			});
 		} else {
 			this.image = $("<div>");
