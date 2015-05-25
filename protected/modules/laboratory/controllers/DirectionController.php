@@ -518,6 +518,30 @@ class DirectionController extends Controller2 {
 		}
 	}
 
+	public function actionCheck() {
+		try {
+			if (!$directions = Yii::app()->getRequest()->getPost("directions")) {
+				$this->leave([ "ready" => [] ]); exit();
+			} else if (!$status = Yii::app()->getRequest()->getPost("status")) {
+				throw new Exception("Check action requires direction status");
+			}
+			$ready = [];
+			foreach ($directions as $pk) {
+				if (!$d = LDirection::model()->findByPk($pk)) {
+					continue;
+				}
+				if ($d->{"status"} == $status) {
+					$ready[] = $pk;
+				}
+			}
+			$this->leave([
+				"ready" => $ready
+			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
 	/**
      * Override that method to return controller's model
      * @return ActiveRecord - Controller's model instance

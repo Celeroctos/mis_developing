@@ -45,7 +45,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		container = (container || $(".analyzer-queue-container:visible"));
 		var k = 1;
 		container.children("li").each(function(i, li) {
-			$(li).attr("data-index", i).find(".queue-index").text("№ " + (k++));
+			$(li).attr("data-index", k).find(".queue-index").text("№ " + (k++));
 		});
 	},
 	drop: function(tr) {
@@ -169,16 +169,68 @@ var Laboratory_AnalyzerQueue_Widget = {
 		this.drop(tr);
 	},
 	start: function() {
+		var me = this;
 		var container = $(".analyzer-queue-container:visible");
-		var table = $("#laboratory-direction-table").parents(".panel")
-			.loading({ image: false }).loading("render");
-		var queue = $(".analyzer-queue-container:visible").parents(".panel")
-			.loading({ image: false }).loading("render");
-		$(".laboratory-clock-wrapper").empty().append($(".clock-container").show());
-		Laboratory_Clock_Loading.ready(2000, 12, function() {
-			table.loading("reset");
-			queue.loading("reset");
+		if (!container.children("li").length) {
+			return Core.createMessage({
+				message: "Не выбраны направления для анализа"
+			});
+		}
+		var panel = container.parents(".panel").loading("render");
+		var time = $(".analyzer-task-menu-item.active > a").attr("data-time");
+		panel.find(".panel-footer > .progress > .progress-bar").animate({
+			width: "100%"
+		}, time * 1, "swing", function() {
+			Core.createMessage({
+				message: "Ожидаем получения данных с сервера ...",
+				sign: "ok",
+				type: "info"
+			});
+			me.await(container);
 		});
+	},
+	await: function(container) {
+		var me = this, done = false;
+		container = container || $(".analyzer-queue-container:visible");
+		var t = function() {
+			var directions = [];
+			container.children("li:not(.active)").each(function(i, li) {
+				directions.push($(li).attr("data-id"));
+			});
+			Core.sendPost("laboratory/direction/check", {
+				directions: directions,
+				status: 3 /* STATUS_READY */
+			}, function(response) {
+				var ready = response["ready"] || [];
+				for (var i in ready) {
+					container.children("li[data-id='"+ ready[i] +"']").addClass("active");
+				}
+				if (ready.length > 0) {
+					$("#laboratory-direction-table").parents(".panel").panel("update");
+				}
+				if (!container.children("li[data-id]:not(.active)").length) {
+					Core.createMessage({
+						message: "Результаты анализов получены",
+						sign: "ok",
+						type: "success"
+					});
+					container.parents(".panel").loading("reset");
+					done = true;
+					me.clear();
+					container.parents(".panel").find(".panel-footer > .progress > .progress-bar").animate({
+						width: "0%"
+					}, 250);
+				}
+				if (!done) {
+					setTimeout(t, 10000);
+				}
+			}).fail(function() {
+				if (!done) {
+					setTimeout(t, 10000);
+				}
+			});
+		};
+		t();
 	},
 	panels: {},
 	locked: {}

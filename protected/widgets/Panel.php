@@ -138,6 +138,8 @@ class Panel extends Widget {
 	 */
 	public $attributes = null;
 
+	public $footer = null;
+
 	/**
 	 * Initialize widget
 	 */

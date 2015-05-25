@@ -107,11 +107,11 @@ $this->widget("Modal", [
 											"icon" => "glyphicon glyphicon-play",
 											"class" => "btn btn-default"
 										],
-										"analyzer-queue-stop-button" => [
+										/* "analyzer-queue-stop-button" => [
 											"label" => "Остановить",
 											"icon" => "glyphicon glyphicon-stop",
 											"class" => "btn btn-default"
-										],
+									 	], */
 									],
 									"mode" => ControlMenu::MODE_BUTTON
 								]),
@@ -132,6 +132,18 @@ $this->widget("Modal", [
 								"controlsWrapperClass" => "col-xs-6 text-right no-padding",
 								"contentClass" => "col-xs-12 no-padding no-margin panel-content",
 								"id" => "analyzer-task-viewer",
+								"footer" => CHtml::tag("div", [
+									"class" => "progress"
+								], CHtml::tag("div", [
+									"class" => "progress-bar progress-bar-striped active",
+									"role" => "progressbar",
+									"aria-valuenow" => "0",
+									"aria-valuemin" => "0",
+									"aria-valuemax" => "100",
+									"style" => "width: 0"
+								], CHtml::tag("span", [
+									"class" => "cr-only"
+								], "")))
 							]); ?>
 							<hr>
 							<div class="btn-group">

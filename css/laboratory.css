@@ -397,10 +397,6 @@
     background-color: #47a347 !important;
 }
 
-.laboratory-tab-container > div {
-    padding-left: 5px;
-    padding-right: 5px;
-}
 .laboratory-tab-container > div:first-child {
     padding-left: 0;
 }
@@ -465,10 +461,11 @@
     /*height: 70%;*/
 }
 
-#analyzer-task-viewer > .panel-heading {
-    margin-right: -5px !important;
+#analyzer-task-viewer > .panel-footer > .progress {
+    margin-bottom: 0;
 }
 
-div:empty[style*='display: block;'] + #analyzer-task-viewer > .panel-heading {
-    margin-left: -5px !important;
+.progress-bar {
+    -webkit-transition: none !important;
+    transition: none !important;
 }

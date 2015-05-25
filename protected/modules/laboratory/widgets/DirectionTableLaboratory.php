@@ -39,12 +39,12 @@ class DirectionTableLaboratory extends Table {
 
 	public function init() {
 		$this->provider = LDirection::model()->getLaboratoryTableProvider();
-		$this->controls = [
+		$this->controls += [
 			"direction-repeat-icon" => [
 				"icon" => "glyphicon glyphicon-repeat",
 				"label" => "Отправить на повторный забор образца"
 			],
-		] + $this->controls;
+		];
 		if (empty($this->criteria)) {
 			$this->criteria = new CDbCriteria();
 		}
