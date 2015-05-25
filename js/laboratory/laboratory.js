@@ -180,14 +180,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 		var time = $(".analyzer-task-menu-item.active > a").attr("data-time");
 		panel.find(".panel-footer > .progress > .progress-bar").animate({
 			width: "100%"
-		}, time * 1, "swing", function() {
+		}, time * 1000, "linear", function() {
 			Core.createMessage({
 				message: "Ожидаем получения данных с сервера ...",
 				sign: "ok",
 				type: "info"
 			});
-			me.await(container);
 		});
+		me.await(container);
 	},
 	await: function(container) {
 		var me = this, done = false;
@@ -208,6 +208,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 				if (ready.length > 0) {
 					$("#laboratory-direction-table").parents(".panel").panel("update");
 				}
+				$("#laboratory-ready-counts").text(ready["total"]);
 				if (!container.children("li[data-id]:not(.active)").length) {
 					Core.createMessage({
 						message: "Результаты анализов получены",
@@ -217,9 +218,9 @@ var Laboratory_AnalyzerQueue_Widget = {
 					container.parents(".panel").loading("reset");
 					done = true;
 					me.clear();
-					container.parents(".panel").find(".panel-footer > .progress > .progress-bar").animate({
-						width: "0%"
-					}, 250);
+
+					container.parents(".panel").find(".panel-footer > .progress > .progress-bar")
+						.stop().animate({ width: "0%" }, 250);
 				}
 				if (!done) {
 					setTimeout(t, 10000);

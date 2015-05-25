@@ -521,7 +521,10 @@ class DirectionController extends Controller2 {
 	public function actionCheck() {
 		try {
 			if (!$directions = Yii::app()->getRequest()->getPost("directions")) {
-				$this->leave([ "ready" => [] ]); exit();
+				$this->leave([
+					"ready" => [],
+					"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+				]); exit();
 			} else if (!$status = Yii::app()->getRequest()->getPost("status")) {
 				throw new Exception("Check action requires direction status");
 			}
@@ -535,7 +538,8 @@ class DirectionController extends Controller2 {
 				}
 			}
 			$this->leave([
-				"ready" => $ready
+				"ready" => $ready,
+				"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
