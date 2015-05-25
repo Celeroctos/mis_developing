@@ -1,6 +1,6 @@
 <?php
 
-class AnalyzerTypeController extends GController {
+class AnalyzertypeController2 extends GController {
 
 	public function getModel() {
 		return new AnalyzerType();
