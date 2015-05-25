@@ -8,13 +8,6 @@
 $this->widget("Modal", [
 	"title" => "Информация о направлении",
 	"body" => CHtml::tag("h1", [], "Направление не выбрано"),
-	"buttons" => [
-		"open-medcard-button" => [
-			"text" => "Открыть медкарту",
-			"class" => "btn btn-success",
-			"align" => "left"
-		]
-	],
 	"id" => "treatment-about-direction-modal"
 ]) ?>
 <?php $this->beginWidget("Modal", [

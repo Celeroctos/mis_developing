@@ -218,7 +218,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 					container.parents(".panel").loading("reset");
 					done = true;
 					me.clear();
-
+					$("#laboratory-ready-grid-wrapper").children(".panel").panel("update");
 					container.parents(".panel").find(".panel-footer > .progress > .progress-bar")
 						.stop().animate({ width: "0%" }, 250);
 				}
