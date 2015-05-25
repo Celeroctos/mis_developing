@@ -108,7 +108,7 @@ var GuideGridView = {
 		}, "json");
 	},
 	load: function(id) {
-		var m = $("#update-guide-modal");
+		var m = $("#update-guide-modal").cleanup();
 		$.get(this.actions.load, { id: id }, function(json) {
 			if (!json["status"]) {
 				return Core.postFormErrors(m, json)

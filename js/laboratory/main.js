@@ -280,9 +280,15 @@ var Laboratory_DirectionTable_Widget = {
 			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.send(
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
+		}).on("click", ".direction-remove-icon", function() {
+			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.remove(
+				$(this).parents("tr:eq(0)").attr("data-id")
+			);
 		});
-		$("#treatment-direction-grid-wrapper").on("dblclick", "tr[data-id]", function () {
-			me.show($(this).attr("data-id"));
+		$(document).on("dblclick", "table > tbody > tr[data-id]", function () {
+			if ($(this).parents("table:eq(0)").find(".direction-show-icon").length > 0) {
+				me.show($(this).attr("data-id"));
+			}
 		});
 		$(".panel-date-button").each(function (i, p) {
 			var dates = $(p).parents(".panel:eq(0)").find(".table:eq(0)").attr("data-dates");
@@ -333,8 +339,8 @@ var Laboratory_DirectionTable_Widget = {
 					message: json["message"]
 				});
 			}
-			panel.panel("after").panel("replace", json["component"])
-				.find(".direction-date").text(date);
+			panel.panel("after").panel("replace", json["component"]);
+				//.find(".direction-date").text(date);
 			table.table("attr", "date", date);
 			success && success(json);
 		}, "json");
@@ -345,7 +351,7 @@ var Laboratory_DirectionTable_Widget = {
 			$(element).datepicker("remove");
 		}
 		var handler = function () {
-			$(this).find(".direction-date").text($(this).panel("attr", "date"));
+			//$(this).find(".direction-date").text($(this).panel("attr", "date"));
 		};
 		$(element).datepicker({
 			language: "ru-RU",
@@ -522,6 +528,9 @@ var Laboratory_DirectionCreator_Modal = {
 				modal.find(".modal-content").loading("reset");
 			});
 		});
+		$("#register-direction-modal").on("show.bs.modal", function() {
+			$(this).find("[name='LDirectionFormEx[analysis_type_id]']").trigger("change");
+		});
 	}
 };
 
@@ -670,7 +679,7 @@ $(document).ready(function() {
 	Laboratory_BarcodeReader.ready();
 
 	// fix for modal window backdrop
-	$(document).on('show.bs.modal', '.modal', function(e) {
+	$(document).on("show.bs.modal", ".modal", function(e) {
 		if (!$(e.target).hasClass("modal")) {
 			return void 0;
 		}
@@ -679,6 +688,8 @@ $(document).ready(function() {
 		setTimeout(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
+	}).on("show.bs.modal", ".modal", function() {
+		$(this).animate({ scrollTop: 0 }, 'slow');
 	});
 
 	$('[data-toggle="popover"]').popover()

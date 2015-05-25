@@ -24,7 +24,7 @@ class MedcardTable extends Table {
 		]
 	];
 
-	public $primaryKey = "card_number";
+	public $primaryKey = "medcard_id";
 	public $orderBy = "card_number";
 	public $id = "medcard-table";
 	public $pageLimit = 10;

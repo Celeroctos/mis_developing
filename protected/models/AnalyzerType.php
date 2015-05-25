@@ -35,6 +35,18 @@ class AnalyzerType extends GActiveRecord {
 		];
     }
 
+	public function findDirections($id, $status = LDirection::STATUS_LABORATORY) {
+		$rows = $this->getDbConnection()->createCommand()
+			->select("d.*")
+			->from("lis.direction as d")
+			->join("lis.analyzer_type_to_analysis_type as at_at", "d.analysis_type_id = at_at.analysis_type_id")
+			->where("at_at.analyzer_type_id = :id and d.status = :status", [
+				":id" => $id,
+				":status" => $status
+			])->queryAll();
+		return $rows;
+	}
+
 	public function findAnalysisTypes($id) {
 		$rows = $this->getDbConnection()->createCommand()
 			->select("ats.*")

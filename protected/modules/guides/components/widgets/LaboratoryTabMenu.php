@@ -3,7 +3,7 @@
 class LaboratoryTabMenu extends CWidget {
 
 	public $list = [
-		"analysisType" => [
+		"analysistype" => [
 			"label" => "Типы анализов",
 			"privilege" => "guideEditAnalysisType"
 		],
@@ -15,7 +15,7 @@ class LaboratoryTabMenu extends CWidget {
 			"label" => "Типы и подтипы образцов",
 			"privilege" => "guideEditAnalysisType"
 		],
-		"analyzerType" => [
+		"analyzertype" => [
 			"label" => "Типы анализаторов",
 			"privilege" => "guideEditAnalyzerType"
 		],

@@ -23,6 +23,9 @@ class DirectionPanel extends Panel {
 	public $status = LDirection::STATUS_TREATMENT_ROOM;
 
 	public function init() {
+		if (empty($this->date)) {
+			$this->date = date("Y-m-d");
+		}
 		$this->controls = [
 			"panel-search-button" => [
 				"class" => "btn btn-default",
@@ -48,13 +51,13 @@ class DirectionPanel extends Panel {
 					"icon" => "glyphicon glyphicon-calendar",
 					"label" => "Дата&nbsp;(" . CHtml::tag("span", [
 							"class" => "direction-date"
-						], date("Y-m-d")) . ")",
+						], $this->date) . ")",
 				],
 				"panel-update-button" => [
 					"class" => "btn btn-default",
 					"icon" => "glyphicon glyphicon-refresh",
 					"onclick" => "$(this).panel('update')",
-					"label" => "Сегодня",
+					"label" => "Обновить",
 				]
 			];
 		} else {

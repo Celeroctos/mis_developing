@@ -3,7 +3,7 @@
 class LaboratoryAsset extends AssetBundle {
 
     public $js = [
-        "js/laboratory/core.js"
+        "js/laboratory/main.js"
     ];
 
     public $css = [

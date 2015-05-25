@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $this AnalysisTypeController
+ * @var $this AnalysistypeController
  */
 $this->widget("LaboratoryTabMenu");
 

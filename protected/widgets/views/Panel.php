@@ -23,4 +23,7 @@
 			</div>
 		</div>
 	</div>
+	<?php if (!empty($this->footer)): ?>
+		<div class="panel-footer"><?= $this->footer ?></div>
+	<?php endif ?>
 </div>

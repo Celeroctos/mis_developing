@@ -16,15 +16,18 @@ class LCardNumberGenerator {
 
 	public function generate() {
 		$row = Yii::app()->getDb()->createCommand()
-			->select("max(id) + 1 as index, substring(extract(year from now())::text from 3 for 4) as year")
+			->select("count(id) + 1 as index, extract(year from now())::text as year")
 			->from("lis.medcard as m")
 			->group("m.year")
 			->where("m.year = year")
 			->queryRow();
 		if (!$row) {
-			$row = [ "index" => 1, "year" => substr(date("Y"), 2, 2) ];
+			$row = [
+				"year" => date("Y"),
+				"index" => 1,
+			];
 		}
-		return static::PREFIX.$row["index"].static::DELIMITER.$row["year"].static::POSTFIX;
+		return static::PREFIX.$row["index"].static::DELIMITER.substr($row["year"], 2, 2).static::POSTFIX;
 	}
 
 	private static $_generator = null;

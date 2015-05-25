@@ -12,6 +12,9 @@ var Core = Core || {};
 
 	Table.prototype.update = function(parameters) {
 		var me = this, table = this.selector();
+		if (this.selector().trigger("table.update") === false) {
+			return void 0;
+		}
 		this.before();
 		var data = $.extend({
 			class: table.attr("data-widget"),
@@ -21,7 +24,8 @@ var Core = Core || {};
 			searchCriteria: this.property("searchCriteria")
 		}, parameters || {});
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
-		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
+		params["_"] = new Date().getTime();
+		$.post(this.selector().data("url"), $.extend(params, data), function(json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
@@ -34,36 +38,43 @@ var Core = Core || {};
 				});
 			}
 			me.after();
-			me.selector().replaceWith(
+			var old = me.selector().hide();
+			me.selector().before(
 				$(json["component"]).data(me.getDataAttribute(), me)
 			);
+			if (old.data("core-loading")) {
+				$.when(old.data("core-loading").back).done(function() {
+					old.trigger("table.updated");
+					old.remove();
+				});
+			} else {
+				old.trigger("table.updated");
+				old.remove();
+			}
 		}, "json").fail(function() {
 			me.after();
 		});
 	};
 
-	Table.prototype.before = function() {
+	Table.prototype.before = function(delay) {
 		var me = this;
 		setTimeout(function() {
-			me.selector().loading("render");
-		}, this.property("updateDelay"));
-		this.selector().trigger("table.update");
+			if (!me.selector().data("core-loading")) {
+				me.selector().loading("render");
+			}
+		}, delay || this.property("updateDelay"));
 	};
 
 	Table.prototype.after = function() {
 		if (this.selector().data("core-loading")) {
 			this.selector().loading("destroy");
 		}
-		this.selector().trigger("table.updated");
 	};
 
 	Table.prototype.find = function(condition) {
 		this.property("searchCriteria", condition);
 		this.update();
 	};
-
-	// dtctksqikzgybr
-	// веселыйшляпник
 
 	Table.prototype.fetch = function(properties) {
 		for (var key in properties) {

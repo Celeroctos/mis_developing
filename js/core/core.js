@@ -471,9 +471,11 @@ var Core = Core || {};
 			args.complete = $.proxy(args.complete, e);
 			args.step = function(now) {
 				$.style(e, 'transform', 'rotate(' + now + 'deg)');
-				if (step) return step.apply(e, arguments);
+				if (step) {
+					return step.apply(e, arguments);
+				}
 			};
-			$({deg: deg}).animate({deg: angle}, args);
+			$({ deg: deg }).animate({ deg: angle }, args);
 		});
 	};
 

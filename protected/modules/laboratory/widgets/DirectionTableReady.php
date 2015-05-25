@@ -40,6 +40,12 @@ class DirectionTableReady extends DirectionTableTreatment {
 			"status" => LDirection::STATUS_READY,
 			"cast(sending_date as date)" => $this->date
 		]);
+		$this->controls = [
+				"direction-finalize-icon" => [
+					"label" => "Проверить результаты",
+					"icon" => "glyphicon glyphicon-eye-open"
+				]
+			] + $this->controls;
 		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_READY);
 	}
 

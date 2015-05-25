@@ -10,7 +10,8 @@ var Core = Core || {};
 			width: 150,
 			height: 25,
 			velocity: "fast",
-			color: "lightgray"
+			color: "lightgray",
+			opacity: 0.5
 		}, selector);
 		this.native = selector;
 	});
@@ -26,7 +27,7 @@ var Core = Core || {};
 		} else if (!(index = parseInt(this.selector().css("z-index")))) {
 			index = 1;
 		}
-		if (this.property("image")) {
+		if (this.property("image") && (typeof this.property("image") == "string")) {
 			this.image = $("<img>", {
 				css: {
 					"position": "absolute",
@@ -38,6 +39,15 @@ var Core = Core || {};
 				},
 				src: this.property("image")
 			});
+		} else if (this.property("image")) {
+			this.image = this.property("image").css({
+				"position": "absolute",
+				"height": imageHeight,
+				"width": imageWidth,
+				"left": "calc(50% - " + (imageWidth / 2) + "px)",
+				"margin-top": height / 2 - imageHeight / 2,
+				"z-index": index + 1
+			});
 		} else {
 			this.image = $("<div>");
 		}
@@ -47,7 +57,7 @@ var Core = Core || {};
 				"height": height,
 				"position": "absolute",
 				"background-color": this.property("color"),
-				"opacity": "0.5",
+				"opacity": this.property("opacity"),
 				"z-index": index
 			}
 		}).addClass(this.selector().attr("class")).fadeIn(this.property("velocity"))).before(
@@ -60,8 +70,8 @@ var Core = Core || {};
 	};
 	Loading.prototype.update = function() {
 	};
-	Loading.prototype.destroy = function() {
-		this.reset();
+	Loading.prototype.destroy = function(success) {
+		this.reset(success);
 	};
 
     Loading.prototype.reset = function(success) {

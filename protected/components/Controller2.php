@@ -304,58 +304,43 @@ abstract class Controller2 extends Controller {
      */
     public function actionGetWidget() {
         try {
-            // Get widget's class component and unique identification number and method
-            $class = $this->getAndUnset("class");
-
-            if (isset($_GET["model"])) {
-                $model = $this->getAndUnset("model");
+			$unset = [ "class", "model", "method", "_" ];
+			if (Yii::app()->getRequest()->getIsPostRequest()) {
+				$params = $_POST;
+			} else {
+				$params = $_GET;
+			}
+            $class = $params["class"];
+            if (isset($params["model"])) {
+                $model = $params["model"];
             } else {
                 $model = null;
             }
-
-            if (isset($_GET["method"])) {
-                $method = $this->getAndUnset("method");
-            } else {
-                $method = "GET";
-            }
-
-            if (isset($_GET["form"])) {
-                $form = $this->getAndUnset("form");
+            if (isset($params["form"])) {
+                $form = $params["form"];
                 if (is_string($form)) {
                     $form = $this->decode($form);
                 }
             } else {
                 $form = null;
             }
-
-            if (strtoupper($method) == "POST") {
-                foreach ($_GET as $key => $value) {
-                    $_POST[$key] = $value;
-                }
-                $parameters = $_POST;
-            } else {
-                $parameters = $_GET;
-            }
-
+			foreach ($unset as $key) {
+				unset($params[$key]);
+			}
             if ($model != null) {
-                $parameters += [
+				$params += [
                     "model" => new $model(null)
                 ];
             }
-
-            // Create widget, check for Widget instance and copy parameters
-            $widget = $this->createWidget($class, $parameters);
-
+            $widget = $this->createWidget($class, $params);
             if (!($widget instanceof Widget)) {
                 throw new CException("Can't update widget which don't extends Widget component");
             }
-
             if ($form != null && $widget instanceof AutoForm && is_array($form)) {
                 foreach ($form as $key => $value) {
                     $widget->model->$key = $value;
                 }
             }
-
             $this->leave([
                 "id" => isset($widget->id) ? $widget->id : null,
                 "component" => $widget->call(),
@@ -511,7 +496,7 @@ abstract class Controller2 extends Controller {
      * Leave script execution and print server's response
      * @param $parameters array - Array with parameters to return
      */
-    public function leave(array $parameters) {
+    public function leave(array $parameters = []) {
         if (!isset($parameters["status"])) {
             $parameters["status"] = true;
         }
@@ -527,6 +512,13 @@ abstract class Controller2 extends Controller {
 	 * @throws Exception - It will be thrown for not ajax requests
 	 */
     public function exception($exception) {
+		if ($exception instanceof CHttpException) {
+			if (Yii::app()->getRequest()->getIsAjaxRequest()) {
+				$this->error($exception->getMessage());
+			} else {
+				throw $exception;
+			}
+		}
         $method = $exception->getTrace()[0];
 		if (!Yii::app()->getRequest()->getIsAjaxRequest() || true) {
 			throw $exception;

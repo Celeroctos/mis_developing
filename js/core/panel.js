@@ -43,6 +43,9 @@ var Core = Core || {};
 	};
 
 	Panel.prototype.before = function() {
+		if (this.selector().data("core-loading")) {
+			return void 0;
+		}
 		var refresh = this.selector().loading("render").find(".panel-update-button");
 		if (refresh[0].tagName != "SPAN") {
 			refresh.children(".glyphicon").rotate(360, 500, "swing");
@@ -51,8 +54,8 @@ var Core = Core || {};
 		}
 	};
 
-	Panel.prototype.after = function() {
-		this.selector().loading("destroy");
+	Panel.prototype.after = function(success) {
+		this.selector().loading("destroy", success);
 	};
 
 	Panel.prototype.replace = function(component) {
@@ -72,11 +75,18 @@ var Core = Core || {};
 			return void 0;
 		}
 		this.before();
+		if (this.selector().find(".panel-content > *:eq(0)").is("table")) {
+			this.selector().find(".panel-content > table").table("update");
+			this.after();
+			this.selector().trigger("panel.updated");
+			return void 0;
+		}
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		if (params.length !== void 0 && !params.length) {
 			params = {};
 		}
-		$.get(Core.Common.getWidget(), $.extend(params, {
+		params["_"] = new Date().getTime();
+		$.post(Core.Common.getWidget(), $.extend(params, {
 			class: this.selector().attr("data-widget")
 		}), function(json) {
 			if (json["status"]) {
@@ -84,7 +94,19 @@ var Core = Core || {};
 			} else {
 				$(json["message"]).message();
 			}
-			me.selector().trigger("panel.updated");
+			var back;
+			if (me.selector().data("core-loading")) {
+				back = me.selector().data("core-loading").back;
+			} else {
+				back = null;
+			}
+			if (back) {
+				$.when(back).done(function() {
+					me.selector().trigger("panel.updated");
+				});
+			} else {
+				me.selector().trigger("panel.updated");
+			}
 			success && success.call(me, json);
 		}, "json").always(function() {
 			me.after();
