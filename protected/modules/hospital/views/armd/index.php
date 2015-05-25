@@ -100,17 +100,11 @@
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <!--<div role="tabpanel" class="tab-pane active" id="t1">
-
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="t2">
-
-                    </div>-->
                 </div>
             </ul>
-            <div class="row">
-                <input type="button" value="Сохранить" class="btn btn-success"/>
-                <input type="button" value="Отмена" class="btn btn-primary" />
+            <div class="row btnPanel">
+                <input type="button" value="Сохранить" class="btn btn-success" id="saveTemplate"/>
+                <input type="button" value="Отмена" class="btn btn-primary" id="cancelTemplate" />
             </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-diagnosis">

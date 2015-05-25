@@ -229,7 +229,7 @@ class Medcard extends MisActiveRecord
         if($filters !== false) {
             $this->getSearchConditions($medcards, $filters, array(
             ), array(
-                'm' => array('date_from', 'date_to'),
+                'm' => array('date_from', 'date_to', 'card_number'),
             ), array(
                 'date_from' => 'reg_date',
                 'date_to' => 'reg_date'

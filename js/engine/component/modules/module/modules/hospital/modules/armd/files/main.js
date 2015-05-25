@@ -196,13 +196,99 @@ misEngine.class('component.module.hospital.armd', function() {
             }, this));
 
             $(document).on('click', '.desktopTab li.last', $.proxy(function(e) {
-                this.makeTemplateTab($(e.target).parent());
+                // Here i do the call of templates list..
+                var target = e.target;
+                var popover = $(e.target).parent().popover({
+                    animation: true,
+                    html: true,
+                    placement: 'right',
+                    title: 'Выбор шаблона',
+                    delay: {
+                        show: 300,
+                        hide: 300
+                    },
+                    template : $('<div>').prop({
+                        'class' : 'popover popover-templates-list',
+                        'role' : 'tooltip'
+                    }).append(
+                        $('<div>').addClass('arrow'),
+                        $('<h5>').addClass('popover-title'),
+                        $('<div>').addClass('popover-content')
+                    ),
+                    container: $(e.target),
+                    content: $.proxy(function () {
+                        return $('<div>').append(
+                            this.getTemplatesList(e.target),
+                            $('<button>')
+                                .prop({
+                                    'class' : 'btn btn-success'
+                                })
+                                .text('OK')
+                                .on('click', $.proxy(function(e) {
+                                     popover.popover('destroy');
+                                    // TODO
+                                }, this))
+                        );
+                    }, this)
+                });
+
+                $(e.target).parent().on('click', function(e) {
+                   return false;
+                });
+
+                $(document).on('hidden.bs.popover', '.popover-templates-list', $.proxy(function(e) {
+                    $('.template-choose:checked').each($.proxy(function(index, element) {
+                        this.makeTemplateTab($(target).parents('li'));
+                    }, this));
+                }, this));
+
+                $(e.target).parent().popover('show')
+
             }, this));
 
 
             $(document).on('click', '.desktopTab .closeTab', function(e) {
 
             });
+
+            $(document).on('change', '.template-choose', function(e) {
+                e.stopPropagation();
+                return true;
+            });
+        },
+
+        getTemplatesList : function(container) {
+            var ul = $('<ul>').append(
+                $('<li>').addClass('list-group-item').append(
+                    $('<input>').prop({
+                        'type' : 'checkbox',
+                        'class' : 'template-choose'
+                    }),
+                    $('<a>').text('Шаблон 1').prop({
+                        'href' : '#'
+                    })
+                ),
+                $('<li>').addClass('list-group-item').append(
+                    $('<input>').prop({
+                        'type' : 'checkbox',
+                        'class' : 'template-choose'
+                    }),
+                    $('<a>').text('Шаблон 2').prop({
+                        'href' : '#'
+                    })
+                ),
+                $('<li>').addClass('list-group-item').append(
+                    $('<input>').prop({
+                        'type' : 'checkbox',
+                        'class' : 'template-choose'
+                    }),
+                    $('<a>').text('Шаблон 3').prop({
+                        'href' : '#'
+                    })
+                )
+            ).addClass('list-group');
+
+            return ul;
         },
 
         makeTemplateTab : function(clickedLi) {
@@ -211,7 +297,6 @@ misEngine.class('component.module.hospital.armd', function() {
             });
 
             var generator = misEngine.create('component.utils.id_generator');
-            console.log(generator);
             var id = generator.getRandom();
 
             var li = $('<li>').prop({
@@ -265,11 +350,18 @@ misEngine.class('component.module.hospital.armd', function() {
 
         },
 
+        displayDiagnosisFields : function() {
+            this.preClinicalDiagnosis = misEngine.create('component.livesearch', {
+                container : '#armd-patient-diagnosis'
+            });
+        },
+
         run : function() {
             this.displayGrids();
+            this.displayDiagnosisFields();
             this.bindHandlers();
             this.initWidgets();
-            this.makeDumpData();
+           // this.makeDumpData();
 
             this.activeTab = 'armdMyPatientsTab'; // First opened tab in window
         },

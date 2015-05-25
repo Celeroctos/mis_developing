@@ -1457,6 +1457,11 @@ class TasuController extends Controller {
                 $sql = "ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_update";
                 $conn->createCommand($sql)->execute();
     
+				if($oms->type == 5) {
+					$number = $serie.$number;
+					$serie = '';
+				}
+	
                 $sql = "EXEC PDPStdStorage.dbo.p_patsetpol_48135
                             ".$patientRow['PatientUID'].",
                             0,
@@ -1465,7 +1470,7 @@ class TasuController extends Controller {
                             '".$number."',
                             '".$smoRow['ShortName']."',
                             '".(($oms->status == 0) ? 1 : 3)."',
-                            '1',
+                            '".$oms->type."',
                             '".$givedate."',
                             ".(($oms->enddate == null) ? "NULL" : "'".$enddate."'").",
                             NULL,

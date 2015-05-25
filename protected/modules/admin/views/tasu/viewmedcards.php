@@ -141,6 +141,17 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <?php echo $form->labelEx($modelFilter,'medcard', array(
+                            'class' => 'col-xs-3 control-label'
+                        )); ?>
+                        <div class="col-xs-2">
+                            <?php echo $form->textField($modelFilter,'medcard', array(
+                                'id' => 'medcard',
+                                'class' => 'form-control'
+                            )); ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <input type="button" id="tasuimport-filter-btn" value="Найти карты" class="btn btn-success">
                     </div>
                     <?php $this->endWidget(); ?>

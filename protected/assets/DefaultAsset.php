@@ -24,7 +24,7 @@ class DefaultAsset extends AssetBundle {
         "js/libs/jqGrid/css/ui.jqgrid.css",
         "js/libs/jquery-ui-bootstrap/css/custom-theme/jquery-ui-1.10.0.custom.css",
         "css/bootstrap-datetimepicker.min.css",
-		"js/libs/bootstrap-3.0.0/less/bootstrap.less",
+		"js/libs/bootstrap-3.0.0/dist/css/bootstrap.min.css",
 		"js/libs/datepicker/bootstrap-datepicker3.css"
     ];
 } 

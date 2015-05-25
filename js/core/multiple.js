@@ -467,7 +467,7 @@ var Core = Core || {};
     };
 
 	$(document).ready(function() {
-		setTimeout(Core.prepareMultiple, 0);
+		setTimeout(Core.prepareMultiple, 10);
 	});
 
 })(Core);

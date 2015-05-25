@@ -65,6 +65,9 @@ misEngine = (function() {
                     'name' : 'id_generator',
                     'script' : null
                 }]
+            }, {
+                'name' : 'livesearch',
+                'script' : null
             }]
         }],
 		getConfig : function(key) {

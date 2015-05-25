@@ -496,6 +496,13 @@
                 'data' :  $('#dateTo').val()
             });
         }
+        if($.trim($('#medcard').val()) != '') {
+            result.rules.push({
+                'field' : 'card_number',
+                'op' : 'eq',
+                'data' :  $('#medcard').val()
+            });
+        }
         return result;
     }
 
