@@ -89,6 +89,7 @@ $this->widget("Modal", [
 					]) ?>
 				</div>
 				<div class="col-xs-6" style="padding-right: 0">
+					<?php if ($analyzers[0]["disabled"]) { $analyzers = []; } ?>
 					<?php foreach ($analyzers as $class => $analyzer): ?>
 						<?php $first = !isset($first) ?>
 						<div class="col-xs-12 no-padding laboratory-tab-container" id="<?= $analyzer["data-tab"] ?>" style="<?= $first ? "display: block;" : "display: none;" ?>">
