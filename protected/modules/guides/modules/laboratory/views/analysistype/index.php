@@ -48,7 +48,7 @@ $this->widget("AutoForm", [
 ]);
 
 $this->widget("GGridView", [
-	"url" => "guides/laboratory/analysisType",
+	"url" => "guides/laboratory/analysistype",
 	"title" => "Типы анализов",
 	"content" => ob_get_clean(),
 	"model" => $model,
