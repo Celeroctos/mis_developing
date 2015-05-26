@@ -469,3 +469,21 @@
     -webkit-transition: none !important;
     transition: none !important;
 }
+
+body > .analyzer-queue-helper {
+    border: solid 1px #d3d3d3;
+    height: auto;
+    font-size: 15px;
+    min-width: 450px;
+    padding-left: 20px;
+    border-radius: 5px;
+    background-color: #3276b0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 2000;
+}
+
+body > .analyzer-queue-helper * {
+    background-color: #3276b0;
+    color: white;
+}

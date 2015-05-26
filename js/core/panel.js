@@ -75,6 +75,12 @@ var Core = Core || {};
 			return void 0;
 		}
 		this.before();
+		if (this.selector().find(".panel-content > *:eq(0)").is("table")) {
+			this.selector().find(".panel-content > table").table("update");
+			this.after();
+			this.selector().trigger("panel.updated");
+			return void 0;
+		}
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
 		if (params.length !== void 0 && !params.length) {
 			params = {};

@@ -5,10 +5,10 @@ const STRONG_LOCK = 2;
 var Laboratory_AnalyzerQueue_Widget = {
 	ready: function() {
 		var me = this;
-		$(".laboratory-table-wrapper .panel:eq(0)").on("panel.updated", function() {
+		/* $(".laboratory-table-wrapper .panel:eq(0)").on("panel.updated", function() {
 			me.createDraggable();
-		});
-		$("#laboratory-direction-table").on("table.updated", function() {
+		}); */
+		$(document).on("table.updated", "#laboratory-direction-table", function() {
 			me.createDraggable();
 		});
 		$("#analyzer-task-viewer .panel-body").droppable({
@@ -48,18 +48,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 			$(li).attr("data-index", k).find(".queue-index").text("№ " + (k++));
 		});
 	},
-	drop: function(tr) {
+	renderItem: function(tr) {
 		var me = this;
-		if (tr.parents(".analyzer-queue-container").length > 0) {
-			return false;
-		}
-		this.lock(tr.attr("data-id"));
 		var string = tr.children("td:eq(1)").text() + ", В: " +
 			tr.children("td:eq(2)").text() + ", Н: "+
 			tr.children("td:eq(3)").text();
 		var container = $(".analyzer-queue-container:visible"),
 			index = container.children("li").length + 1;
-		var a = $("<a></a>", {
+		return $("<a></a>", {
 			"class": "col-xs-12"
 		}).append($("<div></div>", {
 			"class": "col-xs-2 text-left no-padding"
@@ -77,11 +73,23 @@ var Laboratory_AnalyzerQueue_Widget = {
 				"data-original-title": "Удалить",
 				"onmouseenter": "$(this).tooltip('show')",
 				"data-placement": "right"
-			}).click(function() {
+			}).click(function () {
 				me.remove($(this).parents("li:eq(0)").attr("data-id"));
 			}),
 			"class": "col-xs-2 text-right no-padding"
 		}));
+	},
+	drop: function(tr) {
+		var me = this;
+		if (tr.parents(".analyzer-queue-container").length > 0) {
+			return false;
+		} else if ($(".analyzer-queue-container:visible").attr("data-locked")) {
+			return false;
+		}
+		this.lock(tr.attr("data-id"));
+		var container = $(".analyzer-queue-container:visible"),
+			index = container.children("li").length + 1;
+		var a = this.renderItem(tr);
 		container.append($("<li></li>", {
 			"data-id": tr.attr("data-id"),
 			"data-index": index,
@@ -110,21 +118,17 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}).disableSelection();
 	},
 	createDraggable: function() {
+		var me = this;
 		try {
 			$("#laboratory-direction-table tbody > tr").draggable("destroy");
 		} catch (ignored) {
 		}
 		$("#laboratory-direction-table tbody > tr").draggable({
 			helper: function() {
-				var item = $(this).clone(false).css({
-					"background-color": "whitesmoke",
-					"border": "1px solid lightgray"
-				});
-				item.find("td:last").remove();
-				item.find("td").css({
-					"padding": "10px",
-					"border": "1px solid lightgray"
-				});
+				var item = $("<ul></ul>", {
+					class: "nav nav-pills nav-stacked analyzer-queue-helper"
+				}).append("<li></li>").append(me.renderItem($(this)));
+				item.find(".glyphicon").remove();
 				return item;
 			},
 			appendTo: "body"
@@ -192,6 +196,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 	await: function(container) {
 		var me = this, done = false;
 		container = container || $(".analyzer-queue-container:visible");
+		container.attr("data-locked", "true");
 		var t = function() {
 			var directions = [];
 			container.children("li:not(.active)").each(function(i, li) {
@@ -221,6 +226,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 					$("#laboratory-ready-grid-wrapper").children(".panel").panel("update");
 					container.parents(".panel").find(".panel-footer > .progress > .progress-bar")
 						.stop().animate({ width: "0%" }, 250);
+					container.removeAttr("data-locked");
 				}
 				if (!done) {
 					setTimeout(t, 10000);
@@ -312,12 +318,7 @@ var Laboratory_Analyzer_TabMenu = {
 				}
 			});
 		};
-		$(".panel").on("panel.update", function() {
-			fetch();
-		});
-		$(document).on("table.update", "#laboratory-direction-table", function() {
-			fetch();
-		});
+		$(document).on("table.update", "#laboratory-direction-table", fetch);
 	}
 };
 
