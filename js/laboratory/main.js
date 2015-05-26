@@ -339,8 +339,8 @@ var Laboratory_DirectionTable_Widget = {
 					message: json["message"]
 				});
 			}
-			panel.panel("after").panel("replace", json["component"])
-				.find(".direction-date").text(date);
+			panel.panel("after").panel("replace", json["component"]);
+				//.find(".direction-date").text(date);
 			table.table("attr", "date", date);
 			success && success(json);
 		}, "json");
@@ -351,7 +351,7 @@ var Laboratory_DirectionTable_Widget = {
 			$(element).datepicker("remove");
 		}
 		var handler = function () {
-			$(this).find(".direction-date").text($(this).panel("attr", "date"));
+			//$(this).find(".direction-date").text($(this).panel("attr", "date"));
 		};
 		$(element).datepicker({
 			language: "ru-RU",

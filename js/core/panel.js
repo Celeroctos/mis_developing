@@ -85,7 +85,8 @@ var Core = Core || {};
 		if (params.length !== void 0 && !params.length) {
 			params = {};
 		}
-		$.get(Core.Common.getWidget(), $.extend(params, {
+		params["_"] = new Date().getTime();
+		$.post(Core.Common.getWidget(), $.extend(params, {
 			class: this.selector().attr("data-widget")
 		}), function(json) {
 			if (json["status"]) {

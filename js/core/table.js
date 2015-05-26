@@ -24,7 +24,8 @@ var Core = Core || {};
 			searchCriteria: this.property("searchCriteria")
 		}, parameters || {});
 		var params = $.parseJSON(this.selector().attr("data-attributes"));
-		$.get(this.selector().data("url"), $.extend(params, data), function(json) {
+		params["_"] = new Date().getTime();
+		$.post(this.selector().data("url"), $.extend(params, data), function(json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
