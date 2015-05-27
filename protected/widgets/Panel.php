@@ -146,7 +146,7 @@ class Panel extends Widget {
     public function init() {
         if ($this->body instanceof Widget) {
 			$this->_widget = get_class($this->body);
-			$this->attributes = $this->body->getSerializedAttributes();
+			$this->attributes = $this->body->getAttributes();
             $this->body = $this->body->call();
         } else {
 			if ($this->upgradeable === null) {

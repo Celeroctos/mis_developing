@@ -473,7 +473,7 @@ var Laboratory_AboutMedcard_Widget = {
 		});
 	},
 	load: function(id) {
-		return Core.Common.loadWidget("AboutMedcard", {
+		return Core.loadWidget("AboutMedcard", {
 			medcard: id
 		}, function(component) {
 			$("#show-medcard-modal").modal().find(".modal-body").empty().append(component);

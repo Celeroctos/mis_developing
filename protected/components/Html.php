@@ -21,4 +21,12 @@ class Html extends CHtml {
 		}
 		print CHtml::tag("span", $options);
 	}
+
+	public static function beginTag($tag, $options = []) {
+		return static::openTag($tag, $options);
+	}
+
+	public static function endTag($tag) {
+		return static::closeTag($tag);
+	}
 }

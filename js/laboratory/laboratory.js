@@ -53,6 +53,9 @@ var Laboratory_AnalyzerQueue_Widget = {
 		var string = tr.children("td:eq(1)").text() + ", В: " +
 			tr.children("td:eq(2)").text() + ", Н: "+
 			tr.children("td:eq(3)").text();
+		if (string.length > 45) {
+			string = string.substr(0, 45) + " ...";
+		}
 		var container = $(".analyzer-queue-container:visible"),
 			index = container.children("li").length + 1;
 		return $("<a></a>", {
@@ -66,7 +69,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 			/* "class": "glyphicon glyphicon-sort" */
 		}))).append($("<div></div>", {
 			"html": string,
-			"class": "col-xs-8 text-left no-padding"
+			"class": "col-xs-9 text-left no-padding"
 		})).append($("<div></div>", {
 			"html": $("<span></span>", {
 				"class": "glyphicon glyphicon-remove",
@@ -76,7 +79,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 			}).click(function () {
 				me.remove($(this).parents("li:eq(0)").attr("data-id"));
 			}),
-			"class": "col-xs-2 text-right no-padding"
+			"class": "col-xs-1 text-right no-padding"
 		}));
 	},
 	drop: function(tr) {

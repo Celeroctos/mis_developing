@@ -8,6 +8,15 @@ class LDirection extends ActiveRecord {
 	const STATUS_TREATMENT_REPEAT = 4;
 	const STATUS_CLOSED = 5;
 
+	public function relations() {
+		return [
+			"medcard" => [ self::BELONGS_TO, "LMedcard", "medcard_id", "with" => "patient" ],
+			"analysis_type" => [ self::BELONGS_TO, "LAnalysisType", "analysis_type_id" ],
+			"treatment_room_employee" => [ self::BELONGS_TO, "Doctors", "treatment_room_employee_id" ],
+			"laboratory_employee" => [ self::BELONGS_TO, "Doctors", "laboratory_employee_id" ],
+		];
+	}
+
 	public function getWithAnalysis($where = "", $params = []) {
 		return $this->getDbConnection()->createCommand()
 			->select("d.*, at.short_name as analysis_type_short_name")

@@ -1,6 +1,6 @@
 <?php
 
-class MedcardController extends Controller2 {
+class MedcardController extends ControllerEx {
 
 	/**
 	 * Render page with medcards
@@ -22,7 +22,7 @@ class MedcardController extends Controller2 {
 	 */
 	public function actionLoad() {
 		try {
-			$row = LMedcard2::model()->fetchInformationLaboratoryLike($this->get("number"));
+			$row = LMedcardEx::model()->fetchInformationLaboratoryLike($this->get("number"));
 			if ($row == null) {
 				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
 			}
@@ -120,7 +120,7 @@ class MedcardController extends Controller2 {
 	 * Register some form's values in database, it will automatically
 	 * fetch model from $_POST["model"], decode it, build it's FormModel
 	 * object and save into database. But you must override
-	 * Controller2::getModel and return instance of controller's model else
+	 * ControllerEx::getModel and return instance of controller's model else
 	 * it will throw an exception
 	 *
 	 * @in (POST):

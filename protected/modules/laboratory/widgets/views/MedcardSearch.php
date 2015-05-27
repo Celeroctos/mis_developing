@@ -32,7 +32,9 @@
 			<button id="medcard-search-button" class="btn btn-success btn-block" type="button" data-loading-text="Загрузка...">Поиск</button>
 			<hr>
 			<div id="medcard-search-table-wrapper">
-				<?php $this->widget($this->tableWidget, $this->tableConfig) ?>
+				<?php $this->widget("GridTable", [
+					"provider" => $this->provider
+				]) ?>
 			</div>
 		</div>
 	</div>

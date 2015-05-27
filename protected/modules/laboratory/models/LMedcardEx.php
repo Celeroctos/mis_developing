@@ -1,6 +1,6 @@
 <?php
 
-class LMedcard2 extends ActiveRecord {
+class LMedcardEx extends ActiveRecord {
 
 	public $privilege_code;
 	public $snils;
@@ -24,6 +24,13 @@ class LMedcard2 extends ActiveRecord {
 	public $address_str;
 	public $address_reg_str;
 	public $user_created;
+
+	public function relations() {
+		return [
+			"policy" => [ self::BELONGS_TO, "Oms", "policy_id" ],
+			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id" ]
+		];
+	}
 
 	/**
 	 * Find information about patient by it's card number
@@ -112,7 +119,8 @@ class LMedcard2 extends ActiveRecord {
 				"policy_insurance_id" => $this->read($model, "insurance"),
 				"register_address_id" => null,
 				"address_id" => null,
-				"document_type" => $this->read($model, "doctype")
+				"document_type" => $this->read($model, "doctype"),
+				"contacts" => $this->read($model, "contact"),
 			]
 		];
 		if (($address = $this->read($model, "address")) != null) {

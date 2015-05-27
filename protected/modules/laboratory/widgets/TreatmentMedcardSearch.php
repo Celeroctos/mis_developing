@@ -2,21 +2,6 @@
 
 class TreatmentMedcardSearch extends MedcardSearch {
 
-	public $tableConfig = [
-		"controls" => [
-			"direction-register-icon" => [
-				"icon" => "glyphicon glyphicon-link",
-				"label" => "Создать направление"
-			],
-			"medcard-show-icon" => [
-				"icon" => "glyphicon glyphicon-list",
-				"label" => "Открыть / Изменить медкарту"
-			]
-		],
-		"primaryKey" => "medcard_id",
-		"click" => null,
-	];
-
 	public $id = "treatment-medcard-table";
 
 	public function init() {

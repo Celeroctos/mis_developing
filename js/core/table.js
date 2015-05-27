@@ -4,124 +4,104 @@ var Core = Core || {};
 
 	"use strict";
 
+	const SORT_ASC  = 0;
+	const SORT_DESC = 1;
+
 	var Table = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
 			updateDelay: 250
 		}, selector);
 	});
 
-	Table.prototype.update = function(parameters) {
-		var me = this, table = this.selector();
+	Table.prototype.update = function() {
+		var config, me = this, table = this.selector();
 		if (this.selector().trigger("table.update") === false) {
 			return void 0;
 		}
 		this.before();
-		var data = $.extend({
-			class: table.attr("data-widget"),
-			currentPage: this.property("currentPage"),
-			orderBy: this.property("orderBy"),
-			pageLimit: this.property("pageLimit"),
-			searchCriteria: this.property("searchCriteria")
-		}, parameters || {});
-		var params = $.parseJSON(this.selector().attr("data-attributes"));
-		params["_"] = new Date().getTime();
-		$.post(this.selector().data("url"), $.extend(params, data), function(json) {
-			if (!json["status"]) {
-				return Core.createMessage({
-					message: json["message"]
-				});
-			} else if (json["message"]) {
-				Core.createMessage({
-					type: "success",
-					sign: "ok",
-					message: json["message"]
-				});
+		if (config = table.attr("data-config")) {
+			config = $.parseJSON(config);
+			for (var i in config) {
+				this.configure(i, config[i], false);
 			}
+		}
+		config = this.property("config") || {};
+		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), config, function(response) {
+			me.after(function() {
+				me.selector().empty().append($(response["component"]).children());
+				me.selector().attr($(response["component"]).getAttributes());
+				me.selector().trigger("table.updated");
+			});
+		}).fail(function() {
 			me.after();
-			var old = me.selector().hide();
-			me.selector().before(
-				$(json["component"]).data(me.getDataAttribute(), me)
-			);
-			if (old.data("core-loading")) {
-				$.when(old.data("core-loading").back).done(function() {
-					old.trigger("table.updated");
-					old.remove();
-				});
-			} else {
-				old.trigger("table.updated");
-				old.remove();
-			}
-		}, "json").fail(function() {
-			me.after();
-		});
+		}, false);
 	};
 
-	Table.prototype.before = function(delay) {
+	Table.prototype.configure = function(attribute, properties, strong) {
+		var config = this.property("config") || {},
+			scope = config[attribute] || {};
+		if (strong === void 0) {
+			strong = true;
+		}
+		for (var key in properties) {
+			if (scope[key] && !strong) {
+				continue;
+			}
+			scope[key] = properties[key];
+		}
+		if (!$.isPlainObject(properties)) {
+			scope = properties;
+		}
+		config[attribute] = scope;
+		this.property("config", config);
+		return this;
+	};
+
+	Table.prototype.before = function() {
 		var me = this;
+		me._before = true;
 		setTimeout(function() {
-			if (!me.selector().data("core-loading")) {
+			if (me._before == true) {
 				me.selector().loading("render");
 			}
-		}, delay || this.property("updateDelay"));
+		}, 250);
 	};
 
-	Table.prototype.after = function() {
+	Table.prototype.after = function(callback) {
+		var me = this;
+		me._before = false;
 		if (this.selector().data("core-loading")) {
-			this.selector().loading("destroy");
+			me.selector().loading("destroy", callback);
+		} else {
+			callback && callback();
 		}
-	};
-
-	Table.prototype.find = function(condition) {
-		this.property("searchCriteria", condition);
-		this.update();
-	};
-
-	Table.prototype.fetch = function(properties) {
-		for (var key in properties) {
-			this.property(key, properties[key]);
-		}
-		this.update();
 	};
 
 	Table.prototype.order = function(key) {
-		var order, g, match;
-		if ((g = this.selector().find(".table-order")).length > 0) {
-			if (g.hasClass("table-order-desc")) {
-				order = g.parents("td").data("key") + " desc";
-			} else {
-				order = g.parents("td").data("key");
-			}
-			match = order.split(" ");
-			if (key == match[0]) {
-				if (match[1] == "desc") {
-					order = match[0];
-				} else {
-					order = match[0] + " desc";
-				}
-			} else {
-				order = key;
-			}
+		var params = {};
+		if (key.charAt(0) == '-') {
+			params[key.substr(1)] = SORT_DESC;
 		} else {
-			order = key;
+			params[key] = SORT_ASC;
 		}
-		this.fetch({
-			orderBy: order
-		});
+		this.configure("sort", {
+			defaultOrder: params
+		}).update();
 	};
 
 	Table.prototype.page = function(page) {
-		this.fetch({
-			currentPage: +page
-		});
+		this.configure("pagination", {
+			currentPage: page
+		}).update();
 	};
 
 	Table.prototype.limit = function(limit) {
-		this.fetch({
-			pageLimit: +limit
-		});
+		this.configure("pagination", {
+			pageSize: limit
+		}).update();
 	};
 
-	Core.createPlugin("table", function(selector, properties) {
+	$.fn.table = Core.createPlugin("table", function(selector, properties) {
 		var t;
 		if ($(selector).get(0).tagName != "TABLE") {
 			if ((t = $(selector).parents("table")).length != 0) {

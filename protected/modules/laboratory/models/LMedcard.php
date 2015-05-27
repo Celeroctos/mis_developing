@@ -9,6 +9,16 @@ class LMedcard extends ActiveRecord {
 	public $card_number;
 	public $enterprise_id;
 
+	public function relations() {
+		return [
+			"medcard" => [ self::BELONGS_TO, "Medcard", "mis_medcard" ],
+			"patient" => [ self::BELONGS_TO, "LPatient", "patient_id" ],
+			"sender" => [ self::BELONGS_TO, "Doctor", "sender_id" ],
+			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id" ],
+			"direction" => [ self::BELONGS_TO, "LDirection", "medcard_id" ],
+		];
+	}
+
 	/**
 	 * Get instance of default table provider for current table
 	 * @return TableProvider - Default table provider

@@ -1,6 +1,6 @@
 <?php
 
-class LaboratoryController extends Controller2 {
+class LaboratoryController extends ControllerEx {
 
 	public function actionView() {
 		return $this->render("view", [

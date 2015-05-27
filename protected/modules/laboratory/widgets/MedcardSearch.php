@@ -7,15 +7,12 @@ class MedcardSearch extends Widget {
 	 * 	MedcardTable or MedcardTable2
 	 * @see MedcardTable, MedcardTable2
 	 */
-	public $tableWidget = "MedcardTable";
+	public $provider = "MedcardGridProvider";
 
 	/**
-	 * @var array - Default configuration for
-	 * 	table widget [tableWidget]
-	 * @see tableWidget
-	 * @see Table
+	 * @var array - Default configuration for table provider
 	 */
-	public $tableConfig = [
+	public $config = [
 		"emptyData" => true
 	];
 

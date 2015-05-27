@@ -9,7 +9,7 @@ $this->widget("Modal", [
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
 	], $this->getWidget("MedcardSearch", [
-		"tableWidget" => "MedcardTable2"
+		"provider" => "MedcardExGridProvider"
 	])),
 	"id" => "mis-medcard-search-modal",
 	"buttons" => [
@@ -100,14 +100,22 @@ $this->widget("Modal", [
 		<div id="treatment-direction-grid-wrapper">
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на анализ",
-				"body" => $this->createWidget("DirectionTableTreatment"),
+				"body" => $this->createWidget("GridTable", [
+					"provider" => new DirectionGridProvider([
+						"status" => LDirection::STATUS_TREATMENT_ROOM
+					])
+				]),
 				"status" => LDirection::STATUS_TREATMENT_ROOM
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Направления на повторный забор образца",
-				"body" => $this->createWidget("DirectionTableTreatmentRepeat"),
+				"body" => $this->createWidget("GridTable", [
+					"provider" => new DirectionGridProvider([
+						"status" => LDirection::STATUS_TREATMENT_REPEAT
+					])
+				]),
 				"status" => LDirection::STATUS_TREATMENT_REPEAT
 			]) ?>
 		</div>

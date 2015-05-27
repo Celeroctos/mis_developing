@@ -7,9 +7,19 @@
  */
 $this->widget("Modal", [
 	"title" => "Информация о направлении",
-	"body" => CHtml::tag("h1", [], "Направление не выбрано"),
+	"body" => CHtml::tag("h1", [
+		"class" => "text-center"
+	], "Направление не выбрано"),
 	"id" => "treatment-about-direction-modal"
+]);
+$this->widget("Modal", [
+	"title" => "Результаты анализа",
+	"body" => CHtml::tag("h1", [
+		"class" => "text-center"
+	], "Направление не выбрано"),
+	"id" => "laboratory-analysis-result-modal"
 ]) ?>
+
 <?php $this->beginWidget("Modal", [
 	"title" => "Информация о направлениях",
 	"id" => "laboratory-info-modal"
@@ -72,17 +82,8 @@ $this->widget("Modal", [
 				<div class="col-xs-6 no-padding">
 					<?php $this->widget("DirectionPanel", [
 						"title" => "Все направления на анализ",
-						"body" => $this->createWidget("DirectionTableLaboratory", [
-							"controls" => [
-								/* "direction-show-icon" => [
-									"icon" => "glyphicon glyphicon-list",
-									"label" => "Открыть направление"
-								], */
-								"direction-send-icon" => [
-									"icon" => "glyphicon glyphicon-arrow-right",
-									"label" => "Отправить на анализатор"
-								]
-							]
+						"body" => $this->createWidget("GridTable", [
+							"provider" => new QueueGridProvider()
 						]),
 						"panelClass" => "panel panel-default no-select",
 						"status" => LDirection::STATUS_LABORATORY
@@ -161,7 +162,11 @@ $this->widget("Modal", [
 			<hr>
 			<?php $this->widget("DirectionPanel", [
 				"title" => "Завершенные направления",
-				"body" => $this->createWidget("DirectionTableReady"),
+				"body" => $this->createWidget("GridTable", [
+					"provider" => new DirectionGridProvider([
+						"status" => LDirection::STATUS_READY
+					])
+				]),
 				"status" => LDirection::STATUS_READY
 			]) ?>
 			<hr>
@@ -186,3 +191,7 @@ $this->widget("Modal", [
 		"height" => "100%"
 	]) ?>
 </div>
+<hr>
+<?php $this->widget("GridTable", [
+	"provider" => new OmsGridProvider()
+]) ?>
