@@ -146,7 +146,7 @@ misEngine.class('component.livesearch', function() {
         },
 
         bindHandlers: function () {
-            this.inputField.val('').on('keydown', $.proxy(function (e) {
+            $(document).on('keydown', $(this.inputField), $.proxy(function (e) {
                 // Arrow Up
                 if ($.trim($(e.target).val() != '')) {
                     if (e.keyCode == 38) {
@@ -243,23 +243,23 @@ misEngine.class('component.livesearch', function() {
             }, this));
 
 
-            $(this.template).on('click', '.navigation .prev', function(e) {
+            $(document).on('click', $(this.template).find('.navigation .prev'), $.proxy(function(e) {
                 this.initPageParam();
                 this.navPrev();
                 this.searchByField(this.inputField, 1);
                 e.stopPropagation();
                 return false;
-            });
+            }, this));
 
-            $(this.template).on('click', '.navigation .next', function(e) {
+            $(document).on('click', $(this.template).find('.navigation .next'), $.proxy(function(e) {
                 this.initPageParam();
                 this.navNext();
                 this.searchByField(this.inputField, 1);
                 e.stopPropagation();
                 return false;
-            });
+            }, this));
 
-            $(this.inputField).on('keyup', $.proxy(function(e) {
+            $(document).on('keyup', $(this.inputField), $.proxy(function(e) {
                 // Нажатие бекспейса
                 if(!($(e.target).val().length == 1 && e.keyCode == 8)) {
                     if(e.keyCode != 37 && e.keyCode != 39) {
@@ -276,7 +276,7 @@ misEngine.class('component.livesearch', function() {
                 }
             }, this));
 
-            $(this.addValueBtn).on('click', function(e) {
+            $(document).on('click', $(this.addValueBtn), function(e) {
                 if(typeof this.config.bindedWindowSelector != 'undefined' && $(this.config.bindedWindowSelector).length > 0) {
                     if(typeof this.config.beforeWindowShow != 'undefined') {
                         this.config.beforeWindowShow(function() {
@@ -291,7 +291,7 @@ misEngine.class('component.livesearch', function() {
                 }
             });
 
-            $(this.variants).on('click', 'span.item span.glyphicon-remove', $.proxy(function(e) {
+            $(document).on('click', $(this.variants).find('span.item span.glyphicon-remove'), $.proxy(function(e) {
                 // Удаляем из массива предыдущих элементов
                 for(var i = 0; i < this.choosedElements.length; i++) {
                     if('r' + $(this.choosedElements[i]).prop('id') == $(this).parent().prop('id')) {
@@ -313,7 +313,7 @@ misEngine.class('component.livesearch', function() {
                 }
             }, this));
 
-            $(this.variants).on('click', 'span.item span.glyphicon-arrow-down', $.proxy(function(e) {
+            $(document).on('click', $(this.variants).find('span.item span.glyphicon-arrow-down'), $.proxy(function(e) {
                 for(var i = 0; i < this.choosedElements.length; i++) {
                     if('r' + $(this.choosedElements[i]).prop('id') == $(this).parent().prop('id')) {
                         // Размножаем это на все контролы, которые описаны в moving
@@ -329,75 +329,9 @@ misEngine.class('component.livesearch', function() {
             }, this));
 
 
-            $(this.template).on('click', '.variants li:not(.navigation)', $.proxy(function(e) {
+            $(document).on('click', $(this.template).find('.variants li:not(.navigation)'), $.proxy(function(e) {
                 this.addVariantToChoosed(this);
             }, this));
-
-            function addVariantToChoosed(li, withOutInsert) {
-                $(li).parents('ul').hide();
-                var id = $(li).prop('id').substr(1);
-                var primaryField = choosersConfig[$(chooser).prop('id')].primary;
-                for(var i = 0; i < currentElements.length; i++) {
-                    if(currentElements[i][primaryField] == id) {
-                        // Смотрим, нет ли уже такого элемента в списке. Если есть - добавлять не надо в список выбранных
-                        var isFound = false;
-                        var foundElement = null;
-                        for(var j = 0; j < choosedElements.length; j++) {
-                            if(currentElements[i][primaryField] == choosedElements[j][primaryField]) {
-                                isFound = true;
-                                break;
-                            }
-                        }
-                        // А если найден - повторно добавлять не надо
-                        if(!isFound) {
-                            lastUserInput = $(chooser).find('input').val();
-                            if(withOutInsert != 1) {
-                                var span = $('<span>').addClass('item');
-                                // Возможность копирования в соседние chooser-ы
-                                if(choosersConfig[$(chooser).prop('id')].hasOwnProperty('moving') && choosersConfig[$(chooser).prop('id')]['moving'].length > 0) {
-                                    // Посмотрим, все ли элементы есть в наличии
-                                    var moving = choosersConfig[$(chooser).prop('id')]['moving'];
-                                    var isAllowForMoving = true;
-                                    for(var j = 0; j < moving.length; j++) {
-                                        if($('#' + moving[j]).length == 0) {
-                                            isAllowForMoving = false;
-                                            break;
-                                        }
-                                    }
-                                    if(isAllowForMoving) {
-                                        var innerSpan = $('<span>').addClass('glyphicon glyphicon-arrow-down');
-                                    } else {
-                                        var innerSpan = $('<span>').addClass('glyphicon glyphicon-remove');
-                                    }
-                                } else {
-                                    var innerSpan = $('<span>').addClass('glyphicon glyphicon-remove');
-                                }
-                                $(span).append($(li).text()).append(innerSpan);
-                                $(span).prop('id', 'r' + currentElements[i][primaryField]);
-                                $(chooser).find('.choosed').append(span);
-                            }
-                            $(chooser).find('input').val('');
-                            prevVal = null;
-                            choosedElements.push(currentElements[i]);
-                            /* Логика работы: если есть настройка о количестве добавляемых максмально вариантов, то нужно блокировать строку, если количество вариантов достигло максимума */
-                            if(choosersConfig[$(chooser).prop('id')].hasOwnProperty('maxChoosed') && choosedElements.length >= choosersConfig[$(chooser).prop('id')].maxChoosed) {
-
-                                // А вот теперь со спокойной совестью блокируем чюзер
-                                $.fn[$(chooser).attr('id')].disable();
-                            }
-                            if(choosersConfig[$(chooser).prop('id')].hasOwnProperty('hideEmpty') && choosersConfig[$(chooser).prop('id')].hideEmpty) {
-                                $(chooser).find('.choosed').css('display', 'block');
-                            }
-                            if(choosersConfig[$(chooser).prop('id')].hasOwnProperty('afterInsert') && typeof choosersConfig[$(chooser).prop('id')].afterInsert == 'function') {
-                                choosersConfig[$(chooser).prop('id')].afterInsert(chooser);
-                            }
-                        } else {
-                            // TODO: сделать анимацию на вариант, который уже есть в списке, чтобы показать, что он есть
-                        }
-                        break;
-                    }
-                }
-            }
 
         },
 
