@@ -19,7 +19,7 @@ class MedcardEditableViewer extends Widget {
 			$number = $this->number;
 		}
 		if ($this->number != null) {
-			if (!($model = LMedcard2::model()->fetchInformation($this->number))) {
+			if (!($model = LMedcardEx::model()->fetchInformation($this->number))) {
 				throw new CException("Unresolved medcard number \"{$this->number}\"");
 			}
 		} else {

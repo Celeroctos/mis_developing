@@ -29,28 +29,33 @@ class Widget extends CWidget {
 	 *    to be serialized, by default it serializes all scalar attributes
 	 *
 	 * @param array|null $excepts - Array with attributes, that should
-	 * 	be excepted
+	 *    be excepted
+	 *
+	 * @param array|null $string - Array with parameters that should
+	 *      be converted to string value
 	 *
 	 * @return string - Serialized and URL encoded attributes
+	 * @throws Exception
 	 */
-	public function getSerializedAttributes($attributes = null, $excepts = null) {
+	public function getAttributes($attributes = null, $excepts = null, $string = null) {
 		$params = [];
-		if ($attributes !== null) {
-			foreach ($attributes as $key) {
-				if ($excepts !== null && in_array($key, $excepts)) {
-					continue;
-				}
-				if ((is_scalar($this->$key) || is_array($this->$key)) && !empty($this->$key)) {
-					$params[$key] = $this->$key;
-				}
+		if ($attributes === null) {
+			$attributes = $this;
+		}
+		foreach ($attributes as $key => $value) {
+			if ($excepts !== null && in_array($key, $excepts) || $key === "_config") {
+				continue;
 			}
-		} else {
-			foreach ($this as $key => $value) {
-				if ($excepts !== null && in_array($key, $excepts)) {
-					continue;
-				}
-				if ((is_scalar($value) || is_array($value)) && !empty($value)) {
-					$params[$key] = $value;
+			if ((is_scalar($value) || is_array($value)) && !empty($value)) {
+				$params[$key] = $value;
+			} else if ($string !== null && in_array($key, $string)) {
+				if (is_object($value)) {
+					/** @var \stdClass $value */
+					$params[$key] = get_class($value);
+				} else if (is_scalar($value)) {
+					$params[$key] = (string) $value;
+				} else {
+					throw new Exception("Unknown type can't be converted to string \"". gettype($value) ."\"");
 				}
 			}
 		}

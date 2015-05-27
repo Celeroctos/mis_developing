@@ -206,7 +206,7 @@ var Core = Core || {};
 	 * @static
 	 */
 	Common.getWidget = function() {
-		return window["globalVariables"]["getWidget"];
+		return window["globalVariables"]["widget"];
 	};
 
 	/**
@@ -227,6 +227,55 @@ var Core = Core || {};
 				success && success(json["component"], json);
 			}
 		}, "json");
+	};
+
+	Core.loadWidget = function(widget, attributes, success, module) {
+		return Core.sendQuery(window["globalVariables"]["widget"], {
+			"module": module || window["globalVariables"]["module"],
+			"class": widget,
+			"config": attributes
+		}, function(response) {
+			success && success(response["component"]);
+		});
+	};
+
+	Core.loadTable = function(widget, provider, config, success) {
+		return $.ajax({
+			url: window["globalVariables"]["table"],
+			data: {
+				widget: widget,
+				provider: provider,
+				config: config,
+				module: window["globalVariables"]["module"]
+			},
+			dataType: "json",
+			cache: false
+		}).done(function(response) {
+			if (!response["status"]) {
+				if (response["error"] !== "form") {
+					return Core.createMessage({
+						message: response["message"]
+					});
+				}
+			} else if (response["message"]) {
+				Core.createMessage({
+					message: response["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.loadPanel = function(widget, attributes, success) {
+		return Core.sendQuery("ext/panel", $.extend(attributes, {
+			widget: widget
+		}), success);
 	};
 
 	Core.postFormErrors = function(where, json) {
@@ -415,7 +464,7 @@ var Core = Core || {};
 		if (url.charAt(0) != "/") {
 			url = "/" + url;
 		}
-        return window["globalVariables"]["baseUrl"] + url;
+		return window["globalVariables"]["baseUrl"] + url;
     };
 
 	window.serialize = function(obj, prefix) {
@@ -429,32 +478,6 @@ var Core = Core || {};
 			}
 		}
 		return str.join("&");
-	};
-
-	$.fn.update = function() {
-		return this.each(function() {
-			var widget, params, me = this;
-			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
-				return void 0;
-			} else if (!Core.Common.getWidget()) {
-				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
-			}
-			$(this).loading();
-			params = $.parseJSON(params);
-			$.get(Core.Common.getWidget(), $.extend(params, {
-				class: widget
-			}), function(json) {
-				if (json["status"]) {
-					$(me).fadeOut("fast", function() {
-						$(this).empty().append(json["component"]).hide().fadeIn("fast");
-					});
-				} else {
-					$(json["message"]).message();
-				}
-			}, "json").always(function() {
-				$(me).loading("reset");
-			});
-		});
 	};
 
 	$.fn.cleanup = function() {
@@ -479,27 +502,43 @@ var Core = Core || {};
 		});
 	};
 
+	$.fn.rebind = function(event, dst, clear) {
+		var events = [];
+		this.each(function(){
+			var allEvents = jQuery._data(this, "events");
+			if (typeof allEvents === "object") {
+				var thoseEvents = allEvents[event];
+				if (typeof thoseEvents === "object") {
+					for (var i = 0; i<thoseEvents.length; i++) {
+						events.push(allEvents[event][i].handler);
+					}
+				}
+			}
+		});
+		if (typeof dst === "string") {
+			dst = $(dst);
+		} else if (typeof dst === "object") {
+			if (typeof dst.tagName === "string") {
+				dst = $(dst);
+			}
+		}
+		if (clear === true) dst.off(event);
+		dst.each(function(){
+			for(var i = 0; i<events.length; i++) {
+				dst.bind(event, events[i]);
+			}
+		});
+		return this;
+	};
+
+	$.fn.getAttributes = function() {
+		var attributes = {};
+		if(this.length) {
+			$.each(this[0].attributes, function(index, attr) {
+				attributes[attr.name] = attr.value;
+			});
+		}
+		return attributes;
+	};
+
 })(Core);
-
-/*
-$(document).ready(function() {
-$("input[data-regexp][type='text']").each(function(i, item) {
-	var regexp = new RegExp($(item).data("regexp"));
-	$(item).keydown(function(e) {
-		console.log($(item).val());
-		console.log(regexp.test($(item).val()));
-	});
-});
-});
-var isStrValid = function(str) {
-return ((str.match(/[^\d^.]/) === null)
-&& (str.replace(/\d+\.?\d?\d?/, "") === ""));
-};
-
-var node = dojo.byId("txt");
-dojo.connect(node, "onkeyup", function() {
-if (!isStrValid(node.value)) {
-node.value = node.value.substring(0, node.value.length-1);
-}
-});
-* */

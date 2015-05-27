@@ -1,6 +1,6 @@
 <?php
 
-class LMedcardForm2 extends FormModel {
+class LMedcardExForm extends FormModel {
 
 	public $privelege_code;
 	public $snils;

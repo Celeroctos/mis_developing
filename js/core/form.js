@@ -24,7 +24,7 @@ var Core = Core || {};
         }, this.property("animation"));
         this.property("parent") && this.property("parent").find(".refresh-button").replaceWith(
             $("<img>", {
-                src: url("/images/ajax-loader.gif"),
+                src: url("images/ajax-loader.gif"),
                 width: "25px",
                 class: "refresh-image"
             })
@@ -86,7 +86,7 @@ var Core = Core || {};
         this.property("parent") && this.property("parent").find(".refresh-button").click(function() {
             $(this).replaceWith(
                 $("<img>", {
-                    src: url("/images/ajax-loader.gif"),
+                    src: url("images/ajax-loader.gif"),
                     width: "25px",
                     class: "refresh-image"
                 })

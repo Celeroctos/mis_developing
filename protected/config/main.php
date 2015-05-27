@@ -116,8 +116,10 @@ return array(
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
+				'application.modules.laboratory.grids.*',
 				'application.vendor.barcodegen.*',
 				'application.vendor.barcodegen.drawer.*',
+
             )
         )
 	),
@@ -149,6 +151,19 @@ return array(
 					'cssFile' => false,
 					'htmlOptions' => [
 						'class' => 'pagination pagination-sm'
+					],
+					'prevPageLabel' => '<span class="glyphicon glyphicon-chevron-left"></span>',
+					'nextPageLabel' => '<span class="glyphicon glyphicon-chevron-right"></span>',
+					'firstPageLabel' => '<span class="glyphicon glyphicon-fast-backward"></span>',
+					'lastPageLabel' => '<span class="glyphicon glyphicon-fast-forward"></span>',
+					'hiddenPageCssClass' => 'disabled',
+					'header' => '',
+					'selectedPageCssClass' => 'active',
+				],
+				'LinkPager' => [
+					'cssFile' => false,
+					'htmlOptions' => [
+						'class' => 'pagination'
 					],
 					'prevPageLabel' => '<span class="glyphicon glyphicon-chevron-left"></span>',
 					'nextPageLabel' => '<span class="glyphicon glyphicon-chevron-right"></span>',
