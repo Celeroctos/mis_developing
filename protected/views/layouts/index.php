@@ -11,7 +11,10 @@ MainAsset::register()
     <script type="text/javascript">
         var globalVariables = {
             baseUrl : '<?= Yii::app()->request->baseUrl; ?>',
-			getWidget: '<?= Widget::createUrl() ?>'
+			widget: '<?= Widget::createUrl("widget") ?>',
+			table: '<?= Widget::createUrl("table") ?>',
+			panel: '<?= Widget::createUrl("panel") ?>',
+			module: '<?= Yii::app()->getController()->getModule()->getId() ?>'
         };
     </script>
 	<?= AssetBundleManager::getManager()->render() ?>

@@ -69,8 +69,8 @@ class DirectionTableTreatment extends Table {
 		$this->directionDates = LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM);
 	}
 
-	public function getSerializedAttributes($attributes = null, $excepts = []) {
-		return parent::getSerializedAttributes($attributes, array_merge([
+	public function getAttributes($attributes = null, $excepts = []) {
+		return parent::getAttributes($attributes, array_merge([
 				"directionDates",
 				"header",
 				"textNoData",

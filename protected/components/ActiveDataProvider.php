@@ -1,85 +1,118 @@
 <?php
 
-class ActiveDataProvider extends CActiveDataProvider {
+abstract class ActiveDataProvider extends CActiveDataProvider {
+
+	const PAGE_SIZE = 10;
 
 	/**
-	 * @var FormModel - Set your form model to cast all ids and
-	 * 	drop down key to it's readable value
+	 * @var array|false with extra information about columns that should be
+	 *  fetched, it takes information about columns from active record configuration
+	 *
+	 * One query maybe associated with several models, so it might has
+	 * one of next structures:
+	 *
+	 * 1. string name of active record class (string)
+	 * 2. array with names, where key is index of model (string[])
+	 * 3. array with configured models, where every field
+	 * 	associated with it's model (array key is class name of AR)
+	 *
+	 * Example:
+	 *
+	 * <code>
+	 *
+	 * // Fetch as name of model class
+	 * public $fetcher = 'app\models\User';
+	 *
+	 * // Fetcher as list with possible models
+	 * public $fetcher = [
+	 * 		'app\models\User',
+	 * 		'app\models\Role'
+	 * ];
+	 *
+	 * // Fetcher as configured fields
+	 * public $fetcher = [
+	 * 		'app\models\User' => [
+	 * 			"id", "login", "email"
+	 * 		],
+	 * 		'app\models\Role' => [
+	 * 			"name", "description"
+	 * 		]
+	 * ];
+	 *
+	 * </code>
 	 */
-	public $form = null;
+	public $fetcher = false;
 
-    /**
-     * Fetches the data from the persistent data storage.
-     * @return array - List of data items
-     */
-    protected function fetchData() {
-        $criteria = clone $this->getCriteria();
-        if(($pagination = $this->getPagination()) !== false) {
-            $pagination->setItemCount($this->getTotalItemCount());
-            $pagination->applyLimit($criteria);
-        }
-        $baseCriteria = $this->model->getDbCriteria(false);
-        if(($sort = $this->getSort()) !== false) {
-            if($baseCriteria !== null) {
-                $c = clone $baseCriteria;
-                $c->mergeWith($criteria);
-                $this->model->setDbCriteria($c);
-            } else {
-                $this->model->setDbCriteria($criteria);
-            }
-            $sort->applyOrder($criteria);
-        }
-        $this->model->setDbCriteria($baseCriteria !== null ? clone $baseCriteria : null);
-		if ($this->model instanceof ActiveRecord) {
-			$query = $this->model->getGridViewQuery()
-				->where($criteria->condition, $criteria->params);
-			if (!empty($criteria->order)) {
-				$query->order(preg_replace('/\\"/', "", $criteria->order));
+	/**
+	 * Override that method to return class name or
+	 * instance of active record class for current active
+	 * data provider
+	 *
+	 * @return CActiveRecord|string
+	 */
+	public abstract function model();
+
+	/**
+	 * Override that action to return configuration for active data
+	 * provider class (self instance), it uses to produce more operations
+	 * into class on server side
+	 */
+	public function search() {
+		return [
+			"pagination" => [
+				"pageSize" => static::PAGE_SIZE
+			],
+			"sort" => [
+				"attributes" => [ "id" ],
+				"defaultOrder" => [
+					"id" => CSort::SORT_ASC
+				]
+			]
+		];
+	}
+
+	/**
+	 * Construct class instance with configuration
+	 *
+	 * @param $config array with class configuration
+	 */
+	public function __construct($config = []) {
+		# We should copy soft items into data provider
+		foreach ($config as $key => $value) {
+			if (!$this->hasProperty($key)) {
+				$this->$key = $value;
 			}
-			if (($data = $query->queryAll()) != null && isset($data[0]) && !($data[0] instanceof CActiveRecord)) {
-				$data = $this->model->populateRecords($data);
-			}
-			if ($this->form != null) {
-				foreach ($data as &$row) {
-					$this->fetchExtraData($this->form, $row);
-				}
-			}
-		} else {
-			$data = $this->model->findAll($criteria);
 		}
-        $this->model->setDbCriteria($baseCriteria);
-        return $data;
-    }
+		# Then we constructs it with merged search parameters and config
+		parent::__construct($this->model(), CMap::mergeArray(
+			$this->search(), $this->config = $config
+		));
+	}
 
 	/**
-	 * Fetch extra data from rows and database by model's form
-	 * @param FormModel $form - Database table's form model instance
-	 * @param mixed $row - Array with fetched data
-	 * @throws CException
+	 * @var array with data provider configuration, which
+	 *  copies to widget which uses it
+	 *
+	 * @internal only for internal usage
 	 */
-	public static function fetchExtraData($form, &$row) {
-		foreach ($form->getConfig() as $key => $config) {
-			if ($config["type"] != "DropDown" || !isset($config["table"])) {
-				$field = FieldCollection::getCollection()->find($config["type"], false);
-				if ($field != null && $field instanceof DropDown) {
-					$row[$key] = $field->getData($row[$key]);
-				}
-			} else {
-				$data = AutoForm::fetch($config["table"]);
-				if (($value = $row[$key]) != null && isset($data[$value])) {
-					$row[$key] = $data[$value];
-				} else {
-					$row[$key] = "Нет";
-				}
-			}
+	public $config = [];
+
+	/**
+	 * Get new or cached instance of fetcher class, which providers
+	 * action with data fetch from another foreign tables or
+	 * simple dropdown lists
+	 *
+	 * @return Fetcher class instance
+	 */
+	public function getFetcher() {
+		if ($this->_fetcher == null) {
+			return $this->_fetcher = new Fetcher([
+				"fetcher" => $this->fetcher
+			]);
+		} else {
+			return $this->_fetcher;
 		}
 	}
 
-    /**
-     * Get model class instance
-     * @return ActiveRecord - Model class instance
-     */
-    public function getModel() {
-        return $this->model;
-    }
+	private $_fetcher = null;
 } 

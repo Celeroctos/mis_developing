@@ -14,3 +14,12 @@
 .core-table-footer .pagination {
     margin: 0 0 -5px;
 }
+
+.pagination > li .glyphicon {
+    font-size: 11px;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: #80bdf6 !important;
+    cursor: pointer;
+}

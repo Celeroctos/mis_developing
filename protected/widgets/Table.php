@@ -303,7 +303,7 @@ class Table extends Widget {
 			return $this->data;
 		}
 		foreach ($this->data as &$row) {
-			ActiveDataProvider::fetchExtraData($model, $row);
+//			ActiveDataProvider::fetchExtraData($model, $row);
 		}
 		return $this->data;
 	}
@@ -529,8 +529,8 @@ class Table extends Widget {
 	 *
 	 * @return string - Serialized and URL encoded attributes
 	 */
-	public function getSerializedAttributes($attributes = null, $excepts = []) {
-		return parent::getSerializedAttributes($attributes, array_merge([
+	public function getAttributes($attributes = null, $excepts = []) {
+		return parent::getAttributes($attributes, array_merge([
 			/*
 			 * Don't let widget to serialize array
 			 * with data, pff :D

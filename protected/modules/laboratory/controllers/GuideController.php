@@ -1,6 +1,6 @@
 <?php
 
-class GuideController extends Controller2 {
+class GuideController extends ControllerEx {
 
 	/**
 	 * Default view action, which renders page with guides

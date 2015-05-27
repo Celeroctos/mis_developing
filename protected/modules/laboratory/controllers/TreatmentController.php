@@ -1,6 +1,6 @@
 <?php
 
-class TreatmentController extends Controller2 {
+class TreatmentController extends ControllerEx {
 
 	/**
 	 * Default view action

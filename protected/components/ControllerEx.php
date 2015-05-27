@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller2 extends Controller {
+abstract class ControllerEx extends Controller {
 
     /**
      * Override that method to add your chains, if path will be
@@ -31,7 +31,9 @@ abstract class Controller2 extends Controller {
      * Override that method to return controller's model
      * @return ActiveRecord - Controller's model instance
      */
-    public abstract function getModel();
+    public function getModel() {
+		return null;
+	}
 
     /**
      * Override that method to provide access denied action, for example you can
@@ -243,6 +245,36 @@ abstract class Controller2 extends Controller {
 	}
 
 	/**
+	 * Try to get received data via GET method or throw an exception
+	 * with error message
+	 * @param $name string - Name of parameter to get
+	 * @return mixed - Some received stuff
+	 * @throws \Exception - If parameter hasn't been declared in _GET array
+	 */
+	public static function requireQuery($name) {
+		if (!$p = Yii::app()->getRequest()->getQuery($name)) {
+			throw new CHttpException(404, "That action requires query parameter \"$name\"");
+		} else {
+			return $p;
+		}
+	}
+
+	/**
+	 * Try to get received data via POST method or throw an exception
+	 * with error message
+	 * @param $name string - Name of parameter to get
+	 * @return mixed - Some received stuff
+	 * @throws \Exception - If parameter hasn't been declared in _GET array
+	 */
+	public static function requirePost($name) {
+		if (!$p = Yii::app()->getRequest()->getPost($name)) {
+			throw new CHttpException(404, "That action requires body parameter \"$name\"");
+		} else {
+			return $p;
+		}
+	}
+
+	/**
 	 * Check for model existence and return it
 	 *
 	 * @param string $class - Name of model's form class instance, it
@@ -355,7 +387,7 @@ abstract class Controller2 extends Controller {
 	 * Register some form's values in database, it will automatically
 	 * fetch model from $_POST["model"], decode it, build it's FormModel
 	 * object and save into database. But you must override
-	 * Controller2::getModel and return instance of controller's model else
+	 * ControllerEx::getModel and return instance of controller's model else
 	 * it will throw an exception
 	 *
 	 * @in (POST):
@@ -377,7 +409,7 @@ abstract class Controller2 extends Controller {
 				throw new CException("Forms to register mustn't be array");
 			}
 			if (($table = $this->getModel()) == null) {
-				throw new CException("Your controller must override Controller2::getModel method");
+				throw new CException("Your controller must override ControllerEx::getModel method");
 			}
 			$attributes = $model->getConfig();
 			if (isset($attributes)) {
@@ -532,6 +564,81 @@ abstract class Controller2 extends Controller {
             "trace" => $exception->getTrace()
         ]);
     }
+
+	public function actionWidget() {
+		try {
+			$class = $this->requireQuery("class");
+			$widget = $this->createWidget($class, Yii::app()->getRequest()->getQuery("config", []));
+			if (!$widget instanceof CWidget) {
+				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
+			}
+			ob_start();
+			$widget->run();
+			$this->leave([
+				"component" => ob_get_clean()
+			]);
+		} catch (\Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function actionTable() {
+		try {
+			$class = $this->requireQuery("provider");
+			$config = Yii::app()->getRequest()->getQuery("config", [
+				/* Default Table Configuration */
+			]);
+			foreach ($config as $key => &$value) {
+				if (!is_array($value)) {
+					continue;
+				}
+				foreach ([ "class", "widget" ] as $k) {
+					unset($value[$k]);
+				}
+			}
+			/** @var $provider GridProvider */
+			$provider = new $class($config);
+			foreach ($config as $key => &$value) {
+				if (is_array($provider->$key)) {
+					$provider->$key = $value + $provider->$key;
+				} else {
+					$provider->$key = $value;
+				}
+			}
+			if (!$provider instanceof GridProvider) {
+				throw new Exception("Table provider must be an instance of [app\\core\\Table] class");
+			}
+			$widget = $this->createWidget(Yii::app()->getRequest()->getQuery("widget", "GridTable"), [
+				"provider" => $provider,
+				"config" => $config
+			]);
+			if (!$widget instanceof CWidget) {
+				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
+			}
+			ob_start();
+			$widget->run();
+			$this->leave([
+				"component" => ob_get_clean()
+			]);
+		} catch (\Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function actionPanel() {
+		try {
+			$widget = $this->createWidget($this->requireQuery("widget"), Yii::app()->getRequest()->getQuery("config", []));
+			if (!$widget instanceof CWidget) {
+				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
+			}
+			$widget->run();
+			$this->leave([
+				"component" => ob_get_clean()
+			]);
+		} catch (\Exception $e) {
+			$this->exception($e);
+		}
+	}
 
     /**
      * Get access, if returns null, then it has been set by
