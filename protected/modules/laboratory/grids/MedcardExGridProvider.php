@@ -38,7 +38,13 @@ class MedcardExGridProvider extends GridProvider {
 			],
 			"sort" => [
 				"attributes" => [
-					"card_number", "fio", "enterprise_id", "birthday", "contact"
+					"card_number",
+					"policy.last_name",
+					"policy.first_name",
+					"policy.middle_name",
+					"enterprise_id",
+					"policy.birthday",
+					"contact"
 				],
 				"defaultOrder" => [
 					"card_number" => CSort::SORT_ASC
