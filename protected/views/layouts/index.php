@@ -2,7 +2,7 @@
 /**
  * @var string $content
  */
-MainAsset::register()
+MainAsset::register();
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@ MainAsset::register()
 			widget: '<?= Widget::createUrl("widget") ?>',
 			table: '<?= Widget::createUrl("table") ?>',
 			panel: '<?= Widget::createUrl("panel") ?>',
-			module: '<?= Yii::app()->getController()->getModule()->getId() ?>'
+			module: ''
         };
     </script>
 	<?= AssetBundleManager::getManager()->render() ?>
