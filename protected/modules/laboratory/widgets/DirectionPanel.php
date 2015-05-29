@@ -30,7 +30,7 @@ class DirectionPanel extends Panel {
 			"panel-search-button" => [
 				"class" => "btn btn-default",
 				"icon" => "glyphicon glyphicon-search",
-				"label" => "Поиск",
+				"label" => "Фильтр",
 				"title" => "Поиск направления",
 				"data-container" => "body",
 				"data-trigger" => "click",

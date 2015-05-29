@@ -13,28 +13,28 @@ var Core = Core || {};
 		}, selector);
 	});
 
-	Table.prototype.update = function() {
-		var config, me = this, table = this.selector();
+	Table.prototype.update = function(config, success) {
+		var attr, me = this, table = this.selector();
 		if (this.selector().trigger("table.update") === false) {
 			return void 0;
 		}
 		this.before();
-		if (config = table.attr("data-config")) {
-			config = $.parseJSON(config);
-			for (var i in config) {
-				this.configure(i, config[i], false);
+		if (attr = table.attr("data-config")) {
+			attr = $.parseJSON(attr);
+			for (var i in attr) {
+				this.configure(i, attr[i], false);
 			}
 		}
-		config = this.property("config") || {};
-		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), config, function(response) {
+		attr = this.property("config") || {};
+		attr = $.extend(attr, config);
+		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), attr, function(response) {
 			me.after(function() {
 				me.selector().empty().append($(response["component"]).children());
 				me.selector().attr($(response["component"]).getAttributes());
 				me.selector().trigger("table.updated");
+				success && success(response);
 			});
-		}).fail(function() {
-			me.after();
-		}, false);
+		});
 	};
 
 	Table.prototype.configure = function(attribute, properties, strong) {
@@ -60,18 +60,21 @@ var Core = Core || {};
 	Table.prototype.before = function() {
 		var me = this;
 		me._before = true;
-		setTimeout(function() {
+		this._timer = setTimeout(function() {
 			if (me._before == true) {
 				me.selector().loading("render");
 			}
-		}, 250);
+		}, this.property("updateDelay"));
 	};
 
 	Table.prototype.after = function(callback) {
 		var me = this;
 		me._before = false;
+		clearInterval(this._timer);
 		if (this.selector().data("core-loading")) {
-			me.selector().loading("destroy", callback);
+			me.selector().loading("reset", function() {
+				callback && callback();
+			});
 		} else {
 			callback && callback();
 		}
@@ -102,10 +105,10 @@ var Core = Core || {};
 	};
 
 	$.fn.table = Core.createPlugin("table", function(selector, properties) {
-		var t;
-		if ($(selector).get(0).tagName != "TABLE") {
-			if ((t = $(selector).parents("table")).length != 0) {
-				selector = t.get(0);
+		if (!$(selector).is("table")) {
+			var t = $(selector).parents("table");
+			if (t.length != 0) {
+				selector = t[0];
 			} else {
 				return void 0;
 			}

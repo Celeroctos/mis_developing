@@ -31,7 +31,7 @@ class MedcardGridProvider extends GridProvider {
 	public $menu = [
 		"controls" => [
 			"direction-register-icon" => [
-				"icon" => "glyphicon glyphicon-link",
+				"icon" => "glyphicon glyphicon-plus",
 				"label" => "Создать направление"
 			],
 			"medcard-show-icon" => [

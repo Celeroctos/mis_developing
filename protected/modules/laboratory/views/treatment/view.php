@@ -22,7 +22,7 @@ $this->widget("Modal", [
 			"type" => "button"
 		]
 	],
-	"class" => "modal-lg"
+	"class" => "modal-90"
 ]);
 
 $this->widget("Modal", [

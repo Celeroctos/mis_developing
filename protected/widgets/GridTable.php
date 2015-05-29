@@ -49,9 +49,15 @@ class GridTable extends Widget {
 	 * @return array with table configuration
 	 */
 	public function getExtraConfig() {
-		return [
+		$extra = $this->provider->extra;
+		foreach ($extra as $key => &$value) {
+			if (is_array($value)) {
+				$value = json_encode($value);
+			}
+		}
+		return $extra + [
 			"data-provider" => get_class($this->provider),
-			"data-widget" => get_class($this)
+			"data-widget" => get_class($this),
 		];
 	}
 

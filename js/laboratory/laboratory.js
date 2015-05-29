@@ -325,33 +325,6 @@ var Laboratory_Analyzer_TabMenu = {
 	}
 };
 
-var Laboratory_Clock_Loading = {
-	ready: function(duration, steps, success) {
-		duration = duration || 2000;
-		steps = steps || 12;
-		var i = 0;
-		var h = function() {
-			if (i >= steps) {
-				success && success();
-				return false;
-			}
-			$(".clock-container > img:eq(2)").rotate(360 / steps * i + 360 / steps, duration / 8, "linear", 360 / steps * i);
-			++i;
-			return true;
-		};
-		var c = function() {
-			$(".clock-container > img:eq(1)").rotate(360, {
-				duration: duration,
-				easing: "linear",
-				complete: function() {
-					if (h()) { c(); }
-				}
-			});
-		};
-		c();
-	}
-};
-
 $(document).ready(function() {
 
 	Laboratory_AnalyzerQueue_Widget.ready();

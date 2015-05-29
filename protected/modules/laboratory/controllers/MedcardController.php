@@ -5,8 +5,13 @@ class MedcardController extends ControllerEx {
 	/**
 	 * Render page with medcards
 	 */
-    public function actionView() {
-        $this->render("view");
+    public function actionNew() {
+		if (!$number = Yii::app()->getRequest()->getQuery("n")) {
+			$number = LCardNumberGenerator::getGenerator()->generate();
+		}
+        $this->render("new", [
+			"number" => $number
+		]);
     }
 
 	/**
@@ -111,33 +116,6 @@ class MedcardController extends ControllerEx {
 				"message" => "Номер карты был успешно сгенерирован",
 				"number" => LCardNumberGenerator::getGenerator()->generate()
 			]);
-		} catch (Exception $e) {
-			$this->exception($e);
-		}
-	}
-
-	/**
-	 * Register some form's values in database, it will automatically
-	 * fetch model from $_POST["model"], decode it, build it's FormModel
-	 * object and save into database. But you must override
-	 * ControllerEx::getModel and return instance of controller's model else
-	 * it will throw an exception
-	 *
-	 * @in (POST):
-	 *  + model - String with serialized client form via $("form").serialize(), if you're
-	 * 		using Modal or Panel widgets that it will automatically find button with
-	 * 		submit type and send ajax request
-	 * @out (JSON):
-	 *  + message - Message with status
-	 *  + status - True if everything ok
-	 *
-	 * @see LController::getModel
-	 * @see LModal
-	 * @see LPanel
-	 */
-	public function actionRegister() {
-		try {
-
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

@@ -191,7 +191,3 @@ $this->widget("Modal", [
 		"height" => "100%"
 	]) ?>
 </div>
-<hr>
-<?php $this->widget("GridTable", [
-	"provider" => new OmsGridProvider()
-]) ?>

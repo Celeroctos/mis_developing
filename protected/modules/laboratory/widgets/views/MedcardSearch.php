@@ -7,7 +7,7 @@
 <div class="medcard-search-wrapper">
 	<div class="row">
 		<div class="col-xs-12" onkeydown="if (arguments[0].keyCode == 13) { Laboratory_MedcardSearch_Widget.search($(this).parents('.medcard-search-wrapper:eq(0)')); }">
-			<div class="col-xs-5">
+			<div class="col-xs-4">
 				<h4>Поиск</h4>
 				<br>
 				<?php $this->widget("AutoForm", [
@@ -15,15 +15,6 @@
 					"id" => "medcard-search-form"
 				]); ?>
 			</div>
-			<div class="col-xs-5">
-				<h4>Дата проведения анализа</h4>
-				<br>
-				<?php $this->widget("AutoForm", [
-					"model" => new LAnalysisSearchForm(),
-					"id" => "medcard-range-form"
-				]); ?>
-			</div>
-			<div class="col-xs-2"></div>
 		</div>
 	</div>
 	<div class="row">

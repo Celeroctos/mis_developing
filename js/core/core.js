@@ -273,9 +273,11 @@ var Core = Core || {};
 	};
 
 	Core.loadPanel = function(widget, attributes, success) {
-		return Core.sendQuery("ext/panel", $.extend(attributes, {
+		return Core.sendQuery(window["globalVariables"]["panel"], $.extend(attributes, {
 			widget: widget
-		}), success);
+		}), function(json) {
+			success && success(json["component"]);
+		});
 	};
 
 	Core.postFormErrors = function(where, json) {

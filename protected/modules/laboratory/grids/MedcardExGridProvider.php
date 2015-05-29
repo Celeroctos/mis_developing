@@ -34,7 +34,7 @@ class MedcardExGridProvider extends GridProvider {
 			"criteria" => [
 				"with" => [
 					"policy", "enterprise"
-				]
+				],
 			],
 			"sort" => [
 				"attributes" => [

@@ -204,7 +204,7 @@ abstract class ActiveRecord extends CActiveRecord {
         foreach ($this->getKeys() as $key => $ignored) {
             $criteria->compare($key, $this->$key, true, '');
         }
-        return new ActiveDataProvider($this, [
+        return new CActiveDataProvider($this, [
             'criteria' => $criteria,
             'sort' => [
                 'defaultOrder' => [

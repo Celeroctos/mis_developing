@@ -2,27 +2,16 @@
 
 class LMedcard extends ActiveRecord {
 
-	public $id;
-	public $mis_medcard;
-	public $sender_id;
-	public $patient_id;
-	public $card_number;
-	public $enterprise_id;
-
 	public function relations() {
 		return [
-			"medcard" => [ self::BELONGS_TO, "Medcard", "mis_medcard" ],
-			"patient" => [ self::BELONGS_TO, "LPatient", "patient_id" ],
-			"sender" => [ self::BELONGS_TO, "Doctor", "sender_id" ],
-			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id" ],
-			"direction" => [ self::BELONGS_TO, "LDirection", "medcard_id" ],
+			"medcard" => [ self::BELONGS_TO, "Medcard", "mis_medcard", "joinType" => "LEFT OUTER JOIN" ],
+			"patient" => [ self::BELONGS_TO, "LPatient", "patient_id", "joinType" => "INNER JOIN" ],
+			"sender" => [ self::BELONGS_TO, "Doctor", "sender_id", "joinType" => "LEFT OUTER JOIN" ],
+			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id", "joinType" => "LEFT OUTER JOIN" ],
+			"direction" => [ self::BELONGS_TO, "LDirection", "medcard_id", "joinType" => "INNER JOIN" ],
 		];
 	}
 
-	/**
-	 * Get instance of default table provider for current table
-	 * @return TableProvider - Default table provider
-	 */
 	public function getMedcardSearchTableProvider() {
 		return new TableProvider($this, $this->getDbConnection()->createCommand()
 			->selectDistinct("
@@ -41,9 +30,6 @@ class LMedcard extends ActiveRecord {
 		);
 	}
 
-	/**
-	 * @return string - Name of table
-	 */
 	public function tableName() {
 		return "lis.medcard";
 	}

@@ -153,6 +153,12 @@ abstract class GridProvider extends ActiveDataProvider {
 	public $doubleClickEvent = null;
 
 	/**
+	 * @var array with extra attributes, which should be
+	 * 	added to <table> tag
+	 */
+	public $extra = [];
+
+	/**
 	 * @return ControlMenu instance of widget class, which
 	 * 	should renders control menu for current provider
 	 */

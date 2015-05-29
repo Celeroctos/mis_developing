@@ -7,6 +7,12 @@ class DirectionGridProvider extends GridProvider {
 	 */
 	public $status = null;
 
+	/**
+	 * @var string with date, for which directions
+	 * 	should be displayed
+	 */
+	public $date = null;
+
 	public $columns = [
 		"id" => "#",
 		"surname" => [
@@ -37,6 +43,16 @@ class DirectionGridProvider extends GridProvider {
 		]
 	];
 
+	public $menu = [
+		"controls" => [
+			"direction-show-icon" => [
+				"icon" => "glyphicon glyphicon-list",
+				"label" => "Открыть направление"
+			],
+		],
+		"mode" => ControlMenu::MODE_ICON
+	];
+
 	public function search() {
 		$criteria = new CDbCriteria([
 			"with" => [
@@ -50,6 +66,11 @@ class DirectionGridProvider extends GridProvider {
 		if ($this->status != null) {
 			$criteria->addColumnCondition([
 				"status" => $this->status
+			]);
+		}
+		if ($this->date != null) {
+			$criteria->addColumnCondition([
+				"cast(sending_date as date)" => $this->date
 			]);
 		}
 		return [
@@ -69,7 +90,12 @@ class DirectionGridProvider extends GridProvider {
 				]
 			],
 			"textNoData" => "На этот день нет направлений",
-			"primaryKey" => "id"
+			"primaryKey" => "id",
+			"extra" => [
+				"data-dates" => LDirection::model()->getDates(
+					LDirection::STATUS_TREATMENT_ROOM
+				)
+			]
 		];
 	}
 

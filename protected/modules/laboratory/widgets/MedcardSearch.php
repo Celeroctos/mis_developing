@@ -12,9 +12,7 @@ class MedcardSearch extends Widget {
 	/**
 	 * @var array - Default configuration for table provider
 	 */
-	public $config = [
-		"emptyData" => true
-	];
+	public $config = [];
 
 	/**
 	 * Run widget to return just rendered content
