@@ -89,13 +89,13 @@ class DirectionGridProvider extends GridProvider {
 					"id" => CSort::SORT_DESC
 				]
 			],
-			"textNoData" => "На этот день нет направлений",
-			"primaryKey" => "id",
 			"extra" => [
 				"data-dates" => LDirection::model()->getDates(
 					LDirection::STATUS_TREATMENT_ROOM
 				)
-			]
+			],
+			"textNoData" => "На этот день нет направлений",
+			"primaryKey" => "id",
 		];
 	}
 

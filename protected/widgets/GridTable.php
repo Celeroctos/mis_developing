@@ -61,6 +61,21 @@ class GridTable extends Widget {
 		];
 	}
 
+	private function getConfig(array $config) {
+		$result = [];
+		foreach ($config as $key => $value) {
+			if (empty($value) || $value == "") {
+				continue;
+			}
+			if (is_array($value) && is_object($value)) {
+				$result[$key] = $this->getConfig($value);
+			} else {
+				$result[$key] = $value;
+			}
+		}
+		return $result;
+	}
+
 	/**
 	 * Render basic table element, which starts
 	 * with <table> tag and ends with </table>, it
@@ -68,10 +83,14 @@ class GridTable extends Widget {
 	 * body and footer elements
 	 */
 	public function renderTable() {
+		$config = $this->getConfig($this->config);
+		if (isset($config["emptyData"])) {
+			unset($config["emptyData"]);
+		}
 		print Html::beginTag("table", $this->getExtraConfig() + [
 				"class" => $this->provider->tableClass,
 				"id" => $this->provider->id != null ? $this->provider->id : $this->getId(),
-				"data-config" => json_encode($this->config)
+				"data-config" => json_encode($config)
 			]);
 		if ($this->provider->hasHeader) {
 			$this->renderHeader();
@@ -95,7 +114,7 @@ class GridTable extends Widget {
 				"data-key" => $key
 			];
 			if ($this->provider->getSort() != false) {
-				if ($prepared["relation"] && $this->provider->getTotalItemCount() > 0) {
+				if ($prepared["relation"] && $this->provider->getItemCount() > 0) {
 					/* @var $related CActiveRecord */
 					$related = $this->provider->getData()[0];
 					$r = "";
@@ -198,7 +217,7 @@ class GridTable extends Widget {
 		if (empty($models)) {
 			print Html::tag("tr", [], Html::tag("td", [
 				"colspan" => count($this->provider->columns) + ($this->provider->menu != false ? 1 : 0),
-			], Html::tag("h5", [ "class" => "text-center" ], $this->provider->textNoData)));
+			], Html::tag("h5", [ "class" => "text-center" ], $this->provider->emptyData ? $this->provider->textEmptyData : $this->provider->textNoData)));
 		}
 		print Html::endTag("tbody");
 	}

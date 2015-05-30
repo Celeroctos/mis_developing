@@ -26,6 +26,14 @@ class DirectionPanel extends Panel {
 		if (empty($this->date)) {
 			$this->date = date("Y-m-d");
 		}
+		if ($this->body instanceof GridTable) {
+			$provider = is_string($this->body->provider) ? $this->body->provider :
+				get_class($this->body->provider);
+			$config = json_encode($this->body->provider->config);
+		} else {
+			$provider = null;
+			$config = null;
+		}
 		$this->controls = [
 			"panel-search-button" => [
 				"class" => "btn btn-default",
@@ -38,7 +46,9 @@ class DirectionPanel extends Panel {
 				"data-placement" => "bottom",
 				"data-html" => "true",
 				"data-content" => $this->getWidget("DirectionSearch", [
-					"widget" => get_class($this->body)
+					"widget" => get_class($this->body),
+					"provider" => $provider,
+					"config" => $config
 				])
 			],
 		];

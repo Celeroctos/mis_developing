@@ -61,24 +61,26 @@ var Core = Core || {};
             id: form.attr("id"),
             model: form.data("form"),
             url: form.attr("action")
-        }, function(json) {
-            if (!json.status) {
-                me.after();
-                me.activate();
-                return Core.createMessage({
-                    message: json.message
-                });
-            }
-            me.selector().replaceWith(
-                me.selector($(json["component"]))
-            );
+        }, function(response) {
+			if (typeof response == "string" && response.charAt(0) == "{") {
+				var json = $.parseJSON(response);
+				if (!json.status) {
+					me.after();
+					me.activate();
+					return Core.createMessage({
+						message: json.message
+					});
+				}
+			} else {
+				me.selector().replaceWith(me.selector(response));
+			}
             me.selector().find(".form-group").css("opacity",
                 me.property("opacity")
             );
             me.after();
             me.activate();
             after && after(me);
-        }, "json");
+        });
     };
 
     Form.prototype.activate = function() {
@@ -107,26 +109,29 @@ var Core = Core || {};
             });
         }
         var me = this;
-        return $.post(this.property("url"), form.serialize(), function(json) {
+        return $.post(this.property("url"), form.serialize(), function(response) {
             me.after();
-            if (!json["status"]) {
-                callback && callback.call(me.selector(), false);
-				return Core.postFormErrors(me.selector(), json);
-            } else {
-                if (me.property("success")) {
-                    me.property("success").call(me, json);
-                }
-                callback && callback.call(me.selector(), true);
-            }
-            if (json["message"]) {
-                Core.createMessage({
-                    type: "success",
-                    sign: "ok",
-                    message: json["message"]
-                });
-            }
-            $("#" + me.selector().attr("id")).trigger("success", json);
-        }, "json").fail(function() {
+			if (typeof response == "string" && response.charAt(0) == "{") {
+				var json = $.parseJSON(response);
+				if (!json["status"]) {
+					callback && callback.call(me.selector(), false);
+					return Core.postFormErrors(me.selector(), json);
+				}
+				if (json["message"]) {
+					Core.createMessage({
+						type: "success",
+						sign: "ok",
+						message: json["message"]
+					});
+				}
+			} else {
+				$("#" + me.selector().attr("id")).trigger("success", response);
+			}
+			if (me.property("success")) {
+				me.property("success").call(me.selector(), response);
+			}
+			callback && callback.call(me.selector(), true);
+        }).fail(function() {
 			Core.createMessage({
 				message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
 			});

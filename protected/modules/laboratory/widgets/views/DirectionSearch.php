@@ -7,9 +7,11 @@ $this->widget("AutoForm", [
 	"url" => Yii::app()->createUrl("laboratory/direction/search"),
 	"model" => new LDirectionSearchForm(),
 	"defaults" => [
-		"class" => $this->widget
+		"widget" => $this->widget,
+		"provider" => $this->provider,
+		"config" => $this->config,
 	]
-]); ?>
+]) ?>
 <br>
 <div class="col-xs-12 text-center">
 	<button class="btn btn-success direction-search-button" style="width: 30%">

@@ -95,8 +95,8 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Post validation errors
-			if ($this->hasValidationErrors()) {
-				$this->postValidationError();
+			if ($this->hasErrors()) {
+				$this->postErrors();
 			}
 
 			// Load table model for patient category with next attributes
@@ -110,7 +110,7 @@ class DirectionController extends ControllerEx {
 
 			// Try to save model in database
 			if (!$category->save()) {
-				$this->postValidationError($category->errors);
+				$this->postErrors($category->errors);
 			}
 
 			// Get mis medcard identification number to provider
@@ -147,26 +147,26 @@ class DirectionController extends ControllerEx {
 
 			// Try to save direction in database
 			if (!$direction->save(true)) {
-				$this->postValidationError($direction->errors);
+				$this->postErrors($direction->errors);
 			}
 
 			// After saving we have to set it's barcode as primary key (maybe changed)
-			LDirection::model()->updateByPk($direction->id, [
-				"barcode" => $direction->id
+			LDirection::model()->updateByPk($direction->{"id"}, [
+				"barcode" => $direction->{"id"}
 			]);
 
 			// Register direction parameters in database
 			foreach ($form->{"analysis_parameters"} as $id) {
 				$dp = LDirectionParameter::load([
-					"direction_id" => $direction->id,
+					"direction_id" => $direction->{"id"},
 					"analysis_type_parameter_id" => $id
 				]);
 				# Hot! Hot! Hot!
 				if (!$dp->validate()) {
-					$this->postValidationError($dp->errors);
+					$this->postErrors($dp->errors);
 				} else {
 					Yii::app()->getDb()->createCommand()->insert("lis.direction_parameter", [
-						"direction_id" => $direction->id,
+						"direction_id" => $direction->{"id"},
 						"analysis_type_parameter_id" => $id
 					]);
 				}
@@ -176,7 +176,7 @@ class DirectionController extends ControllerEx {
 			$transaction->commit();
 			$this->leave([
 				"message" => "Направление успешно зарегистрировано",
-				"direction" => $direction->id
+				"direction" => $direction->{"id"}
 			]);
 		} catch (Exception $e) {
 			$transaction->rollback();
@@ -229,8 +229,8 @@ class DirectionController extends ControllerEx {
 		$addressForm = $this->requireModel("AddressForm_2", null, "/_\\d+$/");
 
 		// If we have any validation errors, then post it
-		if ($this->hasValidationErrors()) {
-			$this->postValidationError();
+		if ($this->hasErrors()) {
+			$this->postErrors();
 		}
 
 		// Begin transaction for different SQL actions
@@ -247,13 +247,13 @@ class DirectionController extends ControllerEx {
 				"string" => $patientForm["address_id"]
 			]);
 			if (!$address->save(true)) {
-				$this->postValidationError($address->errors);
+				$this->postErrors($address->errors);
 			}
 			$registerAddress = LAddress::loadFromModel($registerAddressForm, [
 				"string" => $patientForm["register_address_id"]
 			]);
 			if (!$registerAddress->save(true)) {
-				$this->postValidationError($registerAddress->errors);
+				$this->postErrors($registerAddress->errors);
 			}
 
 			// Load models for passport and policy and save it in database
@@ -265,7 +265,7 @@ class DirectionController extends ControllerEx {
 					"birthday" => $patientForm["birthday"]
 				]);
 				if (!$passport->save(true)) {
-					$this->postValidationError($passport->errors);
+					$this->postErrors($passport->errors);
 				}
 			} else {
 				$passport = null;
@@ -279,7 +279,7 @@ class DirectionController extends ControllerEx {
 					"document_type" => null
 				]);
 				if (!$policy->save(true)) {
-					$this->postValidationError($policy->errors);
+					$this->postErrors($policy->errors);
 				}
 			} else {
 				$policy = null;
@@ -293,7 +293,7 @@ class DirectionController extends ControllerEx {
 				"policy_id" => $policy != null ? $policy->{"id"} : null
 			]);
 			if (!$patient->save(true)) {
-				$this->postValidationError($patient->errors);
+				$this->postErrors($patient->errors);
 			}
 
 			// Load model for medcard and register it in database
@@ -302,7 +302,7 @@ class DirectionController extends ControllerEx {
 				"patient_id" => $patient->{"id"}
 			]);
 			if (!$medcard->save(true)) {
-				$this->postValidationError($medcard->errors);
+				$this->postErrors($medcard->errors);
 			}
 
 			// Commit all changes
@@ -409,7 +409,7 @@ class DirectionController extends ControllerEx {
 		try {
 			$form = $this->requireModel("LAboutDirectionForm");
 			if ($form->hasErrors()) {
-				$this->postValidationError($form->errors);
+				$this->postErrors($form->errors);
 			}
 			$direction = LDirection::model()->findByPk($form->{"direction_id"});
 			$parameters = [
@@ -452,7 +452,7 @@ class DirectionController extends ControllerEx {
 			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
 				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
 			) {
-				$msg = "Направление успешно отправлено в лабораторию";
+				$msg = "Направление отправлено в лабораторию";
 			} else {
 				$msg = "Направление сохранено";
 			}
@@ -472,28 +472,39 @@ class DirectionController extends ControllerEx {
 				throw new CException("Direction search required [LDirectionSearchForm] form");
 			}
 			$criteria = new CDbCriteria();
-			if (isset($form["fio"]) && !empty($form["fio"])) {
-				$criteria->addSearchCondition("surname", $form["fio"]);
-				$criteria->addSearchCondition("name", $form["fio"]);
+			foreach ([ "surname", "name", "patronymic" ] as $k) {
+				if (isset($form[$k]) && !empty($form[$k])) {
+					$criteria->addSearchCondition($k, (string) $form[$k]);
+				}
 			}
 			if (isset($form["card_number"]) && !empty($form["card_number"])) {
 				$criteria->addSearchCondition("card_number", $form["card_number"]);
-			}
-			if (isset($form["sender_id"]) && $form["sender_id"] != -1) {
-				$criteria->addColumnCondition([
-					"sender_id" => $form["sender_id"]
-				]);
 			}
 			if (isset($form["analysis_type_id"]) && $form["analysis_type_id"] != -1) {
 				$criteria->addColumnCondition([
 					"analysis_type_id" => $form["analysis_type_id"]
 				]);
 			}
-			$this->leave([
-				"component" => $this->getWidget($form["class"], [
-					"criteria" => $criteria
+			if (isset($form["config"])) {
+				$config = json_decode($form["config"], true);
+			} else {
+				$config = [];
+			}
+			if (empty($config)) {
+				$config = [];
+			}
+			$widget = $this->createWidget($form["widget"], [
+				"provider" => new $form["provider"]($config + [
+					"condition" => [
+						"condition" => $criteria->condition,
+						"params" => $criteria->params
+					]
 				])
 			]);
+			if (!$widget instanceof CWidget) {
+				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
+			}
+			$widget->run();
 		} catch (Exception $e) {
 			$this->exception($e);
 		}

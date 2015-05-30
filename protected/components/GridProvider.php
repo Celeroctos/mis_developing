@@ -178,5 +178,13 @@ abstract class GridProvider extends ActiveDataProvider {
 		}
 	}
 
+	protected function fetchData() {
+		if (!$this->emptyData) {
+			return parent::fetchData();
+		} else {
+			return [];
+		}
+	}
+
 	private $_menu = null;
 }

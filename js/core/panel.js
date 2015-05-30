@@ -71,8 +71,6 @@ var Core = Core || {};
 		var widget, me = this;
 		if (!(widget = this.selector().attr("data-widget"))) {
 			return void 0;
-		} else if (!Core.Common.getWidget()) {
-			throw new Error("Layout hasn't declared [doc::widget] field via [Widget::createUrl] method");
 		}
 		if (this.selector().trigger("panel.update") === false) {
 			return void 0;
@@ -89,7 +87,6 @@ var Core = Core || {};
 		if (params.length !== void 0 && !params.length) {
 			params = {};
 		}
-		params["_"] = new Date().getTime();
 		Core.loadPanel(this.selector().attr("data-widget"), params, function(component) {
 			me.replace(component);
 			var back;

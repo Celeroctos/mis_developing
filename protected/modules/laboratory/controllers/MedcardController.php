@@ -53,19 +53,15 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionSearch() {
 		try {
-			if (!($medcard = Yii::app()->getRequest()->getPost("LMedcardSearchForm"))) {
-				throw new CException("Can't resolve search form for medcard \"LMedcardSearchForm\"");
-			}
-			if (!($analysis = Yii::app()->getRequest()->getPost("LAnalysisSearchForm"))) {
-				throw new CException("Can't resolve search form for analysis \"LAnalysisSearchForm\"");
-			}
+			$medcard = $this->requirePost("LMedcardSearchForm");
+			$provider = $this->requirePost("provider");
+			$config = Yii::app()->getRequest()->getQuery("config", []);
 			$criteria = new CDbCriteria();
-			if (isset($analysis["begin_date"]) && isset($analysis["end_date"])) {
-				$criteria->addBetweenCondition("registration_date", $analysis["begin_date"], $analysis["end_date"]);
-			}
 			$like = [
 				"card_number",
-				"fio",
+				"surname",
+				"name",
+				"patronymic",
 				"phone",
 			];
 			$compare = [];
@@ -82,18 +78,18 @@ class MedcardController extends ControllerEx {
 			if (count($compare) > 0) {
 				$criteria->addColumnCondition($compare);
 			}
-			$widget = Yii::app()->getRequest()->getPost("widget");
-			$attributes = json_decode(Yii::app()->getRequest()->getPost("attributes"), true);
-			if (isset($medcard["fio"]) && !empty($medcard["fio"]) && $widget === "MedcardTable2") {
-				$attributes["optimizedPagination"] = true;
-			} else {
-				$attributes["optimizedPagination"] = false;
+			if (!empty($criteria->condition)) {
+				$config += [
+					"condition" => [
+						"condition" => $criteria->condition,
+						"params" => $criteria->params,
+					]
+				];
 			}
-			unset($attributes["searchCriteria"]);
 			$this->leave([
-				"component" => $this->getWidget($widget, [
-					"criteria" => $criteria
-				] + $attributes)
+				"component" => $this->getWidget("GridTable", [
+					"provider" => new $provider($config)
+				])
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -113,7 +109,7 @@ class MedcardController extends ControllerEx {
 	public function actionGenerate() {
 		try {
 			$this->leave([
-				"message" => "Номер карты был успешно сгенерирован",
+				"message" => "Номер карты сгенерирован",
 				"number" => LCardNumberGenerator::getGenerator()->generate()
 			]);
 		} catch (Exception $e) {

@@ -187,11 +187,11 @@ var Laboratory_MedcardSearch_Widget = {
 		});
 	},
 	search: function(wrapper) {
-		var table = wrapper.find("#medcard-search-button").button("loading")
-			.parents(".medcard-search-wrapper:eq(0)").find("table[data-class]");
+		wrapper.find("#medcard-search-button").button("loading");
+		var table = wrapper.find("table");
 		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
-			wrapper.find("#medcard-range-form").serialize() + "&widget=" + table.data("class");
-		data += "&attributes=" + encodeURIComponent(table.attr("data-attributes"));
+			wrapper.find("#medcard-range-form").serialize() + "&provider=" + table.attr("data-provider");
+		data += "&config=" + encodeURIComponent(table.attr("data-config"));
 		Core.sendPost("laboratory/medcard/search", data, function(json) {
 			table.replaceWith($(json["component"]));
 			Core.createMessage({
@@ -205,7 +205,7 @@ var Laboratory_MedcardSearch_Widget = {
 		});
 	},
 	click: function(id) {
-		var me = Laboratory_MedcardSearch_Widget;
+		var me = this;
 		me.active && me.active.removeClass("medcard-table-active");
 		me.active = $(this).addClass("medcard-table-active");
 		if (me.active) {
@@ -228,7 +228,7 @@ var Laboratory_MedcardSearch_Modal = {
 		modal.on("show.bs.modal", function() {
 			$(this).find("#load").prop("disabled", "disabled");
 		});
-		modal.on("click", "#medcard-table tr[data-id]", function() {
+		modal.on("click", "tr[data-id]", function() {
 			me.id = $(this).data("id");
 			$(modal.find("#load")[0]).text("Открыть (" + me.id + ")").removeProp("disabled");
 		});
@@ -336,7 +336,10 @@ var Laboratory_DirectionTable_Widget = {
 			$(element).datepicker("remove");
 		}
 		var handler = function () {
-			$(".direction-date").text($.datepicker.formatDate("yy-mm-dd", $(element).datepicker("getDate")));
+			var t = $.datepicker.formatDate("yy-mm-dd", $(element).datepicker("getDate"));
+			if (t.length > 0) {
+				$(".direction-date").text(t);
+			}
 		};
 		$(element).datepicker({
 			language: "ru-RU",
@@ -390,7 +393,7 @@ var Laboratory_DirectionTable_Widget = {
 		var me = this;
 		$.post(url("laboratory/direction/repeat"), {
 			id: id
-		}, function (json) {
+		}, function(json) {
 			if (!json["status"]) {
 				return Core.createMessage({
 					message: json["message"]
@@ -571,11 +574,12 @@ var Laboratory_DirectionSearchForm_Popover = {
 		$("body").on("click", ".direction-search-button", function() {
 			$("#direction-search-form").form({
 				success: function(response) {
-					$(".panel[data-widget='"+ $("#direction-search-form #class").val() +"']").panel(
-						"replace", response["component"]
-					);
+					$(".panel[data-widget='"+ this.find("#widget").val() +"']:eq(0)").panel("replace", response);
 				}
 			}).form("send");
+			$(".panel-search-button").popover("hide");
+		});
+		$("button[data-tab]").click(function() {
 			$(".panel-search-button").popover("hide");
 		});
 	}

@@ -200,7 +200,7 @@ abstract class ControllerEx extends Controller {
 		$form->attributes = $array;
         if (!$form->validate()) {
             if ($error) {
-				$this->postValidationError($form->getErrors());
+				$this->postErrors($form->getErrors());
             } else {
                 $this->errors += $form->getErrors();
             }
@@ -214,7 +214,7 @@ abstract class ControllerEx extends Controller {
 	 */
 	public function validateForm($form) {
 		if (!$form->validate()) {
-			$this->postValidationError($form->getErrors());
+			$this->postErrors($form->getErrors());
 		}
 	}
 
@@ -222,7 +222,7 @@ abstract class ControllerEx extends Controller {
 	 * Does current controller have any validation errors
 	 * @return bool - Has validation errors
 	 */
-	public function hasValidationErrors() {
+	public function hasErrors() {
 		return !empty($this->errors);
 	}
 
@@ -230,7 +230,7 @@ abstract class ControllerEx extends Controller {
 	 * Post validation errors and terminate script execution
 	 * @param array $errors - Array with validation errors
 	 */
-	public function postValidationError($errors = null) {
+	public function postErrors($errors = null) {
 		if ($errors === null) {
 			$errors = $this->errors;
 		}
@@ -324,7 +324,7 @@ abstract class ControllerEx extends Controller {
             $array[] = $this->getUrlForm($f, false);
         }
         if (count($this->errors) > 0) {
-			$this->postValidationError($this->errors);
+			$this->postErrors($this->errors);
         }
         return $array;
     }
@@ -557,26 +557,19 @@ abstract class ControllerEx extends Controller {
 		}
         $this->leave([
             "message" => basename($method["file"])."[".$method["line"]."] ".$method["class"]."::".$method["function"]."(): \"".$exception->getMessage()."\"",
-            "file" => basename($method["file"]),
-            "method" => $method["class"]."::".$method["function"]."()",
-            "line" => $method["line"],
             "status" => false,
-            "trace" => $exception->getTrace()
         ]);
     }
 
 	public function actionWidget() {
 		try {
-			$class = $this->requireQuery("class");
-			$widget = $this->createWidget($class, Yii::app()->getRequest()->getQuery("config", []));
+			$widget = $this->createWidget($this->requireQuery("widget"),
+				Yii::app()->getRequest()->getQuery("config", [])
+			);
 			if (!$widget instanceof CWidget) {
 				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
 			}
-			ob_start();
 			$widget->run();
-			$this->leave([
-				"component" => ob_get_clean()
-			]);
 		} catch (\Exception $e) {
 			$this->exception($e);
 		}
@@ -615,11 +608,7 @@ abstract class ControllerEx extends Controller {
 			if (!$widget instanceof CWidget) {
 				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
 			}
-			ob_start();
 			$widget->run();
-			$this->leave([
-				"component" => ob_get_clean()
-			]);
 		} catch (\Exception $e) {
 			$this->exception($e);
 		}
@@ -632,9 +621,6 @@ abstract class ControllerEx extends Controller {
 				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
 			}
 			$widget->run();
-			$this->leave([
-				"component" => ob_get_clean()
-			]);
 		} catch (\Exception $e) {
 			$this->exception($e);
 		}

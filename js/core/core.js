@@ -200,42 +200,20 @@ var Core = Core || {};
 		$(component).find(filters.join(",")).val("");
 	};
 
-	/**
-	 * Get url to get widget component
-	 * @returns {String} - Path to widget action
-	 * @static
-	 */
-	Common.getWidget = function() {
-		return window["globalVariables"]["widget"];
-	};
-
-	/**
-	 * Load widget
-	 * @param {String} widget - Name of widget's class
-	 * @param {{}} [attributes] - Widget's parameters
-	 * @param {Function} [success] - Callback after fetch
-	 */
-	Common.loadWidget = function(widget, attributes, success) {
-		return $.get(this.getWidget(), $.extend(attributes, {
-			class: widget
-		}), function(json) {
-			if (!json["status"]) {
-				return Core.createMessage({
-					message: json["message"]
-				});
-			} else {
-				success && success(json["component"], json);
-			}
-		}, "json");
-	};
-
-	Core.loadWidget = function(widget, attributes, success, module) {
-		return Core.sendQuery(window["globalVariables"]["widget"], {
-			"module": module || window["globalVariables"]["module"],
-			"class": widget,
-			"config": attributes
-		}, function(response) {
-			success && success(response["component"]);
+	Core.loadWidget = function(widget, attributes, success) {
+		return $.ajax({
+			url: window["globalVariables"]["widget"],
+			data: {
+				widget: widget,
+				config: attributes
+			},
+			cache: false
+		}).done(function(response) {
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
 		});
 	};
 
@@ -248,22 +226,8 @@ var Core = Core || {};
 				config: config,
 				module: window["globalVariables"]["module"]
 			},
-			dataType: "json",
 			cache: false
 		}).done(function(response) {
-			if (!response["status"]) {
-				if (response["error"] !== "form") {
-					return Core.createMessage({
-						message: response["message"]
-					});
-				}
-			} else if (response["message"]) {
-				Core.createMessage({
-					message: response["message"],
-					type: "success",
-					sign: "ok"
-				});
-			}
 			success && success(response);
 		}).fail(function() {
 			return Core.createMessage({
@@ -272,11 +236,20 @@ var Core = Core || {};
 		});
 	};
 
-	Core.loadPanel = function(widget, attributes, success) {
-		return Core.sendQuery(window["globalVariables"]["panel"], $.extend(attributes, {
-			widget: widget
-		}), function(json) {
-			success && success(json["component"]);
+	Core.loadPanel = function(widget, config, success) {
+		return $.ajax({
+			url: window["globalVariables"]["panel"],
+			data: {
+				widget: widget,
+				config: config
+			},
+			cache: true
+		}).done(function(response) {
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
 		});
 	};
 

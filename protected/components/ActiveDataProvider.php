@@ -44,6 +44,12 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 	public $fetcher = false;
 
 	/**
+	 * @var CDbCriteria|string|array with extra criteria parameters for CDbCriteria
+	 * 	class. It may be class instance, serialized object or array with config
+	 */
+	public $condition = null;
+
+	/**
 	 * Override that method to return class name or
 	 * instance of active record class for current active
 	 * data provider
@@ -87,6 +93,10 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 		parent::__construct($this->model(), CMap::mergeArray(
 			$this->search(), $this->config = $config
 		));
+		# Merge condition with criteria
+		if ($this->getCriteria() != null && $this->condition != null) {
+			$this->getCriteria()->mergeWith($this->condition);
+		}
 	}
 
 	/**

@@ -24,7 +24,7 @@
 			<hr>
 			<div id="medcard-search-table-wrapper">
 				<?php $this->widget("GridTable", [
-					"provider" => $this->provider
+					"provider" => new $this->provider($this->config)
 				]) ?>
 			</div>
 		</div>

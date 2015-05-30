@@ -2,37 +2,50 @@
 
 class LDirectionSearchForm extends FormModel {
 
-	public $class;
-	public $fio;
+	public $widget;
+	public $provider;
+	public $config;
+	public $surname;
+	public $name;
+	public $patronymic;
 	public $card_number;
-	public $sender_id;
 	public $analysis_type_id;
 
 	public function config() {
 		return [
-			"class" => [
+			"widget" => [
 				"type" => "hidden",
 				"options" => [
 					"data-cleanup" => "false"
 				]
 			],
-			"fio" => [
-				"label" => "Пациент",
+			"provider" => [
+				"type" => "hidden",
+				"options" => [
+					"data-cleanup" => "false"
+				]
+			],
+			"config" => [
+				"type" => "hidden",
+				"options" => [
+					"data-cleanup" => "false"
+				]
+			],
+			"surname" => [
+				"label" => "Фамилия",
+				"type" => "text"
+			],
+			"name" => [
+				"label" => "Имя",
+				"type" => "text"
+			],
+			"patronymic" => [
+				"label" => "Отчество",
 				"type" => "text"
 			],
 			"card_number" => [
 				"label" => "Карта",
 				"type" => "text"
-			],
-			"sender_id" => [
-				"label" => "Направитель",
-				"type" => "DropDown",
-				"table" => [
-					"name" => "lis.doctor",
-					"format" => "%{last_name} %{first_name} %{middle_name}",
-					"key" => "id",
-					"value" => "first_name, last_name, middle_name"
-				]
 			],
 			"analysis_type_id" => [
 				"label" => "Тип анализа",

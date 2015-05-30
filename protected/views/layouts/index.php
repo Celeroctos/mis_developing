@@ -13,8 +13,7 @@ MainAsset::register();
             baseUrl : '<?= Yii::app()->request->baseUrl; ?>',
 			widget: '<?= Widget::createUrl("widget") ?>',
 			table: '<?= Widget::createUrl("table") ?>',
-			panel: '<?= Widget::createUrl("panel") ?>',
-			module: ''
+			panel: '<?= Widget::createUrl("panel") ?>'
         };
     </script>
 	<?= AssetBundleManager::getManager()->render() ?>

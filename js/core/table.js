@@ -29,8 +29,8 @@ var Core = Core || {};
 		attr = $.extend(attr, config);
 		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), attr, function(response) {
 			me.after(function() {
-				me.selector().empty().append($(response["component"]).children());
-				me.selector().attr($(response["component"]).getAttributes());
+				me.selector().empty().append($(response).children());
+				me.selector().attr($(response).getAttributes());
 				me.selector().trigger("table.updated");
 				success && success(response);
 			});

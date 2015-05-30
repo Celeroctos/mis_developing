@@ -9,7 +9,10 @@ $this->widget("Modal", [
 	"body" => CHtml::tag("div", [
 		"style" => "padding: 10px"
 	], $this->getWidget("MedcardSearch", [
-		"provider" => "MedcardExGridProvider"
+		"provider" => "MedcardExGridProvider",
+		"config" => [
+			"emptyData" => 1
+		]
 	])),
 	"id" => "mis-medcard-search-modal",
 	"buttons" => [

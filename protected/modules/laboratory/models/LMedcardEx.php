@@ -2,42 +2,13 @@
 
 class LMedcardEx extends ActiveRecord {
 
-	public $privilege_code;
-	public $snils;
-	public $address;
-	public $address_reg;
-	public $doctype;
-	public $serie;
-	public $docnumber;
-	public $gived_date;
-	public $contact;
-	public $invalid_group;
-	public $card_number;
-	public $enterprise_id;
-	public $policy_id;
-	public $reg_date;
-	public $work_place;
-	public $work_address;
-	public $post;
-	public $profession;
-	public $motion;
-	public $address_str;
-	public $address_reg_str;
-	public $user_created;
-
 	public function relations() {
 		return [
-			"policy" => [ self::BELONGS_TO, "Oms", "policy_id" ],
-			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id" ]
+			"policy" => [ self::BELONGS_TO, "Oms", "policy_id", "joinType" => "INNER JOIN" ],
+			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id", "joinType" => "INNER JOIN" ]
 		];
 	}
 
-	/**
-	 * Find information about patient by it's card number
-	 * @param string $number - Number of patients card (mis.medcards.card_number)
-	 * @return mixed - Mixed object with found row
-	 * @throws CDbException
-	 */
 	public function fetchByNumber($number) {
 		return $this->getDbConnection()->createCommand()
 			->select("*")
@@ -49,11 +20,6 @@ class LMedcardEx extends ActiveRecord {
 			]);
 	}
 
-	/**
-	 * Fetch list with patients and it's oms information
-	 * @return array - Array with patients
-	 * @throws CDbException
-	 */
 	public function fetchListWithPatients() {
 		return $this->getDbConnection()->createCommand()
 			->select("m.card_number as number, m.contact as phone, o.first_name as name, o.middle_name as surname, o.last_name as patronymic")
@@ -63,13 +29,6 @@ class LMedcardEx extends ActiveRecord {
 			->queryAll();
 	}
 
-	/**
-	 * Fetch full information about medcard with patient info and others
-	 * @param string $number - Number of medcard to find
-	 * @return mixed - Found rows
-	 * @throws CDbException
-	 * @throws CException
-	 */
 	public function fetchInformation($number) {
 		$row = $this->getDbConnection()->createCommand()
 			->select("*")
@@ -90,12 +49,6 @@ class LMedcardEx extends ActiveRecord {
 		return $row;
 	}
 
-	/**
-	 * Fetch information from mis medcard and format it to laboratory
-	 * medcard with all sub forms
-	 * @param string $number - Card number in mis
-	 * @return array - Array with model information
-	 */
 	public function fetchInformationLaboratoryLike($number) {
 		if (($model = $this->fetchInformation($number)) == null) {
 			return null;
@@ -146,12 +99,6 @@ class LMedcardEx extends ActiveRecord {
 		return $result;
 	}
 
-	/**
-	 * Ready key sequence from object or array
-	 * @param mixed $obj - Mixed object or array
-	 * @param string... [$key] - Sequence with keys
-	 * @return mixed|null - Found value or null
-	 */
 	private function read($obj) {
 		for ($i = 1; $i < func_num_args(); $i++) {
 			$key = func_get_arg($i);
@@ -167,13 +114,6 @@ class LMedcardEx extends ActiveRecord {
 		return $obj;
 	}
 
-	/**
-	 * Fetch information about address from cladr
-	 * @param array $row - Array with parsed json object from [mis.medcards.address]
-	 * @return array - Array with received information about address
-	 * @throws CDbException - Database exceptions
-	 * @throws CException - If some identification number broken
-	 */
 	protected function getAddressInfo($row) {
 		$address = [
 			"region" => null,
@@ -226,28 +166,6 @@ class LMedcardEx extends ActiveRecord {
 		return $address + $row;
 	}
 
-	/**
-	 * Get instance of default table provider for current table
-	 * @return TableProvider - Default table provider
-	 */
-	public function getMedcardSearchTableProvider() {
-		return new TableProvider($this, $this->getDbConnection()->createCommand()
-			->select("
-                m.card_number as card_number,
-                m.contact as phone,
-                concat(o.last_name, ' ', o.first_name, ' ', o.middle_name) as fio,
-                o.birthday as birthday,
-                e.shortname as enterprise,
-                e.id as enterprise_id")
-			->from("mis.medcards as m")
-			->join("mis.oms as o", "m.policy_id = o.id")
-			->leftJoin("mis.enterprise_params as e", "e.id = m.enterprise_id")
-		);
-	}
-
-	/**
-	 * @return string - Name of table
-	 */
 	public function tableName() {
 		return "mis.medcards";
 	}

@@ -7,6 +7,17 @@ class DirectionSearch extends Widget {
 	 */
 	public $widget = null;
 
+	/**
+	 * @var array with table provider configuration
+	 */
+	public $config = [];
+
+	/**
+	 * @var string|ActiveDataProvider instance or name of
+	 * 	class with data provider
+	 */
+	public $provider = null;
+
 	public function run() {
 		return $this->render("DirectionSearch");
 	}

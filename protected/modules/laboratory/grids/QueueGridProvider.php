@@ -4,9 +4,6 @@ class QueueGridProvider extends DirectionGridProvider {
 
 	public $status = LDirection::STATUS_LABORATORY;
 
-	public $tableClass = "table core-table";
-	public $id = "laboratory-direction-table";
-
 	public $columns = [
 		"id" => "#",
 		"surname" => [
@@ -42,4 +39,8 @@ class QueueGridProvider extends DirectionGridProvider {
 		],
 		"mode" => ControlMenu::MODE_MENU
 	];
+
+	public $tableClass = "table core-table";
+
+	public $id = "laboratory-direction-table";
 }

@@ -93,7 +93,7 @@ var Core = Core || {};
 	Loading.prototype.widget = function(widget, attributes, success) {
 		var me = this;
 		this.loading();
-		Core.Common.loadWidget(widget, attributes, success)
+		Core.loadWidget(widget, attributes, success)
 			.success(function(json) {
 				me.reset(function() {
 					$(me.native).replaceWith(json["component"]);
