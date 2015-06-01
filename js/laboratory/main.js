@@ -278,13 +278,17 @@ var Laboratory_DirectionTable_Widget = {
 			me.show($(this).parents("tr:eq(0)").attr("data-id"), this);
 		}).on("click", ".direction-send-icon", function() {
 			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.send(
-				$(this).parents("tr:eq(0)").attr("data-id")
+				$(this).parents("tr:eq(0)").attr("data-id"), $(this)
 			);
 		}).on("click", ".direction-remove-icon", function() {
 			Laboratory_AnalyzerQueue_Widget && Laboratory_AnalyzerQueue_Widget.remove(
-				$(this).parents("tr:eq(0)").attr("data-id")
+				$(this).parents("tr:eq(0)").attr("data-id"), $(this)
 			);
-		});
+		}).on("click", ".direction-result-icon", function() {
+			Laboratory_AnalysisResult_Widget && Laboratory_AnalysisResult_Widget.open(
+				$(this).parents("tr:eq(0)").attr("data-id"), $(this)
+			);
+		})
 		$(document).on("dblclick", "table > tbody > tr[data-id]", function() {
 			if ($(this).parents("table:eq(0)").find(".direction-show-icon").length > 0) {
 				me.show($(this).attr("data-id"));

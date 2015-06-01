@@ -3,63 +3,63 @@
 class MedcardGridProvider extends GridProvider {
 
 	public $columns = [
-		"card_number" => "Номер",
-		"surname" => [
-			"label" => "Фамилия",
-			"relation" => "patient",
+		'card_number' => 'Номер',
+		'surname' => [
+			'label' => 'Фамилия',
+			'relation' => 'patient',
 		],
-		"name" => [
-			"label" => "Имя",
-			"relation" => "patient",
+		'name' => [
+			'label' => 'Имя',
+			'relation' => 'patient',
 		],
-		"patronymic" => [
-			"label" => "Отчество",
-			"relation" => "patient",
+		'patronymic' => [
+			'label' => 'Отчество',
+			'relation' => 'patient',
 		],
-		"enterprise_id" => [
-			"label" => "МУ направитель",
-			"format" => "%{shortname}",
-			"relation" => "enterprise",
+		'enterprise_id' => [
+			'label' => 'МУ направитель',
+			'format' => '%{shortname}',
+			'relation' => 'enterprise',
 		],
-		"birthday" => [
-			"label" => "Дата рождения",
-			"format" => "%{birthday}",
-			"relation" => "patient",
+		'birthday' => [
+			'label' => 'Дата рождения',
+			'format' => '%{birthday}',
+			'relation' => 'patient',
 		]
 	];
 
 	public $menu = [
-		"controls" => [
-			"direction-register-icon" => [
-				"icon" => "glyphicon glyphicon-plus",
-				"label" => "Создать направление"
+		'controls' => [
+			'direction-register-icon' => [
+				'icon' => 'glyphicon glyphicon-plus',
+				'label' => 'Создать направление'
 			],
-			"medcard-show-icon" => [
-				"icon" => "glyphicon glyphicon-list",
-				"label" => "Открыть / Изменить медкарту"
+			'medcard-show-icon' => [
+				'icon' => 'glyphicon glyphicon-list',
+				'label' => 'Открыть / Изменить медкарту'
 			]
 		],
-		"mode" => ControlMenu::MODE_ICON
+		'mode' => ControlMenu::MODE_ICON
 	];
 
 	public function search() {
 		return [
-			"criteria" => [
-				"with" => [
-					"patient", "enterprise"
+			'criteria' => [
+				'with' => [
+					'patient', 'enterprise'
 				]
 			],
-			"sort" => [
-				"attributes" => [
-					"card_number",
-					"patient.surname",
-					"patient.name",
-					"patient.patronymic",
-					"enterprise.shortname",
-					"patient.birthday"
+			'sort' => [
+				'attributes' => [
+					'card_number',
+					'patient.surname',
+					'patient.name',
+					'patient.patronymic',
+					'enterprise.shortname',
+					'patient.birthday'
 				],
-				"defaultOrder" => [
-					"card_number" => CSort::SORT_ASC
+				'defaultOrder' => [
+					'card_number' => CSort::SORT_ASC
 				]
 			]
 		];

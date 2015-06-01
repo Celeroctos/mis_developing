@@ -3,54 +3,54 @@
 class MedcardExGridProvider extends GridProvider {
 
 	public $columns = [
-		"card_number" => "Номер",
-		"last_name" => [
-			"label" => "Фамилия",
-			"relation" => "policy",
+		'card_number' => 'Номер',
+		'last_name' => [
+			'label' => 'Фамилия',
+			'relation' => 'policy',
 		],
-		"first_name" => [
-			"label" => "Имя",
-			"relation" => "policy",
+		'first_name' => [
+			'label' => 'Имя',
+			'relation' => 'policy',
 		],
-		"middle_name" => [
-			"label" => "Отчество",
-			"relation" => "policy",
+		'middle_name' => [
+			'label' => 'Отчество',
+			'relation' => 'policy',
 		],
-		"enterprise_id" => [
-			"label" => "МУ направитель",
-			"format" => "%{shortname}",
-			"relation" => "enterprise",
+		'enterprise_id' => [
+			'label' => 'МУ направитель',
+			'format' => '%{shortname}',
+			'relation' => 'enterprise',
 		],
-		"birthday" => [
-			"label" => "Дата рождения",
-			"format" => "%{birthday}",
-			"relation" => "policy",
+		'birthday' => [
+			'label' => 'Дата рождения',
+			'format' => '%{birthday}',
+			'relation' => 'policy',
 		],
-		"contact" => "Контакты"
+		'contact' => 'Контакты'
 	];
 
 	public function search() {
 		return [
-			"criteria" => [
-				"with" => [
-					"policy", "enterprise"
+			'criteria' => [
+				'with' => [
+					'policy', 'enterprise'
 				],
 			],
-			"sort" => [
-				"attributes" => [
-					"card_number",
-					"policy.last_name",
-					"policy.first_name",
-					"policy.middle_name",
-					"enterprise_id",
-					"policy.birthday",
-					"contact"
+			'sort' => [
+				'attributes' => [
+					'card_number',
+					'policy.last_name',
+					'policy.first_name',
+					'policy.middle_name',
+					'enterprise_id',
+					'policy.birthday',
+					'contact'
 				],
-				"defaultOrder" => [
-					"card_number" => CSort::SORT_ASC
+				'defaultOrder' => [
+					'card_number' => CSort::SORT_ASC
 				]
 			],
-			"primaryKey" => "card_number"
+			'primaryKey' => 'card_number'
 		];
 	}
 

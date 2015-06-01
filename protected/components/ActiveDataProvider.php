@@ -2,7 +2,7 @@
 
 abstract class ActiveDataProvider extends CActiveDataProvider {
 
-	const PAGE_SIZE = 10;
+	const PAGE_SIZE = 25;
 
 	/**
 	 * @var array|false with extra information about columns that should be

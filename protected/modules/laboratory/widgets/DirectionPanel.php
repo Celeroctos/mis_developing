@@ -7,6 +7,8 @@ class DirectionPanel extends Panel {
 	 */
 	public $date = null;
 
+	public $search = true;
+
 	public $controlsWrapperClass = "col-xs-6 text-right no-padding";
 	public $titleWrapperClass = "col-xs-6 text-left no-padding";
 
@@ -34,24 +36,28 @@ class DirectionPanel extends Panel {
 			$provider = null;
 			$config = null;
 		}
-		$this->controls = [
-			"panel-search-button" => [
-				"class" => "btn btn-default",
-				"icon" => "glyphicon glyphicon-search",
-				"label" => "Фильтр",
-				"title" => "Поиск направления",
-				"data-container" => "body",
-				"data-trigger" => "click",
-				"data-toggle" => "popover",
-				"data-placement" => "bottom",
-				"data-html" => "true",
-				"data-content" => $this->getWidget("DirectionSearch", [
-					"widget" => get_class($this->body),
-					"provider" => $provider,
-					"config" => $config
-				])
-			],
-		];
+		if ($this->search) {
+			$this->controls = [
+				"panel-search-button" => [
+					"class" => "btn btn-default",
+					"icon" => "glyphicon glyphicon-search",
+					"label" => "Фильтр",
+					"title" => "Поиск направления",
+					"data-container" => "body",
+					"data-trigger" => "click",
+					"data-toggle" => "popover",
+					"data-placement" => "bottom",
+					"data-html" => "true",
+					"data-content" => $this->getWidget("DirectionSearch", [
+						"widget" => get_class($this->body),
+						"provider" => $provider,
+						"config" => $config
+					])
+				],
+			];
+		} else {
+			$this->controls = [];
+		}
 		if ($this->status == LDirection::STATUS_TREATMENT_ROOM ||
 			$this->status == LDirection::STATUS_READY
 		) {

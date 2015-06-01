@@ -247,9 +247,38 @@ var Laboratory_AnalyzerQueue_Widget = {
 };
 
 var Laboratory_Analyzer_TabMenu = {
-	ready: function() {
+	activateTab: function(li) {
 		var menu = $("#analyzer-tab-menu"),
 			directions;
+		try {
+			directions = $.parseJSON(li.children("a").attr("data-directions"));
+		} catch (ignored) {
+			directions = [];
+		}
+		var locked = $.extend(true, {}, Laboratory_AnalyzerQueue_Widget.locked);
+		$("#laboratory-direction-table").find("tr[data-id]").each(function(i, tr) {
+			var id = $(tr).attr("data-id");
+			if ($.inArray(+id, directions) == -1) {
+				if (!$(tr).data("core-loading")) {
+					Laboratory_AnalyzerQueue_Widget.lock(id, WEAK_LOCK);
+				} else {
+					$(tr).addClass("danger");
+				}
+			} else {
+				Laboratory_AnalyzerQueue_Widget.unlock(id);
+			}
+		});
+		for (var i in locked) {
+			if (locked[i] != WEAK_LOCK && $.inArray(+i, directions) != -1) {
+				Laboratory_AnalyzerQueue_Widget.lock(i);
+			} else if (locked[i] == STRONG_LOCK && Laboratory_AnalyzerQueue_Widget.locked[i] == WEAK_LOCK) {
+				Laboratory_AnalyzerQueue_Widget.lock(i);
+			}
+		}
+	},
+	ready: function() {
+		var me = this;
+		var menu = $("#analyzer-tab-menu");
 		menu.find(".analyzer-task-menu-item:not(.disabled)").click(function() {
 			menu.find(".analyzer-task-menu-item.active").removeClass("active");
 			$(this).addClass("active");
@@ -260,39 +289,13 @@ var Laboratory_Analyzer_TabMenu = {
 			} else {
 				window.location.hash = "";
 			}
-			try {
-				directions = $.parseJSON($(this).children("a").attr("data-directions"));
-			} catch (ignored) {
-				directions = [];
-			}
-			var locked = $.extend(true, {}, Laboratory_AnalyzerQueue_Widget.locked);
-			$("#laboratory-direction-table").find("tr[data-id]").each(function(i, tr) {
-				var id = $(tr).attr("data-id");
-				if ($.inArray(+id, directions) == -1) {
-					if (!$(tr).data("core-loading")) {
-						Laboratory_AnalyzerQueue_Widget.lock(id, WEAK_LOCK);
-					} else {
-						$(tr).addClass("danger");
-					}
-				} else {
-					Laboratory_AnalyzerQueue_Widget.unlock(id);
-				}
-			});
-			for (var i in locked) {
-				if (locked[i] != WEAK_LOCK && $.inArray(+i, directions) != -1) {
-					Laboratory_AnalyzerQueue_Widget.lock(i);
-				} else if (locked[i] == STRONG_LOCK && Laboratory_AnalyzerQueue_Widget.locked[i] == WEAK_LOCK) {
-					Laboratory_AnalyzerQueue_Widget.lock(i);
-				}
-			}
+			me.activateTab($(this));
 		});
 		var activate = function() {
-			if (/^#\d$/.test(window.location.hash || "")) {
-				menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']")
-					.parent("li").trigger("click");
+			if (/^#\d+$/.test(window.location.hash || "")) {
+				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parent("li"));
 			} else {
-				menu.find("li:first-child > a[data-id]")
-					.parent("li").trigger("click");
+				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parent("li"));
 			}
 		};
 		activate();
@@ -325,10 +328,26 @@ var Laboratory_Analyzer_TabMenu = {
 	}
 };
 
+var Laboratory_AnalysisResult_Widget = {
+	ready: function() {
+	},
+	open: function(id, icon) {
+		var panel = icon.parents(".panel").panel("before");
+		Core.loadWidget("AnalysisResult", {
+			direction: id
+		}, function(component) {
+			$("#laboratory-analysis-result-modal").modal("show").find(".modal-body").empty().append(component);
+		}).always(function() {
+			panel.panel("after");
+		});
+	}
+};
+
 $(document).ready(function() {
 
 	Laboratory_AnalyzerQueue_Widget.ready();
 	Laboratory_Analyzer_TabMenu.ready();
+	Laboratory_AnalysisResult_Widget.ready();
 
 	$(document).on("barcode.captured", function(e, p) {
 		var table = $("#laboratory-direction-table");
@@ -372,18 +391,4 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-	/* if (localStorage.getItem("locked") != null) {
-		var locked = localStorage.getItem("locked");
-		try {
-			locked = $.parseJSON(locked);
-			for (var i in locked) {
-				if (locked[i] == STRONG_LOCK) {
-					Laboratory_AnalyzerQueue_Widget.send(i);
-				}
-			}
-			Laboratory_AnalyzerQueue_Widget.locked = locked;
-		} catch (ignore) {
-		}
-	} */
 });
