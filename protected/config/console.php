@@ -7,7 +7,15 @@ return array(
 	// preloading 'log' component
 	'preload'=>array('log'),
 	'import'=>array(
+		'application.models.*',
+		'application.models.forms.*',
 		'application.components.*',
+		'application.controllers.*',
+		'application.assets.*',
+		'application.widgets.*',
+		'application.forms.*',
+		'application.fields.*',
+		'application.validators.*'
 	),
 	// application components
 	'components'=>array(
