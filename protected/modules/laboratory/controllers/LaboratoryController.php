@@ -67,6 +67,10 @@ class LaboratoryController extends ControllerEx {
 		];
 	}
 
+	public function actionHistory() {
+		return $this->render('history');
+	}
+
 	/**
 	 * Override that method to return controller's model
 	 * @return ActiveRecord - Controller's model instance

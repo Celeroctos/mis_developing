@@ -379,14 +379,25 @@ var Laboratory_DirectionTable_Widget = {
 	show: function(id, from) {
 		var panel = from ? $(from).parents(".panel:eq(0)") :
 			$(".table-wrapper .panel:eq(0)");
-		panel.panel("before");
+		if (panel.length > 0) {
+			panel.panel("before");
+		} else {
+			panel = $(from).parents('table').loading("render");
+		}
+		console.log(panel);
 		Core.loadWidget("AboutDirection", {
 			direction: id
 		}, function (component) {
 			$("#treatment-about-direction-modal").modal().find(".modal-body")
 				.empty().append(component);
 		}).always(function() {
-			panel.panel("after");
+			if (panel.length > 0) {
+				if (panel.is("table")) {
+					panel.loading("reset");
+				} else {
+					panel.panel("after");
+				}
+			}
 		}).fail(function() {
 			Core.createMessage({
 				message: "Невозможно открыть направление"
@@ -440,15 +451,19 @@ var Laboratory_DirectionTable_Widget = {
 
 var Laboratory_Medcard_Table = {
 	ready: function() {
-		$(document).on("click", "#medcard-search-table-wrapper .direction-register-icon", function() {
+		$(document).on("click", ".direction-register-icon", function() {
 			$("#register-direction-modal").cleanup().modal().find("[name='LDirectionFormEx[medcard_id]']").val(
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
-		}).on("click", "#medcard-search-table-wrapper .medcard-show-icon", function() {
-			var loading = $("#treatment-laboratory-medcard-table-panel")
-				.find(".table").loading("render");
+		}).on("click", ".medcard-show-icon", function() {
+			var loading = $(this).parents("table");
+			if (loading.length > 0) {
+				loading.loading("render")
+			}
 			Laboratory_AboutMedcard_Widget.load($(this).parents("tr:eq(0)").attr("data-id")).always(function() {
-				loading.loading("reset");
+				if (loading.length > 0) {
+					loading.loading("reset");
+				}
 			});
 		});
 	}
@@ -660,6 +675,23 @@ var Laboratory_BarcodeReader = {
 	last: -1
 };
 
+var Laboratory_TabMenu_Widget = {
+	ready: function() {
+		var menu = $("ul.nav[id*=tabmenu]");
+		menu.find("a[data-tab]:not(:first)").each(function(i, a) {
+			$("#" + $(a).attr("data-tab")).hide();
+		});
+		menu.find("li").click(function() {
+			menu.find("a[data-tab]").each(function(i, a) {
+				$("#" + $(a).attr("data-tab")).hide();
+			});
+			$("#" + $(this).children("a").attr("data-tab")).show();
+			menu.find("li").removeClass("active");
+			$(this).addClass("active");
+		});
+	}
+};
+
 $(document).ready(function() {
 
 	Laboratory_Treatment_Header.ready();
@@ -674,6 +706,7 @@ $(document).ready(function() {
 	Laboratory_DirectionFormEx_Form.ready();
 	Laboratory_DirectionSearchForm_Popover.ready();
 	Laboratory_BarcodeReader.ready();
+	Laboratory_TabMenu_Widget.ready();
 
 	// fix for modal window backdrop
 	$(document).on("show.bs.modal", ".modal", function(e) {

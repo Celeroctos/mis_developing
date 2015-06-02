@@ -158,9 +158,14 @@ class SideMenu extends CWidget {
 					"image" => "pill.png",
 					"href" => "/laboratory/laboratory/view"
 				],
+				"history" => [
+					"label" => "История",
+					"image" => "clinic2.png",
+					"href" => "/laboratory/laboratory/history"
+				],
 				"guides" => [
 					"label" => "Справочники",
-					"image" => "medical50.png",
+					"image" => "write13.png",
 					"privilege" => [ "menuAdmin", "menuOrgGuides", "menuGuides" ],
 					"href" => "/guides/laboratory/analysistype"
 				]

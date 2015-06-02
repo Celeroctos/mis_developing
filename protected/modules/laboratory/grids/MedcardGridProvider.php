@@ -60,7 +60,10 @@ class MedcardGridProvider extends GridProvider {
 				],
 				'defaultOrder' => [
 					'card_number' => CSort::SORT_ASC
-				]
+				],
+			],
+			'pagination' => [
+				'pageSize' => 25
 			]
 		];
 	}
