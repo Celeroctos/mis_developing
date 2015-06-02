@@ -330,6 +330,18 @@ var Laboratory_Analyzer_TabMenu = {
 
 var Laboratory_AnalysisResult_Widget = {
 	ready: function() {
+		$("#submit-analysis-result-button").click(function() {
+			var form = $(this).parents(".modal").find("form").loading("render"),
+				me = this;
+			form.form({
+				success: function() {
+					$("#laboratory-ready-grid-wrapper").find(".panel").panel("update");
+					$(me).parents(".modal").modal("hide");
+				}
+			}).form("send").always(function() {
+				form.loading("reset");
+			});
+		});
 	},
 	open: function(id, icon) {
 		var panel = icon.parents(".panel").panel("before");

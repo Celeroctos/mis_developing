@@ -16,10 +16,12 @@ class AnalysisResult extends Widget {
 		$results = LAnalysisResult::model()->findAllByAttributes([
 			'analysis_id' => $analysis->getAttribute('id')
 		]);
+		$allowed = LDirectionParameter::model()->findByDirection($this->direction->getAttribute('id'));
 		return $this->render('AnalysisResult', [
 			'direction' => $this->direction,
 			'analysis' => $analysis,
-			'results' => $results
+			'results' => $results,
+			'allowed' => CHtml::listData($allowed, 'id', 'short_name')
 		]);
 	}
 }

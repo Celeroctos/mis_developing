@@ -3,10 +3,10 @@
 class LaboratoryController extends ControllerEx {
 
 	public function actionView() {
-		return $this->render("view", [
-			"analyzers" => $this->getAnalyzerTabs(),
-			"total" => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
-			"ready" => LDirection::model()->getCountOf(LDirection::STATUS_READY),
+		return $this->render('view', [
+			'analyzers' => $this->getAnalyzerTabs(),
+			'total' => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
+			'ready' => LDirection::model()->getCountOf(LDirection::STATUS_READY),
 		]);
 	}
 
@@ -16,13 +16,39 @@ class LaboratoryController extends ControllerEx {
 			$result = [];
 			foreach ($analyzers as $i => $analyzer) {
 				$result[] = [
-					"id" => $analyzer["data-id"],
-					"directions" => $analyzer["data-directions"]
+					'id' => $analyzer['data-id'],
+					'directions' => $analyzer['data-directions']
 				];
 			}
 			$this->leave([
-				"result" => $result
+				'result' => $result
 			]);
+		} catch (Exception $e) {
+			$this->exception($e);
+		}
+	}
+
+	public function actionConfirm() {
+		try {
+			$form = new LAnalysisResultForm();
+			$form->setAttributes(Yii::app()->getRequest()->getPost('LAnalysisResultForm'));
+			if (!$form->validate()) {
+				$this->postErrors($form->getErrors());
+			}
+			$total = 0;
+			foreach ($form->result as $id => $result) {
+				$total += LAnalysisResult::model()->updateByPk($id, [
+					'val' => $result
+				]);
+			}
+			LDirection::model()->updateByPk($form->id, [
+				'status' => LDirection::STATUS_CLOSED
+			]);
+			if ($total < count($form->result)) {
+				$this->error('Данные не были обновлены');
+			} else {
+				$this->success('Данные сохранены, направление закрыто');
+			}
 		} catch (Exception $e) {
 			$this->exception($e);
 		}
@@ -34,9 +60,9 @@ class LaboratoryController extends ControllerEx {
 			return $analyzers;
 		};
 		return $analyzers + [
-			"empty" => [
-				"label" => "Нет доступных анализаторов",
-				"disabled" => "true"
+			'empty' => [
+				'label' => 'Нет доступных анализаторов',
+				'disabled' => 'true'
 			]
 		];
 	}

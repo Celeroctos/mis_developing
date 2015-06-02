@@ -93,9 +93,7 @@ class DirectionGridProvider extends GridProvider {
 				'pageSize' => 25
 			],
 			'extra' => [
-				'data-dates' => LDirection::model()->getDates(
-					LDirection::STATUS_TREATMENT_ROOM
-				)
+				'data-dates' => LDirection::model()->getDates($this->status)
 			],
 			'textNoData' => 'На этот день нет направлений',
 			'primaryKey' => 'id',
