@@ -121,7 +121,19 @@ return array(
 				'application.vendor.barcodegen.drawer.*',
 
             )
-        )
+        ),
+		'medcard' => array(
+			'class' => 'application.modules.medcard.MedcardModule',
+			'import' => array(
+				'application.modules.medcard.components.*',
+				'application.modules.medcard.controllers.*',
+				'application.modules.medcard.models.*',
+				'application.modules.medcard.forms.*',
+				'application.modules.medcard.widgets.*',
+				'application.modules.medcard.grids.*',
+
+			)
+		)
 	),
 
 	// application components
