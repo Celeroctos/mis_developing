@@ -296,6 +296,10 @@
 				$("#t" + templates[0]).trigger("click");
 				Core.prepareMultiple();
 				ready();
+				categoryReady();
+				setTimeout(function() {
+					Core.prepareMultiple();
+				}, 1000)
 			}, 100 * counter + 2000);
 		});
 	</script>

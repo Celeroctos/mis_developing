@@ -1,6 +1,6 @@
 var applyInsertForSelect;
 
-$(document).ready(function() {
+var categoryReady = (function() {
 
     $.fn['categories'] = {
         initSelectOnClick: function(controlToInit)  {
@@ -358,3 +358,5 @@ $(document).ready(function() {
 		window.open(url);
 	});
 });
+
+//$(document).ready(categoryReady);

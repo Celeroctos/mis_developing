@@ -32,3 +32,7 @@
 <?php $this->widget("application.modals.admin.templates.RemoveCategory"); ?>
 <?php $this->widget("application.modals.admin.templates.FindCategory"); ?>
 <?php $this->widget("application.modals.admin.templates.IssetMedworkerNotice"); ?>
+
+<script>
+	$(document).ready(categoryReady);
+</script>
