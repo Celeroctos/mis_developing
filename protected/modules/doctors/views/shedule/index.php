@@ -291,17 +291,34 @@
 			var templates = <?= json_encode($templates) ?>;
 			var counter = 0;
 			var finished = 0;
+			var operations = templates.length + 7;
+			var progress = function(index) {
+				if (index >= operations) {
+					$("#doctor-schedule-ajax-loader-wrapper").remove();
+				} else {
+					$("#doctor-schedule-ajax-loader-wrapper").find(".progress-bar").css({
+						width: ((index / operations) * 100) + "%"
+					});
+				}
+			};
 			var fetch = function(template, counter) {
 				setTimeout(function() {
 					loadCategoryWidget(template).done(function() {
+						progress(finished + 1);
 						if (++finished == templates.length) {
-							$("#doctor-schedule-ajax-loader-wrapper").remove();
-							$("#t" + templates[0]).trigger("click");
+							progress(++finished);
 							Core.prepareMultiple();
+							progress(++finished);
 							ready();
+							progress(++finished);
 							categoryReady();
+							progress(++finished);
 							Core.prepareMultiple();
+							progress(++finished);
 							InitDateControls();
+							progress(++finished);
+							$("#t" + templates[0]).trigger("click");
+							progress(++finished);
 						}
 					});
 				}, counter * 100);
@@ -354,6 +371,11 @@
 					'width' => 50, 'height' => 50,
 					'style' => 'margin: 25px'
 				]) ?>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" style="width: 0%;">
+						<span class="sr-only">Загрузка ...</span>
+					</div>
+				</div>
 			</div>
             <?php
             $counter = 0;
