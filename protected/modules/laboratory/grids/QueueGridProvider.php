@@ -42,4 +42,8 @@ class QueueGridProvider extends DirectionGridProvider {
 
 	public $tableClass = 'table core-table';
 	public $id = 'laboratory-direction-table';
+
+	public function search() {
+		return [ 'textNoData' => 'Нет направлений', ] + parent::search();
+	}
 }
