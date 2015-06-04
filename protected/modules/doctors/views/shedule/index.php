@@ -243,6 +243,13 @@
             </div>
         </div>
     </div>
+	<?php if ($templateChoose == 0): ?>
+		<script>
+			$(document).ready(function() {
+				ready(); categoryReady();
+			});
+		</script>
+	<?php endif ?>
     <?php
     if ($currentPatient !== false) {
         if ($templatesChoose == 0) {
