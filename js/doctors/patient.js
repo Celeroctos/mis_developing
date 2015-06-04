@@ -1605,7 +1605,7 @@ $('#nextHistoryPoint').on('click', function () {
 		updatePatientList();
     });
 
-    $('.patientListNav li').on('click', function() {
+    $(document).on('click', '.patientListNav li', function() {
         $('.patientListNav li').removeClass('active');
         $(this).addClass('active');
         $('#writedByOrderCont, #writedByTimeCont').addClass('no-display');
