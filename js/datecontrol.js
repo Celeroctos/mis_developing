@@ -21,7 +21,6 @@
 	    '#addShedulePopup #shift-date-end-cont',
         '#editSheduleEmployeePopup #shift-date-begin-cont',
 	    '#editSheduleEmployeePopup #shift-date-end-cont',
-
         '#addElementPopup #date-max-field-cont',
 	    '#addElementPopup #date-min-field-cont',
         '#editElementPopup #date-max-field-cont',

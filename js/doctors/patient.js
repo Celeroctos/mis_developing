@@ -307,25 +307,6 @@
         }
     }
 
-
-    $("#date-cont").on('changeDate', function (e) {
-        callback = function() {
-            $('#filterDate').val(e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate());
-            $('#change-date-form').submit();
-        }
-        if($('.greetingContentCont').length > 0) {
-            $('#noticeLeavePopup').modal({});
-        } else {
-            $('#leaveYesSubmit').trigger('click');
-        }
-    });
-	
-    $("#date-cont").trigger("refresh");
-
-    $("#date-cont").on('changeMonth', function (e) {
-        $("#date-cont").trigger("refresh", [e.date]);
-    });
-
     // Сжатие-расширение селект-контролов
     expandSelectTimer = null;
     selectToExpand = null;
@@ -764,6 +745,7 @@ $('#submitDiagnosis').on('click', function (e) {
             var ajaxData = {
                 'success':false
             };
+
             try {
                 ajaxData = $.parseJSON(data.responseText);
             } catch (e) {
@@ -1531,7 +1513,7 @@ $('#nextHistoryPoint').on('click', function () {
 		updatePatientList();
     });
 
-    $(document).on('click', '.patientListNav li', function() {
+    $('.patientListNav li').on('click', function() {
         $('.patientListNav li').removeClass('active');
         $(this).addClass('active');
         $('#writedByOrderCont, #writedByTimeCont').addClass('no-display');
@@ -1644,5 +1626,23 @@ $(document).ready(function() {
 	$(window).on('beforeunload', function (e) {
 		// Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
 		return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
+	});
+
+	$("#date-cont").on('changeDate', function (e) {
+		callback = function() {
+			$('#filterDate').val(e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate());
+			$('#change-date-form').submit();
+		}
+		if($('.greetingContentCont').length > 0) {
+			$('#noticeLeavePopup').modal({});
+		} else {
+			$('#leaveYesSubmit').trigger('click');
+		}
+	});
+
+	$("#date-cont").trigger("refresh");
+
+	$("#date-cont").on('changeMonth', function (e) {
+		$("#date-cont").trigger("refresh", [e.date]);
 	});
 });
