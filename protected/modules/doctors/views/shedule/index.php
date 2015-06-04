@@ -294,6 +294,9 @@
 			setTimeout(function() {
 				$("#doctor-schedule-ajax-loader-wrapper").remove();
 				Core.prepareMultiple();
+				setTimeout(function() {
+					$("#t" + templates[0]).trigger("click");
+				}, 1000);
 			}, 100 * counter);
 		});
 	</script>
