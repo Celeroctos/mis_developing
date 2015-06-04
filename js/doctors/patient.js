@@ -7,56 +7,6 @@
 	showMsgs = true;
     showLeaveNotice = false; // Show notice about leaving page
 
-    // Modal window, when page prepares to reload
-    var href = null;
-    var callback = null;
-    $(document).on('click', '.showPatientGreetingLink',  function(e) {
-        href = $(this).prop('href');
-        if($('.greetingContentCont').length > 0) {
-            $('#noticeLeavePopup').modal({});
-        } else {
-            $('#leaveYesSubmit').trigger('click');
-        }
-        return false;
-    });
-
-    $('#leaveYesSubmit').on('click', function(e) {
-        if(href) {
-            location.href = href;
-        }
-        if(callback) {
-            $('#noticeLeavePopup').modal('hide');
-            callback();
-            callback = null;
-        }
-    });
-
-    $('#noticeLeavePopup .btn-default').on('click', function(e) {
-        callback = null;
-        href = null;
-        $('#noticeLeavePopup').modal('hide');
-    });
-
-    $('#noticeLeavePopup').on('click', function(e) {
-        return false;
-    });
-
-    $(document).on('click', '#change-date-form .day', function(e) {
-        if($('.greetingContentCont').length > 0) {
-            $('#noticeLeavePopup').modal({});
-        } else {
-            $('#leaveYesSubmit').trigger('click');
-        }
-        e.preventDefault();
-        return false;
-    });
-
-
-    $(window).on('beforeunload', function (e) {
-        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
-        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
-    });
-
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
     // Редактирование медкарты
     $(".template-edit-form").on('success', function (eventObj, dataFromQuery, status, jqXHR) {
@@ -1451,30 +1401,6 @@ $('#nextHistoryPoint').on('click', function () {
             }
         }
     });
-
-	// Смена врача
-	$('#change-doctor-form select').on('change', function(e) {
-        if($('.greetingContentCont').length > 0) {
-            $('#noticeLeavePopup').modal({});
-        } else {
-            $('#leaveYesSubmit').trigger('click');
-        }
-        var choosedDoctor = $(this).val();
-        //$(this).val(globalVariables.doctorId);
-        callback = function() {
-            globalVariables.doctorId = choosedDoctor;
-            $('#change-doctor-form select')
-                .prop('disabled', true);
-            // Вставляем оверлей
-            $('.overlayCont').prepend($('<div>').prop('class', 'overlay').css({'marginLeft' : '10px'}));
-            $('.changeDate-cont').prepend($('<div>').prop('class', 'overlay'));
-            $('#refreshPatientList').trigger('click');
-        };
-		if($('.greetingContentCont').length <= 0) {
-			callback();
-		}
-        return false;
-	});
 	
 	// Показ комментария (скрытого)
 	$(document).on('mouseover', '#doctorPatientList tr:not(:first), #doctorWaitingList tr:not(:first)', function(e) {
@@ -1644,3 +1570,79 @@ $('html').on('focus','form[id=patient-edit-form] input[type=text],input[type=num
 function getOnlyLikes() {
     return globalVariables.onlyLikes;
 }
+
+$(document).ready(function() {
+
+	// Смена врача
+	$('#change-doctor-form select').on('change', function(e) {
+		if($('.greetingContentCont').length > 0) {
+			$('#noticeLeavePopup').modal({});
+		} else {
+			$('#leaveYesSubmit').trigger('click');
+		}
+		var choosedDoctor = $(this).val();
+		//$(this).val(globalVariables.doctorId);
+		callback = function() {
+			globalVariables.doctorId = choosedDoctor;
+			$('#change-doctor-form select')
+				.prop('disabled', true);
+			// Вставляем оверлей
+			$('.overlayCont').prepend($('<div>').prop('class', 'overlay').css({'marginLeft' : '10px'}));
+			$('.changeDate-cont').prepend($('<div>').prop('class', 'overlay'));
+			$('#refreshPatientList').trigger('click');
+		};
+		if($('.greetingContentCont').length <= 0) {
+			callback();
+		}
+		return false;
+	});
+
+	// Modal window, when page prepares to reload
+	var href = null;
+	var callback = null;
+	$(document).on('click', '.showPatientGreetingLink',  function(e) {
+		href = $(this).prop('href');
+		if($('.greetingContentCont').length > 0) {
+			$('#noticeLeavePopup').modal({});
+		} else {
+			$('#leaveYesSubmit').trigger('click');
+		}
+		return false;
+	});
+
+	$('#leaveYesSubmit').on('click', function(e) {
+		if(href) {
+			location.href = href;
+		}
+		if(callback) {
+			$('#noticeLeavePopup').modal('hide');
+			callback();
+			callback = null;
+		}
+	});
+
+	$('#noticeLeavePopup .btn-default').on('click', function(e) {
+		callback = null;
+		href = null;
+		$('#noticeLeavePopup').modal('hide');
+	});
+
+	$('#noticeLeavePopup').on('click', function(e) {
+		return false;
+	});
+
+	$(document).on('click', '#change-date-form .day', function(e) {
+		if($('.greetingContentCont').length > 0) {
+			$('#noticeLeavePopup').modal({});
+		} else {
+			$('#leaveYesSubmit').trigger('click');
+		}
+		e.preventDefault();
+		return false;
+	});
+
+	$(window).on('beforeunload', function (e) {
+		// Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
+		return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
+	});
+});
