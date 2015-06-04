@@ -283,31 +283,31 @@
 			if (!categoryWidgetConfig[id]) {
 				throw new Error("Unresolved category configuration");
 			}
-			$.post(globalVariables.baseUrl + "/doctors/shedule/loadCategory", categoryWidgetConfig[id], function(response) {
+			return $.post(globalVariables.baseUrl + "/doctors/shedule/loadCategory", categoryWidgetConfig[id], function(response) {
 				container.append(response);
 			});
 		};
 		$(document).ready(function() {
 			var templates = <?= json_encode($templates) ?>;
 			var counter = 0;
+			var finished = 0;
 			var fetch = function(template, counter) {
 				setTimeout(function() {
-					loadCategoryWidget(template);
+					loadCategoryWidget(template).done(function() {
+						if (++finished == templates.length) {
+							$("#doctor-schedule-ajax-loader-wrapper").remove();
+							$("#t" + templates[0]).trigger("click");
+							Core.prepareMultiple();
+							ready();
+							categoryReady();
+							Core.prepareMultiple();
+						}
+					});
 				}, counter * 100);
 			};
 			for (var i in templates) {
 				fetch(templates[i], counter++);
 			}
-			setTimeout(function() {
-				$("#doctor-schedule-ajax-loader-wrapper").remove();
-				$("#t" + templates[0]).trigger("click");
-				Core.prepareMultiple();
-				ready();
-				categoryReady();
-				setTimeout(function() {
-					Core.prepareMultiple();
-				}, 1000)
-			}, 100 * counter + 2000);
 		});
 	</script>
 		<div class="greetingContentCont">
