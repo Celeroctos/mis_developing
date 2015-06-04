@@ -291,13 +291,13 @@
 			var templates = <?= json_encode($templates) ?>;
 			var counter = 0;
 			var finished = 0;
-			var operations = templates.length + 7;
+			var operations = templates.length + 1;
 			var progress = function(index) {
 				if (index >= operations) {
 					$("#doctor-schedule-ajax-loader-wrapper").remove();
 				} else {
 					$("#doctor-schedule-ajax-loader-wrapper").find(".progress-bar").css({
-						width: ((index / operations) * 100) + "%"
+						width: (((index + 1) / operations) * 100) + "%"
 					});
 				}
 			};
@@ -306,17 +306,11 @@
 					loadCategoryWidget(template).done(function() {
 						progress(finished + 1);
 						if (++finished == templates.length) {
-							progress(++finished);
 							Core.prepareMultiple();
-							progress(++finished);
 							ready();
-							progress(++finished);
 							categoryReady();
-							progress(++finished);
 							Core.prepareMultiple();
-							progress(++finished);
 							InitDateControls();
-							progress(++finished);
 							$("#t" + templates[0]).trigger("click");
 							progress(++finished);
 						}
