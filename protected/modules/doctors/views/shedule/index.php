@@ -304,7 +304,7 @@
 			var fetch = function(template, counter) {
 				setTimeout(function() {
 					loadCategoryWidget(template).done(function() {
-						progress(finished + 1);
+						progress(finished + 2);
 						if (++finished == templates.length) {
 							Core.prepareMultiple();
 							ready();
