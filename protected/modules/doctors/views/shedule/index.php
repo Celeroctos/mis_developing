@@ -293,11 +293,10 @@
 			}
 			setTimeout(function() {
 				$("#doctor-schedule-ajax-loader-wrapper").remove();
+				$("#t" + templates[0]).trigger("click");
 				Core.prepareMultiple();
-				setTimeout(function() {
-					$("#t" + templates[0]).trigger("click");
-				}, 1000);
-			}, 100 * counter);
+				ready();
+			}, 100 * counter + 2000);
 		});
 	</script>
 		<div class="greetingContentCont">

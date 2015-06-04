@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿var ready = function () {
 
     globalVariables.isUnsavedUserData = false;  // Есть ли несохранённые данные у пользователя
     globalVariables.wasUserFocused = false; // Был ли фокус на каком-то элементе
@@ -1622,8 +1622,7 @@ $('#nextHistoryPoint').on('click', function () {
     $('#refreshWaitingList').on('click', function(e) {
         updatePatientList(1);
     });
-
-});
+};
 
 // Это сделано для того, чтобы отследить изменение пользователем какого-либо элемента
 //     Если пользователь первый раз на чём-то сфокусировался - то надо поставить обработчик на изменение любого контрола
