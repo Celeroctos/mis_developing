@@ -243,7 +243,7 @@
             </div>
         </div>
     </div>
-	<?php if ($templateChoose == 0): ?>
+	<?php if (!Yii::app()->getRequest()->getQuery('rowid')): ?>
 		<script>
 			$(document).ready(function() {
 				ready(); categoryReady();
@@ -301,6 +301,7 @@
 							ready();
 							categoryReady();
 							Core.prepareMultiple();
+							InitDateControls();
 						}
 					});
 				}, counter * 100);
