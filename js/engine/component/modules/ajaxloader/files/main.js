@@ -11,10 +11,11 @@ misEngine.class('component.ajaxloader',function() {
 		},
 
         generate : function() {
+            console.log(this);
             return $('<img>').prop({
                 'src' : '/images/ajax-loader.gif',
-                'width' : this.width,
-                'height' : this.height,
+                'width' : this.config.width,
+                'height' : this.config.height,
                 'alt' : 'Загрузка...'
             });
         },

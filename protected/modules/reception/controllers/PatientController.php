@@ -2387,6 +2387,14 @@ class PatientController extends Controller {
 			echo CJSON::encode(array('success' => true));
 		}
 	}
+
+    public function actionGetPublicShedule() {
+        $this->layout = 'application.modules.reception.views.layouts.publicshedule';
+        $this->render('publicShedule', array(
+
+        ));
+    }
+
 }
 
 

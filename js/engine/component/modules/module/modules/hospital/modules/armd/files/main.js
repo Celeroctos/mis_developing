@@ -6,6 +6,7 @@ misEngine.class('component.module.hospital.armd', function() {
         },
         patientsGrid : null,
         myPatientsGrid : null,
+        designationsGrid : null,
 
         displayGrids : function() {
             this.displayPatientsGrid();
@@ -37,6 +38,41 @@ misEngine.class('component.module.hospital.armd', function() {
                                             'textAlign' : 'left'
                                         })
                                         .html(data.data);
+                                }
+                            },
+                            error: function(jqXHR, status, errorThrown) {
+                                misEngine.t(jqXHR, status, errorThrown);
+                            }
+                        }
+                    }
+                })
+                .render()
+                .on();
+        },
+
+
+        displayDesignationsGrid : function() {
+            this.designationsGrid = misEngine.create('component.grid');
+            var designationsGridRequestData = {
+                returnAsJson : true,
+                id : 'designationsGrid',
+                serverModel : 'DesignationsGrid',
+                container : '.popover-window #armd-patient-purpose .gridContainer'
+            };
+
+            this.patientsGrid
+                .setConfig({
+                    id : 'designationsGrid',
+                    renderConfig : {
+                        mode : 'ajax',
+                        ajaxConf : {
+                            url : '/hospital/components/grid',
+                            data : designationsGridRequestData,
+                            dataType : 'json',
+                            success : function(data, status, jqXHR) {
+                                if(data.success) {
+
+                                    $(designationsGridRequestData.container).html(data.data);
                                 }
                             },
                             error: function(jqXHR, status, errorThrown) {
@@ -193,6 +229,8 @@ misEngine.class('component.module.hospital.armd', function() {
                     width: '1024px',
                     content : $('.contentForPatientGrid').html()
                 }).show();
+                this.displayDiagnosisFields();
+                this.displayDesignationsGrid();
             }, this));
 
             $(document).on('click', '.desktopTab li.last', $.proxy(function(e) {
@@ -254,6 +292,19 @@ misEngine.class('component.module.hospital.armd', function() {
             $(document).on('change', '.template-choose', function(e) {
                 e.stopPropagation();
                 return true;
+            });
+
+
+            $(document).on('click', '#addDrug', function(e) {
+                $('.panel2').animate({
+                    'marginLeft' : 1000
+                });
+            });
+
+            $(document).on('click', '#addProcedure', function(e) {
+                $('.panel2').animate({
+                    'marginLeft' : -1000
+                });
             });
         },
 
@@ -352,13 +403,173 @@ misEngine.class('component.module.hospital.armd', function() {
 
         displayDiagnosisFields : function() {
             this.preClinicalDiagnosis = misEngine.create('component.livesearch', {
-                container : '#armd-patient-diagnosis'
+                'labelText' : 'Предварительный клинический диагноз',
+                'placeholderText' : 'Начинайте вводить...',
+                'container' : '.popover-window #armd-patient-diagnosis',
+                'primary' : 'id',
+                'maxChoosed' : 1,
+                'bindedWindowSelector' : $('#addNewCladrSettlement'),
+                'beforeWindowShow' : function(callback) {
+                    $.ajax({
+                        'url' : '/reception/address/getsettlementform',
+                        'cache' : false,
+                        'dataType' : 'json',
+                        'type' : 'GET',
+                        'success' : function(data, textStatus, jqXHR) {
+                            if(data.success == true) {
+                                callback();
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                'extraparams' : {
+                    //'region' : $.fn['regionChooser'].getChoosed(),
+                    //'district' : $.fn['districtChooser'].getChoosed()
+                },
+                'rowAddHandler' : function(ul, row) {
+                    $(ul).append($('<li>').text('[' + $.fn.reduceCladrCode(row.code_cladr) + '] ' + row.name));
+                },
+                'url' : '/guides/cladr/settlementget?page=1&rows=10&sidx=id&sord=desc&limit=10&filters=',
+                'filters' : {
+                    'groupOp' : 'AND',
+                    'rules': [
+                        {
+                            'field' : 'name',
+                            'op' : 'cn',
+                            'data' : ''
+                        }
+                    ]
+                }
+            });
+            this.clinicalDiagnosis = misEngine.create('component.livesearch', {
+                'labelText' : 'Клинический диагноз',
+                'placeholderText' : 'Начинайте вводить...',
+                'container' : '.popover-window #armd-patient-diagnosis',
+                'primary' : 'id',
+                'maxChoosed' : 1,
+                'bindedWindowSelector' : $('#addNewCladrSettlement'),
+                'beforeWindowShow' : function(callback) {
+                    $.ajax({
+                        'url' : '/reception/address/getsettlementform',
+                        'cache' : false,
+                        'dataType' : 'json',
+                        'type' : 'GET',
+                        'success' : function(data, textStatus, jqXHR) {
+                            if(data.success == true) {
+                                callback();
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                'extraparams' : {
+                    //'region' : $.fn['regionChooser'].getChoosed(),
+                    //'district' : $.fn['districtChooser'].getChoosed()
+                },
+                'rowAddHandler' : function(ul, row) {
+                    $(ul).append($('<li>').text('[' + $.fn.reduceCladrCode(row.code_cladr) + '] ' + row.name));
+                },
+                'url' : '/guides/cladr/settlementget?page=1&rows=10&sidx=id&sord=desc&limit=10&filters=',
+                'filters' : {
+                    'groupOp' : 'AND',
+                    'rules': [
+                        {
+                            'field' : 'name',
+                            'op' : 'cn',
+                            'data' : ''
+                        }
+                    ]
+                }
+            });
+            this.appendDiagnosis = misEngine.create('component.livesearch', {
+                'labelText' : 'Сопутствующий диагноз',
+                'placeholderText' : 'Начинайте вводить...',
+                'container' : '.popover-window #armd-patient-diagnosis',
+                'primary' : 'id',
+                'maxChoosed' : 1,
+                'bindedWindowSelector' : $('#addNewCladrSettlement'),
+                'beforeWindowShow' : function(callback) {
+                    $.ajax({
+                        'url' : '/reception/address/getsettlementform',
+                        'cache' : false,
+                        'dataType' : 'json',
+                        'type' : 'GET',
+                        'success' : function(data, textStatus, jqXHR) {
+                            if(data.success == true) {
+                                callback();
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                'extraparams' : {
+                    //'region' : $.fn['regionChooser'].getChoosed(),
+                    //'district' : $.fn['districtChooser'].getChoosed()
+                },
+                'rowAddHandler' : function(ul, row) {
+                    $(ul).append($('<li>').text('[' + $.fn.reduceCladrCode(row.code_cladr) + '] ' + row.name));
+                },
+                'url' : '/guides/cladr/settlementget?page=1&rows=10&sidx=id&sord=desc&limit=10&filters=',
+                'filters' : {
+                    'groupOp' : 'AND',
+                    'rules': [
+                        {
+                            'field' : 'name',
+                            'op' : 'cn',
+                            'data' : ''
+                        }
+                    ]
+                }
+            });
+            this.complicationsDiagnosis = misEngine.create('component.livesearch', {
+                'labelText' : 'Осложнения основного диагноза',
+                'placeholderText' : 'Начинайте вводить...',
+                'container' : '.popover-window #armd-patient-diagnosis',
+                'primary' : 'id',
+                'maxChoosed' : 1,
+                'bindedWindowSelector' : $('#addNewCladrSettlement'),
+                'beforeWindowShow' : function(callback) {
+                    $.ajax({
+                        'url' : '/reception/address/getsettlementform',
+                        'cache' : false,
+                        'dataType' : 'json',
+                        'type' : 'GET',
+                        'success' : function(data, textStatus, jqXHR) {
+                            if(data.success == true) {
+                                callback();
+                            } else {
+
+                            }
+                        }
+                    });
+                },
+                'extraparams' : {
+                    //'region' : $.fn['regionChooser'].getChoosed(),
+                    //'district' : $.fn['districtChooser'].getChoosed()
+                },
+                'rowAddHandler' : function(ul, row) {
+                    $(ul).append($('<li>').text('[' + $.fn.reduceCladrCode(row.code_cladr) + '] ' + row.name));
+                },
+                'url' : '/guides/cladr/settlementget?page=1&rows=10&sidx=id&sord=desc&limit=10&filters=',
+                'filters' : {
+                    'groupOp' : 'AND',
+                    'rules': [
+                        {
+                            'field' : 'name',
+                            'op' : 'cn',
+                            'data' : ''
+                        }
+                    ]
+                }
             });
         },
 
         run : function() {
             this.displayGrids();
-            this.displayDiagnosisFields();
             this.bindHandlers();
             this.initWidgets();
            // this.makeDumpData();
