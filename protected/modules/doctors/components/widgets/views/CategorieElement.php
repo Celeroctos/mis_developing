@@ -413,7 +413,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 $options['disabled'] = 'disabled';
             }
             ?>
-            <div id="<?php echo 'f_'.$prefix.'_'.implode('-', explode('|',$element['undotted_path'])).'_'.$element['id']; ?>-cont" class="input-group date null-padding-left">
+            <div id="<?php echo 'f_'.$prefix.'_'.implode('-', explode('|',$element['undotted_path'])).'_'.$element['id']; ?>-cont" class="input-group date null-padding-left date-control">
                 <?php
                 echo $form->hiddenField($model,'f'.$element['undotted_path'].'_'.$element['id'], $options);
                 ?>
