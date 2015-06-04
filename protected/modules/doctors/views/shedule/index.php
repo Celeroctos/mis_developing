@@ -248,6 +248,55 @@
         if ($templatesChoose == 0) {
             $counter = 0;
     ?>
+	<script type="text/javascript">
+		<?php
+		$categoryWidgetConfig = [];
+		$templates = [];
+		foreach($templatesList as $key => $template) {
+			$categoryWidgetConfig["{$template['id']}"] = [
+				'currentPatient' => $currentPatient,
+				'templateType' => 0,
+				'templateId' => $template['id'],
+				'withoutSave' => 0,
+				'greetingId' => $currentSheduleId,
+				'canEditMedcard' => $canEditMedcard,
+				'currentDate' => $currentDate,
+				'templatePrefix' => 'a' . $template['id'],
+				'medcardRecordId' => $medcardRecordId,
+				'isActiveTemplate' => $counter == 0,
+			];
+			$templates[] = $template['id'];
+		} ?>
+		var categoryWidgetConfig = <?= json_encode($categoryWidgetConfig, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT) ?>;
+		var loadCategoryWidget = function(id) {
+			var container = $("#put-category-widget-here-" + id);
+			if (container.length > 1) {
+				return void 0;
+			}
+			if (!categoryWidgetConfig[id]) {
+				throw new Error("Unresolved category configuration");
+			}
+			$.post(globalVariables.baseUrl + "/doctors/shedule/loadCategory", categoryWidgetConfig[id], function(response) {
+				container.append(response);
+			});
+		};
+		$(document).ready(function() {
+			var templates = <?= json_encode($templates) ?>;
+			var counter = 0;
+			var fetch = function(template, counter) {
+				setTimeout(function() {
+					loadCategoryWidget(template);
+				}, counter * 100);
+			};
+			for (var i in templates) {
+				fetch(templates[i], counter++);
+			}
+			setTimeout(function() {
+				$("#doctor-schedule-ajax-loader-wrapper").remove();
+				Core.prepareMultiple();
+			}, 100 * counter);
+		});
+	</script>
 		<div class="greetingContentCont">
 			<p>
 				<a name="topMainTemplates"></a>
@@ -286,27 +335,31 @@
                     globalVariables.elementsDependences = new Array();
                 }
             </script>
+			<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
+				<?= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
+					'width' => 50, 'height' => 50,
+					'style' => 'margin: 25px'
+				]) ?>
+			</div>
             <?php
             $counter = 0;
-            foreach ($templatesList as $key => $template) {
-                ?>
-                <div>
-
+            foreach ($templatesList as $key => $template) { ?>
+                <div id="put-category-widget-here-<?= $template['id'] ?>">
                     <?php
-                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-                        'currentPatient' => $currentPatient,
-                        'templateType' => 0,
-                        'templateId' => $template['id'],
-                        'withoutSave' => 0,
-                        'greetingId' => $currentSheduleId,
-                        'canEditMedcard' => $canEditMedcard,
-                        'medcard' => $medcard,
-                        'currentDate' => $currentDate,
-                        'templatePrefix' => 'a' . $template['id'],
-                        'medcardRecordId' => $medcardRecordId,
-                        'isActiveTemplate' => $counter == 0,
-						//'form' => $formM
-                    )); ?>
+//                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
+//                        'currentPatient' => $currentPatient,
+//                        'templateType' => 0,
+//                        'templateId' => $template['id'],
+//                        'withoutSave' => 0,
+//                        'greetingId' => $currentSheduleId,
+//                        'canEditMedcard' => $canEditMedcard,
+//                        'medcard' => $medcard,
+//                        'currentDate' => $currentDate,
+//                        'templatePrefix' => 'a' . $template['id'],
+//                        'medcardRecordId' => $medcardRecordId,
+//                        'isActiveTemplate' => $counter == 0,
+//						//'form' => $formM
+//                    )); ?>
                 </div>
             <?php
                 $counter++;
