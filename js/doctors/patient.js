@@ -301,7 +301,7 @@
             }
             else {
                 // Вызываем сабмит всех кнопок
-				var btn = $(buttons).find('input[type="submit"].templateContentSave');
+				var btn = $(buttons).find('input[type="submit"]');
 				btn.attr("type", "button");
 				btn.trigger("click");
                 //$(buttons).find('input[type="submit"]').trigger("click");
