@@ -301,9 +301,11 @@
             }
             else {
                 // Вызываем сабмит всех кнопок
-				console.log(buttons);
-                $(buttons).find('input[type="submit"]').trigger("click");
-                $('#submitDiagnosis').click();
+				var btn = $(buttons).find('input[type="submit"].templateContentSave');
+				btn.attr("type", "button");
+				btn.trigger("click");
+                //$(buttons).find('input[type="submit"]').trigger("click");
+                $('#submitDiagnosis').trigger("click");
             }
         }
     }

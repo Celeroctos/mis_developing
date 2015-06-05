@@ -246,7 +246,7 @@
 	<?php if (!Yii::app()->getRequest()->getQuery('rowid')): ?>
 		<script>
 			$(document).ready(function() {
-				ready(); categoryReady();
+				patientReady(); categoryReady();
 			});
 		</script>
 	<?php endif ?>
@@ -316,7 +316,7 @@
 							$(".greetingContentCont").show();
 						}
 					});
-				}, counter * 100);
+				}, counter * 150);
 			};
 			for (var i in templates) {
 				fetch(templates[i], counter++);
@@ -324,10 +324,13 @@
 		});
 	</script>
 		<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
-			<?= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
+			<?/*= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
 				'width' => 50, 'height' => 50,
 				'style' => 'margin: 25px'
-			]) ?>
+			]) */ ?>
+			<br>
+			<h2>Идет построение шаблона ...</h2>
+			<br>
 			<div class="progress">
 				<div class="progress-bar" role="progressbar" style="width: 0%;">
 					<span class="sr-only">Загрузка ...</span>
