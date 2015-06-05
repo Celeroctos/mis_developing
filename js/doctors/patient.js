@@ -1,4 +1,4 @@
-﻿var ready = function () {
+﻿var patientReady = function () {
 
     globalVariables.isUnsavedUserData = false;  // Есть ли несохранённые данные у пользователя
     globalVariables.wasUserFocused = false; // Был ли фокус на каком-то элементе
@@ -301,7 +301,8 @@
             }
             else {
                 // Вызываем сабмит всех кнопок
-                $(buttons).find('input[type="submit"]').click();
+				console.log(buttons);
+                $(buttons).find('input[type="submit"]').trigger("click");
                 $('#submitDiagnosis').click();
             }
         }

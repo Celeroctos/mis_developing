@@ -307,12 +307,13 @@
 						progress(finished + 2);
 						if (++finished == templates.length) {
 							Core.prepareMultiple();
-							ready();
+							patientReady();
 							categoryReady();
 							Core.prepareMultiple();
 							InitDateControls();
 							$("#t" + templates[0]).trigger("click");
 							progress(++finished);
+							$(".greetingContentCont").show();
 						}
 					});
 				}, counter * 100);
@@ -322,7 +323,18 @@
 			}
 		});
 	</script>
-		<div class="greetingContentCont">
+		<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
+			<?= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
+				'width' => 50, 'height' => 50,
+				'style' => 'margin: 25px'
+			]) ?>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" style="width: 0%;">
+					<span class="sr-only">Загрузка ...</span>
+				</div>
+			</div>
+		</div>
+		<div class="greetingContentCont" style="display: none;">
 			<p>
 				<a name="topMainTemplates"></a>
 			</p>
@@ -360,17 +372,6 @@
                     globalVariables.elementsDependences = new Array();
                 }
             </script>
-			<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
-				<?= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
-					'width' => 50, 'height' => 50,
-					'style' => 'margin: 25px'
-				]) ?>
-				<div class="progress">
-					<div class="progress-bar" role="progressbar" style="width: 0%;">
-						<span class="sr-only">Загрузка ...</span>
-					</div>
-				</div>
-			</div>
             <?php
             $counter = 0;
             foreach ($templatesList as $key => $template) { ?>
