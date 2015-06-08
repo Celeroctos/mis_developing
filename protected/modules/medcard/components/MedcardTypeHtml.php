@@ -5,6 +5,7 @@ class MedcardTypeHtml extends CHtml {
 	public static $listTypes = [
 		MedcardElementEx::TYPE_DROPDOWN,
 		MedcardElementEx::TYPE_MULTIPLE,
+		MedcardElementEx::TYPE_EXCHANGE,
 	];
 
 	public static $tableTypes = [
@@ -78,7 +79,47 @@ class MedcardTypeHtml extends CHtml {
 			]);
 	}
 
-	public static function exchangeInput() {
-		return 'exchange123';
+	/**
+	 * Render change input type element, it has next HTML structure
+	 *
+	 * <div class="exchange">
+	 *   <select multiple="multiple" data-ignore="multiple" class="form-control twoColumnListFrom">...</select>
+	 *     <div class="TCLButtonsContainer">
+	 *       <span class = "glyphicon glyphicon-arrow-right twoColumnAddBtn"></span>
+	 *       <span class = "glyphicon glyphicon-arrow-left twoColumnRemoveBtn"></span>
+	 *     </div>
+	 *   <select multiple="multiple" data-ignore="multiple" class="form-control twoColumnListTo">...</select>
+	 * </div>
+	 *
+	 * @param $name string name of exchange element
+	 * @param $select array with selected identification numbers
+	 * @param $data array with data for option list
+	 * @param $options array with html options for left and right lists
+	 */
+	public static function exchangeInput($name, $select, $data, $options = []) {
+		$left = []; $right = [];
+		foreach ($data as $key => $value) {
+			if (in_array($key, $select)) {
+				$left[$key] = $value;
+			} else {
+				$right[$key] = $value;
+			}
+		}
+		print parent::openTag('div', [ 'class' => 'exchange' ]);
+		print parent::dropDownList(null, null, $left, $options + [
+				'multiple' => 'multiple',
+				'data-ignore' => 'multiple',
+				'class' => 'form-control twoColumnListFrom',
+			]);
+		print parent::openTag('div', [ 'class' => 'TCLButtonsContainer' ]);
+		print parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right twoColumnAddBtn' ], '');
+		print parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left twoColumnRemoveBtn' ], '');
+		print parent::closeTag('div');
+		print parent::dropDownList($name, null, $right, $options + [
+				'multiple' => 'multiple',
+				'data-ignore' => 'multiple',
+				'class' => 'form-control twoColumnListTo',
+			]);
+		print parent::closeTag('div');
 	}
 }

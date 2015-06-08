@@ -466,22 +466,22 @@ var Core = Core || {};
 		});
     };
 
-	$(document).ready(function() {
-		setTimeout(Core.prepareMultiple, 10);
-	});
+	//$(document).ready(function() {
+	//	setTimeout(Core.prepareMultiple, 10);
+	//});
 
 })(Core);
 
-(function($) {
-	$.each(['show', 'hide'], function (i, ev) {
-		var el = $.fn[ev];
-		$.fn[ev] = function() {
-			for (var i = 0; i < this.length; i++) {
-				if (this[i].tagName == "SELECT") {
-					$(this[i]).trigger(ev);
-				}
-			}
-			return el.apply(this, arguments);
-		};
-	});
-})(jQuery);
+//(function($) {
+//	$.each(['show', 'hide'], function (i, ev) {
+//		var el = $.fn[ev];
+//		$.fn[ev] = function() {
+//			for (var i = 0; i < this.length; i++) {
+//				if (this[i].tagName == "SELECT") {
+//					$(this[i]).trigger(ev);
+//				}
+//			}
+//			return el.apply(this, arguments);
+//		};
+//	});
+//})(jQuery);

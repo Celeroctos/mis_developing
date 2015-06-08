@@ -40,6 +40,9 @@ foreach($categorie['childrenElementsOrder'] as $item) {
         );
     } else {
         $element = $categorie['elements'][$item['numberInArray']];
+		if (!isset($element['guide'])) {
+			$element['guide'] = [];
+		}
         // Выведем зависимости, если они есть
         if(isset($element['dependences'])) { ?>
             <script type="text/javascript">

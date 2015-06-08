@@ -4,7 +4,7 @@
  */
 
 $category = MedcardCategoryEx::model()->findByAttributes([
-	'id' => 623
+	'id' => 528
 ]);
 
 $elements = MedcardElementEx::model()->findAllByAttributes([

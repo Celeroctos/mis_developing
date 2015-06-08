@@ -306,7 +306,6 @@
 					loadCategoryWidget(template).done(function() {
 						progress(finished + 2);
 						if (++finished == templates.length) {
-							Core.prepareMultiple();
 							patientReady();
 							categoryReady();
 							Core.prepareMultiple();
