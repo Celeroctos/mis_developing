@@ -1,3 +1,7 @@
+var ElementsApi = {
+	currentRow: null
+};
+
 function writeDefValuesFromConfig(defValues) {
 	// Вычисляем макиммальный индекс по строке и столбцу в таблице значений по умолчанию
 	var tableOfDefaults = $('div.defaultValuesTable table.controltable tbody');
@@ -857,7 +861,11 @@ $('#editElementDependences').on('click', function () {
     if ($(this).hasClass('disabled')) {
         return false;
     }
-    currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+	if (ElementsApi.currentRow) {
+		currentRow = ElementsApi.currentRow;
+	} else {
+		currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+	}
 
     $("#dependences").jqGrid('setGridParam', {
         url: url + '?id=' + currentRow,
