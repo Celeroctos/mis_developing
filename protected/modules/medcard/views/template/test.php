@@ -13,8 +13,7 @@ $elements = MedcardElementEx::model()->findAllByAttributes([
 
 <?php foreach ($elements as $e): ?>
 	<div class="row">
-		<?= $e->getAttribute('label') ?>
 		<?php $this->widget('MedcardElementWidget', [ 'element' => $e ]) ?>
 	</div>
-	<br>
+	<hr>
 <?php endforeach ?>

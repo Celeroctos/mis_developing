@@ -188,7 +188,9 @@ var Core = Core || {};
 		она находит опцию со значением -3 и вызывает событие для обработки
 		 */
 		this.selector().find(".multiple-control .multiple-insert-button:visible").click(function() {
-			var t; applyInsertForSelect.call(t = me.selector().find(".multiple-value").get(0), t);
+			if (window['applyInsertForSelect']) {
+				var t; window['applyInsertForSelect'].call(t = me.selector().find(".multiple-value").get(0), t);
+			}
 		});
 	};
 

@@ -1,4 +1,3 @@
-
 /**
  * @type {TemplateEngine} - Глобальный объект, предоставляющий API для работы с
  *      TemplateEngine. Сюда можно добавлять любые методы, какие необходимы и
@@ -1645,22 +1644,21 @@ var TemplateEngine = TemplateEngine || {};
 
 	var _fetchDependencies = function(me) {
 		var success = function(data, textStatus, jqXHR) {
-			var i, option;
 			if (data.success != true) {
 				return true;
 			}
-			data = data.data;
+			var data = data.data;
 			$('#controlValues option').remove();
-			for (i = 0; i < data.comboValues.length; i++) {
-				option = $('<option>').prop({
+			for (var i = 0; i < data.comboValues.length; i++) {
+				var option = $('<option>').prop({
 					'value': data.comboValues[i].id
 				}).text('[ID ' + data.comboValues[i].id + '] ' + data.comboValues[i].value);
 				$('#controlValues').append(option);
 			}
 			// Ставим список всех контролов. Он обновляется всякий раз.
 			$('#controlDependencesList option').remove();
-			for (i = 0; i < data.controls.length; i++) {
-				option = $('<option>').prop({
+			for (var i = 0; i < data.controls.length; i++) {
+				var option = $('<option>').prop({
 					'value': data.controls[i].id
 				}).text(data.controls[i].label);
 				$('#controlDependencesList').append(option);
@@ -1669,8 +1667,8 @@ var TemplateEngine = TemplateEngine || {};
 			// Ставим список действий
 			if ($('#controlActions option').length == 0) {
 				$('#controlActions option').remove();
-				for (i = 0; i < data.actions.length; i++) {
-					option = $('<option>').prop({
+				for (var i = 0; i < data.actions.length; i++) {
+					var option = $('<option>').prop({
 						'value': i
 					}).text(data.actions[i]);
 					if (i == 0) {
@@ -2369,8 +2367,8 @@ var TemplateEngine = TemplateEngine || {};
 						CategoryPatcher.put(prevPath, ref);
 						c.append(ref);
 					}
+					++offset;
 				}
-				++offset;
 			}
 			c.append(item);
 		}
@@ -2469,9 +2467,9 @@ var TemplateEngine = TemplateEngine || {};
 		$(".template-engine-widget").each(function(i, w) {
 			WidgetCollection.register($(w));
 		});
-		$(document).contextmenu(function() {
+		/* $(document).contextmenu(function() {
 			return false;
-		});
+		}); */
 	});
 
 	var collection = WidgetCollection._templateCollection;

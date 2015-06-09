@@ -22,6 +22,16 @@ class MedcardElementEx extends MedcardElement {
 		self::TYPE_EXCHANGE => 'exchangeInput',
 	];
 
+	public static $listTypes = [
+		MedcardElementEx::TYPE_DROPDOWN,
+		MedcardElementEx::TYPE_MULTIPLE,
+		MedcardElementEx::TYPE_EXCHANGE,
+	];
+
+	public static $tableTypes = [
+		MedcardElementEx::TYPE_TABLE,
+	];
+
 	public static function listTypes() {
 		return [
 			static::TYPE_TEXT => 'Текстовое поле',
