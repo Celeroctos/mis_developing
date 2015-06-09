@@ -9,7 +9,7 @@
 }
 
 .multiple .multiple-value {
-    min-height: 150px;
+    height: 150px;
     overflow-x: auto;
     width: 100%;
 }
@@ -44,11 +44,16 @@
     content: 'Нет элементов';
 }
 
-.multiple .multiple-control {
+.multiple-control {
     width: 100%;
     margin-top: 5px;
 }
 
 .multiple-really-not-visible {
     display: none;
+}
+
+.multiple-down-button,
+.multiple-up-button {
+    margin-right: 2px;
 }

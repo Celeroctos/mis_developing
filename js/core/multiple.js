@@ -47,6 +47,46 @@ var Core = Core || {};
 		this.choosen = [];
 	});
 
+	var ButtonHelper = {
+		collapse: function() {
+			return $("<button>", {
+				class: "btn btn-default multiple-collapse-button",
+				type: "button",
+				html: $("<span>", {
+					text: "Развернуть / Свернуть"
+				}),
+				style: "margin-right: 2px"
+			});
+		},
+		down: function() {
+			return $("<button>", {
+				class: "btn btn-default multiple-down-button",
+				type: "button",
+				html: $("<span>", {
+					class: "glyphicon glyphicon-arrow-down"
+				})
+			});
+		},
+		up: function() {
+			return $("<button>", {
+				class: "btn btn-default multiple-up-button",
+				type: "button",
+				html: $("<span>", {
+					class: "glyphicon glyphicon-arrow-up"
+				})
+			});
+		},
+		insert: function() {
+			return $("<button>", {
+				class: "btn btn-default multiple-insert-button",
+				type: "button",
+				html: $("<span>", {
+					class: "glyphicon glyphicon-plus"
+				})
+			}).hide();
+		}
+	};
+
 	/**
 	 * Рендерим компонент Multiple вместе с базовым списком элементов,
 	 * панелью управления и панелью с выбранными элементами
@@ -69,51 +109,11 @@ var Core = Core || {};
                 "min-height": this.property("height")
             }).addClass("form-control");
         var g = $("<div>", {
-            class: "multiple-control text-left",
-            role: "group",
-            style: {
-                width: this.selector().width()
-            }
-        }).append(
-            $("<button>", {
-                class: "btn btn-default multiple-collapse-button",
-                type: "button",
-                html: $("<span>", {
-                    text: "Развернуть / Свернуть"
-                }),
-				style: "margin-right: 2px"
-            })
-        ).append(
-            $("<button>", {
-                class: "btn btn-default multiple-down-button",
-                type: "button",
-                html: $("<span>", {
-                    class: "glyphicon glyphicon-arrow-down"
-                }),
-				style: "margin-right: 2px"
-            })
-        ).append(
-            $("<button>", {
-                class: "btn btn-default multiple-up-button",
-                type: "button",
-                html: $("<span>", {
-                    class: "glyphicon glyphicon-arrow-up"
-                }),
-				style: "margin-right: 2px"
-            })
-        ).append(
-			$("<button>", {
-				class: "btn btn-default multiple-insert-button",
-				type: "button",
-				html: $("<span>", {
-					class: "glyphicon glyphicon-plus"
-				})
-			}).hide()
-		);
+            class: "multiple-control text-left"
+        }).append(ButtonHelper.collapse()).append(ButtonHelper.down())
+			.append(ButtonHelper.up()).append(ButtonHelper.insert());
 		return $("<div>", {
 			class: "multiple"
-		}).css({
-			width: s.width()
 		}).append(s).append(g).append(
 			$("<div>", {
 				class: "multiple-container form-control"
@@ -388,12 +388,20 @@ var Core = Core || {};
 		}
 	});
 
-    Core.prepareMultiple = function() {
+    Core.prepareMultiple = function(element, config) {
+		/* Если селектор не был указан, то будут выбраны все загруеженные
+		элементы на странице */
+		if (!element) {
+			element = $("select[multiple][data-ignore!='multiple']");
+		} else if (!element instanceof jQuery) {
+			element = $(element);
+		}
 		/* Создаем событие на обработку изменения стиля элемента
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
+		console.log(element);
 		var f;
-        $("select[multiple][data-ignore!='multiple']").multiple().on("style", f = function(e) {
+		element.multiple(config || {}).on("style", f = function(e) {
 			if (e.target.tagName !== "SELECT") {
 				return void 0;
 			}
@@ -429,7 +437,7 @@ var Core = Core || {};
 		/* Обходим все элементы, которые уже имеют установленные значения в
 		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
 		добавляем в компонент, после чего удалем поле value */
-        $("select[multiple][data-ignore!='multiple'][value!='']").each(function() {
+		element.filter("[value!='']").each(function() {
             if ($(this).attr("value") != void 0) {
                 $(this).multiple("choose", $(this).attr("value"));
             }
@@ -438,7 +446,7 @@ var Core = Core || {};
 		/* Обходим все элементы, которые имеют отмеченные поля через зажатую
 		клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
 		что если массив пустой, то все поля будут удалены */
-		$("select[multiple][data-ignore!='multiple']").each(function() {
+		element.each(function() {
 			var result = $(this).multiple("selected", true),
 				me = this;
 			if (result.length > 0) {
@@ -463,27 +471,25 @@ var Core = Core || {};
 		});
 		/* Обходим все множественный списки со стилями и применяем их для
 		нового родительского элемента */
-		$("select[multiple][data-ignore!='multiple'][style]").each(function() {
+		element.filter("[style]").each(function() {
 			$(this).parents(".multiple").attr("style", $(this).attr("style"));
 		});
     };
 
 	$(document).ready(function() {
-		setTimeout(Core.prepareMultiple, 10);
+		Core.prepareMultiple();
 	});
 
 })(Core);
 
-(function($) {
-	$.each(['show', 'hide'], function (i, ev) {
-		var el = $.fn[ev];
-		$.fn[ev] = function() {
-			for (var i = 0; i < this.length; i++) {
-				if (this[i].tagName == "SELECT") {
-					$(this[i]).trigger(ev);
-				}
+(function($) { $.each(['show', 'hide'], function (i, ev) {
+	var el = $.fn[ev];
+	$.fn[ev] = function() {
+		for (var i = 0; i < this.length; i++) {
+			if (this[i].tagName == "SELECT") {
+				$(this[i]).trigger(ev);
 			}
-			return el.apply(this, arguments);
-		};
-	});
-})(jQuery);
+		}
+		return el.apply(this, arguments);
+	};
+}) })(jQuery);
