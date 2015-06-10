@@ -54,8 +54,7 @@ var Core = Core || {};
 				type: "button",
 				html: $("<span>", {
 					text: "Развернуть / Свернуть"
-				}),
-				style: "margin-right: 2px"
+				})
 			});
 		},
 		down: function() {
@@ -104,6 +103,10 @@ var Core = Core || {};
 	 * @returns {jQuery}
 	 */
 	Multiple.prototype.render = function() {
+		if (this.selector().hasClass("multiple-value")) {
+			this.selector(this.selector().parents(".multiple"));
+			return void 0;
+		}
         var s = this.selector().clone().data(this.getDataAttribute(), this)
             .addClass("multiple-value").css({
                 "min-height": this.property("height")
@@ -381,7 +384,7 @@ var Core = Core || {};
 	};
 
 	Core.createPlugin("multiple", function(selector, properties) {
-		if (!$(selector).hasClass("multiple-value")) {
+		if (!$(selector).data("core-multiple")) {
 			return Core.createObject(new Multiple(properties, $(selector)), selector, true);
 		} else {
 			return void 0;
@@ -399,7 +402,6 @@ var Core = Core || {};
 		/* Создаем событие на обработку изменения стиля элемента
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
-		console.log(element);
 		var f;
 		element.multiple(config || {}).on("style", f = function(e) {
 			if (e.target.tagName !== "SELECT") {

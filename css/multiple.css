@@ -9,7 +9,7 @@
 }
 
 .multiple .multiple-value {
-    height: 150px;
+    min-height: 150px;
     overflow-x: auto;
     width: 100%;
 }
@@ -54,6 +54,7 @@
 }
 
 .multiple-down-button,
-.multiple-up-button {
+.multiple-up-button,
+.multiple-collapse-button {
     margin-right: 2px;
 }

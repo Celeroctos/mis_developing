@@ -47,6 +47,8 @@ class MedcardElementWidget extends Widget {
 		$type = $element->{'type'};
 		if (in_array($type, MedcardElementEx::$listTypes)) {
 			$parameters += $this->prepareList();
+		} else if (in_array($type, MedcardElementEx::$tableTypes)) {
+			$parameters += $this->prepareTable();
 		} else if ($type == MedcardElementEx::TYPE_DATE) {
 			$parameters += $this->prepareDate();
 		} else if ($type == MedcardElementEx::TYPE_NUMBER) {
@@ -63,7 +65,8 @@ class MedcardElementWidget extends Widget {
 	protected function prepareList() {
 		$parameters = [];
 		if (!$guide = $this->element->{'guide_id'}) {
-			throw new CException('Can\'t resolve guide for list element type');
+			/* throw new CException('Can\'t resolve guide for list element type'); */
+			$data = [];
 		} else {
 			$data = MedcardGuideValue::model()->getRows(false, $guide);
 		}
@@ -78,38 +81,38 @@ class MedcardElementWidget extends Widget {
 	}
 
 	protected function prepareTable() {
-		$parameters = [];
-
+		$parameters = [
+			'config' => [
+				'numCols' => $this->getConfig('numCols', 3),
+				'numRows' => $this->getConfig('numRows', 3),
+				'rows' => $this->getConfig('rows', []),
+				'cols' => $this->getConfig('cols', []),
+				'values' => $this->getConfig('values', []),
+			]
+		];
 		return $parameters;
 	}
 
 	protected function prepareDate() {
-		$options = [
-			'data-date-format' => 'yyyy-mm-dd',
-			'data-date-language' => 'ru-RU',
-			'data-today-btn' => 'linked',
-			'data-today-highlight' => 'true',
-			'data-autoclose' => 'true',
-		];
 		$config = [
 			'format' => 'yyyy-mm-dd',
 			'language' => 'ru-RU',
 			'todayBtn' => 'linked',
 			'todayHighlight' => 'true',
 			'autoclose' => 'true',
+			'orientation' => 'bottom top',
 		];
 		if ($min = $this->getConfig('minValue')) {
-			$options['data-date-start-date'] = $min;
+			$config['startDate'] = $min;
 		}
 		if ($max = $this->getConfig('maxValue')) {
-			$options['data-date-end-date'] = $max;
+			$config['endDate'] = $max;
 		}
 		return [ 'options' => [ 'data-config' => json_encode($config) ] ];
 	}
 
 	protected function prepareNumber() {
-		$options = [
-		];
+		$options = [];
 		if ($min = $this->getConfig('minValue')) {
 			$options['min'] = $min;
 		}

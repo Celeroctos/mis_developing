@@ -14,7 +14,7 @@ class MedcardHtml extends CHtml {
 		'name', 'config', 'options',
 	];
 
-	public static function renderByType($type, $name, $parameters = []) {
+	public static function renderByType($type, $name, $parameters = [], $capture = false) {
 		$fix = [];
 		if (!isset(MedcardElementEx::$render[$type])) {
 			throw new CException('Unresolved medcard type ('. $type .')');
@@ -43,7 +43,7 @@ class MedcardHtml extends CHtml {
 		foreach ($indexes as $i) {
 			$fix[] = $parameters[$i];
 		}
-		return static::renderInternal($strategy, $name, $fix);
+		return static::renderInternal($strategy, $name, $fix, $capture);
 	}
 
 	public static function createKey(CActiveRecord $element) {
@@ -73,24 +73,141 @@ class MedcardHtml extends CHtml {
 	}
 
 	public static function dropDownInput($name, $select, $data, $options = []) {
+		$config = [];
 		if (isset($data['-3'])) {
+			$config += [ '-3' => [ 'class' => 'hidden' ] ];
 		}
-		return static::dropDownList($name, $select, $data, $options + [
-				'class' => 'form-control', 'options' => [
-
-				]
+		$addon = UniqueGenerator::generate('addon');
+		print parent::openTag('div', [
+			'class' => 'input-group'
+		]);
+		print parent::dropDownList($name, $select, $data, $options + [
+				'class' => 'form-control', 'options' => $config, 'aria-describedby' => $addon,
 			]);
+		$js = 'var _s = $(this).parent(".input-group").children("select"); window["applyInsertForSelect"] && window["applyInsertForSelect"].call(_s, _s)';
+		print parent::tag('span', [ 'class' => 'input-group-addon', 'style' => 'cursor: pointer;', 'id' => $addon, 'onclick' => $js ], parent::tag('span', [
+			'class' => 'glyphicon glyphicon-plus'
+		], ''));
+		print parent::closeTag('div');
+		return null;
 	}
 
+	/**
+	 * Render multiple element with next HTML structure
+	 *
+	 * <div class="multiple">
+	 *   <select multiple="multiple" name="test[]" id="test" class="multiple-value form-control">
+	 *     <option value="...">...</option>
+	 *   </select>
+	 *   <div class="multiple-control text-left">
+	 *     <button class="btn btn-default multiple-collapse-button" type="button">
+	 *       <span>Развернуть / Свернуть</span>
+	 *     </button>
+	 *     <button class="btn btn-default multiple-down-button" type="button">
+	 *       <span class="glyphicon glyphicon-arrow-down"></span>
+	 *     </button>
+	 *     <button class="btn btn-default multiple-up-button" type="button">
+	 *       <span class="glyphicon glyphicon-arrow-up"></span>
+	 *     </button>
+	 *     <button class="btn btn-default multiple-insert-button" type="button">
+	 *       <span class="glyphicon glyphicon-plus"></span>
+	 *     </button>
+	 *   </div>
+	 *   <div class="multiple-container form-control"></div>
+	 * </div>
+	 *
+	 * @param $name string name of multiple element
+	 * @param $select array with selected values
+	 * @param $data array with list data
+	 * @param $options array with html options
+	 *
+	 * @return null, catch output buffer to get string
+	 */
 	public static function multipleInput($name, $select, $data, $options = []) {
-		return static::dropDownList($name, $select, $data, $options + [
-				'form-control' => 'true',
-				'multiple' => 'true',
+		print parent::openTag('div', [ 'class' => 'multiple' ]);
+		print parent::dropDownList($name, $select, $data, $options + [
+				'multiple' => 'multiple',
+				'class' => 'multiple-value form-control',
 			]);
+		print parent::openTag('div', [ 'class' => 'multiple-control text-left' ]);
+		print parent::tag('button', [
+			'class' => 'btn btn-default multiple-collapse-button',
+			'type' => 'button',
+		], '<span>Развернуть / Свернуть</span>');
+		print parent::tag('button', [
+			'class' => 'btn btn-default multiple-down-button',
+			'type' => 'button',
+		], '<span class="glyphicon glyphicon-arrow-down"></span>');
+		print parent::tag('button', [
+			'class' => 'btn btn-default multiple-up-button',
+			'type' => 'button',
+		], '<span class="glyphicon glyphicon-arrow-up"></span>');
+		if (isset($data['-3'])) {
+			print parent::tag('button', [
+				'class' => 'btn btn-default multiple-insert-button',
+				'type' => 'button',
+			], '<span class="glyphicon glyphicon-plus"></span>');
+		}
+		print parent::closeTag('div');
+		print parent::tag('div', [ 'class' => 'multiple-container form-control' ], '');
+		print parent::closeTag('div');
+		return null;
 	}
 
 	public static function tableInput($name, $config, $options = []) {
-		return 'table123';
+		$cols = $config['numCols'];
+		$rows = $config['numRows'];
+		if (isset($config['rows'])) {
+			$labels = $config['rows'];
+		} else {
+			$labels = [];
+		}
+		print parent::openTag('table', [ 'name' => $name ] + $options + [
+				'class' => 'table table-bordered table-striped table-condensed'
+			]);
+		if (isset($config['cols'])) {
+			print parent::openTag('thead');
+			print parent::openTag('tr');
+			if (!empty($labels)) {
+				print parent::tag('td', [ 'align' => 'left' ]);
+			}
+			foreach ($config['cols'] as $c) {
+				print parent::tag('td', [ 'align' => 'left' ],
+					parent::tag('b', [], $c)
+				);
+			}
+			print parent::closeTag('tr');
+			print parent::closeTag('thead');
+		}
+		$values = [];
+		foreach ($config['values'] as $key => $val) {
+			if (count($key = explode('_', $key)) != 2) {
+				continue;
+			}
+			if (!isset($values[$key[0]])) {
+				$values[$key[0]] = [ $key[1] => $val ];
+			} else {
+				$values[$key[0]][$key[1]] = $val;
+			}
+		}
+		print parent::openTag('tbody');
+		for ($i = 0; $i < $rows; $i++) {
+			print parent::openTag('tr');
+			if (isset($labels[$i])) {
+				print parent::tag('td', [],
+					parent::tag('b', [], $labels[$i])
+				);
+			}
+			for ($j = 0; $j < $cols; $j++) {
+				print parent::tag('td', [
+					'height' => '25px'
+				], isset($values[$i][$j]) ? $values[$i][$j] : '');
+			}
+			print parent::closeTag('tr');
+		}
+		print parent::closeTag('tbody');
+		print parent::closeTag('table');
+		return null;
 	}
 
 	public static function numberInput($name, $value = '', $options = []) {
@@ -138,6 +255,9 @@ class MedcardHtml extends CHtml {
 	 * @param $select array with selected identification numbers
 	 * @param $data array with data for option list
 	 * @param $options array with html options for left and right lists
+	 *
+	 * @return null simply null, capture output buffer
+	 * 	to get string content
 	 */
 	public static function exchangeInput($name, $select, $data, $options = []) {
 		$left = []; $right = [];
@@ -156,12 +276,12 @@ class MedcardHtml extends CHtml {
 				'data-ignore' => 'multiple',
 			])
 		);
-		print parent::openTag('div', [ 'class' => 'TCLButtonsContainer col-xs-1 text-center' ]);
-		print parent::tag('span', [ 'class' => 'btn btn-default btn-sm btn-block twoColumnRemoveBtn' ],
-			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left' ], '')
-		);
-		print parent::tag('span', [ 'class' => 'btn btn-default btn-sm btn-block twoColumnAddBtn' ],
+		print parent::openTag('div', [ 'class' => 'TCLButtonsContainer col-xs-1 text-center btn-group-vertical' ]);
+		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
+		);
+		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnRemoveBtn' ],
+			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left' ], '')
 		);
 		print parent::closeTag('div');
 		print parent::tag('div', [ 'class' => 'col-xs-5 no-padding' ],
@@ -172,15 +292,16 @@ class MedcardHtml extends CHtml {
 				])
 		);
 		print parent::closeTag('div');
+		return null;
 	}
 
-	protected static function renderInternal($method, $name, $parameters = []) {
+	protected static function renderInternal($method, $name, $parameters = [], $capture = true) {
 		if (!method_exists(__CLASS__, $method)) {
 			throw new CException('Unresolved medcard type render method (' . $method . ')');
-		} else {
+		} else if ($capture) {
 			ob_start();
 		}
 		print call_user_func_array([ __CLASS__, $method ], [ $name ] + $parameters);
-		return ob_get_clean();
+		return $capture ? ob_get_clean() : null;
 	}
 }
