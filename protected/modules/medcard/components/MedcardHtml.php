@@ -1,6 +1,6 @@
 <?php
 
-class MedcardHtml extends CHtml {
+class MedcardHtml extends Html {
 
 	public static $defaultIndexes = [
 		'name', 'value', 'options',
@@ -44,6 +44,10 @@ class MedcardHtml extends CHtml {
 			$fix[] = $parameters[$i];
 		}
 		return static::renderInternal($strategy, $name, $fix, $capture);
+	}
+
+	public static function createHash(CActiveRecord $element, $prefix = '', $letter = 'f') {
+		return $letter.'_'.$prefix.'_'.static::createPath($element).'_'.$element->{'id'};
 	}
 
 	public static function createKey(CActiveRecord $element) {
@@ -162,7 +166,7 @@ class MedcardHtml extends CHtml {
 		} else {
 			$labels = [];
 		}
-		print parent::openTag('table', [ 'name' => $name ] + $options + [
+		print parent::openTag('table', [ 'name' => $name, 'width' => '100%' ] + $options + [
 				'class' => 'table table-bordered table-striped table-condensed'
 			]);
 		if (isset($config['cols'])) {
@@ -268,30 +272,40 @@ class MedcardHtml extends CHtml {
 				$right[$key] = $value;
 			}
 		}
-		print parent::openTag('div', [ 'class' => 'exchange col-xs-12 no-padding' ]);
-		print parent::tag('div', [ 'class' => 'col-xs-5 no-padding' ],
-			parent::dropDownList(null, null, $left, $options + [
+		print parent::openTag('table', [
+			'class' => 'exchange',
+			'width' => '100%',
+		]);
+		print parent::openTag('tr');
+		print parent::tag('td', [
+			'width' => '50%'
+		], parent::dropDownList(null, null, $left, $options + [
 				'multiple' => 'multiple',
 				'class' => 'form-control twoColumnListFrom col-xs-5 no-padding',
 				'data-ignore' => 'multiple',
 			])
 		);
-		print parent::openTag('div', [ 'class' => 'TCLButtonsContainer col-xs-1 text-center btn-group-vertical' ]);
+		print parent::openTag('td', [
+			'class' => 'TCLButtonsContainer btn-group-vertical',
+			'width' => '40px',
+		]);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
 		);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnRemoveBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left' ], '')
 		);
-		print parent::closeTag('div');
-		print parent::tag('div', [ 'class' => 'col-xs-5 no-padding' ],
-			parent::dropDownList($name, null, $right, $options + [
-					'multiple' => 'multiple',
-					'class' => 'form-control twoColumnListTo col-xs-5 no-padding',
-					'data-ignore' => 'multiple',
-				])
+		print parent::closeTag('td');
+		print parent::tag('td', [
+			'width' => '50%'
+		], parent::dropDownList($name, null, $right, $options + [
+				'multiple' => 'multiple',
+				'class' => 'form-control twoColumnListTo col-xs-5 no-padding',
+				'data-ignore' => 'multiple',
+			])
 		);
-		print parent::closeTag('div');
+		print parent::closeTag('tr');
+		print parent::closeTag('table');
 		return null;
 	}
 

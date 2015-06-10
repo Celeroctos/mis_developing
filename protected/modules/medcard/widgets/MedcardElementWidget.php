@@ -8,6 +8,12 @@ class MedcardElementWidget extends Widget {
 	 */
 	public $element;
 
+	/**
+	 * @var string prefix for category identifier
+	 *  generator
+	 */
+	public $prefix = '';
+
 	public function init() {
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
@@ -17,42 +23,62 @@ class MedcardElementWidget extends Widget {
 	}
 
 	public function run() {
-		print MedcardHtml::openTag('div', [
+		if (!empty($this->element->{'size'}) && $this->element->{'size'} > 0) {
+			$width = $this->element->{'size'};
+		} else {
+			$width = null;
+		}
+		print Html::openTag('table', [
 			'class' => 'element-wrapper'
 		]);
-		print MedcardHtml::tag('span', [ 'class' => 'element-label-before' ],
-			$this->element->{'label'}
-		);
+		print Html::openTag('tr');
+		$this->renderLabelBefore();
+		print Html::openTag('td', [
+			'width' => $width
+		]);
 		if ($this->getConfig('showDynamic')) {
-			print MedcardHtml::openTag('span', [
+			print Html::openTag('span', [
 				'class' => 'showDynamicWrap'
 			]);
-			print MedcardHtml::tag('span', [
+			print Html::tag('span', [
 				'class' => 'showDynamicIcon glyphicon glyphicon-eye-open',
 				'title' => 'Динамика изменения параметра',
 			], '');
 		}
 		print MedcardHtml::renderByType($this->element->{'type'}, 'test', $this->prepareElement($this->element));
 		if ($this->getConfig('showDynamic')) {
-			print MedcardHtml::closeTag('span');
+			print Html::closeTag('span');
 		}
-		print MedcardHtml::tag('span', [ 'class' => 'element-label-after' ],
+		print Html::closeTag('td');
+		$this->renderLabelAfter();
+		print Html::closeTag('tr');
+		print Html::closeTag('table');
+	}
+
+	protected function renderLabelBefore() {
+		print Html::tag('td', [ 'align' => 'middle' ], Html::tag('label', [ 'class' => 'element-label-before' ],
+			$this->element->{'label'}
+		));
+	}
+
+	protected function renderLabelAfter() {
+		print Html::tag('td', [ 'align' => 'middle' ], Html::tag('label', [ 'class' => 'element-label-after' ],
 			$this->element->{'label_after'}
-		);
-		print MedcardHtml::closeTag('div');
+		));
 	}
 
 	protected function prepareElement(CActiveRecord $element) {
-		$parameters = [];
 		$type = $element->{'type'};
 		if (in_array($type, MedcardElementEx::$listTypes)) {
-			$parameters += $this->prepareList();
+			$parameters = $this->prepareList();
 		} else if (in_array($type, MedcardElementEx::$tableTypes)) {
-			$parameters += $this->prepareTable();
+			$parameters = $this->prepareTable();
 		} else if ($type == MedcardElementEx::TYPE_DATE) {
-			$parameters += $this->prepareDate();
+			$parameters = $this->prepareDate();
 		} else if ($type == MedcardElementEx::TYPE_NUMBER) {
-			$parameters += $this->prepareNumber();
+			$parameters = $this->prepareNumber();
+		} else {
+			$parameters = [];
 		}
 		if (!in_array($type, MedcardElementEx::$listTypes) &&
 			!in_array($type, MedcardElementEx::$tableTypes)
@@ -65,8 +91,7 @@ class MedcardElementWidget extends Widget {
 	protected function prepareList() {
 		$parameters = [];
 		if (!$guide = $this->element->{'guide_id'}) {
-			/* throw new CException('Can\'t resolve guide for list element type'); */
-			$data = [];
+			$data = [ -2 => 'Отсутствует справочник' ];
 		} else {
 			$data = MedcardGuideValue::model()->getRows(false, $guide);
 		}
@@ -133,6 +158,10 @@ class MedcardElementWidget extends Widget {
 			return $this->_config[$key];
 		}
 		return $default;
+	}
+
+	private function createKey($prefix, $letter) {
+		return $prefix.'_'.MedcardHtml::createHash($this->element, $this->prefix, $letter);
 	}
 
 	private $_config = null;

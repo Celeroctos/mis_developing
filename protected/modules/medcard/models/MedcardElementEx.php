@@ -32,7 +32,11 @@ class MedcardElementEx extends MedcardElement {
 		MedcardElementEx::TYPE_TABLE,
 	];
 
-	public static function listTypes() {
+	public static $growableTypes = [
+		MedcardElementEx::TYPE_DROPDOWN,
+	];
+
+	public static function getTypeList() {
 		return [
 			static::TYPE_TEXT => 'Текстовое поле',
 			static::TYPE_TEXTAREA => 'Текстовая область',
