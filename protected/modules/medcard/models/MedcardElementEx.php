@@ -15,7 +15,7 @@ class MedcardElementEx extends MedcardElement {
 		self::TYPE_TEXT => 'textInput',
 		self::TYPE_TEXTAREA => 'textAreaInput',
 		self::TYPE_DROPDOWN => 'dropDownInput',
-		self::TYPE_MULTIPLE => 'multipleInput',
+		self::TYPE_MULTIPLE => 'selectInput',
 		self::TYPE_TABLE => 'tableInput',
 		self::TYPE_NUMBER => 'numberInput',
 		self::TYPE_DATE => 'dateInput',

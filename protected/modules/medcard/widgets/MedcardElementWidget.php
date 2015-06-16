@@ -48,6 +48,9 @@ class MedcardElementWidget extends Widget {
 		} else {
 			$width = $this->size;
 		}
+        if ($this->element->{'type'} == MedcardElementEx::TYPE_DROPDOWN) {
+            $width += 37;
+        }
         print Html::openTag('div', [
             'class' => 'medcard-element-wrapper',
         ]);
