@@ -60,6 +60,9 @@ class MedcardHtml extends Html {
 	}
 
 	public static function createPath(CActiveRecord $element) {
+        if (!$element->hasAttribute('path')) {
+            throw new CException('Can\'t create path for element without [path] field');
+        }
 		return implode('', explode('.', $element->{'path'}));
 	}
 
@@ -128,6 +131,12 @@ class MedcardHtml extends Html {
 	 * @return null, catch output buffer to get string
 	 */
 	public static function multipleInput($name, $select, $data, $options = []) {
+        if (isset($data['-3'])) {
+            $insert = true;
+        } else {
+            $insert = false;
+        }
+        unset($data['-3']);
 		print parent::openTag('div', [ 'class' => 'multiple' ]);
 		print parent::dropDownList($name, $select, $data, $options + [
 				'multiple' => 'multiple',
@@ -146,7 +155,7 @@ class MedcardHtml extends Html {
 			'class' => 'btn btn-default multiple-up-button',
 			'type' => 'button',
 		], '<span class="glyphicon glyphicon-arrow-up"></span>');
-		if (isset($data['-3'])) {
+		if ($insert) {
 			print parent::tag('button', [
 				'class' => 'btn btn-default multiple-insert-button',
 				'type' => 'button',
@@ -157,6 +166,15 @@ class MedcardHtml extends Html {
 		print parent::closeTag('div');
 		return null;
 	}
+
+    public static function selectInput($name, $select, $data, $options = []) {
+        return static::dropDownInput($name, $select, $data, $options + [
+                'class' => 'form-control selectpicker',
+                'data-live-search' => 'true',
+                'multiple' => 'true',
+                'data-ignore' => 'multiple',
+            ]);
+    }
 
 	public static function tableInput($name, $config, $options = []) {
 		$cols = $config['numCols'];
@@ -169,7 +187,7 @@ class MedcardHtml extends Html {
 		print parent::openTag('table', [ 'name' => $name, 'width' => '100%' ] + $options + [
 				'class' => 'table table-bordered table-striped table-condensed'
 			]);
-		if (isset($config['cols'])) {
+		if (isset($config['cols']) && !empty($config['cols'])) {
 			print parent::openTag('thead');
 			print parent::openTag('tr');
 			if (!empty($labels)) {
@@ -204,7 +222,8 @@ class MedcardHtml extends Html {
 			}
 			for ($j = 0; $j < $cols; $j++) {
 				print parent::tag('td', [
-					'height' => '25px'
+					'height' => '25px',
+                    'width' => '75px',
 				], isset($values[$i][$j]) ? $values[$i][$j] : '');
 			}
 			print parent::closeTag('tr');
@@ -237,6 +256,9 @@ class MedcardHtml extends Html {
 			$config = [];
 		}
 		unset($options['data-config']);
+        if (is_array($config)) {
+            $config = json_encode($config);
+        }
 		$js = "$(this).datepicker($config).datepicker(\"show\");";
 		return static::inputField('text', $name, $value, $options + [
 				'class' => 'form-control datepicker-fix', 'onclick' => $js

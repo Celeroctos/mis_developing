@@ -41,11 +41,17 @@ class MedcardCategoryWidget extends Widget {
 		$this->_elements = $model->findAllByAttributes([
 			'categorie_id' => $this->category->{'id'}
 		]);
+        if ($this->category instanceof MedcardCategorie) {
+            $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
+                'parent_id' => $this->category->{'id'}
+            ]));
+        }
+        $this->prepareElements();
 	}
 
 	public function run() {
 		print Html::openTag('div', [
-			'class' => 'accordion'
+			'class' => 'accordion medcard-category'
 		]);
 		print Html::openTag('div', [
 			'class' => 'accordion-group'
@@ -62,15 +68,14 @@ class MedcardCategoryWidget extends Widget {
 		/* @var $e CActiveRecord */
 		$this->openLine();
 		foreach ($this->_elements as $e) {
-			if ($e->{'is_wrapped'}) {
-				$this->closeLine();
-				$this->openLine();
-			}
-			if ($e->hasAttribute('element_id') && $e->{'element_id'} != -1 || !$e->hasAttribute('element_id')) {
-				$this->widget('MedcardElementWidget', [ 'element' => $e ]);
-			} else {
-				print "CATEGORY";
-			}
+            if (!$e instanceof MedcardCategorie) {
+                if ($e->{'is_wrapped'}) {
+                    $this->closeLine(true);
+                }
+                $this->widget('MedcardElementWidget', [ 'element' => $e ]);
+            } else {
+                $this->widget('MedcardCategoryWidget', [ 'category' => $e ]);
+            }
 		}
 		$this->closeLine();
 		print Html::closeTag('div');
@@ -79,18 +84,37 @@ class MedcardCategoryWidget extends Widget {
 		print Html::closeTag('div');
 	}
 
+    protected function prepareElements() {
+        usort($this->_elements, function($left, $right) {
+            return strcmp($left->{'path'}, $right->{'path'});
+        });
+    }
+
 	protected function openLine() {
-		print Html::openTag('div', [ 'class' => 'row form-group no-margin', 'style' => 'margin-bottom: 10px' ]);
+		print Html::openTag('div', [ 'class' => 'row form-group no-margin vertical-align medcard-wrapper', 'style' => 'margin-bottom: 10px' ]);
 	}
 
-	protected function closeLine() {
+	protected function closeLine($reopen = false) {
 		print Html::closeTag('div');
+        if ($reopen) {
+            print Html::tag('hr', [
+                'class' => 'medcard-hr'
+            ]);
+            $this->openLine();
+        }
 	}
 
 	protected function getLink() {
+        if ($this->category->{'is_dynamic'}) {
+            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm accordion-clone-btn' ],
+                Html::tag('span', [ 'class' => 'glyphicon glyphicon-plus' ], '')
+            );
+        } else {
+            $button = '';
+        }
 		return Html::link($this->getLabel(), $this->createKey('#collapse', 'a'), [ 'data-parent' => $this->createKey('#accordion', 'a'),
 			'data-toggle' => 'collapse', 'class' => 'accordion-toggle',
-		]);
+		]) . $button;
 	}
 
 	protected function getLabel() {

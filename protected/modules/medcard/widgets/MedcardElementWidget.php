@@ -2,6 +2,8 @@
 
 class MedcardElementWidget extends Widget {
 
+    const DEFAULT_SCALE = 10;
+
 	/**
 	 * @var MedcardElementPatientEx|MedcardElementEx class instance of
 	 * 	active record class
@@ -14,22 +16,43 @@ class MedcardElementWidget extends Widget {
 	 */
 	public $prefix = '';
 
+    /**
+     * @var int default size of element
+     */
+    public $size = 300;
+
+    /**
+     * @var int scale factor for size parameter, by default it
+     *  takes from database [mis.settings], key [lettersInPixel]
+     */
+    public $scale;
+
 	public function init() {
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
 		} else if (!$this->element instanceof CActiveRecord) {
 			throw new CException('Medcard element must be an instance of ActiveRecord class');
 		}
+        if (!$this->scale) {
+            if ($scale = Setting::model()->findByAttributes([ 'name' => 'lettersInPixel' ])) {
+                $this->scale = intval($scale->{'value'});
+            } else {
+                $this->scale = static::DEFAULT_SCALE;
+            }
+        }
 	}
 
 	public function run() {
 		if (!empty($this->element->{'size'}) && $this->element->{'size'} > 0) {
-			$width = $this->element->{'size'};
+			$width = $this->element->{'size'} * $this->scale;
 		} else {
-			$width = null;
+			$width = $this->size;
 		}
+        print Html::openTag('div', [
+            'class' => 'medcard-element-wrapper',
+        ]);
 		print Html::openTag('table', [
-			'class' => 'element-wrapper'
+			'class' => 'medcard-element',
 		]);
 		print Html::openTag('tr');
 		$this->renderLabelBefore();
@@ -53,6 +76,7 @@ class MedcardElementWidget extends Widget {
 		$this->renderLabelAfter();
 		print Html::closeTag('tr');
 		print Html::closeTag('table');
+        print Html::closeTag('div');
 	}
 
 	protected function renderLabelBefore() {

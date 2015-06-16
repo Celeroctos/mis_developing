@@ -3,6 +3,8 @@
  * @var $this TemplateController
  */
 
-$this->widget('MedcardCategoryWidget', [
-	'category' => MedcardCategoryEx::model()->findByAttributes([ 'id' => 528 ])
+$this->widget('MedcardTemplateWidget', [
+    'template' => MedcardTemplateEx::model()->findByAttributes([
+        'id' => 40
+    ])
 ]);

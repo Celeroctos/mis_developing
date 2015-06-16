@@ -975,4 +975,9 @@ $('.buttonUpContainer').click(function () {
 			}
 		}
 	});
+
+    $.fn.selectpicker.Constructor.DEFAULTS = $.extend($.fn.selectpicker.Constructor.DEFAULTS, {
+        noneSelectedText: "Не выбрано",
+        noneResultsText: "Нет соответствий {0}"
+    });
 });

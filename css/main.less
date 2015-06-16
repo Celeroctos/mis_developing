@@ -2736,7 +2736,7 @@ textarea,
 
 .vertical-align > * {
   display: table-cell;
-  float: none;
+  float: none !important;
   vertical-align: middle;
 }
 
@@ -2749,19 +2749,38 @@ textarea,
   margin-top: 70px !important;
 }
 
-.element-wrapper > tbody > tr > td:first-child > label {
-  margin-right: 5px;
-}
-.element-wrapper > tbody > tr > td:last-child > label {
-  margin-left: 5px;
-}
-.element-wrapper > tbody > tr > td > label {
-  margin-bottom: 0;
-  font-size: 14px;
-}
-
-.element-wrapper {
+.medcard-element {
+  > tbody > tr {
+    > td:first-child > label {
+      margin-right: 5px;
+    }
+    > td:last-child > label {
+      margin-left: 5px;
+    }
+    > td > label {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+  }
   margin-right: 10px;
   float: left;
   height: auto;
+}
+
+.medcard-hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.medcard-element-wrapper {
+  display: inline-block;
+}
+
+.medcard-category {
+  width: 100%;
+  display: block !important;
+}
+
+.medcard-wrapper {
+  word-wrap: break-word !important;
 }

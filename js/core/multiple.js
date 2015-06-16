@@ -394,16 +394,16 @@ var Core = Core || {};
     Core.prepareMultiple = function(element, config) {
 		/* Если селектор не был указан, то будут выбраны все загруеженные
 		элементы на странице */
-		if (!element) {
-			element = $("select[multiple][data-ignore!='multiple']");
-		} else if (!element instanceof jQuery) {
-			element = $(element);
+		if (!element || 1) {
+			element = "select[multiple][data-ignore!='multiple']";
+		} else if (element instanceof jQuery) {
+			element = element.selector;
 		}
 		/* Создаем событие на обработку изменения стиля элемента
 		select[multiple], которые потом парсим и применяем родительскому
 		элементу с классом multiple */
 		var f;
-		element.multiple(config || {}).on("style", f = function(e) {
+        $(element).multiple(config || {}).on("style", f = function(e) {
 			if (e.target.tagName !== "SELECT") {
 				return void 0;
 			}
@@ -439,7 +439,7 @@ var Core = Core || {};
 		/* Обходим все элементы, которые уже имеют установленные значения в
 		атрибуте value, вытаскиваем их них значения (обычно - массив JSON) и
 		добавляем в компонент, после чего удалем поле value */
-		element.filter("[value!='']").each(function() {
+        $(element + "[value!='']").each(function() {
             if ($(this).attr("value") != void 0) {
                 $(this).multiple("choose", $(this).attr("value"));
             }
@@ -448,7 +448,7 @@ var Core = Core || {};
 		/* Обходим все элементы, которые имеют отмеченные поля через зажатую
 		клавишу Ctrl, получаем их и добавляем в компонент, разумеется, учитываем,
 		что если массив пустой, то все поля будут удалены */
-		element.each(function() {
+        $(element).each(function() {
 			var result = $(this).multiple("selected", true),
 				me = this;
 			if (result.length > 0) {
@@ -473,7 +473,7 @@ var Core = Core || {};
 		});
 		/* Обходим все множественный списки со стилями и применяем их для
 		нового родительского элемента */
-		element.filter("[style]").each(function() {
+        $(element + "[style]").each(function() {
 			$(this).parents(".multiple").attr("style", $(this).attr("style"));
 		});
     };
