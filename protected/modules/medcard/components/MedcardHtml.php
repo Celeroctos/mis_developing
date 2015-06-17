@@ -326,15 +326,19 @@ class MedcardHtml extends Html {
 			])
 		);
 		print parent::openTag('td', [
-			'class' => 'TCLButtonsContainer btn-group-vertical',
+			'valign' => 'middle',
 			'width' => '40px',
 		]);
+        print parent::openTag('div', [
+            'class' => 'TCLButtonsContainer btn-group-vertical'
+        ]);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
 		);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnRemoveBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left' ], '')
 		);
+        print parent::closeTag('div');
 		print parent::closeTag('td');
 		print parent::tag('td', [
 			'width' => '50%'
