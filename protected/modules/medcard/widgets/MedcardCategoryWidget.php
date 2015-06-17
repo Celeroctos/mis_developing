@@ -163,21 +163,17 @@ class MedcardCategoryWidget extends Widget {
     }
 
 	protected function openLine() {
-		print Html::openTag('div', [ 'class' => 'row form-group no-margin vertical-align medcard-wrapper', 'style' => 'margin-bottom: 10px' ]);
+		print Html::openTag('div', [ 'class' => 'row no-margin form-group vertical-align medcard-wrapper' ]);
 	}
 
 	protected function closeLine($reopen = false) {
 		print Html::closeTag('div');
         if ($reopen) {
-            print Html::tag('hr', [
-                'class' => 'medcard-hr'
-            ]);
             $this->openLine();
         }
 	}
 
     protected function createAccordionKey() {
-        /* {cardId}|{rowId}|{path}|{parentId}|{id}  */
         if (!($card = Yii::app()->getRequest()->getQuery('cardid')) ||
             !($row = Yii::app()->getRequest()->getQuery('rowid'))
         ) {

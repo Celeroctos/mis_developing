@@ -61,6 +61,8 @@ class MedcardElementWidget extends Widget {
 		}
         if ($this->element->{'type'} == MedcardElementEx::TYPE_DROPDOWN) {
             $width += 37; # Width of small bootstrap button with plus glyphicon :P
+        } else if ($this->element->{'type'} == MedcardElementEx::TYPE_EXCHANGE) {
+            $width = $width * 2 + 37; # Two columns width + Small bootstrap button
         }
         if ($this->category != null && $this->category->getDependent($this->element->{'id'}) == MedcardElementDependencyEx::ACTION_SHOW) {
             $style = 'display: none;';
