@@ -27,6 +27,12 @@ class MedcardElementWidget extends Widget {
      */
     public $scale;
 
+    /**
+     * @var MedcardCategoryWidget category widget, which contains
+     *  current element
+     */
+    public $category = null;
+
 	public function init() {
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
@@ -40,6 +46,16 @@ class MedcardElementWidget extends Widget {
                 $this->scale = static::DEFAULT_SCALE;
             }
         }
+        if ($this->category != null) {
+            $this->_dependencies = $this->category->getDependencies($this->element->{'id'});
+        } else {
+            $this->_dependencies = [];
+        }
+        if (!empty($this->_dependencies)) {
+            print '<pre>';
+            print_r($this->_dependencies);
+            print '</pre>';
+        }
 	}
 
 	public function run() {
@@ -49,10 +65,18 @@ class MedcardElementWidget extends Widget {
 			$width = $this->size;
 		}
         if ($this->element->{'type'} == MedcardElementEx::TYPE_DROPDOWN) {
-            $width += 37;
+            $width += 37; # Width of small bootstrap button with plus glyphicon :P
+        }
+        if ($this->category != null && $this->category->getDependent($this->element->{'id'}) == MedcardElementDependencyEx::ACTION_SHOW) {
+            $style = 'display: none;';
+        } else {
+            $style = null;
         }
         print Html::openTag('div', [
             'class' => 'medcard-element-wrapper',
+            'onmouseenter' => '$(this).tooltip("show")',
+            'data-original-title' => $this->element->{'path'},
+            'style' => $style,
         ]);
 		print Html::openTag('table', [
 			'class' => 'medcard-element',
@@ -71,7 +95,8 @@ class MedcardElementWidget extends Widget {
 				'title' => 'Динамика изменения параметра',
 			], '');
 		}
-		print MedcardHtml::renderByType($this->element->{'type'}, 'test', $this->prepareElement($this->element));
+        $key = 'FormTemplateDefault[f'.preg_replace('/\./', '|', $this->element->{'path'}).'_'.$this->element->{'id'}.']';
+		print MedcardHtml::renderByType($this->element->{'type'}, $key, $this->prepareElement($this->element));
 		if ($this->getConfig('showDynamic')) {
 			print Html::closeTag('span');
 		}
@@ -107,11 +132,15 @@ class MedcardElementWidget extends Widget {
 		} else {
 			$parameters = [];
 		}
-		if (!in_array($type, MedcardElementEx::$listTypes) &&
-			!in_array($type, MedcardElementEx::$tableTypes)
-		) {
-			$parameters['value'] = $element->{'default_value'};
-		}
+        if (!in_array($type, MedcardElementEx::$listTypes) &&
+            !in_array($type, MedcardElementEx::$tableTypes)
+        ) {
+            $parameters['value'] = $element->{'default_value'};
+        }
+        if (!isset($parameters['options'])) {
+            $parameters['options'] = [];
+        }
+        $parameters['options']['id'] = MedcardHtml::createHash($this->element, $this->prefix, 'f');
 		return $parameters;
 	}
 
@@ -129,8 +158,34 @@ class MedcardElementWidget extends Widget {
 			$parameters['selected'] = $this->element->{'default_value'};
 		}
 		$parameters['data'] = MedcardHtml::listData($data, 'id', 'value');
+        if (empty($this->_dependencies)) {
+            return $parameters;
+        }
+        # f__1|3_17
+        $js = '';
+        foreach ($this->_dependencies as $dependency) {
+            $js .= $this->createDependencyScript($dependency);
+        }
+        $parameters['options'] = [
+            'onchange' => preg_replace('/[\r\n\t ]+/', ' ', $js)
+        ];
 		return $parameters;
 	}
+
+    protected function createDependencyScript($dependency) {
+        $value = $dependency['value_id'];
+        if ($dependency['action'] == MedcardElementDependencyEx::ACTION_HIDE) {
+            $if = 'hide';
+            $else = 'show';
+        } else if ($dependency['action'] == MedcardElementDependencyEx::ACTION_SHOW) {
+            $if = 'show';
+            $else = 'hide';
+        } else {
+            return '';
+        }
+        $id = MedcardHtml::createHash([ 'id' => $dependency['dep_element_id'], 'path' => $dependency['dep_path'], ], $this->prefix, 'f');
+        return 'if ($(this).val() == '. $value .') $("#'. $id .'").parents(".medcard-element-wrapper:eq(0)").'. $if .'(); else $("#'. $id .'").parents(".medcard-element-wrapper:eq(0)").'. $else .'(); ';
+    }
 
 	protected function prepareTable() {
 		$parameters = [
@@ -187,9 +242,10 @@ class MedcardElementWidget extends Widget {
 		return $default;
 	}
 
-	private function createKey($prefix, $letter) {
+	private function createKey($prefix = null, $letter = '') {
 		return $prefix.'_'.MedcardHtml::createHash($this->element, $this->prefix, $letter);
 	}
 
+    private $_dependencies;
 	private $_config = null;
 }

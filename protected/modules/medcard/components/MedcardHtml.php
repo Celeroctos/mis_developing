@@ -46,8 +46,13 @@ class MedcardHtml extends Html {
 		return static::renderInternal($strategy, $name, $fix, $capture);
 	}
 
-	public static function createHash(CActiveRecord $element, $prefix = '', $letter = 'f') {
-		return $letter.'_'.$prefix.'_'.static::createPath($element).'_'.$element->{'id'};
+	public static function createHash($element, $prefix = '', $letter = 'f') {
+        if (is_array($element)) {
+            $id = $element['id'];
+        } else {
+            $id = $element->{'id'};
+        }
+		return $letter.'_'.$prefix.'_'.static::createPath($element).'_'.$id;
 	}
 
 	public static function createKey(CActiveRecord $element) {
@@ -59,11 +64,23 @@ class MedcardHtml extends Html {
 			$element->{'id'};
 	}
 
-	public static function createPath(CActiveRecord $element) {
-        if (!$element->hasAttribute('path')) {
-            throw new CException('Can\'t create path for element without [path] field');
+	public static function createPath($element) {
+        if ($element instanceof CActiveRecord) {
+            if (!$element->hasAttribute('path')) {
+                throw new CException('Can\'t create path for element without [path] field');
+            } else {
+                $path = $element->getAttribute('path');
+            }
+        } else if (is_array($element)) {
+            if (!isset($element['path'])) {
+                throw new CException('Can\'t create path for element without [path] field');
+            } else {
+                $path = $element['path'];
+            }
+        } else {
+            throw new CException('Unresolved element type, requires CActiveRecord or array');
         }
-		return implode('', explode('.', $element->{'path'}));
+		return implode('', explode('.', $path));
 	}
 
 	public static function textInput($name, $value = '', $options = []) {

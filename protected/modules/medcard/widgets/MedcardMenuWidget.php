@@ -27,7 +27,7 @@ class MedcardMenuWidget extends Widget {
         $this->_menu = [];
         $js = <<< JS
         var c = $(this).parents(".medcard-menu:eq(0)");
-        c.find("[id$=-tab]").hide();
+        c.find("[id^=tab-]").hide();
         c.find("#" + $(this).attr("data-tab")).show();
         c.find("> ul > li").removeClass("active");
         $(this).parent("li").addClass("active");
@@ -69,6 +69,11 @@ JS;
             ]);
             print Html::closeTag('div');
         }
+        print Html::tag('br');
+        $this->widget('TabMenu', [
+            'items' => $this->_menu,
+            'active' => $active,
+        ]);
         print Html::closeTag('div');
     }
 
