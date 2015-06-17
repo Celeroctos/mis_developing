@@ -20,6 +20,8 @@ class MedcardMenuWidget extends Widget {
         }
         if (empty($this->templates)) {
             $this->templates = $this->getTemplates($this->personal);
+        } else if (is_numeric(array_values($this->templates)[0])) {
+            $this->templates = MedcardTemplateEx::model()->findAll('id in ('. implode(',', $this->templates) .')');
         }
         usort($this->templates, function($left, $right) {
             return $left->{'index'} - $right->{'index'};

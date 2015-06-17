@@ -1,4 +1,5 @@
-﻿<!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
+﻿<?php /* @var $this SheduleController */ ?>
+<!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/patient.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/comments.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/categories.js"></script>-->
@@ -255,113 +256,11 @@
         if ($templatesChoose == 0) {
             $counter = 0;
     ?>
-	<script type="text/javascript">
-		<?php
-		$categoryWidgetConfig = [];
-		$templates = [];
-		foreach($templatesList as $key => $template) {
-			$categoryWidgetConfig["{$template['id']}"] = [
-				'currentPatient' => $currentPatient,
-				'templateType' => 0,
-				'templateId' => $template['id'],
-				'withoutSave' => 0,
-				'greetingId' => $currentSheduleId,
-				'canEditMedcard' => $canEditMedcard,
-				'currentDate' => $currentDate,
-				'templatePrefix' => 'a' . $template['id'],
-				'medcardRecordId' => $medcardRecordId,
-				'isActiveTemplate' => $counter == 0,
-			];
-			$templates[] = $template['id'];
-		} ?>
-		var categoryWidgetConfig = <?= json_encode($categoryWidgetConfig, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT) ?>;
-		var loadCategoryWidget = function(id) {
-			var container = $("#put-category-widget-here-" + id);
-			if (container.length > 1) {
-				return void 0;
-			}
-			if (!categoryWidgetConfig[id]) {
-				throw new Error("Unresolved category configuration");
-			}
-			return $.post(globalVariables.baseUrl + "/doctors/shedule/loadCategory", categoryWidgetConfig[id], function(response) {
-				container.append(response);
-			});
-		};
-		$(document).ready(function() {
-			var templates = <?= json_encode($templates) ?>;
-			var counter = 0;
-			var finished = 0;
-			var operations = templates.length + 1;
-			var progress = function(index) {
-				if (index >= operations) {
-					$("#doctor-schedule-ajax-loader-wrapper").remove();
-				} else {
-					$("#doctor-schedule-ajax-loader-wrapper").find(".progress-bar").css({
-						width: (((index + 1) / operations) * 100) + "%"
-					});
-				}
-			};
-			var fetch = function(template, counter) {
-				setTimeout(function() {
-					loadCategoryWidget(template).done(function() {
-						progress(finished + 2);
-						if (++finished == templates.length) {
-							patientReady();
-							categoryReady();
-							Core.prepareMultiple();
-							InitDateControls();
-							$("#t" + templates[0]).trigger("click");
-							progress(++finished);
-							$(".greetingContentCont").show();
-						}
-					});
-				}, counter * 150);
-			};
-			for (var i in templates) {
-				fetch(templates[i], counter++);
-			}
-		});
-	</script>
-		<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
-			<?/*= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
-				'width' => 50, 'height' => 50,
-				'style' => 'margin: 25px'
-			]) */ ?>
-			<br>
-			<h2>Идет построение шаблона ...</h2>
-			<br>
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" style="width: 0%;">
-					<span class="sr-only">Загрузка ...</span>
-				</div>
-			</div>
-		</div>
-		<div class="greetingContentCont" style="display: none;">
-			<p>
-				<a name="topMainTemplates"></a>
-			</p>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs templatesListNav">
-                    <?php foreach($templatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="t<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                    <?php
-                        $counter++;
-                    } ?>
-                </ul>
-
-            </div>
+		<div class="greetingContentCont">
+			<p><a name="topMainTemplates"></a></p>
             <script>
-                //oldAddress = document.location.href;
-
-                //document.location.href=document.location.href+'#topMainTemplates';
-               // window.scrollBy(0,-50);
                 destinationAnchor = $('a[name=topMainTemplates]');
-                if (destinationAnchor!=undefined)
-                {
+                if (destinationAnchor != undefined) {
                     destination = $(destinationAnchor)[0].offsetTop;
                     $('body,html').animate({
                         scrollTop: destination
@@ -369,54 +268,13 @@
                 }
             </script>
             <script type="text/javascript">
-                if (globalVariables.elementsDependences == undefined)
-                {
-                    globalVariables.elementsDependences = new Array();
-                }
+                globalVariables.elementsDependences = globalVariables.elementsDependences || [];
             </script>
-            <?php
-            $counter = 0;
-            foreach ($templatesList as $key => $template) { ?>
-                <div id="put-category-widget-here-<?= $template['id'] ?>">
-                    <?php
-//                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-//                        'currentPatient' => $currentPatient,
-//                        'templateType' => 0,
-//                        'templateId' => $template['id'],
-//                        'withoutSave' => 0,
-//                        'greetingId' => $currentSheduleId,
-//                        'canEditMedcard' => $canEditMedcard,
-//                        'medcard' => $medcard,
-//                        'currentDate' => $currentDate,
-//                        'templatePrefix' => 'a' . $template['id'],
-//                        'medcardRecordId' => $medcardRecordId,
-//                        'isActiveTemplate' => $counter == 0,
-//						//'form' => $formM
-//                    )); ?>
-                </div>
-            <?php
-                $counter++;
-            } ?>
-            <?php
-            //$this->endWidget();
-            ?>
-            <?php $counter = 0; if (true){ ?>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs templatesListNav templatesListNavBottom">
-                    <?php foreach($templatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="t<?php echo $template['id']; ?>">
-                                <strong>
-                                    <?php echo $template['name']; ?>
-                                </strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-            </div>
-                <?php } ?>
+            <?php $this->widget('MedcardMenuWidget', [
+                'templates' => Yii::app()->getRequest()->getPost('templatesList', [
+                    /* In that way current personal templates will be loaded */
+                ])
+            ]) ?>
 			<div class="modal fade error-popup" id="successEditPopup">
 				<div class="modal-dialog">
 					<div class="modal-content">
