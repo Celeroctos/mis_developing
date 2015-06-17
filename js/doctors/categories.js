@@ -96,20 +96,20 @@ var categoryReady = (function() {
     });
 
     $("#add-greeting-value-form").on('success', function(eventObj, ajaxData, status, jqXHR) {
-        var ajaxData = $.parseJSON(ajaxData);
+        var element = $(globalVariables.domElement);
+        ajaxData = $.parseJSON(ajaxData);
         if(ajaxData.success == 'true') { // Запрос прошёл удачно, закрываем окно для добавления нового предприятия, перезагружаем jqGrid
             $('#addGreetingComboValuePopup').modal('hide');
             //$("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
-            if (  $(globalVariables.domElement).is('select') )
-            {
-                $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
+            if (element.is('select')) {
+                element.find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
                 //$(globalVariables.domElement).val(ajaxData.id);
-            }
-            else
-            {
-                if (  $(globalVariables.domElement).is('input') )
-                {
-                    $.fn[ $(globalVariables.domElement).attr('id') ].addSelected(ajaxData.id,ajaxData.display);
+                if (element.hasClass("selectpicker")) {
+                    element.selectpicker("refresh");
+                }
+            } else {
+                if (element.is('input')) {
+                    $.fn[element.attr('id')].addSelected(ajaxData.id,ajaxData.display);
                 }
             }
         } else {
