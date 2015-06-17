@@ -1,6 +1,5 @@
 <?php
 class CategorieViewWidget extends CWidget {
-
     public $formModel = null;
     public $currentPatient = false;
     public $templateType = null;

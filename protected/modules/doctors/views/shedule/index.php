@@ -243,101 +243,12 @@
             </div>
         </div>
     </div>
-	<?php if (!Yii::app()->getRequest()->getQuery('rowid')): ?>
-		<script>
-			$(document).ready(function() {
-				patientReady(); categoryReady();
-			});
-		</script>
-	<?php endif ?>
     <?php
     if ($currentPatient !== false) {
         if ($templatesChoose == 0) {
             $counter = 0;
     ?>
-	<script type="text/javascript">
-		<?php
-		$categoryWidgetConfig = [];
-		$templates = [];
-		foreach($templatesList as $key => $template) {
-			$categoryWidgetConfig["{$template['id']}"] = [
-				'currentPatient' => $currentPatient,
-				'templateType' => 0,
-				'templateId' => $template['id'],
-				'withoutSave' => 0,
-				'greetingId' => $currentSheduleId,
-				'canEditMedcard' => $canEditMedcard,
-				'currentDate' => $currentDate,
-				'templatePrefix' => 'a' . $template['id'],
-				'medcardRecordId' => $medcardRecordId,
-				'isActiveTemplate' => $counter == 0,
-			];
-			$templates[] = $template['id'];
-		} ?>
-		var categoryWidgetConfig = <?= json_encode($categoryWidgetConfig, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT) ?>;
-		var loadCategoryWidget = function(id) {
-			var container = $("#put-category-widget-here-" + id);
-			if (container.length > 1) {
-				return void 0;
-			}
-			if (!categoryWidgetConfig[id]) {
-				throw new Error("Unresolved category configuration");
-			}
-			return $.post(globalVariables.baseUrl + "/doctors/shedule/loadCategory", categoryWidgetConfig[id], function(response) {
-				container.append(response);
-			});
-		};
-		$(document).ready(function() {
-			var templates = <?= json_encode($templates) ?>;
-			var counter = 0;
-			var finished = 0;
-			var operations = templates.length + 1;
-			var progress = function(index) {
-				if (index >= operations) {
-					$("#doctor-schedule-ajax-loader-wrapper").remove();
-				} else {
-					$("#doctor-schedule-ajax-loader-wrapper").find(".progress-bar").css({
-						width: (((index + 1) / operations) * 100) + "%"
-					});
-				}
-			};
-			var fetch = function(template, counter) {
-				setTimeout(function() {
-					loadCategoryWidget(template).done(function() {
-						progress(finished + 2);
-						if (++finished == templates.length) {
-							Core.prepareMultiple();
-							patientReady();
-							categoryReady();
-							Core.prepareMultiple();
-							InitDateControls();
-							$("#t" + templates[0]).trigger("click");
-							progress(++finished);
-							$(".greetingContentCont").show();
-						}
-					});
-				}, counter * 150);
-			};
-			for (var i in templates) {
-				fetch(templates[i], counter++);
-			}
-		});
-	</script>
-		<div class="col-xs-12 text-center" id="doctor-schedule-ajax-loader-wrapper">
-			<?/*= CHtml::image(Yii::app()->createUrl('images/ajax-loader.gif'), '', [
-				'width' => 50, 'height' => 50,
-				'style' => 'margin: 25px'
-			]) */ ?>
-			<br>
-			<h2>Идет построение шаблона ...</h2>
-			<br>
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" style="width: 0%;">
-					<span class="sr-only">Загрузка ...</span>
-				</div>
-			</div>
-		</div>
-		<div class="greetingContentCont" style="display: none;">
+		<div class="greetingContentCont">
 			<p>
 				<a name="topMainTemplates"></a>
 			</p>
@@ -377,23 +288,25 @@
             </script>
             <?php
             $counter = 0;
-            foreach ($templatesList as $key => $template) { ?>
-                <div id="put-category-widget-here-<?= $template['id'] ?>">
+            foreach ($templatesList as $key => $template) {
+                ?>
+                <div>
+
                     <?php
-//                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-//                        'currentPatient' => $currentPatient,
-//                        'templateType' => 0,
-//                        'templateId' => $template['id'],
-//                        'withoutSave' => 0,
-//                        'greetingId' => $currentSheduleId,
-//                        'canEditMedcard' => $canEditMedcard,
-//                        'medcard' => $medcard,
-//                        'currentDate' => $currentDate,
-//                        'templatePrefix' => 'a' . $template['id'],
-//                        'medcardRecordId' => $medcardRecordId,
-//                        'isActiveTemplate' => $counter == 0,
-//						//'form' => $formM
-//                    )); ?>
+                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
+                        'currentPatient' => $currentPatient,
+                        'templateType' => 0,
+                        'templateId' => $template['id'],
+                        'withoutSave' => 0,
+                        'greetingId' => $currentSheduleId,
+                        'canEditMedcard' => $canEditMedcard,
+                        'medcard' => $medcard,
+                        'currentDate' => $currentDate,
+                        'templatePrefix' => 'a' . $template['id'],
+                        'medcardRecordId' => $medcardRecordId,
+                        'isActiveTemplate' => $counter == 0,
+						//'form' => $formM
+                    )); ?>
                 </div>
             <?php
                 $counter++;

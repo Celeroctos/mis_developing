@@ -1770,11 +1770,4 @@ class SheduleController extends Controller {
         echo CJSON::encode(array('success' => 'false',
             'data' => 'Какая-то не понятная ошибка. Вы меня сильно озадачили!'));
     }
-
-	public function actionLoadCategory() {
-		$widget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget', $_POST + [
-				'medcard' => Medcard::model()->findByAttributes([ 'card_number' => $_POST['currentPatient'] ])
-			]);
-		print $widget->run();
-	}
 }

@@ -12,7 +12,3 @@
 <?php $this->widget("application.modals.admin.templates.AddCategory"); ?>
 <?php $this->widget("application.modals.admin.templates.AddCategoryError"); ?>
 <?php $this->widget("application.modals.admin.templates.EditCategory"); ?>
-
-<script>
-	$(document).ready(categoryReady);
-</script>
