@@ -330,7 +330,8 @@ class MedcardHtml extends Html {
 			'width' => '40px',
 		]);
         print parent::openTag('div', [
-            'class' => 'TCLButtonsContainer btn-group-vertical'
+            'class' => 'TCLButtonsContainer btn-group-vertical',
+            'style' => 'width: 40px;',
         ]);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
