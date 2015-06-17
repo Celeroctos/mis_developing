@@ -202,7 +202,7 @@ class MedcardHtml extends Html {
 			$labels = [];
 		}
 		print parent::openTag('table', [ 'name' => $name, 'width' => '100%' ] + $options + [
-				'class' => 'table table-bordered table-striped table-condensed'
+				'class' => 'table table-bordered table-striped table-condensed controltable'
 			]);
 		if (isset($config['cols']) && !empty($config['cols'])) {
 			print parent::openTag('thead');
@@ -239,6 +239,7 @@ class MedcardHtml extends Html {
 			}
 			for ($j = 0; $j < $cols; $j++) {
 				print parent::tag('td', [
+                    'class' => 'controlTableContentCell content-'.($i + 1).'_'.$j,
 					'height' => '25px',
                     'width' => '75px',
 				], isset($values[$i][$j]) ? $values[$i][$j] : '');

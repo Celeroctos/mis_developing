@@ -51,11 +51,6 @@ class MedcardElementWidget extends Widget {
         } else {
             $this->_dependencies = [];
         }
-        if (!empty($this->_dependencies)) {
-            print '<pre>';
-            print_r($this->_dependencies);
-            print '</pre>';
-        }
 	}
 
 	public function run() {
@@ -74,8 +69,8 @@ class MedcardElementWidget extends Widget {
         }
         print Html::openTag('div', [
             'class' => 'medcard-element-wrapper',
-            'onmouseenter' => '$(this).tooltip("show")',
-            'data-original-title' => $this->element->{'path'},
+            /* 'onmouseenter' => '$(this).tooltip("show")',
+            'data-original-title' => $this->element->{'path'}, */
             'style' => $style,
         ]);
 		print Html::openTag('table', [
