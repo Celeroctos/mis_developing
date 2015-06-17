@@ -707,8 +707,8 @@ $(document).ready(function() {
 	Laboratory_BarcodeReader.ready();
 	Laboratory_TabMenu_Widget.ready();
 
-	// fix for modal window backdrop
-	$(document).on("show.bs.modal", ".modal", function(e) {
+	/* moved to main.js */
+	/* $(document).on("show.bs.modal", ".modal", function(e) {
 		if (!$(e.target).hasClass("modal")) {
 			return void 0;
 		}
@@ -719,7 +719,7 @@ $(document).ready(function() {
 		}, 0);
 	}).on("show.bs.modal", ".modal", function() {
 		$(this).animate({ scrollTop: 0 }, 'slow');
-	});
+	}); */
 
 	$('[data-toggle="popover"]').popover()
 });

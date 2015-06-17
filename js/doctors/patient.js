@@ -556,7 +556,6 @@ $(document).on('click', '.medcard-history-showlink', function (e) {
             console.log(data);
         },
         'success': function (data, textStatus, jqXHR) {
-            console.log(data);
             if (data.success == 'true') {
                 // Заполняем медкарту-историю значениями
                 var historyContent = data.data;
@@ -661,7 +660,6 @@ function printDataToPrintPopup() {
         'success': function (data, textStatus, jqXHR) {
             // Если true - то удаление произошло
             if (data.success == true || data.success == 'true') {
-                console.log(data);
                 // Перебираем строки шаблона и выводим по чекбоксу для каждого шаблона
                 templates = data.data;
                 // Очистим блок с шаблонами

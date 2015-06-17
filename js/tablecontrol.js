@@ -167,7 +167,6 @@ $(document).ready(function() {
 
         // Если при инициализации в контрол было что-то вписано, нужно вписать в эту таблицу
         var jsonValue = $(control).parent().find('input[type="hidden"]').val();
-        console.log(jsonValue);
         if($.trim(jsonValue) != '') {
             var initValues = $.parseJSON(jsonValue);
             for(var i = 0; i < initValues.length; i++) {

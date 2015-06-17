@@ -20,6 +20,11 @@ class MedcardCategoryWidget extends Widget {
 	 */
 	public $prefix = '';
 
+    /**
+     * @var MedcardCategoryWidget instance of parent category widget
+     */
+    public $parent = null;
+
 	public function init() {
 		if (empty($this->category)) {
 			throw new CException('Medcard category must not be empty');
@@ -38,7 +43,8 @@ class MedcardCategoryWidget extends Widget {
 
 	public function run() {
 		print Html::openTag('div', [
-			'class' => 'accordion medcard-category'
+			'class' => 'accordion medcard-category',
+            'id' => $this->createKey('accordion', 'a')
 		]);
 		print Html::openTag('div', [
 			'class' => 'accordion-group'
@@ -64,9 +70,15 @@ class MedcardCategoryWidget extends Widget {
                 if ($e->{'is_wrapped'}) {
                     $this->closeLine(true);
                 }
-                $this->widget('MedcardElementWidget', [ 'category' => $this, 'element' => $e ]);
+                $this->widget('MedcardElementWidget', [
+                    'category' => $this,
+                    'element' => $e
+                ]);
             } else {
-                $this->widget('MedcardCategoryWidget', [ 'category' => $e ]);
+                $this->widget('MedcardCategoryWidget', [
+                    'parent' => $this,
+                    'category' => $e
+                ]);
             }
 		}
 		$this->closeLine();
@@ -164,10 +176,26 @@ class MedcardCategoryWidget extends Widget {
         }
 	}
 
+    protected function createAccordionKey() {
+        /* {cardId}|{rowId}|{path}|{parentId}|{id}  */
+        if (!($card = Yii::app()->getRequest()->getQuery('cardid')) ||
+            !($row = Yii::app()->getRequest()->getQuery('rowid'))
+        ) {
+            return '';
+        }
+        if ($this->parent != null && $this->parent->category != null) {
+            $parent = $this->parent->category->{'id'};
+        } else {
+            $parent = null;
+        }
+        return $card.'|'.$row.'|'.$this->category->{'path'}.'|'.$parent.'|'.$this->category->{'id'};
+    }
+
 	protected function getLink() {
         if ($this->category->{'is_dynamic'}) {
             $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm accordion-clone-btn' ],
-                Html::tag('span', [ 'class' => 'glyphicon glyphicon-plus' ], '')
+                Html::tag('span', [ 'class' => 'glyphicon glyphicon-plus' ], '').
+                Html::tag('span', [ 'class' => 'no-display pr-key' ], $this->createAccordionKey())
             );
         } else {
             $button = '';

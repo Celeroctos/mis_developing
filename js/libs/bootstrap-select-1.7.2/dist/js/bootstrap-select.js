@@ -651,6 +651,9 @@
 
       //strip all html-tags and trim the result
       this.$button.attr('title', $.trim(title.replace(/<[^>]*>?/g, '')));
+        if (title.length > 30) {
+            title = title.substr(0, 30) + ' ...';
+        }
       this.$button.children('.filter-option').html(title);
 
       this.$element.trigger('rendered.bs.select');
