@@ -1648,3 +1648,5 @@ $(document).ready(function() {
 		$("#date-cont").trigger("refresh", [e.date]);
 	});
 });
+
+$(document).ready(patientReady);

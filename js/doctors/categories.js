@@ -359,4 +359,4 @@ var categoryReady = (function() {
 	});
 });
 
-//$(document).ready(categoryReady);
+$(document).ready(categoryReady);
