@@ -20,15 +20,22 @@ class MedcardTemplateWidget extends Widget {
 	}
 
 	public function run() {
-        print Html::openTag('div', [
-            'class' => 'medcard-template'
+        print Html::openTag('form', [
+            'class' => 'medcard-template form-horizontal col-xs-12 template-edit-form',
+            'role' => 'form',
+            'id' => UniqueGenerator::generate('form'),
+            'action' => Yii::app()->createUrl('doctors/shedule/patientddit'),
+            'method' => 'post',
         ]);
         foreach ($this->_categories as $category) {
             $this->widget('MedcardCategoryWidget', [
                 'category' => $category
             ]);
         }
-        print Html::closeTag('div');
+        print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl('doctors/shedule/patientddit'), [], [
+            'class' => 'templateContentSave'
+        ]));
+        print Html::closeTag('form');
     }
 
     private $_categories;
