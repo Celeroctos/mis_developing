@@ -24,7 +24,7 @@ class MedcardTemplateWidget extends Widget {
             'class' => 'medcard-template form-horizontal col-xs-12 template-edit-form',
             'role' => 'form',
             'id' => UniqueGenerator::generate('form'),
-            'action' => Yii::app()->createUrl('doctors/shedule/patientddit'),
+            'action' => Yii::app()->createUrl('doctors/shedule/patientedit'),
             'method' => 'post',
         ]);
         foreach ($this->_categories as $category) {
@@ -32,7 +32,7 @@ class MedcardTemplateWidget extends Widget {
                 'category' => $category
             ]);
         }
-        print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl('doctors/shedule/patientddit'), [], [
+        print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl('doctors/shedule/patientedit'), [], [
             'class' => 'templateContentSave'
         ]));
         print Html::closeTag('form');
