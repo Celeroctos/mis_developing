@@ -7,6 +7,9 @@ class MedcardTemplateWidget extends Widget {
 	 */
 	public $template;
 
+    public $greetingNumber;
+    public $cardNumber;
+
 	public function init() {
         if (empty($this->template)) {
             throw new CException('Medcard template must not be empty');
@@ -15,6 +18,12 @@ class MedcardTemplateWidget extends Widget {
         }
         if (!$categories = json_decode($this->template->{'categorie_ids'})) {
             throw new CException('Can\'t decode template categories');
+        }
+        if (!$this->greetingNumber) {
+            $this->greetingNumber = Yii::app()->getRequest()->getQuery('rowid');
+        }
+        if (!$this->cardNumber) {
+            $this->cardNumber = Yii::app()->getRequest()->getQuery('cardid');
         }
         $this->_categories = MedcardCategoryEx::model()->findAll('id in ('. implode(', ', $categories) .')');
 	}
@@ -26,6 +35,18 @@ class MedcardTemplateWidget extends Widget {
             'id' => UniqueGenerator::generate('form'),
             'action' => Yii::app()->createUrl('doctors/shedule/patientedit'),
             'method' => 'post',
+        ]);
+        print Html::hiddenField('FormTemplateDefault[medcardId]', $this->cardNumber, [
+            'id' => 'medcardId', 'class' => 'from-control',
+        ]);
+        print Html::hiddenField('FormTemplateDefault[greetingId]', $this->greetingNumber, [
+            'id' => 'greetingId', 'class' => 'from-control',
+        ]);
+        print Html::hiddenField('FormTemplateDefault[templateName]', $this->template->{'name'}, [
+            'id' => 'templateName', 'class' => 'from-control',
+        ]);
+        print Html::hiddenField('FormTemplateDefault[templateId]', $this->template->{'id'}, [
+            'id' => 'templateId', 'class' => 'from-control',
         ]);
         foreach ($this->_categories as $category) {
             $this->widget('MedcardCategoryWidget', [

@@ -313,7 +313,7 @@ class MedcardHtml extends Html {
 			}
 		}
 		print parent::openTag('table', [
-			'class' => 'exchange',
+			'class' => 'exchange twoColumnList',
 			'width' => '100%',
 		]);
 		print parent::openTag('tr');
