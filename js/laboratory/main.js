@@ -384,7 +384,6 @@ var Laboratory_DirectionTable_Widget = {
 		} else {
 			panel = $(from).parents('table').loading("render");
 		}
-		console.log(panel);
 		Core.loadWidget("AboutDirection", {
 			direction: id
 		}, function (component) {
