@@ -105,7 +105,7 @@ class MedcardHtml extends Html {
 		print parent::openTag('div', [
 			'class' => 'input-group'
 		]);
-		print parent::dropDownList($name, $select, $data, $options + [
+        print parent::dropDownList($name, $select, $data, $options + [
 				'class' => 'form-control', 'options' => $config, 'aria-describedby' => $addon,
 			]);
 		$js = 'var _s = $(this).parent(".input-group").children("select"); window["applyInsertForSelect"] && window["applyInsertForSelect"].call(_s, _s)';
@@ -113,6 +113,10 @@ class MedcardHtml extends Html {
 			'class' => 'glyphicon glyphicon-plus'
 		], ''));
 		print parent::closeTag('div');
+        print parent::openTag('div', [
+            'class' => 'selectpicker-variants'
+        ]);
+        print parent::closeTag('div');
 		return null;
 	}
 

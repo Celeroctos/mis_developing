@@ -113,6 +113,7 @@ class MedcardCategoryWidget extends Widget {
         $criteria = new CDbCriteria();
         $criteria->addColumnCondition([ 'categorie_id' => $this->category->{'id'} ]);
         $this->_elements = $model->findAll($criteria);
+
         if ($this->category instanceof MedcardCategorie) {
             $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
                 'parent_id' => $this->category->{'id'}

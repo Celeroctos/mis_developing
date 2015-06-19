@@ -357,6 +357,17 @@ var categoryReady = (function() {
 		}
 		window.open(url);
 	});
+
+    $(document).on('DOMAttrModified', '.bootstrap-select .btn-default', function(e) {
+        var title = $(this).prop('title');
+        var variants = $(this).parents('.input-group').next();
+        if($.trim(title) != '') {
+            $(variants).css({'display' : 'block'});
+            $(variants).html(title);
+        } else {
+            $(variants).css({'display' : 'none'});
+        }
+    });
 });
 
 $(document).ready(categoryReady);
