@@ -81,6 +81,13 @@ return array(
 				'application.modules.laboratory.widgets.*',
 				'application.modules.laboratory.forms.*',
 				'application.modules.laboratory.models.*',
+                # import medcard components
+                'application.modules.medcard.components.*',
+                'application.modules.medcard.controllers.*',
+                'application.modules.medcard.models.*',
+                'application.modules.medcard.forms.*',
+                'application.modules.medcard.widgets.*',
+                'application.modules.medcard.grids.*',
             ),
         ),
         'settings' => array(

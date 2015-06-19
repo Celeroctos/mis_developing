@@ -5,6 +5,17 @@ class MisActiveRecord extends CActiveRecord {
         parent::__construct($scenario);
     }
 
+	/**
+	 * @param string|null $className
+	 * @return static
+	 */
+	public static function model($className = null) {
+		if ($className == null) {
+			$className = get_called_class();
+		}
+		return parent::model($className);
+	}
+
     protected function beforeSave() {
        /* foreach($this->attributes as $key => $attr) {
             $this->attributes->$key] = CHtml::encode(strip_tags($attr));

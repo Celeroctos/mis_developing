@@ -146,6 +146,5 @@ var GuideGridView = {
 };
 
 $(document).ready(function() {
-	Core.prepareMultiple();
 	GuideGridView.ready();
 });

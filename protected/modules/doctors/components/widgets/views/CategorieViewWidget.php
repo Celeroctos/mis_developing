@@ -10,7 +10,7 @@
 	$form = $this->beginWidget('CActiveForm', array(
 		'enableAjaxValidation' => true,
 		'enableClientValidation' => true,
-		'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/doctors/shedule/editpatient'),
+		'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/doctors/shedule/patientedit'),
 		'htmlOptions' => array(
 			'class' => 'form-horizontal col-xs-12 template-edit-form',
 			'role' => 'form'
@@ -70,7 +70,8 @@ if(!$this->previewMode /*&& $this->templateType == 0*/) {
             }'
 		),
 		array(
-            'class' => 'templateContentSave'
+            'class' => 'templateContentSave',
+			'name' => UniqueGenerator::generate('yt'),
 		)
 	); ?>
 </div>

@@ -44,11 +44,17 @@
     content: 'Нет элементов';
 }
 
-.multiple .multiple-control {
+.multiple-control {
     width: 100%;
     margin-top: 5px;
 }
 
 .multiple-really-not-visible {
     display: none;
+}
+
+.multiple-down-button,
+.multiple-up-button,
+.multiple-collapse-button {
+    margin-right: 2px;
 }

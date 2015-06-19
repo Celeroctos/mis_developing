@@ -2031,6 +2031,7 @@ form[id=template-edit-form] .btnAddValue
 .showDynamicWrap {
 	position: relative;
 	.showDynamicIcon {
+        z-index: 2;
 		position: absolute;
 		left: 12px;
 		top: -7px;
@@ -2736,10 +2737,56 @@ textarea,
 
 .vertical-align > * {
   display: table-cell;
-  float: none;
+  float: none !important;
   vertical-align: middle;
 }
 
 #doctor-direction-nav .nav > li {
   padding: 5px;
+}
+
+/* fix for datepicker offset (70px is header's top margin) */
+.datepicker {
+  margin-top: 70px !important;
+}
+
+.medcard-element {
+  > tbody > tr {
+    > td:first-child > label {
+      margin-right: 5px;
+    }
+    > td:last-child > label {
+      margin-left: 5px;
+    }
+    > td > label {
+      margin-bottom: 0;
+      font-size: 12px;
+    }
+  }
+  margin-right: 10px;
+  float: left;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.medcard-hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.medcard-element-wrapper {
+  display: inline-block;
+}
+
+.medcard-category {
+  > .accordion-group > .accordion-body > .accordion-inner {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+  width: 100%;
+  display: block !important;
+}
+
+.medcard-wrapper {
+  word-wrap: break-word !important;
 }

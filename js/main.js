@@ -975,4 +975,23 @@ $('.buttonUpContainer').click(function () {
 			}
 		}
 	});
+
+    $.fn.selectpicker.Constructor.DEFAULTS = $.extend($.fn.selectpicker.Constructor.DEFAULTS, {
+        noneSelectedText: "Не выбрано",
+        noneResultsText: "Нет соответствий {0}"
+    });
+
+    // fix for modal window backdrop
+    $(document).on("show.bs.modal", ".modal", function(e) {
+        if (!$(e.target).hasClass("modal")) {
+            return void 0;
+        }
+        var depth = 1140 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', depth);
+        setTimeout(function() {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
+        }, 0);
+    }).on("show.bs.modal", ".modal", function() {
+        $(this).animate({ scrollTop: 0 }, 'slow');
+    });
 });

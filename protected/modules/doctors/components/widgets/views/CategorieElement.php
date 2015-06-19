@@ -40,6 +40,9 @@ foreach($categorie['childrenElementsOrder'] as $item) {
         );
     } else {
         $element = $categorie['elements'][$item['numberInArray']];
+		if (!isset($element['guide'])) {
+			$element['guide'] = [];
+		}
         // Выведем зависимости, если они есть
         if(isset($element['dependences'])) { ?>
             <script type="text/javascript">
@@ -413,7 +416,7 @@ foreach($categorie['childrenElementsOrder'] as $item) {
                 $options['disabled'] = 'disabled';
             }
             ?>
-            <div id="<?php echo 'f_'.$prefix.'_'.implode('-', explode('|',$element['undotted_path'])).'_'.$element['id']; ?>-cont" class="input-group date null-padding-left">
+            <div id="<?php echo 'f_'.$prefix.'_'.implode('-', explode('|',$element['undotted_path'])).'_'.$element['id']; ?>-cont" class="input-group date null-padding-left date-control">
                 <?php
                 echo $form->hiddenField($model,'f'.$element['undotted_path'].'_'.$element['id'], $options);
                 ?>

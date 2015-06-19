@@ -140,9 +140,10 @@ var Core = Core || {};
      */
     Component.prototype.update = function() {
         this.before();
-        this.selector().replaceWith(
-            this.selector(this.render())
-        );
+		var r = this.render();
+		if (r != void 0) {
+			this.selector().replaceWith(this.selector(r));
+		}
         this.after();
         this.activate();
     };
