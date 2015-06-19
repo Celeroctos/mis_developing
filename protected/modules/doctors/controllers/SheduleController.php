@@ -708,6 +708,7 @@ class SheduleController extends Controller {
             $_POST['FormTemplateDefault']['greetingId'],
             $pathsOfElements
         );
+
         $historyElementsPaths = array();
 
         foreach ($historyElements as $oneHistoryElement) {
@@ -723,7 +724,6 @@ class SheduleController extends Controller {
             $historyCategorieElement = $historyElementsPaths[$pathsToFields[$field]];
             $this->stepToNextState($historyCategorieElement, $value, $recordId );
             $answerCurrentDate = true;
-
             if(!$historyCategorieElement->save()) {
                 ob_end_clean();
                 echo CJSON::encode(array('success' => true,

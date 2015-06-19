@@ -2,7 +2,6 @@
 /**
  * @var $this TemplateController
  */
-
 $this->widget('MedcardMenuWidget');
 
 //$this->widget('MedcardMenuWidget', [ 'templates' => $templates ]);

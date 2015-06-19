@@ -244,13 +244,13 @@
             </div>
         </div>
     </div>
-	<?php if (!Yii::app()->getRequest()->getQuery('rowid')): ?>
+	<?php /* if (!Yii::app()->getRequest()->getQuery('rowid')): */ ?>
 		<script>
-			$(document).ready(function() {
+			/* $(document).ready(function() {
 				patientReady(); categoryReady();
-			});
+			}); */
 		</script>
-	<?php endif ?>
+	<?php /* endif */ ?>
     <?php
     if ($currentPatient !== false) {
         if ($templatesChoose == 0) {
