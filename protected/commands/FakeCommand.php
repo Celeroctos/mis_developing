@@ -9,7 +9,7 @@ class FakeCommand extends CConsoleCommand {
 		$pagination = new CPagination(Oms::model()->count());
 		$total = $pagination->getItemCount();
 		$finished = 0;
-		$pagination->setPageSize(1000);
+		$pagination->setPageSize(10000);
 		for ($i = 0; $i < $pagination->getPageCount(); $i++) {
 			$pagination->setCurrentPage($i);
 			$rows = Yii::app()->getDb()->createCommand()
@@ -18,9 +18,6 @@ class FakeCommand extends CConsoleCommand {
 				->limit($pagination->getLimit(), $pagination->getOffset())
 				->queryAll();
 			foreach ($rows as $row) {
-				if (!is_numeric($row['first_name'])) {
-					continue;
-				}
 				Yii::app()->getDb()->createCommand()
 					->update('mis.oms', [
 						'first_name' => ($faker->firstName),
@@ -31,7 +28,7 @@ class FakeCommand extends CConsoleCommand {
 					]);
 				++$finished;
 			}
-			print_r((((float) $finished / $total) * 100) . '%, ');
+			print_r((((float) $finished / $total) * 100.0) . '%, ');
 		}
 	}
 
@@ -49,9 +46,6 @@ class FakeCommand extends CConsoleCommand {
 				->limit($pagination->getLimit(), $pagination->getOffset())
 				->queryAll();
 			foreach ($rows as $row) {
-				if (!is_numeric($row['surname'])) {
-					continue;
-				}
 				Yii::app()->getDb()->createCommand()
 					->update('lis.patient', [
 						'surname' => ($faker->lastName),
