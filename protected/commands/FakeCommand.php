@@ -20,9 +20,9 @@ class FakeCommand extends CConsoleCommand {
 			foreach ($rows as $row) {
 				Yii::app()->getDb()->createCommand()
 					->update('mis.oms', [
-						'first_name' => ($faker->firstName),
-						'last_name' => ($faker->lastName),
-						'middle_name' => ($faker->{'middleName'})
+						'first_name' => mb_strtoupper($faker->firstName, 'UTF-8'),
+						'last_name' => mb_strtoupper($faker->lastName, 'UTF-8'),
+						'middle_name' => mb_strtoupper($faker->{'middleName'}, 'UTF-8')
 					], 'id = :id', [
 						':id' => $row['id']
 					]);
@@ -48,9 +48,9 @@ class FakeCommand extends CConsoleCommand {
 			foreach ($rows as $row) {
 				Yii::app()->getDb()->createCommand()
 					->update('lis.patient', [
-						'surname' => ($faker->lastName),
-						'name' => ($faker->firstName),
-						'patronymic' => ($faker->{'middleName'})
+						'surname' => mb_strtoupper($faker->lastName, 'UTF-8'),
+						'name' => mb_strtoupper($faker->firstName, 'UTF-8'),
+						'patronymic' => mb_strtoupper($faker->{'middleName'}, 'UTF-8')
 					], 'id = :id', [
 						':id' => $row['id']
 					]);
