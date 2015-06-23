@@ -1,0 +1,69 @@
+
+SELECT * FROM mis.medcard_elements_patient AS p
+  LEFT OUTER JOIN mis.medcard_elements AS e ON e.id = p.element_id
+WHERE e.categorie_id = 2 AND p.categorie_id = 2;
+
+WITH "element" AS (
+    SELECT * FROM "mis"."medcard_elements" FIRST WHERE "categorie_id" = 2
+) SELECT  "p"."element_id", "e".* FROM "mis"."medcard_elements_patient" AS "p", "element" AS "e"
+WHERE "p"."element_id" = "e"."id" AND "p"."categorie_id" = 2 ORDER BY "p"."change_date" DESC LIMIT 1;
+
+WITH "patient" AS (
+    SELECT * FROM "mis"."medcard_elements_patient" WHERE "categorie_id" = 2 ORDER BY "change_date" DESC LIMIT 1
+) SELECT "p"."element_id", "e".* FROM "mis"."medcard_elements" AS "e", "patient" AS "p" WHERE "e"."categorie_id" = 2;
+
+
+SELECT p.element_id, e.* FROM mis.medcard_elements AS e LEFT JOIN (
+    SELECT DISTINCT ON (element_id) * FROM mis.medcard_elements_patient
+    ORDER BY element_id, change_date DESC
+  ) AS p
+ON e.id = p.element_id WHERE e.categorie_id = 2;
+
+
+SELECT "p"."element_id", "e".* FROM "mis"."medcard_elements" AS "e"
+  LEFT OUTER JOIN "mis"."medcard_elements_patient" AS "p" ON "e"."id" = (
+    SELECT "id" FROM "mis"."medcard_elements_patient" WHERE "categorie_id" = 2 ORDER BY "change_date" DESC LIMIT 1
+  ) AND "p"."element_id" = "e"."id"
+WHERE "e"."categorie_id" = 2;
+
+
+-- SELECT * FROM mis.medcard_elements_patient GROUP BY element_id;
+
+WITH "patient" AS (
+  SELECT * FROM mis.medcard_elements_patient WHERE categorie_id = 2 ORDER BY change_date DESC LIMIT 1
+) SELECT e.* FROM mis.medcard_elements_patient AS p, patient AS e WHERE p.categorie_id = 2 AND p.element_id = e.element_id;
+
+CREATE OR REPLACE VIEW mis.medcard_element_helper AS
+  SELECT
+    "element_id" as id,
+    "type" as type,
+    "categorie_id" as categorie_id,
+    "label_before" as label,
+    "guide_id" as guide_id,
+    "allow_add" as allow_add,
+    "label_after" as label_after,
+    "size" as size,
+    "is_wrapped" as is_wrapped,
+    "path" as path,
+    "config" as config,
+    "value" as default_value,
+    "is_required" as is_required,
+    "not_printing_values" as not_printing_values,
+    "hide_label_before" as hide_label_before
+  FROM mis.medcard_elements_patient GROUP BY
+    id,
+    type,
+    categorie_id,
+    label,
+    guide_id,
+    allow_add,
+    label_after,
+    size,
+    is_wrapped,
+    path,
+    config,
+    default_value,
+    is_required,
+    not_printing_values,
+    hide_label_before;
+

@@ -1,5 +1,6 @@
 <?php
 class MedcardElementForPatient extends MisActiveRecord {
+
     private $typesList = array( // Типы контролов
         'Текстовое поле',
         'Текстовая область',
@@ -9,11 +10,6 @@ class MedcardElementForPatient extends MisActiveRecord {
         'Числовое поле',
         'Дата'
     );
-
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
 
     public function tableName()
     {

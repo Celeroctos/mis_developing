@@ -105,9 +105,7 @@ class MedcardCategoryWidget extends Widget {
     }
 
     protected function prepareElements() {
-        $this->_elements = MedcardElementEx::model()->fetchWithGreeting('e.categorie_id = :id', [
-            ':id' => $this->category['id']
-        ]);
+        $this->_elements = MedcardElementEx::model()->fetchWithGreeting($this->category['id']);
         if ($this->category instanceof MedcardCategorie) {
             $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
                 'parent_id' => $this->category['id']
