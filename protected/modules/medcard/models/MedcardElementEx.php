@@ -43,7 +43,7 @@ class MedcardElementEx extends MedcardElement {
         if (!empty($condition)) {
             $query->where($condition, $params);
         }
-        $rows = [];
+        /* $rows = [];
         foreach ($query->queryAll() as $row) {
             $patient = $this->getDbConnection()->createCommand()
                 ->select('*')
@@ -58,7 +58,8 @@ class MedcardElementEx extends MedcardElement {
             } else {
                 $rows[] = $row;
             }
-        }
+        } */
+        $rows = $query->queryAll();
         return $rows;
     }
 
