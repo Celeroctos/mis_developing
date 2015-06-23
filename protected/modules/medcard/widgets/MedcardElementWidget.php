@@ -36,35 +36,33 @@ class MedcardElementWidget extends Widget {
 	public function init() {
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
-		} else if (!$this->element instanceof CActiveRecord) {
-			throw new CException('Medcard element must be an instance of ActiveRecord class');
 		}
         if (!$this->scale) {
             if ($scale = Setting::model()->findByAttributes([ 'name' => 'lettersInPixel' ])) {
-                $this->scale = intval($scale->{'value'});
+                $this->scale = intval($scale['value']);
             } else {
                 $this->scale = static::DEFAULT_SCALE;
             }
         }
         if ($this->category != null) {
-            $this->_dependencies = $this->category->getDependencies($this->element->{'id'});
+            $this->_dependencies = $this->category->getDependencies($this->element['id']);
         } else {
             $this->_dependencies = [];
         }
 	}
 
 	public function run() {
-		if (!empty($this->element->{'size'}) && $this->element->{'size'} > 0) {
-			$width = $this->element->{'size'} * $this->scale;
+		if (!empty($this->element['size']) && $this->element['size'] > 0) {
+			$width = $this->element['size'] * $this->scale;
 		} else {
 			$width = $this->size;
 		}
-        if ($this->element->{'type'} == MedcardElementEx::TYPE_DROPDOWN) {
+        if ($this->element['type'] == MedcardElementEx::TYPE_DROPDOWN) {
             $width += 37; # Width of small bootstrap button with plus glyphicon
-        } else if ($this->element->{'type'} == MedcardElementEx::TYPE_EXCHANGE) {
+        } else if ($this->element['type'] == MedcardElementEx::TYPE_EXCHANGE) {
             $width = $width * 2 + 40; # Two columns width + Small bootstrap button, for 40px see [MedcardHtml::exchangeInput]
         }
-        if ($this->category != null && $this->category->getDependent($this->element->{'id'}) == MedcardElementDependencyEx::ACTION_SHOW) {
+        if ($this->category != null && $this->category->getDependent($this->element['id']) == MedcardElementDependencyEx::ACTION_SHOW) {
             $style = 'display: none;';
         } else {
             $style = null;
@@ -72,7 +70,7 @@ class MedcardElementWidget extends Widget {
         print Html::openTag('div', [
             'class' => 'medcard-element-wrapper',
             /* 'onmouseenter' => '$(this).tooltip("show")',
-            'data-original-title' => $this->element->{'path'}, */
+            'data-original-title' => $this->element['path'], */
             'style' => $style,
         ]);
 		print Html::openTag('table', [
@@ -92,8 +90,8 @@ class MedcardElementWidget extends Widget {
 				'title' => 'Динамика изменения параметра',
 			], '');
 		}
-        $key = 'FormTemplateDefault[f'.preg_replace('/\./', '|', $this->element->{'path'}).'_'.$this->element->{'id'}.']';
-		print MedcardHtml::renderByType($this->element->{'type'}, $key, $this->prepareElement($this->element));
+        $key = 'FormTemplateDefault[f'.preg_replace('/\./', '|', $this->element['path']).'_'.$this->element['id'].']';
+		print MedcardHtml::renderByType($this->element['type'], $key, $this->prepareElement($this->element));
 		if ($this->getConfig('showDynamic')) {
 			print Html::closeTag('span');
 		}
@@ -106,18 +104,18 @@ class MedcardElementWidget extends Widget {
 
 	protected function renderLabelBefore() {
 		print Html::tag('td', [ 'align' => 'middle' ], Html::tag('label', [ 'class' => 'element-label-before' ],
-			$this->element->{'label'}
+			$this->element['label']
 		));
 	}
 
 	protected function renderLabelAfter() {
 		print Html::tag('td', [ 'align' => 'middle' ], Html::tag('label', [ 'class' => 'element-label-after' ],
-			$this->element->{'label_after'}
+			$this->element['label_after']
 		));
 	}
 
-	protected function prepareElement(CActiveRecord $element) {
-		$type = $element->{'type'};
+	protected function prepareElement($element) {
+		$type = $element['type'];
 		if (in_array($type, MedcardElementEx::$listTypes)) {
 			$parameters = $this->prepareList();
 		} else if (in_array($type, MedcardElementEx::$tableTypes)) {
@@ -132,7 +130,11 @@ class MedcardElementWidget extends Widget {
         if (!in_array($type, MedcardElementEx::$listTypes) &&
             !in_array($type, MedcardElementEx::$tableTypes)
         ) {
-            $parameters['value'] = $element->{'default_value'};
+            if (isset($element['value'])) {
+                $parameters['value'] = $element['value'];
+            } else {
+                $parameters['value'] = $element['default_value'];
+            }
         }
         if (!isset($parameters['options'])) {
             $parameters['options'] = [];
@@ -143,22 +145,25 @@ class MedcardElementWidget extends Widget {
 
 	protected function prepareList() {
 		$parameters = [];
-		if (!$guide = $this->element->{'guide_id'}) {
+		if (!$guide = $this->element['guide_id']) {
 			$data = [ -2 => 'Отсутствует справочник' ];
 		} else {
 			$data = MedcardGuideValue::model()->getRows(false, $guide);
 		}
-		if ($this->element->{'type'} == MedcardElementEx::TYPE_EXCHANGE) {
+		if ($this->element['type'] == MedcardElementEx::TYPE_EXCHANGE) {
 			unset($data['-3']);
 		}
-		if ($this->element->{'default_value'}) {
-			$parameters['selected'] = $this->element->{'default_value'};
+        if (isset($this->element['value'])) {
+            if ($this->element['value']) {
+                $parameters['selected'] = $this->element['value'];
+            }
+        } else if ($this->element['default_value']) {
+			$parameters['selected'] = $this->element['default_value'];
 		}
 		$parameters['data'] = MedcardHtml::listData($data, 'id', 'value');
         if (empty($this->_dependencies)) {
             return $parameters;
         }
-        # f__1|3_17
         $js = '';
         foreach ($this->_dependencies as $dependency) {
             $js .= $this->createDependencyScript($dependency);
@@ -231,7 +236,7 @@ class MedcardElementWidget extends Widget {
 
 	protected function getConfig($key, $default = null) {
 		if ($this->_config == null) {
-			$this->_config = json_decode($this->element->{'config'}, true);
+			$this->_config = json_decode($this->element['config'], true);
 		}
 		if (isset($this->_config[$key])) {
 			return $this->_config[$key];

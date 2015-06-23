@@ -47,8 +47,5 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/yii/yiilite.php" />
-  </component>
   <component name="ProjectRootManager" version="2" />
 </project>

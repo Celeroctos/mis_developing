@@ -36,6 +36,32 @@ class MedcardElementEx extends MedcardElement {
 		MedcardElementEx::TYPE_DROPDOWN,
 	];
 
+    public function fetchWithGreeting($condition = '', $params = []) {
+        $query = $this->getDbConnection()->createCommand()
+            ->select('e.*')
+            ->from('mis.medcard_elements as e');
+        if (!empty($condition)) {
+            $query->where($condition, $params);
+        }
+        $rows = [];
+        foreach ($query->queryAll() as $row) {
+            $patient = $this->getDbConnection()->createCommand()
+                ->select('*')
+                ->from('mis.medcard_elements_patient')
+                ->where('element_id = :id', [
+                    ':id' => $row['id']
+                ])->limit(1)
+                ->order('change_date desc')
+                ->queryRow();
+            if ($patient !== false) {
+                $rows[] = $patient + $row;
+            } else {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
 	public static function getTypeList() {
 		return [
 			static::TYPE_TEXT => 'Текстовое поле',

@@ -13,6 +13,7 @@
         var ajaxData = { 'success':false };
         ajaxData = $.parseJSON(dataFromQuery);
         onSectionSave(ajaxData);
+        $(".bodyOverlay").remove();
     });
 
     globalVariables.isSavingErrors = false;
@@ -29,7 +30,7 @@
             // Сбрасываем режим на дефолт
             globalVariables.numCalls = 0;
             // Если класс контента приёма имеет класс неотображения, это было сохранение при смене врача
-            $('.backDropForSaving').remove();
+            //$('.backDropForSaving').remove();
             $('.modal-backdrop').hide();
 
             getNewHistory();
@@ -240,7 +241,7 @@
         } else {
             // Show the backdrop
             if (!overlaySuck) {
-                $('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
+                //$('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
             }
 
             for (var i = 0; i < buttonsContainers.length; i++) {

@@ -1,11 +1,15 @@
 <?php
 class MisActiveRecord extends CActiveRecord {
 
-    public function __construct($scenario = 'insert') {
-        parent::__construct($scenario);
+    public function getTableName($alias = null) {
+        if ($alias != null) {
+            return $this->tableName().' as '.$alias;
+        } else {
+            return $this->tableName();
+        }
     }
 
-	/**
+    /**
 	 * @param string|null $className
 	 * @return static
 	 */
@@ -15,13 +19,6 @@ class MisActiveRecord extends CActiveRecord {
 		}
 		return parent::model($className);
 	}
-
-    protected function beforeSave() {
-       /* foreach($this->attributes as $key => $attr) {
-            $this->attributes->$key] = CHtml::encode(strip_tags($attr));
-        } */
-        return true;
-    }
 
 	/**
 	 * This method is invoked after saving a record successfully.
