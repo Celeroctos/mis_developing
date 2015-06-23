@@ -82,11 +82,9 @@ class Controller extends CController {
         $role = $auth->createRole('r'.$currentRoles['id'], '');
         $result = $auth->assign('r'.$currentRoles['id'], Yii::app()->user->getId()); // Текущему юзеру назначаем эту роль
 		foreach($currentRoles['actions'] as $id => $action) {
-			if(array_key_exists($id, $actionsDetached) === false && array_key_exists($id, $actionsAttached) === false) {
-                if ($auth->getAuthItem($action) == null) {
-                    $auth->createOperation($action);
-                }
-				$role->addChild($action);
+			if(array_key_exists($id, $actionsDetached) === false && array_key_exists($id, $actionsAttached) === false && $auth->getAuthItem($action) != null) {
+                $auth->createOperation($action);
+                $role->addChild($action);
 			}
         }
 
