@@ -3,7 +3,7 @@
 class MedcardCategoryWidget extends Widget {
 
 	/**
-	 * @var MedcardCategoryEx instance of category
+	 * @var MedcardCategoryEx|array instance of category
 	 * 	class
 	 */
 	public $category;
@@ -28,11 +28,9 @@ class MedcardCategoryWidget extends Widget {
 	public function init() {
 		if (empty($this->category)) {
 			throw new CException('Medcard category must not be empty');
-		} else if (!$this->category instanceof CActiveRecord) {
-			throw new CException('Medcard category must be an instance of ActiveRecord class');
 		}
 		if (empty($this->name)) {
-			if ($this->category->hasAttribute('categorie_name')) {
+			if (is_object($this->category) && $this->category->hasAttribute('categorie_name') || isset($this->category['categorie_name'])) {
 				$this->name = $this->category['categorie_name'];
 			} else {
 				$this->name = $this->category['name'];
