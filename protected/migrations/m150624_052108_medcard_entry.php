@@ -16,7 +16,7 @@ CREATE TABLE "medcard"."medcard_guide_value" (
   "id" SERIAL PRIMARY KEY,
   "guide_id" INT REFERENCES "medcard"."medcard_guide"("id") ON DELETE CASCADE,
   "value" TEXT NOT NULL,
-  "greeting_id" INT REFERENCES "mis"."tasu_fake_greetings"("id") ON DELETE CASCADE DEFAULT NULL
+  "greeting_id" INT DEFAULT NULL
 );
 
 CREATE TABLE "medcard"."medcard_template" (
@@ -54,7 +54,7 @@ CREATE TABLE "medcard"."medcard_greeting_element" (
   "parent_id" INT REFERENCES "medcard"."medcard_greeting_element"("id") ON DELETE CASCADE,
   "value_id" INT REFERENCES "medcard"."medcard_guide_value"("id") ON DELETE CASCADE,
   "change_date" TIMESTAMP DEFAULT now(),
-  "greeting_id" INT REFERENCES "mis"."tasu_fake_greetings"("id") ON DELETE CASCADE,
+  "greeting_id" INT DEFAULT NULL,
   "flags" INT DEFAULT 0
 );
 
