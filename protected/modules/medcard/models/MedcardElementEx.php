@@ -2,6 +2,17 @@
 
 class MedcardElementEx extends MedcardElement {
 
+    const FLAG_DEFAULT = 0x0000;
+    const FLAG_GROWABLE = 0x0001;
+    const FLAG_WRAPPED = 0x0002;
+    const FLAG_REQUIRED = 0x0004;
+    const FLAG_DYNAMIC = 0x0008;
+    const FLAG_RECORD = 0x0010;
+    const FLAG_CATEGORY = 0x0020;
+
+    const FLAG_NOT_PRINT_VALUES = 0x0040;
+    const FLAG_HIDE_LABEL_BEFORE = 0x0080;
+
 	const TYPE_TEXT = 0;
 	const TYPE_TEXTAREA = 1;
 	const TYPE_DROPDOWN = 2;
@@ -10,6 +21,20 @@ class MedcardElementEx extends MedcardElement {
 	const TYPE_NUMBER = 5;
 	const TYPE_DATE = 6;
 	const TYPE_EXCHANGE = 7;
+
+    public static $listTypes = [
+        MedcardElementEx::TYPE_DROPDOWN,
+        MedcardElementEx::TYPE_MULTIPLE,
+        MedcardElementEx::TYPE_EXCHANGE,
+    ];
+
+    public static $tableTypes = [
+        MedcardElementEx::TYPE_TABLE,
+    ];
+
+    public static $growableTypes = [
+        MedcardElementEx::TYPE_DROPDOWN,
+    ];
 
 	public static $render = [
 		self::TYPE_TEXT => 'textInput',
@@ -20,20 +45,6 @@ class MedcardElementEx extends MedcardElement {
 		self::TYPE_NUMBER => 'numberInput',
 		self::TYPE_DATE => 'dateInput',
 		self::TYPE_EXCHANGE => 'exchangeInput',
-	];
-
-	public static $listTypes = [
-		MedcardElementEx::TYPE_DROPDOWN,
-		MedcardElementEx::TYPE_MULTIPLE,
-		MedcardElementEx::TYPE_EXCHANGE,
-	];
-
-	public static $tableTypes = [
-		MedcardElementEx::TYPE_TABLE,
-	];
-
-	public static $growableTypes = [
-		MedcardElementEx::TYPE_DROPDOWN,
 	];
 
     public function fetchWithGreeting($category) {

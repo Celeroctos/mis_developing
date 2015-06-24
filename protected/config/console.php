@@ -17,6 +17,20 @@ return array(
 		'application.fields.*',
 		'application.validators.*'
 	),
+    'modules'=>array(
+        'medcard' => array(
+            'class' => 'application.modules.medcard.MedcardModule',
+            'import' => array(
+                'application.modules.medcard.components.*',
+                'application.modules.medcard.controllers.*',
+                'application.modules.medcard.models.*',
+                'application.modules.medcard.forms.*',
+                'application.modules.medcard.widgets.*',
+                'application.modules.medcard.grids.*',
+
+            )
+        )
+    ),
 	// application components
 	'components'=>array(
 		'db'=>include( dirname(__FILE__).'/db/db.php' ),
