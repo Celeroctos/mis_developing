@@ -186,6 +186,7 @@
 	setTimeout(autoSave, 30000);
 	
 	function autoSave() {
+        return void 0;
 		if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
 			return false;
 		}
@@ -1634,7 +1635,7 @@ $(document).ready(function() {
 		callback = function() {
 			$('#filterDate').val(e.date.getFullYear() + '-' + (e.date.getMonth() + 1) + '-' + e.date.getDate());
 			$('#change-date-form').submit();
-		}
+		};
 		if($('.greetingContentCont').length > 0) {
 			$('#noticeLeavePopup').modal({});
 		} else {
@@ -1650,3 +1651,56 @@ $(document).ready(function() {
 });
 
 $(document).ready(patientReady);
+
+var whenTemplateLoaded = function(values) {
+    /* jQuery doesn't like | separator */
+    for (var i in values) {
+        $(document.getElementById(i)).val(values[i]);
+    }
+};
+
+var initMedcardMenu = function(menu) {
+    var identifiers = [];
+    try {
+        identifiers = $.parseJSON($(menu).attr("data-templates"));
+    } catch (e) {
+    }
+    var prepare = function() {
+        if (identifiers.length > 0) {
+            setTimeout(function() {
+                load(identifiers.shift());
+            }, 0);
+        } else {
+            Core.createMessage({
+                message: "Все шаблоны успешно загружены",
+                type: "success",
+                sign: "ok"
+            });
+        }
+    };
+    var load = function(id) {
+        console.log("loading template: " + id);
+        var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab"));
+        tab.loading({ align: "top" }).loading("render");
+        $.getJSON(url("medcard/template/describe"), { id: id }, function(response) {
+            if (response.hasOwnProperty("values")) {
+                whenTemplateLoaded(response["values"]);
+            }
+        }).done(function() {
+            prepare();
+        }).fail(function() {
+            Core.createMessage({
+                message: "Произошла ошибка при загрузке значений шаблонов, попробуйте перезагрузить страницу"
+            });
+        }).always(function() {
+            tab.loading("reset");
+        });
+    };
+    prepare();
+};
+
+$(document).ready(function() {
+    $(".medcard-menu").each(function(i, m) {
+        initMedcardMenu($(m));
+    });
+});

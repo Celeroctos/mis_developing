@@ -21,7 +21,7 @@ class MedcardCategoryWidget extends Widget {
 	public $prefix = '';
 
     /**
-     * @var MedcardCategoryWidget instance of parent category widget
+     * @var MedcardCategoryWidget|MedcardTemplateWidget instance of parent category widget
      */
     public $parent = null;
 
@@ -36,13 +36,24 @@ class MedcardCategoryWidget extends Widget {
 				$this->name = $this->category['name'];
 			}
 		}
+        if ($this->parent != null) {
+            if ($this->parent instanceof MedcardTemplateWidget) {
+                $this->_parent = $this->parent->template['id'];
+            } else if ($this->parent instanceof MedcardCategoryWidget) {
+                $this->_parent = $this->parent->category['id'];
+            } else {
+                $this->_parent = null;
+            }
+        } else {
+            $this->_parent = null;
+        }
         $this->prepareElements();
 	}
 
 	public function run() {
 		print Html::openTag('div', [
 			'class' => 'accordion medcard-category',
-            'id' => $this->createKey('accordion', 'a')
+            'id' => $this->createKey('accordion', 'a' . $this->_parent, '')
 		]);
 		print Html::openTag('div', [
 			'class' => 'accordion-group'
@@ -55,7 +66,7 @@ class MedcardCategoryWidget extends Widget {
         }
 		print Html::openTag('div', [
 			'class' => 'accordion-body'.$collapse,
-			'id' => $this->createKey('collapse', 'a'),
+			'id' => $this->createKey('collapse', 'a' . $this->_parent, ''),
 			'style' => 'height: auto;',
 		]);
 		print Html::openTag('div', [
@@ -103,7 +114,7 @@ class MedcardCategoryWidget extends Widget {
     }
 
     protected function prepareElements() {
-        $this->_elements = MedcardElementPatientEx::model()->fetchWithGreeting($this->category['id']);
+        $this->_elements = MedcardElementEx::model()->fetchWithGreeting($this->category['id']);
         if ($this->category instanceof MedcardCategorie) {
             $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
                 'parent_id' => $this->category['id']
@@ -167,12 +178,7 @@ class MedcardCategoryWidget extends Widget {
         ) {
             return '';
         }
-        if ($this->parent != null && $this->parent->category != null) {
-            $parent = $this->parent->category['id'];
-        } else {
-            $parent = null;
-        }
-        return $card.'|'.$row.'|'.$this->category['path'].'|'.$parent.'|'.$this->category['id'];
+        return $card.'|'.$row.'|'.$this->category['path'].'|'.$this->_parent.'|'.$this->category['id'];
     }
 
 	protected function getLink() {
@@ -184,7 +190,7 @@ class MedcardCategoryWidget extends Widget {
         } else {
             $button = '';
         }
-		return Html::link($this->getLabel(), $this->createKey('#collapse', 'a'), [ 'data-parent' => $this->createKey('#accordion', 'a'),
+		return Html::link($this->getLabel(), $this->createKey('#collapse', 'a' .  $this->_parent, ''), [ 'data-parent' => $this->createKey('#accordion', 'a' . $this->_parent, ''),
 			'data-toggle' => 'collapse', 'class' => 'accordion-toggle',
 		]) . $button;
 	}
@@ -207,11 +213,12 @@ class MedcardCategoryWidget extends Widget {
 		}
 	}
 
-	private function createKey($prefix, $letter) {
-		return $prefix.'_'.MedcardHtml::createHash($this->category, $this->prefix, $letter);
+	private function createKey($prefix, $letter, $glue = '|') {
+		return $prefix.'_'.MedcardHtml::createHash($this->category, $this->prefix, $letter, $glue);
 	}
 
     private $_dependent;
     private $_dependencies;
 	private $_elements;
+    private $_parent;
 }

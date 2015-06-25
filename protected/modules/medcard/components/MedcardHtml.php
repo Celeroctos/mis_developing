@@ -46,13 +46,8 @@ class MedcardHtml extends Html {
 		return static::renderInternal($strategy, $name, $fix, $capture);
 	}
 
-	public static function createHash($element, $prefix = '', $letter = 'f') {
-        if (is_array($element)) {
-            $id = $element['id'];
-        } else {
-            $id = $element->{'id'};
-        }
-		return $letter.'_'.$prefix.'_'.static::createPath($element).'_'.$id;
+	public static function createHash($element, $prefix = '', $letter = 'f', $glue = '|') {
+		return $letter.'_'.$prefix.'_'.static::createPath($element, $glue).'_'.$element['id'];
 	}
 
 	public static function createKey(CActiveRecord $element) {
@@ -64,7 +59,7 @@ class MedcardHtml extends Html {
 			$element->{'id'};
 	}
 
-	public static function createPath($element) {
+	public static function createPath($element, $glue = '|') {
         if ($element instanceof CActiveRecord) {
             if (!$element->hasAttribute('path')) {
                 throw new CException('Can\'t create path for element without [path] field');
@@ -80,7 +75,7 @@ class MedcardHtml extends Html {
         } else {
             throw new CException('Unresolved element type, requires CActiveRecord or array');
         }
-		return implode('', explode('.', $path));
+		return implode($glue, explode('.', $path));
 	}
 
 	public static function textInput($name, $value = '', $options = []) {

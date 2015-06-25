@@ -12,19 +12,19 @@ class MedcardMenuWidget extends Widget {
      * @var int personal identification number, if empty then current
      *  user's personal will be used
      */
-    public $personal;
+    public $medworker;
 
     public function init() {
-        if (empty($this->personal)) {
-            $this->personal = Yii::app()->{'user'}->getState('medworkerId');
+        if (empty($this->medworker)) {
+            $this->medworker = Yii::app()->{'user'}->getState('medworkerId');
         }
         if (empty($this->templates)) {
-            $this->templates = $this->getTemplates($this->personal);
+            $this->templates = $this->getTemplates($this->medworker);
         } else if (is_numeric(array_values($this->templates)[0])) {
             $this->templates = MedcardTemplateEx::model()->findAll('id in ('. implode(',', $this->templates) .')');
         }
         usort($this->templates, function($left, $right) {
-            return $left->{'index'} - $right->{'index'};
+            return $left['index'] - $right['index'];
         });
         $this->_menu = [];
         $js = <<< JS
@@ -36,8 +36,8 @@ class MedcardMenuWidget extends Widget {
 JS;
         $js = preg_replace('/[\r\n\t ]+/', ' ', $js);
         foreach ($this->templates as $template) {
-            $this->_menu[$template->{'id'}] = [ 'data-tab' => UniqueGenerator::generate('tab'),
-                'label' => $template->{'name'}, 'onclick' => $js,
+            $this->_menu[$template['id']] = [ 'data-tab' => UniqueGenerator::generate('tab'),
+                'label' => $template['name'], 'onclick' => $js, 'data-id' => $template['id']
             ];
         }
     }
@@ -48,8 +48,13 @@ JS;
         } else {
             $active = null;
         }
+        $identifiers = [];
+        foreach ($this->templates as $template) {
+            $identifiers[] = $template['id'];
+        }
         print Html::openTag('div', [
-            'class' => 'medcard-menu'
+            'class' => 'medcard-menu',
+            'data-templates' => json_encode($identifiers)
         ]);
         $this->widget('TabMenu', [
             'items' => $this->_menu,
@@ -57,13 +62,13 @@ JS;
         ]);
         print Html::tag('br');
         foreach ($this->templates as $template) {
-            if ($template->{'id'} == $active) {
+            if ($template['id'] == $active) {
                 $style = 'display: block;';
             } else {
                 $style = 'display: none;';
             }
             print Html::openTag('div', [
-                'id' => $this->_menu[$template->{'id'}]['data-tab'],
+                'id' => $this->_menu[$template['id']]['data-tab'],
                 'style' => $style,
             ]);
             $this->widget('MedcardTemplateWidget', [
@@ -72,10 +77,10 @@ JS;
             print Html::closeTag('div');
         }
         print Html::tag('br');
-        $this->widget('TabMenu', [
+        /* $this->widget('TabMenu', [
             'items' => $this->_menu,
             'active' => $active,
-        ]);
+        ]); */
         print Html::closeTag('div');
     }
 

@@ -29,7 +29,7 @@ class MedcardTemplateWidget extends Widget {
 
 	public function run() {
         print Html::openTag('form', [
-            'class' => 'medcard-template form-horizontal col-xs-12 template-edit-form',
+            'class' => 'medcard-template form-horizontal col-xs-12 template-edit-form no-padding',
             'role' => 'form',
             'id' => UniqueGenerator::generate('form'),
             'action' => Yii::app()->createUrl($this->saveUrl),
@@ -49,7 +49,7 @@ class MedcardTemplateWidget extends Widget {
         ]);
         foreach ($this->_categories as $category) {
             $this->widget('MedcardCategoryWidget', [
-                'category' => $category
+                'category' => $category, "parent" => $this
             ]);
         }
         print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl($this->saveUrl), [], [

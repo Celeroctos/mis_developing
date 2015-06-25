@@ -66,19 +66,17 @@ class MedcardElementForPatient extends MisActiveRecord {
     }
 
     public function getElementsByCategorie($id) {
-        try {
-            $connection = Yii::app()->db;
-            $elements = $connection->createCommand()
-                ->select('mc.*')
-                ->from('mis.medcard_elements mc')
-                ->where('mc.categorie_id = :categorie_id', array(':categorie_id' => $id))
-                ->queryAll();
+        $rows = $this->getDbConnection()->createCommand()
+            ->select('*')
+            ->from('mis.medcard_elements')
+            ->where('categorie_id = :categorie_id', [
+                ':categorie_id' => $id
+            ])->queryAll();
+        return $rows;
+    }
 
-            return $elements;
-
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
+    public function getElementsByCategory($id) {
+        return $this->getElementsByCategorie($id);
     }
 
 	public static function getTemplateName($recordId, $medcardId)

@@ -11,7 +11,8 @@ var Core = Core || {};
 			height: 25,
 			velocity: "fast",
 			color: "lightgray",
-			opacity: 0.5
+			opacity: 0.5,
+            align: "center"
 		}, selector);
 		this.native = selector;
 	});
@@ -28,13 +29,19 @@ var Core = Core || {};
 			index = 1;
 		}
 		if (this.property("image") && (typeof this.property("image") == "string")) {
+            var top = 0;
+            if (this.property("align") == "center") {
+                top = height / 2 - imageHeight / 2;
+            } else if (this.property("align") == "top") {
+                top = imageHeight / 2 + 50;
+            }
 			this.image = $("<img>", {
 				css: {
 					"position": "absolute",
 					"height": imageHeight,
 					"width": imageWidth,
 					"left": "calc(50% - " + (imageWidth / 2) + "px)",
-					"margin-top": height / 2 - imageHeight / 2,
+					"margin-top": top,
 					"z-index": index + 1
 				},
 				src: this.property("image")

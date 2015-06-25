@@ -2,7 +2,7 @@
 
 class MedcardTemplateEx extends MedcardTemplate {
 
-    public function fetchCategories($id = null) {
+    public function fetchCategories($id = null, $ar = true) {
         if ($id == null) {
             $id = $this->getAttribute('id');
         }
@@ -15,7 +15,11 @@ class MedcardTemplateEx extends MedcardTemplate {
         if (!$template) {
             throw new CException('Template with ('. $id .') identification number doesn\'t exists');
         } else if ($list = json_decode($template['categorie_ids'])) {
-            return MedcardCategoryEx::model()->findAll('id in ('. implode(', ', $list) .')');
+            if ($ar) {
+                return MedcardCategoryEx::model()->findAll('id in ('. implode(', ', $list) .')');
+            } else {
+                return $list;
+            }
         } else {
             return [];
         }

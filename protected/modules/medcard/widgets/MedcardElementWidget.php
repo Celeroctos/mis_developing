@@ -5,7 +5,7 @@ class MedcardElementWidget extends Widget {
     const DEFAULT_SCALE = 10;
 
 	/**
-	 * @var MedcardElementPatientEx|MedcardElementEx class instance of
+	 * @var CActiveRecord|array class instance of
 	 * 	active record class
 	 */
 	public $element;

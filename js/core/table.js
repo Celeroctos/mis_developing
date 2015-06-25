@@ -2,10 +2,10 @@ var Core = Core || {};
 
 (function(Core) {
 
-	"use strict";
-
 	const SORT_ASC  = 0;
 	const SORT_DESC = 1;
+
+    "use strict";
 
 	var Table = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
