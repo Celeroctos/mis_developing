@@ -708,7 +708,6 @@ class SheduleController extends Controller {
             $_POST['FormTemplateDefault']['greetingId'],
             $pathsOfElements
         );
-
         $historyElementsPaths = array();
 
         foreach ($historyElements as $oneHistoryElement) {
@@ -720,10 +719,11 @@ class SheduleController extends Controller {
             if(is_array($value)) {
                 $value = CJSON::encode($value);
             }
-			/** @var $historyCategorieElement MedcardElementForPatient */
+            /** @var $historyCategorieElement MedcardElementForPatient */
             $historyCategorieElement = $historyElementsPaths[$pathsToFields[$field]];
             $this->stepToNextState($historyCategorieElement, $value, $recordId );
             $answerCurrentDate = true;
+
             if(!$historyCategorieElement->save()) {
                 ob_end_clean();
                 echo CJSON::encode(array('success' => true,
@@ -1658,7 +1658,7 @@ class SheduleController extends Controller {
             $sheduleElement->comment = $mediateForm->comment;
             if(!$mediate->save()) {
                 echo CJSON::encode(array('success' => 'false',
-                                         'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
+                    'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
                 exit();
             }
 
@@ -1770,11 +1770,4 @@ class SheduleController extends Controller {
         echo CJSON::encode(array('success' => 'false',
             'data' => 'Какая-то не понятная ошибка. Вы меня сильно озадачили!'));
     }
-
-	public function actionLoadCategory() {
-		$widget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget', $_POST + [
-				'medcard' => Medcard::model()->findByAttributes([ 'card_number' => $_POST['currentPatient'] ])
-			]);
-		print $widget->run();
-	}
 }
