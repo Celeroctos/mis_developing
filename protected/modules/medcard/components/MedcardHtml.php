@@ -317,7 +317,7 @@ class MedcardHtml extends Html {
 		]);
 		print parent::openTag('tr');
 		print parent::tag('td', [
-			'width' => '50%'
+			'width' => 'calc(50% - 20px)'
 		], parent::dropDownList(null, null, $left, $options + [
 				'multiple' => 'multiple',
 				'class' => 'form-control twoColumnListFrom col-xs-5 no-padding',
@@ -330,7 +330,7 @@ class MedcardHtml extends Html {
 		]);
         print parent::openTag('div', [
             'class' => 'TCLButtonsContainer btn-group-vertical',
-            'style' => 'width: 40px;',
+            'width' => 'calc(50% - 20px)'
         ]);
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
