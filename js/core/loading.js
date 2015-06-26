@@ -66,7 +66,8 @@ var Core = Core || {};
 				"background-color": this.property("color"),
 				"opacity": this.property("opacity"),
 				"z-index": index
-			}
+			},
+            class: "loading"
 		}).addClass(this.selector().attr("class")).fadeIn(this.property("velocity"))).before(
 			this.image.fadeIn(this.property("velocity"))
 		);

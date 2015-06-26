@@ -341,7 +341,7 @@ class MedcardHtml extends Html {
         print parent::closeTag('div');
 		print parent::closeTag('td');
 		print parent::tag('td', [
-            'width' => 'calc(50% - 20px)'
+            'width' => '50%'
 		], parent::dropDownList($name, null, $right, $options + [
 				'multiple' => 'multiple',
 				'class' => 'form-control twoColumnListTo col-xs-5 no-padding',
