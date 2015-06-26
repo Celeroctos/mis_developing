@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
 
+    var printHandler;
+
     globalVariables.isUnsavedUserData = false;  // Есть ли несохранённые данные у пользователя
     globalVariables.wasUserFocused = false; // Был ли фокус на каком-то элементе
     globalVariables.savingProcessing = false;
