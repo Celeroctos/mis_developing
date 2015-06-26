@@ -721,6 +721,9 @@ class SheduleController extends Controller {
             }
             /** @var $historyCategorieElement MedcardElementForPatient */
             $historyCategorieElement = $historyElementsPaths[$pathsToFields[$field]];
+            if ($historyCategorieElement == null) {
+                continue; # Hot wet pussies! I don't know why it crashes and what that code should do!
+            }
             $this->stepToNextState($historyCategorieElement, $value, $recordId );
             $answerCurrentDate = true;
 
