@@ -293,7 +293,7 @@
         } else {
             // Show the backdrop
             if (!overlaySuck) {
-                $('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
+                //$('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
             }
 
             for (var i = 0; i < buttonsContainers.length; i++) {
@@ -399,7 +399,7 @@
     elementUnderCursor = null;
     ticksAfterCursor = 0;
 
-    $(document).on('mouseenter','form.template-edit-form select[multiple]',
+    /* $(document).on('mouseenter','form.template-edit-form select[multiple]',
         function(e) {
             isCursorInElement = true;
             elementUnderCursor = this;
@@ -412,12 +412,12 @@
             isCursorInElement = false;
             elementUnderCursor = null;
         }
-    );
+    ); */
 
     oldClientX = 0;
     oldClientY = 0;
 
-    $(document).on('mousemove','form.template-edit-form select[multiple]',
+    /* $(document).on('mousemove','form.template-edit-form select[multiple]',
         function(e) {
             if  (
                 ( (oldClientX- e.clientX>10 )||(oldClientY- e.clientY>10 ) )
@@ -432,7 +432,7 @@
             oldClientY = e.clientY;
         }
 
-    );
+    ); */
 
     $(document).on('scroll',
         function(e) {
@@ -1670,7 +1670,6 @@ var initMedcardMenu = function(menu) {
         } else {
             var ul = $("<ul>");
             for (var i in stack) {
-                console.log(stack[i]);
                 ul.append($("<li></li>").append($("<span></span>", {
                     text: stack[i]
                 })));
@@ -1689,10 +1688,12 @@ var initMedcardMenu = function(menu) {
             src: url("images/ajax-loader.gif")
         }));
     };
+    for (var i in identifiers) {
+        menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ identifiers[i] +"']").attr("data-tab"))
+            .children().hide().before(renderLoader());
+    }
     var load = function(id) {
-        console.log("loading template: " + id);
         var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab"));
-        tab.children().hide().before(renderLoader());
         $.getJSON(url("medcard/template/describe"), { id: id }, function(response) {
             if (response.hasOwnProperty("values")) {
                 whenTemplateLoaded(response["values"]);
