@@ -317,7 +317,8 @@ class MedcardHtml extends Html {
 		]);
 		print parent::openTag('tr');
 		print parent::tag('td', [
-			'width' => 'calc(50% - 20px)'
+			'width' => 'calc(50% - 20px)',
+            'valign' => 'top',
 		], parent::dropDownList(null, null, $left, $options + [
 				'multiple' => 'multiple',
 				'class' => 'form-control twoColumnListFrom col-xs-5 no-padding',
@@ -325,8 +326,8 @@ class MedcardHtml extends Html {
 			])
 		);
 		print parent::openTag('td', [
-			'valign' => 'middle',
 			'width' => '40px',
+            'valign' => 'top',
 		]);
         print parent::openTag('div', [
             'class' => 'TCLButtonsContainer btn-group-vertical',
@@ -335,13 +336,19 @@ class MedcardHtml extends Html {
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
 		);
+        if (isset($options['growable'])) {
+            print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnAddBtn' ],
+                parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-right' ], '')
+            );
+        }
 		print parent::tag('span', [ 'class' => 'btn btn-default btn-block twoColumnRemoveBtn' ],
 			parent::tag('span', [ 'class' => 'glyphicon glyphicon-arrow-left' ], '')
 		);
         print parent::closeTag('div');
 		print parent::closeTag('td');
 		print parent::tag('td', [
-            'width' => '50%'
+            'width' => '50%',
+            'valign' => 'top',
 		], parent::dropDownList($name, null, $right, $options + [
 				'multiple' => 'multiple',
 				'class' => 'form-control twoColumnListTo col-xs-5 no-padding',

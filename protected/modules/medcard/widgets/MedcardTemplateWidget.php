@@ -3,7 +3,7 @@
 class MedcardTemplateWidget extends Widget {
 
 	/**
-	 * @var MedcardTemplateEx model of template element to display
+	 * @var MedcardTemplateEx|array model of template element to display
 	 */
 	public $template;
 
@@ -15,8 +15,6 @@ class MedcardTemplateWidget extends Widget {
 	public function init() {
         if (empty($this->template)) {
             throw new CException('Medcard template must not be empty');
-        } else if (!$this->template instanceof CActiveRecord) {
-            throw new CException('Medcard template must be an instance of ActiveRecord class');
         }
         if (!$this->greetingNumber && !($this->greetingNumber = Yii::app()->getRequest()->getQuery('rowid'))) {
             throw new CException('Medcard template widget requires greeting number');
@@ -24,7 +22,11 @@ class MedcardTemplateWidget extends Widget {
         if (!$this->cardNumber && !($this->cardNumber = Yii::app()->getRequest()->getQuery('cardid'))) {
             throw new CException('Medcard template widget requires card number');
         }
-        $this->_categories = $this->template->fetchCategories();
+        if ($this->template instanceof MedcardTemplateEx) {
+            $this->_categories = $this->template->fetchCategories();
+        } else {
+            $this->_categories = MedcardTemplateEx::model()->fetchCategories($this->template['id']);
+        }
 	}
 
 	public function run() {

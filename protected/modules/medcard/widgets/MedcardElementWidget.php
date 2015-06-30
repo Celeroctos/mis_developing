@@ -37,7 +37,7 @@ class MedcardElementWidget extends Widget {
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
 		}
-        if (!$this->scale) {
+        if (empty($this->scale)) {
             if ($scale = Setting::model()->findByAttributes([ 'name' => 'lettersInPixel' ])) {
                 $this->scale = intval($scale['value']);
             } else {
@@ -96,6 +96,17 @@ class MedcardElementWidget extends Widget {
 			print Html::closeTag('span');
 		}
 		print Html::closeTag('td');
+        if ($this->element['allow_add']) {
+            print Html::openTag('td');
+            print Html::tag('button', [
+                'type' => 'button',
+                'id' => 'ba_'.$this->prefix.'_'.$this->element['guide_id'].'_'.$this->prefix.$this->element['id'],
+                'class' => 'btnAddValues btn btn-default btn-sm'
+            ], Html::tag('span', [
+                'class' => 'glyphicon glyphicon-plus'
+            ]));
+            print Html::closeTag('td');
+        }
 		$this->renderLabelAfter();
 		print Html::closeTag('tr');
 		print Html::closeTag('table');

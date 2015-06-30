@@ -21,6 +21,9 @@ class TemplateController extends ControllerEx {
             $result[MedcardHtml::createHash($row, '', 'f')] = $element['value'];
         }
         $this->leave([
+            'name' => MedcardTemplateEx::model()->findByAttributes([
+                'id' => $id
+            ])->getAttribute('name'),
             'values' => $result
         ]);
     }

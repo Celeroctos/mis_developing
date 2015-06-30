@@ -272,7 +272,7 @@
             </script>
             <?php $this->widget('MedcardMenuWidget', [
                 'templates' => Yii::app()->getRequest()->getPost('templatesList', [
-                    /* In that way current personal templates will be loaded */
+                    /* With default parameters, current personal templates will be loaded */
                 ])
             ]) ?>
 			<div class="modal fade error-popup" id="successEditPopup">
@@ -315,7 +315,6 @@
                                 )
                             ));
                             ?>
-
                             <div class="form-group">
                                 <label for="doctor" class="col-xs-3 control-label">Клинический диагноз</label>
                                 <div class="col-xs-9">
@@ -373,7 +372,6 @@
                                     <input type="checkbox" id="onlyLikeDiagnosis">
                                 </div>
                             </div>
-
                             <div class="form-group chooser" id="primaryDiagnosisChooser">
                             <label for="doctor" class="col-xs-3 control-label">Основной диагноз по МКБ-10:</label>
                                 <div class="col-xs-9">
@@ -390,9 +388,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                             <div class="form-group chooser" id="complicationsDiagnosisChooser">
                                 <label for="doctor" class="col-xs-3 control-label">Осложнения основного диагноза по МКБ-10:</label>
                                 <div class="col-xs-9">
@@ -443,73 +438,12 @@
                 </div>
             </div>
             <div class="greetingHR"></div>
-			  <?php
-            echo CHtml::link('<span class="glyphicon glyphicon-print"></span>', '#' . $currentSheduleId,
-                array('title' => 'Печать рекомендаций',
-                    'class' => 'print-recomendation-link'));
-            ?>
-            <?php
-            $counter = 0;
-            //var_dump('-------');
-            //var_dump($referenceTemplatesList);
-            //exit();
-            ?>
-            <p><a name="topRecomTemplates"></a></p>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs recomTemplatesListNav">
-                            <?php foreach($referenceTemplatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="rt<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-
-            </div>
-            <?php
-            $counter = 0;
-            //var_dump($referenceTemplatesList);
-            //exit();
-            foreach ($referenceTemplatesList as $key => $template) {
-                ?>
-                <div class="default-margin-top">
-                    <?php $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-                        'currentPatient' => $currentPatient,
-                        'templateType' => 1,
-                        'templateId' => $template['id'],
-                        'withoutSave' => 0,
-                        'greetingId' => $currentSheduleId,
-                        'canEditMedcard' => $canEditMedcard,
-                        'medcard' => $medcard,
-                        'currentDate' => $currentDate,
-                        'templatePrefix' => 'r' . $template['id'],
-                        'medcardRecordId' => $medcardRecordId,
-						'isActiveTemplate' => $counter == 0,
-					//	'form' => $formM
-                    )); ?>
-                </div>
-                <?php
-                $counter++;
-            }
-			//	$this->endWidget();
-            $counter = 0;
-			?>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs recomTemplatesListNav recomTemplatesListNavBottom">
-                    <?php foreach($referenceTemplatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="rt<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-            </div>
+            <?= CHtml::link('<span class="glyphicon glyphicon-print"></span>', '#' . $currentSheduleId, [
+                'title' => 'Печать рекомендаций', 'class' => 'print-recomendation-link'
+            ]) ?>
+            <?php $this->widget('MedcardMenuWidget', [
+                'templates' => $referenceTemplatesList
+            ]) ?>
 		</div>
         <?php } ?>
     <?php } ?>

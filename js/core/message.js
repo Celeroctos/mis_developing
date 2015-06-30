@@ -22,7 +22,7 @@ var Core = Core || {};
 			type: "danger",
 			message: "Not-Initialized",
 			sign: "info",
-			delay: 5000
+			delay: 7000
 		});
 	});
 
@@ -56,7 +56,6 @@ var Core = Core || {};
 		this.selector().click(function() {
 			me.destroy();
 		}).css("left", (-this.selector().width() * 2) + "px");
-		this.open();
 	};
 
 	/**
@@ -120,15 +119,30 @@ var Core = Core || {};
 	 */
 	var Collection = {
 		create: function(properties) {
-			var message = new Message(properties);
+			var message = new Message(properties), last, me = this;
+            if (this._components.length > 0) {
+                last = this._components[this._components.length - 1];
+            } else {
+                last = null;
+            }
 			Core.createObject(message, document.body);
-			message.selector().css("top", parseInt(message.selector().css("top")) + "px");
-			for (var i in this._components) {
-				this._components[i].selector().animate({
-					top: parseInt(this._components[i].selector().css("top")) + message.selector().height() + 37
-				});
-			}
-			this._components.push(message);
+            var finalize = function(message) {
+                message.selector().css("top", parseInt(message.selector().css("top")) + "px");
+                for (var i in me._components) {
+                    me._components[i].selector().animate({
+                        top: parseInt(me._components[i].selector().css("top")) + message.selector().height() + 37
+                    });
+                }
+                message.open();
+            };
+            if (last != null) {
+                $.when(last.selector()).done(function() {
+                    finalize(message);
+                });
+            } else {
+                finalize(message);
+            }
+            this._components.push(message);
 			return message;
 		},
 		destroy: function(component) {

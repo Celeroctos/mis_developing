@@ -1657,7 +1657,7 @@ var whenTemplateLoaded = function(values) {
 };
 
 var initMedcardMenu = function(menu) {
-    var identifiers = [];
+    var identifiers = [], stack = [];
     try {
         identifiers = $.parseJSON($(menu).attr("data-templates"));
     } catch (e) {
@@ -1668,29 +1668,45 @@ var initMedcardMenu = function(menu) {
                 load(identifiers.shift());
             }, 0);
         } else {
+            var ul = $("<ul>");
+            for (var i in stack) {
+                console.log(stack[i]);
+                ul.append($("<li></li>").append($("<span></span>", {
+                    text: stack[i]
+                })));
+            }
             Core.createMessage({
-                message: "Все шаблоны успешно загружены",
+                message: "Шаблоны загружены: <br>" + ul.html(),
                 type: "success",
                 sign: "ok"
             });
         }
     };
+    var renderLoader = function() {
+        return $("<div>", {
+            class: "col-xs-12 text-center greeting-loader"
+        }).append($("<img>", {
+            src: url("images/ajax-loader.gif")
+        }));
+    };
     var load = function(id) {
         console.log("loading template: " + id);
         var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab"));
-        tab.loading({ align: "top" }).loading("render");
+        tab.children().hide().before(renderLoader());
         $.getJSON(url("medcard/template/describe"), { id: id }, function(response) {
             if (response.hasOwnProperty("values")) {
                 whenTemplateLoaded(response["values"]);
             }
-        }).done(function() {
+        }).done(function(response) {
+            stack.push(response["name"]);
             prepare();
         }).fail(function() {
             Core.createMessage({
                 message: "Произошла ошибка при загрузке значений шаблонов, попробуйте перезагрузить страницу"
             });
         }).always(function() {
-            tab.loading("reset");
+            tab.children(".greeting-loader").remove();
+            tab.children().show();
         });
     };
     prepare();

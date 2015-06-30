@@ -15,8 +15,8 @@ class MedcardMenuWidget extends Widget {
     public $medworker;
 
     public function init() {
-        if (empty($this->medworker)) {
-            $this->medworker = Yii::app()->{'user'}->getState('medworkerId');
+        if (empty($this->medworker) && !$this->medworker = Yii::app()->{'user'}->getState('medworkerId')) {
+            throw new CException('Can\'t resolve user\'s medworker identification number');
         }
         if (empty($this->templates)) {
             $this->templates = $this->getTemplates($this->medworker);
@@ -43,10 +43,10 @@ JS;
     }
 
     public function run() {
-        if (!empty($this->templates)) {
-            $active = $this->templates[0]->{'id'};
-        } else {
-            $active = null;
+        $active = null;
+        # Fix: Active tab bug for single template
+        foreach ($this->templates as $template) {
+            $active = $template['id']; break;
         }
         $identifiers = [];
         foreach ($this->templates as $template) {
