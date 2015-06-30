@@ -183,7 +183,7 @@ class MedcardCategoryWidget extends Widget {
 
 	protected function getLink() {
         if ($this->category['is_dynamic']) {
-            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm accordion-clone-btn' ],
+            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm accordion-clone-btn', 'type' => 'button' ],
                 Html::tag('span', [ 'class' => 'glyphicon glyphicon-plus' ], '').
                 Html::tag('span', [ 'class' => 'no-display pr-key' ], $this->createAccordionKey())
             );

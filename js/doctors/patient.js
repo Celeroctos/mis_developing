@@ -74,7 +74,7 @@
             // Поднимаем флаг, что есть ошибки
             globalVariables.isSavingErrors = true;
         }
-        console.log( globalVariables.numCalls);
+        //console.log( globalVariables.numCalls);
         if ($(".submitEditPatient").length == globalVariables.numCalls) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;

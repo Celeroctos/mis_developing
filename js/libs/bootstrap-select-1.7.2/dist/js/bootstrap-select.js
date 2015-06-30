@@ -651,10 +651,16 @@
 
       //strip all html-tags and trim the result
       this.$button.attr('title', $.trim(title.replace(/<[^>]*>?/g, '')));
-        if (title.length > 30) {
-            title = title.substr(0, 30) + ' ...';
+        //if (title.length > 30) {
+        //    title = title.substr(0, 30) + ' ...';
+        //}
+        this.$button.empty();
+        var split = title.split(",");
+        for (var i in split) {
+            this.$button.append('<span class="filter-option pull-left">'+ split[i] +'</span>');
         }
-      this.$button.children('.filter-option').html(title);
+        this.$button.append('<span class="caret"></span>');
+      //this.$button.children('.filter-option').html(title);
 
       this.$element.trigger('rendered.bs.select');
     },

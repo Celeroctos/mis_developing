@@ -186,7 +186,7 @@ class MedcardElementWidget extends Widget {
             return '';
         }
         $id = MedcardHtml::createHash([ 'id' => $dependency['dep_element_id'], 'path' => $dependency['dep_path'], ], $this->prefix, 'f');
-        return 'if ($(this).val() == '. $value .') $("#'. $id .'").parents(".medcard-element-wrapper:eq(0)").'. $if .'(); else $("#'. $id .'").parents(".medcard-element-wrapper:eq(0)").'. $else .'(); ';
+        return 'if ($(this).val() == '. $value .') $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $if .'(); else $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $else .'(); ';
     }
 
 	protected function prepareTable() {
