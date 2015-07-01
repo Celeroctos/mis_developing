@@ -44,7 +44,7 @@ class MedcardCommand extends CConsoleCommand {
             }
             return [
                 'id' => $row['id'],
-                'type' => null,
+                'type' => MedcardElementEx::TYPE_CATEGORY,
                 'category_id' => null,
                 'label_before' => null,
                 'label_after' => null,

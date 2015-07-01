@@ -21,6 +21,7 @@ class MedcardElementEx extends MedcardElement {
 	const TYPE_NUMBER = 5;
 	const TYPE_DATE = 6;
 	const TYPE_EXCHANGE = 7;
+    const TYPE_CATEGORY = 8;
 
     public static $listTypes = [
         MedcardElementEx::TYPE_DROPDOWN,
@@ -66,7 +67,8 @@ class MedcardElementEx extends MedcardElement {
 			static::TYPE_TABLE => 'Редактируемая таблица',
 			static::TYPE_NUMBER => 'Числовое поле',
 			static::TYPE_DATE => 'Дата',
-			static::TYPE_EXCHANGE => 'Двухколоночный список'
+			static::TYPE_EXCHANGE => 'Двухколоночный список',
+            static::TYPE_CATEGORY => 'Категорий',
 		];
 	}
 }
