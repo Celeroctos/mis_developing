@@ -55,8 +55,14 @@
 
 
     $(window).on('beforeunload', function (e) {
-        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
-        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
+        var message = "В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите \"остаться на странице\" и сохраните данные.";
+        if (typeof evt == "undefined") {
+            evt = window.event;
+        }
+        if (evt) {
+            evt.returnValue = message;
+        }
+        return message;
     });
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
@@ -238,6 +244,7 @@
     setTimeout(autoSave, 30000);
 
     function autoSave() {
+        return void 0;
         if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
@@ -1693,8 +1700,9 @@ var initMedcardMenu = function(menu) {
             .children().hide().before(renderLoader());
     }
     var load = function(id) {
-        var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab"));
-        $.getJSON(url("medcard/template/describe"), { id: id }, function(response) {
+        var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab")),
+            greeting = tab.find("#greetingId").val();
+        $.getJSON(url("medcard/template/describe"), { id: id, greeting: greeting }, function(response) {
             if (response.hasOwnProperty("values")) {
                 whenTemplateLoaded(response["values"]);
             }

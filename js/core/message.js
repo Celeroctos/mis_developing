@@ -135,7 +135,7 @@ var Core = Core || {};
                 }
                 message.open();
             };
-            if (last != null) {
+            if (last != null && false) {
                 $.when(last.selector()).done(function() {
                     finalize(message);
                 });

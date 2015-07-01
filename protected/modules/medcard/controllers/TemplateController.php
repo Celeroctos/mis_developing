@@ -6,9 +6,9 @@ class TemplateController extends ControllerEx {
 		return $this->render('test');
 	}
 
-    public function actionDescribe($id) {
+    public function actionDescribe($id, $greeting) {
         $result = [];
-        $elements = MedcardElementPatientEx::model()->fetchByTemplate($id);
+        $elements = MedcardElementPatientEx::model()->fetchByTemplate($id, $greeting);
         foreach ($elements as $element) {
             if (empty($element['value'])) {
                 continue;

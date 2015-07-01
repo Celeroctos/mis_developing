@@ -7,13 +7,14 @@ class MedcardElementPatientEx extends MedcardElementForPatient {
         return $elements;
     }
 
-    public function fetchByCategory($category) {
+    public function fetchByCategory($category, $greeting) {
         $identifiers = [];
         $rows = $this->getDbConnection()->createCommand()
             ->select('max(pk) as pk')
             ->from('mis.medcard_elements_patient')
-            ->where('categorie_id = :category_id and value is not null', [
-                ':category_id' => $category
+            ->where('categorie_id = :category_id and value is not null and greeting_id = :greeting_id', [
+                ':category_id' => $category,
+                ':greeting_id' => $greeting
             ])->group('element_id')
             ->order('pk desc')
             ->queryAll();
@@ -39,11 +40,11 @@ class MedcardElementPatientEx extends MedcardElementForPatient {
         return $rows; */
     }
 
-    public function fetchByTemplate($template) {
+    public function fetchByTemplate($template, $greeting) {
         $categories = MedcardTemplateEx::model()->fetchCategories($template, false);
         $result = [];
         foreach ($categories as $c) {
-            $result = array_merge($result, $this->fetchByCategory($c));
+            $result = array_merge($result, $this->fetchByCategory($c, $greeting));
         }
         return $result;
 //
