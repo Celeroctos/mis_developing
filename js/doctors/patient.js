@@ -1651,7 +1651,7 @@ function getOnlyLikes() {
 var whenTemplateLoaded = function(values) {
     /* jQuery doesn't like | separator */
     for (var i in values) {
-        var s = $("[id='"+ i +"']")
+        var s = $(document.getElementById(i));
         if (s.is("select[multiple]")) {
             try {
                 s.selectpicker("val", $.parseJSON(values[i]));
