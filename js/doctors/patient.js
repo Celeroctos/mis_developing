@@ -53,9 +53,9 @@
 
     $(window).on('beforeunload', function(e) {
         var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
-        /* if (!globalVariables.isUnsavedUserData) {
+        if (!globalVariables.isUnsavedUserData) {
             return void 0;
-        } */
+        }
         if (typeof e == "undefined") {
             e = window.event;
         }
