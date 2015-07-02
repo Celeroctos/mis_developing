@@ -612,382 +612,6 @@ class SheduleController extends Controller {
         $historyCategorieElement['change_date'] = date('Y-m-d H:i');
     }
 
-    public function createElementsCopy($templateId, $greetingId, $cardNumber) {
-        $template = MedcardTemplateEx::model()->findByAttributes([
-            'id' => $templateId
-        ]);
-        $medcardRecordId = MedcardElementForPatient::getMaxRecordId($_GET['cardid']) + 1;
-        // date('Y-m-d h:i');
-        $this->greetingId = $greetingId;
-        $this->templateId = $templateId;
-        $this->cardNumber = $cardNumber;
-        $this->template = $template;
-        // Категории нужны, чтобы сформировать первичный шаблон для пациента в том случае, когда у пациента нет перенесённых записей о данном приёме в хистори. Для начала проверим, есть ли шаблон приёма. Если нет - вынимаем категории и помещаем их в историю
-        // Т.е. в приём не вносили изменений, шаблона истории нет
-        $categories = $this->getCategories(0, $medcardRecordId, $templateId);
-    }
-
-    public function getCategories($pageId, $recordId, $templateId = null) {
-        $templateModel = new MedcardTemplate();
-        if($templateId == null) {
-            $templates = $templateModel->getTemplatesByPageId($pageId);
-        } else {
-            $template = $templateModel->findByPk($templateId);
-            if($template == null) {
-                exit('Невозможно найти шаблон с ID '.$templateId.'!');
-            }
-            $templates = array(array(
-                'id' => $template->id,
-                'name' => $template->name,
-                'page_id' => $template->page_id,
-                'categorie_ids' => $template->categorie_ids
-            ));
-        }
-        // Получаем типы элементов
-        $categoriesResult = array();
-        foreach($templates as $key => $template) {
-            $categorieTemplateFill = array();
-            // В случае выпадающих списков с множественным выборов стоит разобрать идентификаторы их
-            $categorie_ids = CJSON::decode($template['categorie_ids']);
-            foreach($categorie_ids as $index => $id) {
-                // Попробуем выбрать категорию из истории. Если не получится, то нужно создавать новую. В противном случае, брать из истории
-                $categorie = MedcardCategorie::model()->findByPk($id);
-                if($categorie == null) {
-                    continue;
-                }
-                $historyCategorie = $this->getHistoryElements('one', array(
-                    ':greeting_id' => $this->greetingId,
-                    ':medcard_id' => $this->cardNumber,
-                    ':history_id' => 1,
-                    ':path' => $categorie->path
-                ));
-                if($historyCategorie == null) {
-                    $categorieResult = $this->getCategorie($id, $recordId, $template['id'], $template['name']);
-                } else {
-                    $categorieResult = $this->getCategorie(false, $recordId, $template['id'], $template['name'], $historyCategorie->path);
-                }
-                $categorieTemplateFill[] = $categorieResult;
-            }
-            usort($categorieTemplateFill, function($element1, $element2) {
-                return $element1['position'] - $element2['position'];
-            });
-            $categoriesResult[] = array(
-                'templateName' => $template['name'],
-                'cats' => $categorieTemplateFill
-            );
-
-        }
-        // echo "<pre>";
-        //var_dump($categoriesResult);
-        // exit();
-        return $categoriesResult;
-    }
-
-    private $greetingId;
-    private $templateId;
-    private $cardNumber;
-    private $template;
-
-    public function getCategorie($id = false, $recordId, $templateId, $templateName, $path = false) {
-        if (!$categorie = MedcardCategorie::model()->findByPk($id)) {
-            return [];
-        }
-        // Выбираем категорию
-        if($id && !$path) { // Категории, для которых делается выборка по-первому
-            $historyCategories = $this->getHistoryElements('multiple',  array(
-                ':greeting_id' => $this->greetingId,
-                ':medcard_id' => $this->cardNumber,
-                ':history_id' => 1,
-                ':categorie_id' => $categorie->parent_id,
-                ':path' => $categorie->path
-            ));
-        } else {
-            $historyCategories = $this->getHistoryElements('multiple',  array(
-                ':greeting_id' => $this->greetingId,
-                ':medcard_id' => $this->medcard['card_number'],
-                ':history_id' => 1,
-                ':path' => $path
-            ));
-        }
-        /* В противом случае, находим категорию, как категорию из хистори.
-               По ключам: номер приёма, максимальный размер истории (история у категории всегда единичка и не меняется, т.к. категория не изменяется), ключ категории */
-        if(count($historyCategories) == 0) {
-            $medcardCategorie = new MedcardElementForPatient();
-            $medcardCategorie->medcard_id = $this->cardNumber;
-            $medcardCategorie->greeting_id = $this->greetingId;
-            $medcardCategorie->history_id = 1;
-            $medcardCategorie->template_page_id = 0;
-            $medcardCategorie->record_id = $recordId;
-            $medcardCategorie->categorie_name = $categorie->name;
-            // $medcardCategorie->is_required = $categorie->is_required;
-            $medcardCategorie->path = $categorie->path;
-            $medcardCategorie->is_wrapped = 0;
-            $medcardCategorie->categorie_id = $categorie->parent_id;
-            $medcardCategorie->element_id = -1;
-            //$medcardCategorie->change_date = $this->currentDate;
-            $medcardCategorie->change_date = date('Y-m-d H:i');
-            $medcardCategorie->type = -1; // У категории нет типа контрола
-            $medcardCategorie->template_id = $this->templateId;
-            $medcardCategorie->template_name = $this->template->{'name'};
-            $medcardCategorie->is_dynamic = $categorie->is_dynamic;
-            $medcardCategorie->real_categorie_id = $categorie->id;
-            $medcardCategorie->config = CJSON::encode(array(
-                'isWrapped' => $categorie->is_wrapped
-            ));
-            // Сохраняем только в том случае, если это не previewMode
-            if(!$medcardCategorie->save()) {
-                exit('Не могу перенести категорию из шаблонов!');
-            }
-            $historyCategories[] = $medcardCategorie;
-        } else {
-            // Выбираем ещё и дополнительные категории (клонированные). Они не попадают в первый раз по условию пути
-            if(isset($categorie) && $categorie != null) {
-                $historyCategoriesPlus = $this->getHistoryElements('multiple', array(
-                    ':greeting_id' => $this->greetingId,
-                    ':medcard_id' => $this->medcard['card_number'],
-                    ':history_id' => 1,
-                    ':categorie_id' => $categorie->parent_id,
-                    ':element_id' => -1
-                ));
-                $foundedPath = $historyCategories[0]['path']; // Один путь мы уже включили при первой выборке
-                foreach($historyCategoriesPlus as $categoriePlus) {
-                    if($categoriePlus['path'] == $foundedPath) {
-                        continue;
-                    }
-                    $historyCategories[] = $categoriePlus;
-                }
-            }
-        }
-
-        $categorieResult = array();
-        if(count($historyCategories) > 0) {
-            foreach($historyCategories as $categorie) {
-                // Разные поля при разных выборках
-                $categorieResult['id'] = $id !== false ? $id : $categorie['real_categorie_id'];
-                $categorieResult['path'] = $path !== false ? $path : $categorie['path'];
-                $categorieResult['undotted_path'] = implode('', explode('.', $categorieResult['path']));
-                $categorieResult['name'] = $categorie['categorie_name'];
-                $categorieResult['is_dynamic'] = $categorie['is_dynamic'];
-                if($categorieResult['is_dynamic'] == 1) {
-                    $categorieResult['pr_key'] = $categorie['medcard_id'].'|'.$categorie['greeting_id'].'|'.$categorie['path'].'|'.$categorie['categorie_id'].'|'.$categorieResult['id'];
-                }
-                $parts = explode('.', $categorie['path']);
-                // Если количество кусков и точек совпадает, то это неверно: в иерархии у этого элемента нет позиции
-                if(mb_substr_count($categorie['path'], '.') == count($parts)) {
-                    exit('Ошибка: категории c ID '.$categorie['categorie_id'].' не присвоена позиция в шаблоне!');
-                }
-                $parts = array_reverse($parts); // 1 с конца - номер элемента
-                $categorieResult['position'] = $parts[0];
-                $categorieResult['elements'] = array();
-                $categorieResult['config'] = CJSON::decode($categorie['config']);
-
-                // Для клонов вынимаем элементы из истории, а не из основной таблицы
-                if(($id && !$path)) {
-                    $elements = MedcardElement::model()->getElementsByCategorie($id);
-                } else {
-                    // Здесь выбираются ЭЛЕМЕНТЫ (без категорий), если приём был начат раньше
-                    $elements = array();
-                    // Проверяем - если maxRecordIdByTemplateGreeting равно нулю, то присваиваем ему значение 1
-                    if (is_null($this->maxRecordIdByTemplateGreeting))
-                    {
-                        $this->maxRecordIdByTemplateGreeting = 1;
-                    }
-                    $mepObject = new MedcardElementForPatient();
-                    $elements = $mepObject->findElementsForGreeting(
-                        $this->greetingId,
-                        $this->cardNumber,
-                        $categorieResult['id'],
-                        $path);
-                }
-
-                $numWrapped = 0; // Это число элементов, которые следуют за каким-то конкретным элементом
-                foreach($elements as $key => $element) {
-                    $elementResult = array();
-                    // Проверим наличие элемента в истории, если это не выборка исторических элементов
-                    if($id && !$path) {
-                        $historyCategorieElement = $this->getHistoryElements('one', array(
-                            ':medcard_id' => $this->cardNumber,
-                            ':greeting_id' => $this->greetingId,
-                            ':path' => $element['path']
-                        ));
-
-                        if($historyCategorieElement == null) {
-                            // Для элемента посмотрим путь на наличие NULL-позиции
-                            $parts = explode('.', $element['path']);
-                            $parts = array_filter($parts, function($element) {
-                                return trim($element) != '';
-                            }) ;
-                            // Если количество кусков и точек совпадает, то это неверно: в иерархии у этого элемента нет позиции
-                            if(mb_substr_count($element['path'], '.') == count($parts)) {
-                                exit('Ошибка: элементу c ID '.$element['id'].' не присвоена позиция в категории!');
-                            }
-
-                            $medcardCategorieElement = new MedcardElementForPatient();
-                            $medcardCategorieElement->medcard_id = $this->cardNumber;
-                            $medcardCategorieElement->history_id = 1;
-                            $medcardCategorieElement->template_page_id = 0;
-                            $medcardCategorieElement->record_id = $recordId;
-                            $medcardCategorieElement->greeting_id = $this->greetingId;
-                            $medcardCategorieElement->categorie_name = '';
-                            $medcardCategorieElement->path = $element['path'];
-                            $medcardCategorieElement->is_wrapped = $element['is_wrapped'];
-                            $medcardCategorieElement->is_required = $element['is_required'];
-                            $medcardCategorieElement->categorie_id = $categorieResult['id'];
-                            $medcardCategorieElement->element_id = $element['id'];
-                            $medcardCategorieElement->label_before = $element['label'];
-                            $medcardCategorieElement->label_after = $element['label_after'];
-                            $medcardCategorieElement->size = $element['size'];
-                            //$medcardCategorieElement->change_date = $this->currentDate;
-                            $medcardCategorieElement->change_date = date('Y-m-d H:i');
-                            $medcardCategorieElement->type = $element['type']; // У категории нет типа контрола
-                            $medcardCategorieElement->guide_id = $element['guide_id'];
-                            $medcardCategorieElement->allow_add = $element['allow_add'];
-                            $medcardCategorieElement->not_printing_values = $element['not_printing_values'];
-                            $medcardCategorieElement->hide_label_before = $element['hide_label_before'];
-                            $medcardCategorieElement->config = $element['config'];
-                            if($element['default_value'] != null) {
-                                $medcardCategorieElement->value = $element['default_value'];
-                            }
-
-                            if(!$medcardCategorieElement->save()) {
-                                exit('Не могу перенести элемент из категории '.$categorieResult['id']);
-                            }
-
-                            $eCopy = $medcardCategorieElement;
-                        } else {
-                            $eCopy = $historyCategorieElement;
-                        }
-                        $elementResult['type'] = $eCopy->type;
-                        $elementResult['label_before'] = $eCopy->label_before;
-                        $elementResult['label_after'] = $eCopy->label_after;
-                        $elementResult['id'] = $eCopy->element_id;
-                        $elementResult['guide_id'] = $eCopy->guide_id;
-                        $elementResult['path'] = $eCopy->path;
-                        $elementResult['allow_add'] = $eCopy->allow_add;
-                        $elementResult['not_printing_values'] = $eCopy->not_printing_values;
-                        $elementResult['hide_label_before'] = $eCopy->hide_label_before;
-                        $pathParts = explode('.', $element['path']);
-                        $elementResult['position'] = array_pop($pathParts);
-                        $elementResult['is_required'] = $element['is_required'];
-                        $elementResult['size'] = $element['size'];
-                        $elementResult['is_wrapped'] = $element['is_wrapped'];
-                        $elementResult['config'] = CJSON::decode($element['config']);
-                    } else {
-                        $elementResult['type'] = $element['type'];
-                        $elementResult['label_before'] = isset($element['label']) ? $element['label'] : $element['label_before'];
-                        $elementResult['label_after'] = $element['label_after'];
-                        $elementResult['id'] = isset($element['id']) ? $element['id'] : $element['element_id'];
-                        $elementResult['guide_id'] =  $element['guide_id'];
-                        $elementResult['path'] = $element['path'];
-                        $elementResult['allow_add'] = $element['allow_add'];
-                        $elementResult['not_printing_values'] = $element['not_printing_values'];
-                        $elementResult['hide_label_before'] = $element['hide_label_before'];
-                        $pathParts = explode('.', $element['path']);
-                        $elementResult['position'] = array_pop($pathParts);
-                        $elementResult['size'] = $element['size'];
-                        $elementResult['is_wrapped'] = $element['is_wrapped'];
-                        $elementResult['is_required'] = $element['is_required'];
-                        $elementResult['config'] = CJSON::decode($element['config']);
-                    }
-                }
-
-                // Теперь смотрим, есть ли дочерние элементы
-                if($id && !$path) {
-                    $categoriesChildren = MedcardCategorie::model()->findAll('parent_id = :parent_id', array(':parent_id' => $id));
-                    // Дочерние элементы могут быть ещё и вложенными, поэтому выясняем ещё и в хистори, есть ли элементы, которые показать
-                    $categoriesChildrenPlus = MedcardElementForPatient::model()->findAll(
-                        'history_id = :history_id
-                        AND greeting_id = :greeting_id
-                        AND medcard_id = :medcard_id
-                        AND categorie_id = :categorie_id
-                        AND element_id = -1',
-                        array(
-                            ':greeting_id' => $this->greetingId,
-                            ':medcard_id' => $this->cardNumber,
-                            ':history_id' => 1,
-                            ':categorie_id' => $id
-                        )
-                    );
-
-                    $numCategoriesChildren = count($categoriesChildren);
-                    $numChildrenPlus = count($categoriesChildrenPlus);
-                    for($i = 0; $i < $numChildrenPlus; $i++) {
-                        for($j = 0; $j < $numCategoriesChildren; $j++) {
-                            if($categoriesChildren[$j]->path != $categoriesChildrenPlus[$i]->path) {
-                                $categoriesChildren[] = $categoriesChildrenPlus[$i];
-                            }
-                        }
-                    }
-                } else {
-                    $categoriesChildren = MedcardElementForPatient::model()->findAll(
-                        'categorie_id = :categorie_id
-                        AND element_id = :element_id
-                        AND greeting_id = :greeting_id
-                        AND medcard_id = :medcard_id
-                        AND history_id = :history_id
-                        AND path LIKE :path',
-                        array(
-                            ':categorie_id' => $categorieResult['id'],
-                            ':element_id' => -1,
-                            ':greeting_id' => $this->greetingId,
-                            ':medcard_id' => $this->medcard['card_number'],
-                            ':history_id' => 1,
-                            ':path' => $categorieResult['path'].'.%'
-                        )
-                    );
-                }
-                $categorieResult['children'] = array();
-                if(count($categoriesChildren) > 0) {
-                    // Дети есть. Для каждого из них вышеописанный процесс повторяется
-                    foreach($categoriesChildren as $child) {
-                        // Обычная категория
-                        if(isset($child->id)) {
-                            $categorieResult['children'][] = $this->getCategorie($child->id, $recordId, $templateId, $templateName);
-                        } else { // Категория-клон
-                            $categorieResult['children'][] = $this->getCategorie(false, $recordId, $templateId, $templateName, $child->path);
-                        }
-                    }
-                }
-            }
-        }
-        // Имеем два массива - children, с категориями-детьми.
-        //    И массив elements - c элементами-детьми
-        //   Создаём специальный массив, каждый элемент которого будет содержать следующее:
-        //    - Номер массива (children/elements)
-        //    - Значение поля "Позиция в родителе"
-        //    - Номер в массиве children или elements
-        $itemsOrders = array();
-        for($i=0;$i<count($categorieResult['children']);$i++)
-        {
-            $itemsOrders[] = array(
-                'arrayNumber' => '1',
-                'position' => $categorieResult['children'][$i]['position'],
-                'numberInArray' => $i
-            );
-        }
-        for($i=0;$i<count($categorieResult['elements']);$i++) {
-            $itemsOrders[] = array(
-                'arrayNumber' => '2',
-                'position' => $categorieResult['elements'][$i]['position'],
-                'numberInArray' => $i
-            );
-        }
-        // Сортируем массив itemsOrder по элементу position
-        usort($itemsOrders, function($element1, $element2) {
-            if($element1['position'] > $element2['position']) {
-                return 1;
-            } elseif($element1['position'] < $element2['position']) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
-        $categorieResult['childrenElementsOrder'] = $itemsOrders;
-        //var_dump($categorieResult['childrenElementsOrder']);
-        return $categorieResult;
-    }
-
-
     // Редактирование данных пациента
     public function actionPatientEdit(){
         // Метод работает так: Сначала прочитываем из формы ид тех элементов, которые правятся в результате приёма.
@@ -1001,22 +625,68 @@ class SheduleController extends Controller {
                 'text' => 'Ошибка запроса.'));
         }
 
+        $medcardId = $_POST['FormTemplateDefault']['medcardId'];
+        $greetingId = $_POST['FormTemplateDefault']['greetingId'];
+        $templateId = $_POST['FormTemplateDefault']['templateId'];
+
         // SELECT * FROM mis.medcard_elements_patient WHERE greeting_id = 4227;
 
         /* Nasrat' */
         $first = Yii::app()->getDb()->createCommand()
             ->select('count(*) as count')
             ->from('mis.medcard_elements_patient')
-            ->where('greeting_id = :greeting_id', [
-                ':greeting_id' => $_POST['FormTemplateDefault']['greetingId']
+            ->where('greeting_id = :greeting_id and template_id = :template_id', [
+                ':greeting_id' => $greetingId,
+                ':template_id' => $templateId,
             ])->queryRow();
         if ($first == null || $first['count'] == 0) {
-            if ($first != false) {
-                $this->createElementsCopy(
-                    $_POST['FormTemplateDefault']['templateId'],
-                    $_POST['FormTemplateDefault']['greetingId'],
-                    $_POST['FormTemplateDefault']['medcardId']
-                );
+            $skip = [ 'medcardId', 'greetingId', 'templateName', 'templateId' ];
+            foreach($_POST['FormTemplateDefault'] as $field => $value) {
+                if (in_array($field, $skip) || !preg_match('/^f(\d+\|)*\d+_(\d+)$/', $field)) {
+                    continue;
+                }
+                $center = strrpos($field, '_');
+                $path = implode('.', explode('|', substr($field, 1, $center - 1)));
+                $elementId = substr($field, $center + 1);
+                if (!$previous = MedcardElementEx::model()->findByPk($elementId)) {
+                    throw new CException('Element with that identification number does not exists ('. $elementId .')');
+                }
+                if (!$config = json_decode($previous->{'config'}, true)) {
+                    $config = [];
+                }
+                $element = new MedcardElementPatientEx();
+                $element->setAttributes([
+                    'medcard_id' => $medcardId,
+                    'element_id' => $elementId,
+                    'value' => $value,
+                    'history_id' => 1,
+                    'change_date' => date('Y-m-d H:i'),
+                    'greeting_id' => $greetingId,
+                    'categorie_name' => 'No Name Anymore',
+                    'path' => $path,
+                    'label_before' => $previous->{'label'},
+                    'label_after' => $previous->{'label_after'},
+                    'size' => $previous->{'size'},
+                    'is_wrapped' => $previous->{'is_wrapped'},
+                    'categorie_id' => $previous->{'categorie_id'},
+                    'type' => $previous->{'type'},
+                    'template_id' => $templateId,
+                    'template_name' => null,
+                    'guide_id' => $previous->{'guide_id'},
+                    'is_dynamic' => isset($config['isDynamic']) ? $config['isDynamic'] : 0,
+                    'real_categorie_id' => null,
+                    'allow_add' => $previous->{'allow_add'},
+                    'config' => $previous->{'config'},
+                    'is_required' => $previous->{'is_required'},
+                    'is_record' => false,
+                    'record_id' => 1,
+                    'template_page_id' => 0,
+                    'not_printing_values' => $previous->{'not_printing_values'},
+                    'hide_label_before' => $previous->{'hide_label_before'},
+                ], false);
+                if (!$element->save(false)) {
+                    throw new CException('Can\'t save history row in database');
+                }
             }
         }
 

@@ -8,18 +8,40 @@ class MedcardElementPatientEx extends MedcardElementForPatient {
     }
 
     public function fetchByCategory($category, $greeting) {
+        /* $history = $this->getDbConnection()->createCommand()
+            ->select('history_id')
+            ->from('mis.medcard_elements_patient')
+            ->where('greeting_id = :greeting_id and categorie_id = :category_id', [
+                ':greeting_id' => $greeting,
+                ':category_id' => $category,
+            ])
+            ->order('history_id desc')
+            ->limit(1)
+            ->queryRow();
+        if ($history != null) {
+            $history = $history['history_id'];
+        } else {
+            $history = 1;
+        }
+        $rows = $this->getDbConnection()->createCommand()
+            ->select('*')
+            ->from('mis.medcard_elements_patient')
+            ->where('greeting_id = :greeting_id and categorie_id = :category_id and history_id = :history_id', [
+                ':greeting_id' => $greeting, ':category_id' => $category, ':history_id' => $history
+            ])->queryAll();
+        return $rows; */
         $identifiers = [];
         $rows = $this->getDbConnection()->createCommand()
-            ->select('max(pk) as pk')
+            ->select('max(history_id) as history_id, max(change_date) as change_date')
             ->from('mis.medcard_elements_patient')
             ->where('categorie_id = :category_id and value is not null and greeting_id = :greeting_id', [
                 ':category_id' => $category,
                 ':greeting_id' => $greeting
             ])->group('element_id')
-            ->order('pk desc')
+            ->order('change_date desc')
             ->queryAll();
         foreach ($rows as $row) {
-            $identifiers[] = $row['pk'];
+            $identifiers[] = '\''.$row['change_date'].'\'';
         }
         if (empty($identifiers)) {
             return [];
@@ -27,7 +49,7 @@ class MedcardElementPatientEx extends MedcardElementForPatient {
         $rows = $this->getDbConnection()->createCommand()
             ->select('*')
             ->from('mis.medcard_elements_patient')
-            ->where('pk in ('. implode(',', $identifiers) .')')
+            ->where('change_date in ('. implode(',', $identifiers) .')')
             ->queryAll();
         return $rows;
         /* $rows = $this->getDbConnection()->createCommand()

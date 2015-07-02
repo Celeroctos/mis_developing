@@ -62,8 +62,12 @@ class MedcardElementWidget extends Widget {
         } else if ($this->element['type'] == MedcardElementEx::TYPE_EXCHANGE) {
             $width = $width * 2 + 40; # Two columns width + Small bootstrap button, for 40px see [MedcardHtml::exchangeInput]
         }
-        if ($this->category != null && $this->category->getDependent($this->element['id']) == MedcardElementDependencyEx::ACTION_SHOW) {
-            $style = 'display: none;';
+        if ($this->category != null) {
+            if ($this->category->getDependent($this->element['id']) == MedcardElementDependencyEx::ACTION_SHOW) {
+                $style = 'display: none;';
+            } else {
+                $style = null;
+            }
         } else {
             $style = null;
         }

@@ -1,7 +1,5 @@
 ﻿$(document).ready(function () {
 
-    var printHandler;
-
     globalVariables.isUnsavedUserData = false;  // Есть ли несохранённые данные у пользователя
     globalVariables.wasUserFocused = false; // Был ли фокус на каком-то элементе
     globalVariables.savingProcessing = false;
@@ -55,14 +53,8 @@
 
 
     $(window).on('beforeunload', function (e) {
-        var message = "В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите \"остаться на странице\" и сохраните данные.";
-        if (typeof evt == "undefined") {
-            evt = window.event;
-        }
-        if (evt) {
-            evt.returnValue = message;
-        }
-        return message;
+        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
+        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
     });
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
@@ -81,7 +73,7 @@
             globalVariables.isSavingErrors = true;
         }
         //console.log( globalVariables.numCalls);
-        if ($(".submitEditPatient").length == globalVariables.numCalls) {
+        if ($(".submitEditPatient").length == globalVariables.numCalls || true) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;
             globalVariables.savingProcessing = false;
@@ -245,7 +237,7 @@
 
     function autoSave() {
         return void 0;
-        if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
+        if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
         isThisPrint = false;
@@ -300,7 +292,7 @@
         } else {
             // Show the backdrop
             if (!overlaySuck) {
-                //$('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
+                $('<div class="modal-backdrop fade in backDropForSaving"></div>').appendTo(document.body);
             }
 
             for (var i = 0; i < buttonsContainers.length; i++) {
@@ -406,7 +398,7 @@
     elementUnderCursor = null;
     ticksAfterCursor = 0;
 
-    /* $(document).on('mouseenter','form.template-edit-form select[multiple]',
+    $(document).on('mouseenter','form.template-edit-form select[multiple]',
         function(e) {
             isCursorInElement = true;
             elementUnderCursor = this;
@@ -419,12 +411,12 @@
             isCursorInElement = false;
             elementUnderCursor = null;
         }
-    ); */
+    );
 
     oldClientX = 0;
     oldClientY = 0;
 
-    /* $(document).on('mousemove','form.template-edit-form select[multiple]',
+    $(document).on('mousemove','form.template-edit-form select[multiple]',
         function(e) {
             if  (
                 ( (oldClientX- e.clientX>10 )||(oldClientY- e.clientY>10 ) )
@@ -439,7 +431,7 @@
             oldClientY = e.clientY;
         }
 
-    ); */
+    );
 
     $(document).on('scroll',
         function(e) {
@@ -1639,7 +1631,7 @@
 //     Если пользователь первый раз на чём-то сфокусировался - то надо поставить обработчик на изменение любого контрола
 //                 который в случае изменения - поднимает флаг
 $('html').on('focus','form[id=patient-edit-form] input[type=text],input[type=number],textarea,select',
-    function (e) {
+    function(e) {
         if (globalVariables.wasUserFocused ==false)  {
             // Ставим обработчик на изменние -
             $('html').on('change','form[id=patient-edit-form] input[type=text],input[type=number],textarea,select',
@@ -1659,7 +1651,11 @@ function getOnlyLikes() {
 var whenTemplateLoaded = function(values) {
     /* jQuery doesn't like | separator */
     for (var i in values) {
-        $(document.getElementById(i)).val(values[i]);
+        var s = $(document.getElementById(i));
+        s.val(values[i]);
+        if (s.is("select")) {
+            s.trigger("change");
+        }
     }
 };
 
