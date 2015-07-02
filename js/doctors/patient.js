@@ -1653,7 +1653,7 @@ var whenTemplateLoaded = function(values) {
     for (var i in values) {
         var s = $(document.getElementById(i));
         s.val(values[i]);
-        if (s.is("select")) {
+        if (s.is("select") && s.val() != "-3") {
             s.trigger("change");
         }
     }
