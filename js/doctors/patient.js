@@ -51,10 +51,18 @@
         return false;
     });
 
-
-    $(window).on('beforeunload', function (e) {
-        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
-        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
+    $(window).on('beforeunload', function(e) {
+        var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
+        /* if (!globalVariables.isUnsavedUserData) {
+            return void 0;
+        } */
+        if (typeof e == "undefined") {
+            e = window.event;
+        }
+        if (e) {
+            e.returnValue = message;
+        }
+        return message;
     });
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза

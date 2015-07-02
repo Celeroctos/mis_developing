@@ -487,7 +487,6 @@ var dateControlConfigs =
                         e.stopPropagation();
                         return false;
                     }
-
                     var selected = getSelected(this);
                     // Проверка на корректность введённого месяца вообще
                     if((e.keyCode > 48 && e.keyCode < 58) || (e.keyCode > 96 && e.keyCode < 106)) { // Это вообще введены цифры, типа
