@@ -170,10 +170,10 @@ class MedcardElementWidget extends Widget {
 		}
         if (isset($this->element['value'])) {
             if ($this->element['value']) {
-                $parameters['selected'] = $this->element['value'];
+                $parameters['select'] = $this->element['value'];
             }
         } else if ($this->element['default_value']) {
-			$parameters['selected'] = $this->element['default_value'];
+			$parameters['select'] = $this->element['default_value'];
 		}
 		$parameters['data'] = MedcardHtml::listData($data, 'id', 'value');
         if (empty($this->_dependencies)) {

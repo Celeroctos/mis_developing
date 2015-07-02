@@ -184,11 +184,14 @@ class MedcardHtml extends Html {
 	}
 
     public static function selectInput($name, $select, $data, $options = []) {
+        if (is_string($select)) {
+            $select = json_decode($select, true);
+        }
         return static::dropDownInput($name, $select, $data, $options + [
                 'class' => 'form-control selectpicker',
                 'data-live-search' => 'true',
                 'multiple' => 'true',
-                'data-ignore' => 'multiple',
+                'data-ignore' => 'multiple'
             ]);
     }
 

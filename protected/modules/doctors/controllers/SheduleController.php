@@ -654,6 +654,9 @@ class SheduleController extends Controller {
                 if (!$config = json_decode($previous->{'config'}, true)) {
                     $config = [];
                 }
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                }
                 $element = new MedcardElementPatientEx();
                 $element->setAttributes([
                     'medcard_id' => $medcardId,
@@ -662,7 +665,7 @@ class SheduleController extends Controller {
                     'history_id' => 1,
                     'change_date' => date('Y-m-d H:i'),
                     'greeting_id' => $greetingId,
-                    'categorie_name' => 'No Name Anymore',
+                    'categorie_name' => null,
                     'path' => $path,
                     'label_before' => $previous->{'label'},
                     'label_after' => $previous->{'label_after'},

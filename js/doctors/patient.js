@@ -1651,8 +1651,15 @@ function getOnlyLikes() {
 var whenTemplateLoaded = function(values) {
     /* jQuery doesn't like | separator */
     for (var i in values) {
-        var s = $(document.getElementById(i));
-        s.val(values[i]);
+        var s = $("[id='"+ i +"']")
+        if (s.is("select[multiple]")) {
+            try {
+                s.selectpicker("val", $.parseJSON(values[i]));
+            } catch (ignored) {
+            }
+        } else {
+            s.val(values[i]);
+        }
         if (s.is("select") && s.val() != "-3") {
             s.trigger("change");
         }
