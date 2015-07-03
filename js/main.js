@@ -58,11 +58,11 @@ $(document).ready(function () {
 
     // Снилс
     $('#snils').on('keydown', function (e) {
-        return !e.ctrlKey ? applySnilsDown.call(this, e.keyCode) : console.log($(this).val());
+        return !e.ctrlKey ? applySnilsDown.call(this, e.keyCode) : true;
     });
 
     $('#snils').on('keyup', function (e) {
-        return !e.ctrlKey ? applySnilsUp.call(this, e.keyCode) : console.log($(this).val());
+        return !e.ctrlKey ? applySnilsUp.call(this, e.keyCode) : true;
     });
 
     var applySeriaKeyDown = function(pressedKey) {
@@ -84,7 +84,7 @@ $(document).ready(function () {
 
     // Filter on serie and passport number
     $('#patient-medcard-edit-form, #patient-withoutcard-form, #patient-withcard-form').find('#serie').on('keydown', function(e) {
-        return !e.ctrlKey ? applySeriaKeyDown.call(this, e.keyCode) : console.log($(this).val());
+        return !e.ctrlKey ? applySeriaKeyDown.call(this, e.keyCode) : true;
     });
 
     $('#patient-medcard-edit-form, #patient-withoutcard-form, #patient-withcard-form').find('#serie').on('keyup', function(e) {
@@ -109,9 +109,7 @@ $(document).ready(function () {
         }
     }
 
-    $('#contact, #phone, #phoneFilter').on('keydown', function (e) {
-        // Нажатая клавиша
-        var pressedKey = e.keyCode;
+    var applyContactKeyDown = function(pressedKey) {
         // Если символ Enter или Tab - сразу возвращаем true
         if (pressedKey == 13 || pressedKey == 9 || pressedKey == 16)
             return true;
@@ -156,6 +154,10 @@ $(document).ready(function () {
             }
         }
         return true;
+    };
+
+    $('#contact, #phone, #phoneFilter').on('keydown', function (e) {
+        return !e.ctrlKey ? applyContactKeyDown.call(this, e.keyCode) : true;
     });
 
 
