@@ -243,7 +243,6 @@
     setTimeout(autoSave, 30000);
 
     function autoSave() {
-        return void 0;
         if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
