@@ -27,6 +27,9 @@ class MedcardHtml extends Html {
 				'data' => [],
 				'options' => [],
 			];
+            if (is_string($parameters['select'])) {
+                $parameters['select'] = json_decode($parameters['select'], true);
+            }
 			$indexes = static::$listIndexes;
 		} else if (in_array($type, MedcardElementEx::$tableTypes)) {
 			$parameters += [
@@ -184,9 +187,6 @@ class MedcardHtml extends Html {
 	}
 
     public static function selectInput($name, $select, $data, $options = []) {
-        if (is_string($select)) {
-            $select = json_decode($select, true);
-        }
         return static::dropDownInput($name, $select, $data, $options + [
                 'class' => 'form-control selectpicker',
                 'data-live-search' => 'true',
