@@ -625,73 +625,12 @@ class SheduleController extends Controller {
                 'text' => 'Ошибка запроса.'));
         }
 
-        $medcardId = $_POST['FormTemplateDefault']['medcardId'];
-        $greetingId = $_POST['FormTemplateDefault']['greetingId'];
-        $templateId = $_POST['FormTemplateDefault']['templateId'];
-
-        // SELECT * FROM mis.medcard_elements_patient WHERE greeting_id = 4227;
-
-        /* Nasrat' */
-        $first = Yii::app()->getDb()->createCommand()
-            ->select('count(*) as count')
-            ->from('mis.medcard_elements_patient')
-            ->where('greeting_id = :greeting_id and template_id = :template_id', [
-                ':greeting_id' => $greetingId,
-                ':template_id' => $templateId,
-            ])->queryRow();
-        if ($first == null || $first['count'] == 0) {
-            $skip = [ 'medcardId', 'greetingId', 'templateName', 'templateId' ];
-            foreach($_POST['FormTemplateDefault'] as $field => $value) {
-                if (in_array($field, $skip) || !preg_match('/^f(\d+\|)*\d+_(\d+)$/', $field)) {
-                    continue;
-                }
-                $center = strrpos($field, '_');
-                $path = implode('.', explode('|', substr($field, 1, $center - 1)));
-                $elementId = substr($field, $center + 1);
-                if (!$previous = MedcardElementEx::model()->findByPk($elementId)) {
-                    throw new CException('Element with that identification number does not exists ('. $elementId .')');
-                }
-                if (!$config = json_decode($previous->{'config'}, true)) {
-                    $config = [];
-                }
-                if (is_array($value)) {
-                    $value = json_encode($value);
-                }
-                $element = new MedcardElementPatientEx();
-                $element->setAttributes([
-                    'medcard_id' => $medcardId,
-                    'element_id' => $elementId,
-                    'value' => $value,
-                    'history_id' => 1,
-                    'change_date' => date('Y-m-d H:i'),
-                    'greeting_id' => $greetingId,
-                    'categorie_name' => null,
-                    'path' => $path,
-                    'label_before' => $previous->{'label'},
-                    'label_after' => $previous->{'label_after'},
-                    'size' => $previous->{'size'},
-                    'is_wrapped' => $previous->{'is_wrapped'},
-                    'categorie_id' => $previous->{'categorie_id'},
-                    'type' => $previous->{'type'},
-                    'template_id' => $templateId,
-                    'template_name' => null,
-                    'guide_id' => $previous->{'guide_id'},
-                    'is_dynamic' => isset($config['isDynamic']) ? $config['isDynamic'] : 0,
-                    'real_categorie_id' => null,
-                    'allow_add' => $previous->{'allow_add'},
-                    'config' => $previous->{'config'},
-                    'is_required' => $previous->{'is_required'},
-                    'is_record' => false,
-                    'record_id' => 1,
-                    'template_page_id' => 0,
-                    'not_printing_values' => $previous->{'not_printing_values'},
-                    'hide_label_before' => $previous->{'hide_label_before'},
-                ], false);
-                if (!$element->save(false)) {
-                    throw new CException('Can\'t save history row in database');
-                }
-            }
-        }
+        $master = new TemplateCloneMaster(
+            $_POST['FormTemplateDefault']['medcardId'],
+            $_POST['FormTemplateDefault']['greetingId'],
+            $_POST['FormTemplateDefault']['templateId']
+        );
+        $master->cloneTemplateElements($_POST['FormTemplateDefault']);
 
 //      $transaction = Yii::app()->db->beginTransaction();
 

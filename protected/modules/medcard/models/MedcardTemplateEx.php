@@ -24,4 +24,13 @@ class MedcardTemplateEx extends MedcardTemplate {
             return [];
         }
     }
+
+    public function fetchGreetingCategories($greetingId) {
+        return $this->getDbConnection()->createCommand()
+            ->select('*')
+            ->from('mis.medcard_elements_patient')
+            ->where('element_id = -1 and greeting_id = :greeting_id', [
+                'greeting_id' => $greetingId
+            ])->queryAll();
+    }
 }

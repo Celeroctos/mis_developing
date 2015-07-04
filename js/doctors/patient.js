@@ -51,11 +51,19 @@
         return false;
     });
 
-
-    $(window).on('beforeunload', function (e) {
-        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
-        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
-    });
+    /* $(window).on('beforeunload', function(e) {
+        var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
+        if (!globalVariables.isUnsavedUserData || true) {
+            return void 0;
+        }
+        if (typeof e == "undefined") {
+            e = window.event;
+        }
+        if (e) {
+            e.returnValue = message;
+        }
+        return message;
+    }); */
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
     // Редактирование медкарты
@@ -72,8 +80,8 @@
             // Поднимаем флаг, что есть ошибки
             globalVariables.isSavingErrors = true;
         }
-        //console.log( globalVariables.numCalls);
-        if ($(".submitEditPatient").length == globalVariables.numCalls || true) {
+        console.log( globalVariables.numCalls);
+        if ($(".submitEditPatient").length == globalVariables.numCalls) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;
             globalVariables.savingProcessing = false;
@@ -236,8 +244,7 @@
     setTimeout(autoSave, 30000);
 
     function autoSave() {
-        return void 0;
-        if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
+        if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
         isThisPrint = false;
@@ -1631,7 +1638,7 @@
 //     Если пользователь первый раз на чём-то сфокусировался - то надо поставить обработчик на изменение любого контрола
 //                 который в случае изменения - поднимает флаг
 $('html').on('focus','form[id=patient-edit-form] input[type=text],input[type=number],textarea,select',
-    function(e) {
+    function (e) {
         if (globalVariables.wasUserFocused ==false)  {
             // Ставим обработчик на изменние -
             $('html').on('change','form[id=patient-edit-form] input[type=text],input[type=number],textarea,select',

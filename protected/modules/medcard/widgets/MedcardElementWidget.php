@@ -94,8 +94,7 @@ class MedcardElementWidget extends Widget {
 				'title' => 'Динамика изменения параметра',
 			], '');
 		}
-        $key = 'FormTemplateDefault[f'.preg_replace('/\./', '|', $this->element['path']).'_'.$this->element['id'].']';
-		print MedcardHtml::renderByType($this->element['type'], $key, $this->prepareElement($this->element));
+		print MedcardHtml::renderByType($this->element['type'], $this->createName(), $this->prepareElement($this->element));
 		if ($this->getConfig('showDynamic')) {
 			print Html::closeTag('span');
 		}
@@ -258,6 +257,10 @@ class MedcardElementWidget extends Widget {
 		}
 		return $default;
 	}
+
+    private function createName() {
+        return 'FormTemplateDefault[f'.preg_replace('/\./', '|', $this->element['path']).'_'.$this->element['id'].']';
+    }
 
 	private function createKey($prefix = null, $letter = '') {
 		return $prefix.'_'.MedcardHtml::createHash($this->element, $this->prefix, $letter);

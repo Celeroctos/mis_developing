@@ -40,12 +40,25 @@ class MedcardCategoryWidget extends Widget {
             if ($this->parent instanceof MedcardTemplateWidget) {
                 $this->_parent = $this->parent->template['id'];
             } else if ($this->parent instanceof MedcardCategoryWidget) {
-                $this->_parent = $this->parent->category['id'];
+                if (isset($this->parent->category['copy_id'])) {
+                    $this->_parent = $this->parent->category['copy_id'];
+                } else {
+                    $this->_parent = $this->parent->category['id'];
+                }
             } else {
                 $this->_parent = null;
             }
         } else {
             $this->_parent = null;
+        }
+        $parent = $this->parent;
+        while ($parent != null && !$parent instanceof MedcardTemplateWidget) {
+            $parent = $parent->parent;
+        }
+        if ($parent != null) {
+            $this->_greeting = $parent->greetingNumber;
+        } else {
+            $this->_greeting = null;
         }
         $this->prepareElements();
 	}
@@ -74,8 +87,14 @@ class MedcardCategoryWidget extends Widget {
 		]);
 		/* @var $e CActiveRecord */
 		$this->openLine();
+        $fix = [];
 		foreach ($this->_elements as $e) {
-            if (!$e instanceof MedcardCategorie) {
+            if (isset($fix[$e['id']])) {
+                continue;
+            } else {
+                $fix[$e['id']] = true;
+            }
+            if (!$e instanceof MedcardCategoryEx && $e['type'] != -1) {
                 if ($e['is_wrapped']) {
                     $this->closeLine(true);
                 }
@@ -114,11 +133,26 @@ class MedcardCategoryWidget extends Widget {
     }
 
     protected function prepareElements() {
-        $this->_elements = MedcardElementEx::model()->fetchWithGreeting($this->category['id']);
-        if ($this->category instanceof MedcardCategorie) {
+        if (isset($this->category['copy_id'])) {
+            $id = $this->category['copy_id'];
+        } else {
+            $id = $this->category['id'];
+        }
+        $this->_elements = MedcardElementEx::model()->fetchWithGreeting($id);
+        if (!isset($this->category['type'])) {
             $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
-                'parent_id' => $this->category['id']
+                'parent_id' => $id
             ]));
+            if ($this->category['parent_id'] > 0) {
+                $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
+                    'parent_id' => $id
+                ]));
+                if ($this->_greeting != null) {
+                    $this->_elements = CMap::mergeArray($this->_elements, MedcardElementPatientEx::model()->fetchGreetingCategories(
+                        $this->_greeting, $this->category['id']
+                    ));
+                }
+            }
         }
         $filter = [];
         foreach ($this->_elements as $element) {
@@ -183,8 +217,15 @@ class MedcardCategoryWidget extends Widget {
 
 	protected function getLink() {
         if ($this->category['is_dynamic']) {
-            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm accordion-clone-btn', 'type' => 'button' ],
-                Html::tag('span', [ 'class' => 'glyphicon glyphicon-plus' ], '').
+            if (isset($this->category['copy_id'])) {
+                $class = 'accordion-unclone-btn';
+                $icon = 'glyphicon glyphicon-minus';
+            } else {
+                $class = 'accordion-clone-btn';
+                $icon = 'glyphicon glyphicon-plus';
+            }
+            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm '. $class, 'type' => 'button' ],
+                Html::tag('span', [ 'class' => $icon ], '').
                 Html::tag('span', [ 'class' => 'no-display pr-key' ], $this->createAccordionKey())
             );
         } else {
@@ -202,15 +243,13 @@ class MedcardCategoryWidget extends Widget {
 	}
 
 	protected function getTitle() {
-		if (count($this->_elements) > 0) {
-			if ($this->category['is_wrapped'] != 0) {
-				return 'Свернуть';
-			} else {
-				return 'Развернуть';
-			}
-		} else {
-			return 'Пустая категория';
-		}
+        if (empty($this->_elements)) {
+            return 'Пустая категория';
+        } else if ($this->category['is_wrapped'] != 0) {
+            return 'Свернуть';
+        } else {
+            return 'Развернуть';
+        }
 	}
 
 	private function createKey($prefix, $letter, $glue = '|') {
@@ -221,4 +260,5 @@ class MedcardCategoryWidget extends Widget {
     private $_dependencies;
 	private $_elements;
     private $_parent;
+    private $_greeting;
 }

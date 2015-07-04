@@ -69,27 +69,15 @@ class MedcardElementPatientEx extends MedcardElementForPatient {
             $result = array_merge($result, $this->fetchByCategory($c, $greeting));
         }
         return $result;
-//
-//        $sql = <<< SQL
-//WITH "patient" AS (
-//  SELECT * FROM "mis"."medcard_elements_patient"
-//    WHERE "categorie_id" = :category_id
-//      AND "type" <> -1
-//    ORDER BY "change_date" DESC
-//  LIMIT 1
-//) SELECT * FROM "mis"."medcard_elements" AS "e"
-//  LEFT OUTER JOIN "patient" AS "p"
-//    ON "p"."element_id" = "e"."id";
-//SQL;
-//        $this->getDbConnection()->createCommand($sql)->queryAll();
-//
-//        $rows = $this->getDbConnection()->createCommand()
-//            ->select('*, element_id as id')
-//            ->from('mis.medcard_elements_patient as p')
-//            ->join('mis.medcard_categories as c', 'p.categorie_id = c.id')
-//            ->where('c.id in ('. implode(',', $categories) .')')
-//            ->order('p.change_date desc')
-//            ->queryAll();
-//        return $rows;
+    }
+
+    public function fetchGreetingCategories($greetingId, $parentId) {
+        return $this->getDbConnection()->createCommand()
+            ->select('*, element_id as id, real_categorie_id as copy_id')
+            ->from('mis.medcard_elements_patient')
+            ->where('element_id = -1 and greeting_id = :greeting_id and categorie_id = :category_id', [
+                ':greeting_id' => $greetingId,
+                ':category_id' => $parentId,
+            ])->queryAll();
     }
 }
