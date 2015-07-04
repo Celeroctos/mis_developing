@@ -80,8 +80,7 @@
             // Поднимаем флаг, что есть ошибки
             globalVariables.isSavingErrors = true;
         }
-        console.log( globalVariables.numCalls);
-        if ($(".submitEditPatient").length == globalVariables.numCalls) {
+        if ($(".submitEditPatient").length == globalVariables.numCalls || true) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;
             globalVariables.savingProcessing = false;
@@ -244,7 +243,8 @@
     setTimeout(autoSave, 30000);
 
     function autoSave() {
-        if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
+        return void 0;
+        if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
         isThisPrint = false;
@@ -933,12 +933,16 @@
         var prKey = $(this).find('span.pr-key').text();
         var accParent = $(this).parents('.accordion')[0];
         var accClone = $(accParent).clone();
+        var form = $(this).parents("form:eq(0)");
 
         // Теперь нужно отклонировать элемент. Для этого мы подадим запрос, результатом которого станет категория (кусок дерева)
         $.ajax({
             'url': '/doctors/patient/cloneelement',
             'data': {
-                'pr_key': prKey
+                'pr_key': prKey,
+                'templateId': form.find("#templateId").val(),
+                'greetingId': form.find("#greetingId").val(),
+                'medcardId': form.find("#medcardId").val()
             },
             'cache': false,
             'dataType': 'json',

@@ -148,9 +148,9 @@ class MedcardCategoryWidget extends Widget {
                     'parent_id' => $id
                 ]));
                 if ($this->_greeting != null) {
-                    $this->_elements = CMap::mergeArray($this->_elements, MedcardElementPatientEx::model()->fetchGreetingCategories(
+                    $this->_elements = CMap::mergeArray(MedcardElementPatientEx::model()->fetchGreetingCategories(
                         $this->_greeting, $this->category['id']
-                    ));
+                    ), $this->_elements);
                 }
             }
         }
@@ -216,7 +216,7 @@ class MedcardCategoryWidget extends Widget {
     }
 
 	protected function getLink() {
-        if ($this->category['is_dynamic']) {
+        if ($this->category['is_dynamic'] && !isset($this->category['copy_id'])) {
             if (isset($this->category['copy_id'])) {
                 $class = 'accordion-unclone-btn';
                 $icon = 'glyphicon glyphicon-minus';

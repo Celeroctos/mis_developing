@@ -138,7 +138,7 @@ class PatientController extends Controller {
     }
 
     // Клонирование элемента (категории)
-	public function actionCloneElement($pr_key, $templateId, $recordId = false, $level = 0, $levelParts = array()) {
+	public function actionCloneElement($pr_key, $templateId, $greetingId, $medcardId, $recordId = false, $level = 0, $levelParts = array()) {
         $keyParts = explode('|', $pr_key);
         /* Порядок полей в ключе:
          * - Номер карты
@@ -155,7 +155,7 @@ class PatientController extends Controller {
         );
 
         if($historyCategorie == null) {
-            $master = new TemplateCloneMaster($keyParts[0], $keyParts[1], $templateId);
+            $master = new TemplateCloneMaster($medcardId, $greetingId, $templateId);
             $master->cloneTemplateCategory($keyParts[4]);
         }
 
