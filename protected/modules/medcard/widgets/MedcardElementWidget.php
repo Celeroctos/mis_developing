@@ -49,7 +49,23 @@ class MedcardElementWidget extends Widget {
         } else {
             $this->_dependencies = [];
         }
+        if ($this->category != null && !isset($this->element['element_id'])) {
+            $this->mergeWithHistoryElement($this->category);
+        }
 	}
+
+    protected function mergeWithHistoryElement(MedcardCategoryWidget $category) {
+        $element = MedcardElementPatientEx::model()->fetchHistoryByElement(
+            $this->element['id'], $category->getGreeting(), $category->category['path']
+        );
+        if ($element == null) {
+            return ;
+        }
+        $this->element['default_value'] = $element['value'];
+        $this->element['label'] = $element['label_before'];
+        $this->element['label_after'] = $element['label_after'];
+        $this->element['path'] = $element['path'];
+    }
 
 	public function run() {
 		if (!empty($this->element['size']) && $this->element['size'] > 0) {

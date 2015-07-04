@@ -60,8 +60,27 @@ class MedcardCategoryWidget extends Widget {
         } else {
             $this->_greeting = null;
         }
+        if ($this->category != null) {
+            /* $this->mergeWithHistoryElement(); */
+        }
         $this->prepareElements();
 	}
+
+    protected function mergeWithHistoryElement() {
+        $category = MedcardElementPatientEx::model()->fetchHistoryByCategory(
+            $this->category['id'], $this->getGreeting()
+        );
+        if ($category == null) {
+            return ;
+        }
+        if (count($category) > 0) {
+            $history = $category[0];
+        } else {
+            $history = $category;
+        }
+        $this->category['path'] = $history->{'path'};
+        $this->_after = array_splice($category, 1);
+    }
 
 	public function run() {
 		print Html::openTag('div', [
@@ -87,13 +106,7 @@ class MedcardCategoryWidget extends Widget {
 		]);
 		/* @var $e CActiveRecord */
 		$this->openLine();
-        $fix = [];
 		foreach ($this->_elements as $e) {
-            if (isset($fix[$e['id']])) {
-                continue;
-            } else {
-                $fix[$e['id']] = true;
-            }
             if (!$e instanceof MedcardCategoryEx && $e['type'] != -1) {
                 if ($e['is_wrapped']) {
                     $this->closeLine(true);
@@ -116,47 +129,52 @@ class MedcardCategoryWidget extends Widget {
 		print Html::closeTag('div');
 	}
 
-    public function getDependencies($id) {
-        if (isset($this->_dependencies[$id])) {
-            return $this->_dependencies[$id];
-        } else {
-            return [];
-        }
-    }
-
-    public function getDependent($id) {
-        if (isset($this->_dependent[$id])) {
-            return $this->_dependent[$id];
-        } else {
-            return [];
-        }
-    }
-
     protected function prepareElements() {
         if (isset($this->category['copy_id'])) {
             $id = $this->category['copy_id'];
         } else {
             $id = $this->category['id'];
         }
+        if ($id == 13) {
+            print 1;
+        }
         $this->_elements = MedcardElementEx::model()->fetchWithGreeting($id);
-        if (!isset($this->category['type'])) {
-            $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
+//        $this->_elements = MedcardElementPatientEx::model()->fetchHistoryElementsByCategory($id, $this->_greeting);
+        if ($this->_greeting != null) {
+            $rows = MedcardElementPatientEx::model()->fetchHistoryByCategory(
+                $this->category['id'], $this->_greeting
+            );
+            if (!empty($rows)) {
+                $this->_elements = CMap::mergeArray($this->_elements, $rows);
+            }
+        } else {
+            $rows = null;
+        }
+        if ($this->_greeting == null || empty($rows)) {
+            $rows = MedcardCategoryEx::model()->findAllByAttributes([
                 'parent_id' => $id
-            ]));
-            if ($this->category['parent_id'] > 0) {
-                $this->_elements = CMap::mergeArray($this->_elements, MedcardCategoryEx::model()->findAllByAttributes([
-                    'parent_id' => $id
-                ]));
-                if ($this->_greeting != null) {
-                    $this->_elements = CMap::mergeArray(MedcardElementPatientEx::model()->fetchGreetingCategories(
-                        $this->_greeting, $this->category['id']
-                    ), $this->_elements);
-                }
+            ]);
+            if (!empty($rows)) {
+                $this->_elements = CMap::mergeArray($this->_elements, $rows);
             }
         }
         $filter = [];
-        foreach ($this->_elements as $element) {
-            $filter[] = $element['id'];
+        $fix = [];
+        foreach ($this->_elements as $i => $element) {
+            if (isset($fix[$element['path']])) {
+                array_splice($this->_elements, $i, 1);
+            } else {
+                $fix[$element['path']] = true;
+            }
+            if (isset($element['element_id']) && $element['element_id'] > 0) {
+                $filter[] = $element['element_id'];
+            } else if (isset($element['id'])) {
+                $filter[] = $element['id'];
+            }
+            /* $p = substr($element['path'], 0, strrpos($element['path'], '.'));
+            if ($p != $this->category['path']) {
+                array_splice($this->_elements, $i, 1);
+            } */
         }
         if (!empty($filter)) {
             $dependencies = MedcardElementDependencyEx::model()->fetchArray(
@@ -256,9 +274,30 @@ class MedcardCategoryWidget extends Widget {
 		return $prefix.'_'.MedcardHtml::createHash($this->category, $this->prefix, $letter, $glue);
 	}
 
+    public function getDependencies($id) {
+        if (isset($this->_dependencies[$id])) {
+            return $this->_dependencies[$id];
+        } else {
+            return [];
+        }
+    }
+
+    public function getDependent($id) {
+        if (isset($this->_dependent[$id])) {
+            return $this->_dependent[$id];
+        } else {
+            return [];
+        }
+    }
+
+    public function getGreeting() {
+        return $this->_greeting;
+    }
+
     private $_dependent;
     private $_dependencies;
 	private $_elements;
     private $_parent;
     private $_greeting;
+    private $_after;
 }

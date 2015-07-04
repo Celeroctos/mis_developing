@@ -37,7 +37,7 @@ JS;
         $js = preg_replace('/[\r\n\t ]+/', ' ', $js);
         foreach ($this->templates as $template) {
             $this->_menu[$template['id']] = [ 'data-tab' => UniqueGenerator::generate('tab'),
-                'label' => $template['name'], 'onclick' => $js, 'data-id' => $template['id']
+                'label' => Html::tag('b', [], $template['name']), 'onclick' => $js, 'data-id' => $template['id']
             ];
         }
     }

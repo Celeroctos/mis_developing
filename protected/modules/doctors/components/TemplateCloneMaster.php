@@ -41,7 +41,7 @@ class TemplateCloneMaster {
             'label_before' => null,
             'label_after' => null,
             'size' => null,
-            'is_wrapped' => 0,
+            'is_wrapped' => $previous->{'is_wrapped'},
             'categorie_id' => $previous->{'parent_id'},
             'type' => -1,
             'template_id' => $this->templateId,

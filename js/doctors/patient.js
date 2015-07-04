@@ -1735,8 +1735,8 @@ var initMedcardMenu = function(menu) {
     prepare();
 };
 
-$(document).ready(function() {
-    $(".medcard-menu").each(function(i, m) {
-        initMedcardMenu($(m));
-    });
-});
+//$(document).ready(function() {
+//    $(".medcard-menu").each(function(i, m) {
+//        initMedcardMenu($(m));
+//    });
+//});
