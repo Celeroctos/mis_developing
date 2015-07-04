@@ -135,11 +135,7 @@ class MedcardCategoryWidget extends Widget {
         } else {
             $id = $this->category['id'];
         }
-        if ($id == 13) {
-            print 1;
-        }
         $this->_elements = MedcardElementEx::model()->fetchWithGreeting($id);
-//        $this->_elements = MedcardElementPatientEx::model()->fetchHistoryElementsByCategory($id, $this->_greeting);
         if ($this->_greeting != null) {
             $rows = MedcardElementPatientEx::model()->fetchHistoryByCategory(
                 $this->category['id'], $this->_greeting
@@ -171,10 +167,6 @@ class MedcardCategoryWidget extends Widget {
             } else if (isset($element['id'])) {
                 $filter[] = $element['id'];
             }
-            /* $p = substr($element['path'], 0, strrpos($element['path'], '.'));
-            if ($p != $this->category['path']) {
-                array_splice($this->_elements, $i, 1);
-            } */
         }
         if (!empty($filter)) {
             $dependencies = MedcardElementDependencyEx::model()->fetchArray(

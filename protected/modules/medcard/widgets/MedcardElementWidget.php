@@ -89,12 +89,12 @@ class MedcardElementWidget extends Widget {
         }
         print Html::openTag('div', [
             'class' => 'medcard-element-wrapper',
-            /* 'onmouseenter' => '$(this).tooltip("show")',
-            'data-original-title' => $this->element['path'], */
             'style' => $style,
         ]);
 		print Html::openTag('table', [
 			'class' => 'medcard-element',
+            /* 'onmouseenter' => '$(this).tooltip("show")',
+            'data-original-title' => $this->element['path'], */
 		]);
 		print Html::openTag('tr');
 		$this->renderLabelBefore();

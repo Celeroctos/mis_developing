@@ -1677,7 +1677,7 @@ var whenTemplateLoaded = function(values) {
     }
 };
 
-var initMedcardMenu = function(menu) {
+/* var initMedcardMenu = function(menu) {
     var identifiers = [], stack = [];
     try {
         identifiers = $.parseJSON($(menu).attr("data-templates"));
@@ -1735,8 +1735,8 @@ var initMedcardMenu = function(menu) {
     prepare();
 };
 
-//$(document).ready(function() {
-//    $(".medcard-menu").each(function(i, m) {
-//        initMedcardMenu($(m));
-//    });
-//});
+$(document).ready(function() {
+    $(".medcard-menu").each(function(i, m) {
+        initMedcardMenu($(m));
+    });
+}); */
