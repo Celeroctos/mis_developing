@@ -369,12 +369,14 @@ class PrintController extends Controller {
         );
         if($greetingIn === false) {
             if(!$returnResult) {
-                $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L');
+//                $mPDF = Yii::app()->ePdf->mpdf(''', 'A5-L');
+                $mPDF = Yii::app()->ePdf->mpdf('', '');
                 $mPDF->SetDisplayMode('fullpage');
                 $mPDF->list_indent_first_level = 0;
 
                 if ($printRecom){
-                    $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0,'',8,8,8,8,8,8);
+                    $mPDF = Yii::app()->ePdf->mpdf('', '', 0,'',8,8,8,8,8,8);
+//                    $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0,'',8,8,8,8,8,8);
                 }
                 $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot.css').'/paper.less');
                 $mPDF->WriteHTML($stylesheet, 1);
