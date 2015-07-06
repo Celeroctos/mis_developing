@@ -1,13 +1,7 @@
 <?php
 class PatientController extends Controller {
-    public function actionGetHistoryMedcard() {
-       /* echo '<pre>';
-        var_dump($_GET);
-        echo '<pre>';
-        var_dump($_POST);
-        exit();
-*/
 
+    public function actionGetHistoryMedcard() {
 
         if(!Yii::app()->request->isAjaxRequest) {
             exit('Error!');
@@ -17,6 +11,7 @@ class PatientController extends Controller {
                                      'data' => 'Не хватает данных для запроса!'));
         }
 
+        /* @var $categorieWidget CategorieViewWidget */
         $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
 
         $categorieWidget->createFormModel();
@@ -24,12 +19,7 @@ class PatientController extends Controller {
             $_GET['medcardId'],
             $_GET['greetingId'],
             $_GET['templateId']
-
         );
-       // echo '<pre>';
-        //var_dump($historyArr);
-//        exit();
-
 
          // Получаем поля для всех полей относительно хистори
 		ob_end_clean();

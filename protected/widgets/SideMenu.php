@@ -171,11 +171,11 @@ class SideMenu extends CWidget {
 				]
 			]
 		],
-		'medcard' => [
+		/* 'medcard' => [
 			'label' => 'Медкарты',
 			'image' => 'medcard.png',
 			'href' => '/medcard/template/test',
-		],
+		], */
 		'statistic' => [
 			'label' => 'Статистика',
 			'image' => 'stat.png',
