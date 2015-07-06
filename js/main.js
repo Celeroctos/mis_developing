@@ -22,65 +22,73 @@ $(document).ready(function () {
 
     $('#firstName, #lastName, #middleName').keyfilter(/^[А-Яа-яЁёa-zA-Z\-]*$/);
 
-    $('#snils').on('keyup', function (e) {
-        var value = $(this).val();
-        // СНИЛС по проверке
-        if ((value.length == 3 || value.length == 7 || value.length == 11) && e.keyCode != 8) { // Введён год или месяц..
-            $(this).val(value + '-');
-        }
-        if ((value.length == 4 || value.length == 8 || value.length == 12) && e.keyCode == 8) { // Убрать автоматически прочерк
-            $(this).val(value.substr(0, value.length - 1));
-        }
-    });
-
-    // Снилс
-    $('#snils').on('keydown', function (e) {
+    var applySnilsDown = function(keyCode) {
         // Бэкспейс разрешить, цифры разрешить
         var isAllow = true;
         // Проверяем табуляцию и  Enter
         // Если символ Enter или Tab - сразу возвращаем true
-        if ((e.keyCode == 13) || (e.keyCode == 9))
+        if ((keyCode == 13) || (keyCode == 9))
             return true;
 
         var value = $(this).val();
-        if (value.length == 14 && e.keyCode != 8) {
+        if (value.length == 14 && keyCode != 8) {
             $.fn.switchFocusToNext();
             isAllow = false;
         } else {
-            if (!(e.keyCode > 47 && e.keyCode < 58) && !(e.keyCode > 95 && e.keyCode < 106) && e.keyCode != 8) {
+            if (!(keyCode > 47 && keyCode < 58) && !(keyCode > 95 && keyCode < 106) && keyCode != 8) {
                 isAllow = false;
             }
         }
-        if ((value.length == 3 || value.length == 7 || value.length == 11) && e.keyCode != 8) {
+        if ((value.length == 3 || value.length == 7 || value.length == 11) && keyCode != 8) {
             $(this).val(value + '-');
         }
         return isAllow;
+    };
+
+    var applySnilsUp = function(keyCode) {
+        var value = $(this).val();
+        // СНИЛС по проверке
+        if ((value.length == 3 || value.length == 7 || value.length == 11) && keyCode != 8) { // Введён год или месяц..
+            $(this).val(value + '-');
+        }
+        if ((value.length == 4 || value.length == 8 || value.length == 12) && keyCode == 8) { // Убрать автоматически прочерк
+            $(this).val(value.substr(0, value.length - 1));
+        }
+    };
+
+    // Снилс
+    $('#snils').on('keydown', function (e) {
+        return !e.ctrlKey ? applySnilsDown.call(this, e.keyCode) : true;
     });
 
+    $('#snils').on('keyup', function (e) {
+        return !e.ctrlKey ? applySnilsUp.call(this, e.keyCode) : true;
+    });
 
-    // Filter on serie and passport number
-    $('#patient-medcard-edit-form, #patient-withoutcard-form, #patient-withcard-form').find('#serie').on('keydown', function(e) {
-        // Only in this form..
-        var pressedKey = e.keyCode;
+    var applySeriaKeyDown = function(pressedKey) {
         var doctypeField = $(this).parents('form').find('#doctype');
         if(doctypeField.length > 0 && doctypeField.val() == 1) {
             if([8, 9, 13, 16, 46].indexOf(pressedKey) != -1) {
                 return true;
             }
-
-            if($(this).val().length != 2 && $(this).val().length < 5 && ((pressedKey  > 47 && pressedKey  < 58) || (pressedKey > 95 && pressedKey  < 106))) {
-                return true;
-            }
-
-            return false;
+            return !!($(this).val().length != 2 && $(this).val().length < 5 && ((pressedKey > 47 && pressedKey < 58) || (pressedKey > 95 && pressedKey < 106)));
         }
+    };
+
+    var applySeriaKeyUp = function(pressedKey) {
+        var doctypeField = $(this).parents('form').find('#doctype');
+        if(doctypeField.length > 0 && doctypeField.val() == 1 && $(this).val().length == 2 && pressedKey != 8) {
+            $(this).val($(this).val() + ' ');
+        }
+    };
+
+    // Filter on serie and passport number
+    $('#patient-medcard-edit-form, #patient-withoutcard-form, #patient-withcard-form').find('#serie').on('keydown', function(e) {
+        return !e.ctrlKey ? applySeriaKeyDown.call(this, e.keyCode) : true;
     });
 
     $('#patient-medcard-edit-form, #patient-withoutcard-form, #patient-withcard-form').find('#serie').on('keyup', function(e) {
-        var doctypeField = $(this).parents('form').find('#doctype');
-        if(doctypeField.length > 0 && doctypeField.val() == 1 && $(this).val().length == 2 && e.keyCode != 8) {
-            $(this).val($(this).val() + ' ');
-        }
+        return !e.ctrlKey ? applySeriaKeyUp.call(this, e.keyCode) : true;
     });
 
 
@@ -101,9 +109,7 @@ $(document).ready(function () {
         }
     }
 
-    $('#contact, #phone, #phoneFilter').on('keydown', function (e) {
-        // Нажатая клавиша
-        var pressedKey = e.keyCode;
+    var applyContactKeyDown = function(pressedKey) {
         // Если символ Enter или Tab - сразу возвращаем true
         if (pressedKey == 13 || pressedKey == 9 || pressedKey == 16)
             return true;
@@ -148,6 +154,10 @@ $(document).ready(function () {
             }
         }
         return true;
+    };
+
+    $('#contact, #phone, #phoneFilter').on('keydown', function (e) {
+        return !e.ctrlKey ? applyContactKeyDown.call(this, e.keyCode) : true;
     });
 
 

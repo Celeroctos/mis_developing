@@ -21,8 +21,8 @@ class CardnumberGenerator extends CComponent {
 		$savedNumber = Yii::app()->user->getState('savedCardNumber', -1);
 		if($this->clearPrevNumber) {
 			Yii::app()->user->setState('savedCardNumber', -1);
-		}	
-
+		}		
+		
 		$alreadyExists = Medcard::model()->findByPk($savedNumber);
 		
 		if($savedNumber != -1 && !$alreadyExists) {

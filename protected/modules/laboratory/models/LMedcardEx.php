@@ -4,8 +4,8 @@ class LMedcardEx extends ActiveRecord {
 
 	public function relations() {
 		return [
-			"policy" => [ self::BELONGS_TO, "Oms", "policy_id", "joinType" => "LEFT OUTER JOIN" ],
-			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id", "joinType" => "LEFT OUTER JOIN" ],
+			"policy" => [ self::BELONGS_TO, "Oms", "policy_id", "joinType" => "INNER JOIN" ],
+			"enterprise" => [ self::BELONGS_TO, "Enterprise", "enterprise_id", "joinType" => "INNER JOIN" ]
 		];
 	}
 

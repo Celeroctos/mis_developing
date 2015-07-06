@@ -59,7 +59,7 @@ misEngine.class('component.livesearch', function() {
         clearAll: function () {
             this.current = null;
             this.choosedElements = [];
-            $(chooser).find('.choosed span').remove(); // TODO
+            $(this.choosed).find('span').remove();
             this.inputField.prop('disabled', false);
             if (this.config.hideEmpty) {
                 this.choosed.css('display', 'none');
@@ -129,7 +129,7 @@ misEngine.class('component.livesearch', function() {
                 }).append(
                     $('<label>').prop({
                         'class': 'col-xs-4 control-label'
-                    }).text(this.config.label),
+                    }).text(this.config.labelText),
                     $('<div>').prop({
                         'class': 'col-xs-6'
                     }).append(
@@ -140,18 +140,21 @@ misEngine.class('component.livesearch', function() {
                         this.choosed = $('<div>').prop({
                             'class': 'choosed'
                         })
-                    )
+                    ),
+                    $('<div>').prop({
+                        'style' : 'clear: both;'
+                    })
                 )
             );
         },
 
         bindHandlers: function () {
-            $(document).on('keydown', $(this.inputField), $.proxy(function (e) {
+            $(document).on('keydown', '.chooser input[type="text"]:visible', $.proxy(function (e) {
                 // Arrow Up
                 if ($.trim($(e.target).val() != '')) {
                     if (e.keyCode == 38) {
                         this.variants.find('li.active').removeClass('active');
-                        if (current == null) {
+                        if (this.current == null) {
                             this.variants.find('li:not(.navigation):last').addClass('active');
                             this.current = this.variants.find('li:not(.navigation)').length - 1;
                         } else {
@@ -208,7 +211,7 @@ misEngine.class('component.livesearch', function() {
                     if (e.keyCode == 13) {
                         // Если в поле ничего не вбито - переходим в другой контрол
                         wasChangedFocus = false;
-                        if ($.trim(this.inputField).val() == '') {
+                        if ($.trim($(this.inputField).val()) == '') {
                             wasChangedFocus = true;
                             $.fn.switchFocusToNext();
                         }
@@ -243,7 +246,7 @@ misEngine.class('component.livesearch', function() {
             }, this));
 
 
-            $(document).on('click', $(this.template).find('.navigation .prev'), $.proxy(function(e) {
+            $(this.template).on('click', '.navigation .prev', $.proxy(function(e) {
                 this.initPageParam();
                 this.navPrev();
                 this.searchByField(this.inputField, 1);
@@ -251,7 +254,7 @@ misEngine.class('component.livesearch', function() {
                 return false;
             }, this));
 
-            $(document).on('click', $(this.template).find('.navigation .next'), $.proxy(function(e) {
+            $(this.template).on('click', '.navigation .next', $.proxy(function(e) {
                 this.initPageParam();
                 this.navNext();
                 this.searchByField(this.inputField, 1);
@@ -259,7 +262,7 @@ misEngine.class('component.livesearch', function() {
                 return false;
             }, this));
 
-            $(document).on('keyup', $(this.inputField), $.proxy(function(e) {
+            $(document).on('keyup', '.chooser input[type="text"]:visible', $.proxy(function(e) {
                 // Нажатие бекспейса
                 if(!($(e.target).val().length == 1 && e.keyCode == 8)) {
                     if(e.keyCode != 37 && e.keyCode != 39) {
@@ -276,7 +279,7 @@ misEngine.class('component.livesearch', function() {
                 }
             }, this));
 
-            $(document).on('click', $(this.addValueBtn), function(e) {
+            $(document).on('click', $(this.addValueBtn), $.proxy(function(e) {
                 if(typeof this.config.bindedWindowSelector != 'undefined' && $(this.config.bindedWindowSelector).length > 0) {
                     if(typeof this.config.beforeWindowShow != 'undefined') {
                         this.config.beforeWindowShow(function() {
@@ -289,9 +292,9 @@ misEngine.class('component.livesearch', function() {
                         }
                     }
                 }
-            });
+            }, this));
 
-            $(document).on('click', $(this.variants).find('span.item span.glyphicon-remove'), $.proxy(function(e) {
+            $(this.choosed).on('click', 'span.item span.glyphicon-remove', $.proxy(function(e) {
                 // Удаляем из массива предыдущих элементов
                 for(var i = 0; i < this.choosedElements.length; i++) {
                     if('r' + $(this.choosedElements[i]).prop('id') == $(this).parent().prop('id')) {
@@ -299,28 +302,28 @@ misEngine.class('component.livesearch', function() {
                         break;
                     }
                 }
-                $(this).parent().remove();
+                $(e.target).parent().remove();
                 this.enable();
                 if(this.config.hasOwnProperty('afterRemove') && typeof this.config.afterRemove == 'function') {
                     this.config.afterRemove();
                 }
                 if(this.config.hasOwnProperty('hideEmpty') && this.config.hideEmpty) {
-                    if($.fn[$(chooser).attr('id')].getChoosed().length == 0) {
-                        $(this.variants).css('display', 'none');
+                    if(this.getChoosed().length == 0) {
+                        $(this.choosed).css('display', 'none');
                     } else {
-                        $(this.variants).css('display', 'block');
+                        $(this.choosed).css('display', 'block');
                     }
                 }
             }, this));
 
-            $(document).on('click', $(this.variants).find('span.item span.glyphicon-arrow-down'), $.proxy(function(e) {
+            $(this.variants).on('click', 'span.item span.glyphicon-arrow-down', $.proxy(function(e) {
                 for(var i = 0; i < this.choosedElements.length; i++) {
-                    if('r' + $(this.choosedElements[i]).prop('id') == $(this).parent().prop('id')) {
+                    if('r' + $(this.choosedElements[i]).prop('id') == $(e.target).parent().prop('id')) {
                         // Размножаем это на все контролы, которые описаны в moving
                         var moving = this.config.moving;
                         if(typeof moving != 'undefined') {
                             for(var j = 0; j < moving.length; j++) {
-                                $.fn[moving[j]].addChoosed(this.config.movingFunc(choosedElements[i]), choosedElements[i]);
+                                this.addChoosed(this.config.movingFunc(this.choosedElements[i]), this.choosedElements[i]);
                             }
                             break;
                         }
@@ -329,8 +332,8 @@ misEngine.class('component.livesearch', function() {
             }, this));
 
 
-            $(document).on('click', $(this.template).find('.variants li:not(.navigation)'), $.proxy(function(e) {
-                this.addVariantToChoosed(this);
+            $(this.template).on('click', '.variants li:not(.navigation)', $.proxy(function(e) {
+                this.addVariantToChoosed($(e.target));
             }, this));
 
         },
@@ -374,9 +377,10 @@ misEngine.class('component.livesearch', function() {
                             } else {
                                 var innerSpan = $('<span>').addClass('glyphicon glyphicon-remove');
                             }
+
                             $(span).append($(li).text()).append(innerSpan);
-                            $(span).prop('id', 'r' + currentElements[i][primaryField]);
-                            $(this.variants).append(span);
+                            $(span).prop('id', 'r' + this.currentElements[i][primaryField]);
+                            $(this.choosed).append(span);
                         }
                         $(this.inputField).val('');
                         this.prevVal = null;
@@ -388,7 +392,7 @@ misEngine.class('component.livesearch', function() {
                             this.disable();
                         }
                         if(this.config.hasOwnProperty('hideEmpty') && this.config.hideEmpty) {
-                            $(this.variants).css('display', 'block');
+                            $(this.choosed).css('display', 'block');
                         }
                         if(this.config.hasOwnProperty('afterInsert') && typeof this.config.afterInsert == 'function') {
                             this.config.afterInsert(this);
@@ -411,7 +415,7 @@ misEngine.class('component.livesearch', function() {
 
                 // Переводим, если надо, на другой язык, если стоит опция
                 if(this.config.hasOwnProperty('alwaysLanguage')) {
-                    var fieldValue = $.trim(changeLanguage($(field).val().toLowerCase(), this.config.alwaysLanguage));
+                    var fieldValue = $.trim(this.changeLanguage($(field).val().toLowerCase(), this.config.alwaysLanguage));
                 } else {
                     var fieldValue = $.trim($(field).val().toLowerCase());
                 }
@@ -524,14 +528,14 @@ misEngine.class('component.livesearch', function() {
 
         navPrev: function () {
             if (this.config.extraparams.page == 1) {
-                this.config.extraparams.page = Math.ceil(numRecords / 10);
+                this.config.extraparams.page = Math.ceil(this.numRecords / 10);
             } else {
                 this.config.extraparams.page--;
             }
         },
 
         navNext: function () {
-            if (this.config.extraparams.page == Math.ceil(numRecords / 10)) {
+            if (this.config.extraparams.page == Math.ceil(this.numRecords / 10)) {
                 this.config.extraparams.page = 1;
             } else {
                 this.config.extraparams.page++;

@@ -81,6 +81,15 @@ class UsersController extends Controller {
 			}
 		}
 	}
+
+
+    public function actionIsLogged() {
+        echo CJSON::encode(
+            array(
+                'success' => !Yii::app()->user->getIsGuest(),
+            )
+        );
+    }
 }
 
 ?>

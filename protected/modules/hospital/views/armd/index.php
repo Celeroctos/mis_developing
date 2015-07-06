@@ -107,11 +107,24 @@
                 <input type="button" value="Отмена" class="btn btn-primary" id="cancelTemplate" />
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="armd-patient-diagnosis">
-            2
-        </div>
+        <div role="tabpanel" class="tab-pane" id="armd-patient-diagnosis"></div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-purpose">
-            3
+            <div class="wrap">
+                <div class="panel1"></div>
+                <div class="panel2">
+                    <div class="gridContainer"></div>
+                    <h6>Назначение новых</h6>
+                    <div class="row btnPanel">
+                        <input type="button" value="Медикамента" class="btn btn-success" id="addDrug"/>
+                        <input type="button" value="Процедуры" class="btn btn-success" id="addProcedure" />
+                    </div>
+                </div>
+                <div class="panel3">
+                    <h5>Новое назначение</h5>
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+            </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-directions">
             4

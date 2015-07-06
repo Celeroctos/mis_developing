@@ -160,8 +160,7 @@
                             }'
                         ),
                         array(
-                            'class' => 'btn btn-primary',
-							'name' => UniqueGenerator::generate('yt'),
+                            'class' => 'btn btn-primary'
                         )
                     ); ?>
                 </div>
@@ -226,8 +225,7 @@
                             }'
                         ),
                         array(
-                            'class' => 'btn btn-primary',
-							'name' => UniqueGenerator::generate('yt'),
+                            'class' => 'btn btn-primary'
                         )
                     ); ?>
                 </div>

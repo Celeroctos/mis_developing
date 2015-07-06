@@ -1,4 +1,4 @@
-﻿<?php /* @var $this SheduleController */ ?>
+﻿﻿<?php /* @var $this SheduleController */ ?>
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/patient.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/comments.js"></script>-->

@@ -52,18 +52,18 @@
     });
 
     /* $(window).on('beforeunload', function(e) {
-        var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
-        if (!globalVariables.isUnsavedUserData || true) {
-            return void 0;
-        }
-        if (typeof e == "undefined") {
-            e = window.event;
-        }
-        if (e) {
-            e.returnValue = message;
-        }
-        return message;
-    }); */
+     var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
+     if (!globalVariables.isUnsavedUserData || true) {
+     return void 0;
+     }
+     if (typeof e == "undefined") {
+     e = window.event;
+     }
+     if (e) {
+     e.returnValue = message;
+     }
+     return message;
+     }); */
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
     // Редактирование медкарты
@@ -1677,65 +1677,65 @@ var whenTemplateLoaded = function(values) {
 };
 
 /* var initMedcardMenu = function(menu) {
-    var identifiers = [], stack = [];
-    try {
-        identifiers = $.parseJSON($(menu).attr("data-templates"));
-    } catch (e) {
-    }
-    var prepare = function() {
-        if (identifiers.length > 0) {
-            setTimeout(function() {
-                load(identifiers.shift());
-            }, 0);
-        } else {
-            var ul = $("<ul>");
-            for (var i in stack) {
-                ul.append($("<li></li>").append($("<span></span>", {
-                    text: stack[i]
-                })));
-            }
-            Core.createMessage({
-                message: "Шаблоны загружены: <br>" + ul.html(),
-                type: "success",
-                sign: "ok"
-            });
-        }
-    };
-    var renderLoader = function() {
-        return $("<div>", {
-            class: "col-xs-12 text-center greeting-loader"
-        }).append($("<img>", {
-            src: url("images/ajax-loader.gif")
-        }));
-    };
-    for (var i in identifiers) {
-        menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ identifiers[i] +"']").attr("data-tab"))
-            .children().hide().before(renderLoader());
-    }
-    var load = function(id) {
-        var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab")),
-            greeting = tab.find("#greetingId").val();
-        $.getJSON(url("medcard/template/describe"), { id: id, greeting: greeting }, function(response) {
-            if (response.hasOwnProperty("values")) {
-                whenTemplateLoaded(response["values"]);
-            }
-        }).done(function(response) {
-            stack.push(response["name"]);
-            prepare();
-        }).fail(function() {
-            Core.createMessage({
-                message: "Произошла ошибка при загрузке значений шаблонов, попробуйте перезагрузить страницу"
-            });
-        }).always(function() {
-            tab.children(".greeting-loader").remove();
-            tab.children().show();
-        });
-    };
-    prepare();
-};
+ var identifiers = [], stack = [];
+ try {
+ identifiers = $.parseJSON($(menu).attr("data-templates"));
+ } catch (e) {
+ }
+ var prepare = function() {
+ if (identifiers.length > 0) {
+ setTimeout(function() {
+ load(identifiers.shift());
+ }, 0);
+ } else {
+ var ul = $("<ul>");
+ for (var i in stack) {
+ ul.append($("<li></li>").append($("<span></span>", {
+ text: stack[i]
+ })));
+ }
+ Core.createMessage({
+ message: "Шаблоны загружены: <br>" + ul.html(),
+ type: "success",
+ sign: "ok"
+ });
+ }
+ };
+ var renderLoader = function() {
+ return $("<div>", {
+ class: "col-xs-12 text-center greeting-loader"
+ }).append($("<img>", {
+ src: url("images/ajax-loader.gif")
+ }));
+ };
+ for (var i in identifiers) {
+ menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ identifiers[i] +"']").attr("data-tab"))
+ .children().hide().before(renderLoader());
+ }
+ var load = function(id) {
+ var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab")),
+ greeting = tab.find("#greetingId").val();
+ $.getJSON(url("medcard/template/describe"), { id: id, greeting: greeting }, function(response) {
+ if (response.hasOwnProperty("values")) {
+ whenTemplateLoaded(response["values"]);
+ }
+ }).done(function(response) {
+ stack.push(response["name"]);
+ prepare();
+ }).fail(function() {
+ Core.createMessage({
+ message: "Произошла ошибка при загрузке значений шаблонов, попробуйте перезагрузить страницу"
+ });
+ }).always(function() {
+ tab.children(".greeting-loader").remove();
+ tab.children().show();
+ });
+ };
+ prepare();
+ };
 
-$(document).ready(function() {
-    $(".medcard-menu").each(function(i, m) {
-        initMedcardMenu($(m));
-    });
-}); */
+ $(document).ready(function() {
+ $(".medcard-menu").each(function(i, m) {
+ initMedcardMenu($(m));
+ });
+ }); */
