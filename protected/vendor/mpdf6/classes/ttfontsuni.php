@@ -3611,6 +3611,9 @@ $LuCoverage = '.var_export($this->LuCoverage , true).';
 				$nComponentElements = 0;
 				while ($flags & GF_MORE) {
 					$nComponentElements += 1;	// number of glyphs referenced at top level
+                    if (substr($data,$pos_in_glyph+2) != 2) {
+                        break;
+                    }
 					$up = unpack("n", substr($data,$pos_in_glyph,2));
 					$flags = $up[1];
                     if (substr($data,$pos_in_glyph+2,2) != 2) {
