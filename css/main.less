@@ -14,7 +14,7 @@
 .colorpicker-saturation {
   width: 100px;
   height: 100px;
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/saturation.png);
+  background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/saturation.png");
   cursor: crosshair;
   float: left;
 }
@@ -61,9 +61,9 @@
   width: 100%;
   margin-top: -1px;
 }
-.colorpicker-hue { background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/hue.png) }
+.colorpicker-hue { background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/hue.png") }
 .colorpicker-alpha {
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/alpha.png);
+  background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/alpha.png");
   display: none;
 }
 .colorpicker {
@@ -111,8 +111,7 @@
   height: 10px;
   margin-top: 5px;
   clear: both;
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/alpha.png);
-  background-position: 0 100%;
+  background: url("/libs/colorpicker/img/bootstrap-colorpicker/alpha.png") 0 100%;
 }
 .colorpicker-color div { height: 10px }
 .colorpicker-component .add-on i,
@@ -272,7 +271,7 @@ select {
   display: inline;
   padding-left: 25px;
   margin-right: @default-margin;
-  height: 50;
+  height: 50px;
 }
 .borderedBox {
   border-radius: @default-border-radius;
@@ -956,7 +955,7 @@ position:absolute;
         font-weight: bold;
       }
       td {
-        font-weight: 13px;
+        font-size: 13px;
         padding: 3px 5px;
         border: 1px solid #A4A4A4;
         border-collapse: collapse;
@@ -1135,6 +1134,9 @@ select#restDays {
     button + button {
       margin-left: 10px;
     }
+  }
+  .modal-body > .row {
+    padding: 15px;
   }
 }
 #accordionH {

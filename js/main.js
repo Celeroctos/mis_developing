@@ -986,10 +986,12 @@ $('.buttonUpContainer').click(function () {
 		}
 	});
 
-    $.fn.selectpicker.Constructor.DEFAULTS = $.extend($.fn.selectpicker.Constructor.DEFAULTS, {
-        noneSelectedText: "Не выбрано",
-        noneResultsText: "Нет соответствий {0}"
-    });
+    if ($.fn.selectpicker != void 0) {
+        $.fn.selectpicker.Constructor.DEFAULTS = $.extend($.fn.selectpicker.Constructor.DEFAULTS, {
+            noneSelectedText: "Не выбрано",
+            noneResultsText: "Нет соответствий {0}"
+        });
+    }
 
     // fix for modal window backdrop
     $(document).on("show.bs.modal", ".modal", function(e) {

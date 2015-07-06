@@ -25,7 +25,16 @@ class MedcardCategoryWidget extends Widget {
      */
     public $parent = null;
 
+    /**
+     * @var int render mode, by default MODE_DEFAULT will be
+     *  used
+     */
+    public $mode;
+
 	public function init() {
+        if (!$this->mode) {
+            $this->mode = MedcardElementWidget::MODE_DEFAULT;
+        }
 		if (empty($this->category)) {
 			throw new CException('Medcard category must not be empty');
 		}
@@ -113,12 +122,14 @@ class MedcardCategoryWidget extends Widget {
                 }
                 $this->widget('MedcardElementWidget', [
                     'category' => $this,
-                    'element' => $e
+                    'element' => $e,
+                    'mode' => $this->mode
                 ]);
             } else {
                 $this->widget('MedcardCategoryWidget', [
                     'parent' => $this,
-                    'category' => $e
+                    'category' => $e,
+                    'mode' => $this->mode
                 ]);
             }
 		}
@@ -226,7 +237,7 @@ class MedcardCategoryWidget extends Widget {
     }
 
 	protected function getLink() {
-        if ($this->category['is_dynamic'] && !isset($this->category['copy_id'])) {
+        if ($this->category['is_dynamic'] && !isset($this->category['copy_id']) && $this->mode == MedcardElementWidget::MODE_DEFAULT) {
             if (isset($this->category['copy_id'])) {
                 $class = 'accordion-unclone-btn';
                 $icon = 'glyphicon glyphicon-minus';

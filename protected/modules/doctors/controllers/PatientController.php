@@ -6,25 +6,27 @@ class PatientController extends Controller {
         if(!Yii::app()->request->isAjaxRequest) {
             exit('Error!');
         }
-        if(!isset($_GET['date'], $_GET['medcardid'])) {
-            echo CJSON::encode(array('success' => true,
-                                     'data' => 'Не хватает данных для запроса!'));
-        }
 
         /* @var $categorieWidget CategorieViewWidget */
-        $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
+//        $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
+//        $categorieWidget->createFormModel();
+//		$historyArr = $categorieWidget->getFieldsHistoryByDate(
+//            $_GET['medcardId'],
+//            $_GET['greetingId'],
+//            $_GET['templateId']
+//        );
 
-        $categorieWidget->createFormModel();
-		$historyArr = $categorieWidget->getFieldsHistoryByDate(
-            $_GET['medcardId'],
-            $_GET['greetingId'],
-            $_GET['templateId']
-        );
+        $content = $this->widget('MedcardTemplateWidget', [
+            'template' => $_GET['templateId'],
+            'greetingNumber' => $_GET['greetingId'],
+            'cardNumber' => $_GET['medcardId'],
+            'mode' => MedcardElementWidget::MODE_HISTORY,
+        ], true);
 
          // Получаем поля для всех полей относительно хистори
 		ob_end_clean();
         echo CJSON::encode(array('success' => 'true',
-                                 'data' => $historyArr));
+                                 'data' => $content));
         exit();
     }
 

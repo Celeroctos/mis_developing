@@ -100,20 +100,19 @@ class MedcardHtml extends Html {
 			$config += [ '-3' => [ 'class' => 'hidden' ] ];
 		}
 		$addon = UniqueGenerator::generate('addon');
-		print parent::openTag('div', [
-			'class' => 'input-group'
-		]);
+        if (!isset($options['readonly'])) {
+            print parent::openTag('div', ['class' => 'input-group']);
+        }
         print parent::dropDownList($name, $select, $data, $options + [
 				'class' => 'form-control', 'options' => $config, 'aria-describedby' => $addon,
 			]);
-		$js = 'var _s = $(this).parent(".input-group").children("select"); window["applyInsertForSelect"] && window["applyInsertForSelect"].call(_s, _s)';
-		print parent::tag('span', [ 'class' => 'input-group-addon', 'style' => 'cursor: pointer;', 'id' => $addon, 'onclick' => $js ], parent::tag('span', [
-			'class' => 'glyphicon glyphicon-plus'
-		], ''));
-		print parent::closeTag('div');
-        print parent::openTag('div', [
-            'class' => 'selectpicker-variants'
-        ]);
+        if (!isset($options['readonly'])) {
+            $js = 'var _s = $(this).parent(".input-group").children("select"); window["applyInsertForSelect"] && window["applyInsertForSelect"].call(_s, _s)';
+            print parent::tag('span', [ 'class' => 'input-group-addon', 'style' => 'cursor: pointer;', 'id' => $addon, 'onclick' => $js ], parent::tag('span', [
+                'class' => 'glyphicon glyphicon-plus'
+            ], ''));
+            print parent::closeTag('div');
+        }
         print parent::closeTag('div');
 		return null;
 	}
@@ -187,12 +186,25 @@ class MedcardHtml extends Html {
 	}
 
     public static function selectInput($name, $select, $data, $options = []) {
-        return static::dropDownInput($name, $select, $data, $options + [
-                'class' => 'form-control selectpicker',
-                'data-live-search' => 'true',
-                'multiple' => 'true',
-                'data-ignore' => 'multiple'
-            ]);
+        if (!isset($options['disabled'])) {
+            return static::dropDownInput($name, $select, $data, $options + [
+                    'class' => 'form-control selectpicker',
+                    'data-live-search' => 'true',
+                    'multiple' => 'true',
+                    'data-ignore' => 'multiple'
+                ]);
+        } else {
+            $result = [];
+            foreach ($data as $value => $label) {
+                if (in_array($value, $select)) {
+                    $result[$value] = $label;
+                }
+            }
+            return static::dropDownInput($name, [], $result, $options + [
+                    'multiple' => 'true',
+                    'data-ignore' => 'multiple'
+                ]);
+        }
     }
 
 	public static function tableInput($name, $config, $options = []) {

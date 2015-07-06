@@ -11,6 +11,19 @@ class TemplateCloneMaster {
         $this->medcardId = $medcardId;
         $this->greetingId = $greetingId;
         $this->templateId = $templateId;
+        $record = new MedcardRecord();
+        $user = User::model()->find('id=:id', array(':id' => Yii::app()->{'user'}->id));
+        $record->setAttributes([
+            'doctor_id' => $user['employee_id'],
+            'medcard_id' => $this->medcardId,
+            'greeting_id' => $this->greetingId,
+            'template_id' => $this->templateId,
+            'template_name' => $this->template->{'name'},
+            'record_id' => $this->recordId + 1,
+            'record_date' => date('Y-m-d H:i'),
+        ], false);
+        $user->save();
+        $this->recordId = $user->{'id'};
     }
 
     public function cloneTemplateCategory($categoryId) {

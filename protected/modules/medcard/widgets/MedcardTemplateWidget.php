@@ -7,14 +7,35 @@ class MedcardTemplateWidget extends Widget {
 	 */
 	public $template;
 
+    /**
+     * @var int greeting identification number
+     */
     public $greetingNumber;
+
+    /**
+     * @var string card identification number
+     */
     public $cardNumber;
 
+    /**
+     * @var string url to save template
+     */
     public $saveUrl = 'doctors/shedule/patientedit';
 
+    /**
+     * @var int render mode, by default MODE_DEFAULT will be
+     *  used
+     */
+    public $mode;
+
 	public function init() {
+        if (!$this->mode) {
+            $this->mode = MedcardElementWidget::MODE_DEFAULT;
+        }
         if (empty($this->template)) {
             throw new CException('Medcard template must not be empty');
+        } else if (is_scalar($this->template) && !$this->template = MedcardTemplateEx::model()->findByPk($this->template)) {
+            throw new CException('Unresolved template identification number');
         }
         if (!$this->greetingNumber && !($this->greetingNumber = Yii::app()->getRequest()->getQuery('rowid'))) {
             throw new CException('Medcard template widget requires greeting number');
@@ -51,7 +72,9 @@ class MedcardTemplateWidget extends Widget {
         ]);
         foreach ($this->_categories as $category) {
             $this->widget('MedcardCategoryWidget', [
-                'category' => $category, "parent" => $this
+                'category' => $category,
+                'parent' => $this,
+                'mode' => $this->mode,
             ]);
         }
         print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl($this->saveUrl), [], [

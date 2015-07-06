@@ -630,14 +630,13 @@
                 console.log(data);
             },
             'success': function (data, textStatus, jqXHR) {
-                console.log(data);
                 if (data.success == 'true') {
                     // Заполняем медкарту-историю значениями
                     var historyContent = data.data;
                     $(gif).remove();
-                    $('#historyPopup .modal-body .row').html(historyContent);
-                    $('#historyPopup').modal({
-                    });
+                    var s = $('#historyPopup .modal-body .row').html(historyContent);
+                    $('#historyPopup').modal();
+                    s.find("select[multiple].selectpicker").selectpicker();
                 }
             }
         });

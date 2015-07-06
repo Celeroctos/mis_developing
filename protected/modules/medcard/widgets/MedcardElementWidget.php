@@ -2,7 +2,8 @@
 
 class MedcardElementWidget extends Widget {
 
-    const DEFAULT_SCALE = 10;
+    const MODE_DEFAULT = 0;
+    const MODE_HISTORY = 1;
 
 	/**
 	 * @var CActiveRecord|array class instance of
@@ -28,12 +29,21 @@ class MedcardElementWidget extends Widget {
     public $scale;
 
     /**
+     * @var int render mode, by default MODE_DEFAULT will be
+     *  used
+     */
+    public $mode;
+
+    /**
      * @var MedcardCategoryWidget category widget, which contains
      *  current element
      */
     public $category = null;
 
 	public function init() {
+        if (!$this->mode) {
+            $this->mode = static::MODE_DEFAULT;
+        }
 		if (empty($this->element)) {
 			throw new CException('Medcard element must not be empty');
 		}
@@ -41,7 +51,7 @@ class MedcardElementWidget extends Widget {
             if ($scale = Setting::model()->findByAttributes([ 'name' => 'lettersInPixel' ])) {
                 $this->scale = intval($scale['value']);
             } else {
-                $this->scale = static::DEFAULT_SCALE;
+                $this->scale = 10;
             }
         }
         if ($this->category != null) {
@@ -68,6 +78,13 @@ class MedcardElementWidget extends Widget {
     }
 
 	public function run() {
+        if ($this->mode == static::MODE_HISTORY) {
+            if (isset($this->element['value']) && empty($this->element['value']) ||
+                empty($this->element['default_value'])
+            ) {
+                return '';
+            }
+        }
 		if (!empty($this->element['size']) && $this->element['size'] > 0) {
 			$width = $this->element['size'] * $this->scale;
 		} else {
@@ -93,8 +110,6 @@ class MedcardElementWidget extends Widget {
         ]);
 		print Html::openTag('table', [
 			'class' => 'medcard-element',
-            /* 'onmouseenter' => '$(this).tooltip("show")',
-            'data-original-title' => $this->element['path'], */
 		]);
 		print Html::openTag('tr');
 		$this->renderLabelBefore();
@@ -115,7 +130,7 @@ class MedcardElementWidget extends Widget {
 			print Html::closeTag('span');
 		}
 		print Html::closeTag('td');
-        if ($this->element['allow_add']) {
+        if ($this->element['allow_add'] && $this->mode != static::MODE_HISTORY) {
             print Html::openTag('td');
             print Html::tag('button', [
                 'type' => 'button',
@@ -170,6 +185,10 @@ class MedcardElementWidget extends Widget {
             $parameters['options'] = [];
         }
         $parameters['options']['id'] = MedcardHtml::createHash($this->element, $this->prefix, 'f');
+        if ($this->mode == static::MODE_HISTORY) {
+            $parameters['options']['readonly'] = 'true';
+            $parameters['options']['disabled'] = 'true';
+        }
 		return $parameters;
 	}
 
