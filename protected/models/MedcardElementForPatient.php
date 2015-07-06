@@ -209,8 +209,9 @@ class MedcardElementForPatient extends MisActiveRecord {
         try {
             $connection = Yii::app()->db;
             $templates = $connection->createCommand()
-                ->selectDistinct('template_id, template_name')
+                ->selectDistinct('template_id, t.name as template_name')
                 ->from('mis.medcard_elements_patient mep')
+                ->join('mis.medcard_templates as t', 't.id = mep.template_id')
                 ->where('mep.greeting_id = :greetingId
                         AND (NOT(template_id is NULL))
                         AND template_page_id = 1',

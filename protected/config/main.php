@@ -274,7 +274,7 @@ return array(
 			'class'         => 'ext.yii-pdf-0_3_2.EYiiPdf',
 			'params'        => array(
 			    'mpdf'     => array(
-				'librarySourcePath' => 'application.vendor.mpdf.*',
+				'librarySourcePath' => 'application.vendor.mpdf6.*',
 				'constants'         => array(
 				    '_MPDF_TEMP_PATH' => Yii::getPathOfAlias('application.runtime'),
 				),
