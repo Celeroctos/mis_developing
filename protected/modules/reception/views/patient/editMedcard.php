@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/datecontrol.js" ></script>
+<!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/datecontrol.js" ></script>-->
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/reception/searchAddPatient.js" ></script>
 <?php if(Yii::app()->user->checkAccess('editMedcard')) { ?>
 <h4>Редактирование карты пациента</h4>

@@ -566,7 +566,7 @@ class PatientController extends Controller {
                 $formModel->mediateId = -1;
                 $formModel->policy = $patient->id;
 
-                $this->render('addPatientWithCard', array(
+                $this->render('addPatientWithcard', array(
                     'model' => $formModel,
                     'policy_number' => $patient->oms_number,
                     'policy_id' => $patient->id,
@@ -619,7 +619,7 @@ class PatientController extends Controller {
                     $model->contact = $mediate->phone;
                 }
 
-                $this->render('addPatientWithCard', array(
+                $this->render('addPatientWithcard', array(
                     'model' => $model,
                     'regPoint' => date('Y'),
                     'privilegesList' => $privilegesList,
@@ -2387,6 +2387,14 @@ class PatientController extends Controller {
 			echo CJSON::encode(array('success' => true));
 		}
 	}
+
+    public function actionGetPublicShedule() {
+        $this->layout = 'application.modules.reception.views.layouts.publicshedule';
+        $this->render('publicShedule', array(
+
+        ));
+    }
+
 }
 
 

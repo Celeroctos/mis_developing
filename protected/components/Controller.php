@@ -77,13 +77,14 @@ class Controller extends CController {
 		}
 
         // Создаём иерархию для текущей роли пользователя
+        /* @var $auth CAuthManager */
         $auth = Yii::app()->authManager;
         $role = $auth->createRole('r'.$currentRoles['id'], '');
         $result = $auth->assign('r'.$currentRoles['id'], Yii::app()->user->getId()); // Текущему юзеру назначаем эту роль
-		foreach($currentRoles['actions'] as $id => $action) {
-			if(array_key_exists($id, $actionsDetached) === false && array_key_exists($id, $actionsAttached) === false) {
-				$auth->createOperation($action);
-				$role->addChild($action);
+		foreach($currentRoles['actions'] as $accessKey => $action) {
+			if(array_key_exists($action['id'], $actionsDetached) === false && array_key_exists($action['id'], $actionsAttached) === false) {
+                $auth->createOperation($accessKey);
+                $role->addChild($accessKey);
 			}
         }
 

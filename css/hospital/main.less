@@ -88,6 +88,8 @@
 .bedsstockTablesCont, .armdTablesCont  {
   .tab-pane {
     min-height: 150px;
+    padding-top: 10px;
+    overflow: hidden;
     .ajaxLoader {
       position: relative;
       top: 55px;
@@ -540,5 +542,44 @@ body .popover-templates-list {
 
       }
     }
+  }
+}
+
+
+#armd-patient-diagnosis {
+  .form-group {
+    margin-bottom: 10px;
+  }
+}
+
+#armd-patient-purpose {
+  h6 {
+    text-align: center;
+    font-weight: bold;
+  }
+  .btnPanel {
+    text-align: center;
+  }
+  .panel2, .panel3 {
+    float: left;
+  }
+  .panel1, .panel2, .panel3 {
+    width: 990px;
+  }
+
+  .panel3 {
+    h5 {
+      text-align: center;
+      font-weight: bold;
+    }
+    .left {
+      float: left;
+    }
+    .right {
+      float: right;
+    }
+  }
+  .wrap {
+    width: 3000px;
   }
 }
