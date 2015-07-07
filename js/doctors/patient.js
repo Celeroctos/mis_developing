@@ -1677,6 +1677,10 @@ var whenTemplateLoaded = function(values) {
     }
 };
 
+$(document).ready(function() {
+    $("select[onchage!='']").trigger("change");
+});
+
 /* var initMedcardMenu = function(menu) {
  var identifiers = [], stack = [];
  try {
