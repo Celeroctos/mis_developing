@@ -339,7 +339,12 @@ class PrintController extends Controller {
             if ($element['type'] != MedcardElementEx::TYPE_TABLE) {
                 continue;
             } else if (!empty($element['value']) && $element['value'][0] == '{') {
-                $changedElements[$i]['config'] = $element['value'];
+                if ($json = json_decode($element['value']) && isset($json['value'])) {
+                    $value = $json['values'];
+                } else {
+                    $value = [];
+                }
+                $changedElements[$i]['value'] = $value;
             }
         }
 

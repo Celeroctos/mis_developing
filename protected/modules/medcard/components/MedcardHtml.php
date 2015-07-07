@@ -208,9 +208,6 @@ class MedcardHtml extends Html {
     }
 
 	public static function tableInput($name, $config, $options = []) {
-        if ($name == 'FormTemplateDefault[f1|1|4_282]') {
-            print null;
-        }
 		$cols = $config['numCols'];
 		$rows = $config['numRows'];
 		if (isset($config['rows'])) {
@@ -265,9 +262,11 @@ class MedcardHtml extends Html {
 		}
 		print parent::closeTag('tbody');
 		print parent::closeTag('table');
-        print parent::textField($name, json_encode($config), $options + [
-                'style' => 'display: none;',
-            ]);
+        if (!isset($options['print'])) {
+            print parent::textField($name, json_encode($config), $options + [
+                    'style' => 'display: none;',
+                ]);
+        }
 		return null;
 	}
 
