@@ -108,7 +108,14 @@ class MedcardHtml extends Html {
 			]);
         if (!isset($options['readonly'])) {
             $js = 'var _s = $(this).parent(".input-group").children("select"); window["applyInsertForSelect"] && window["applyInsertForSelect"].call(_s, _s)';
-            print parent::tag('span', [ 'class' => 'input-group-addon', 'style' => 'cursor: pointer;', 'id' => $addon, 'onclick' => $js ], parent::tag('span', [
+            print parent::tag('span', [
+                'class' => 'input-group-addon',
+                'style' => 'cursor: pointer;',
+                'id' => $addon,
+                'onclick' => $js,
+                'onmouseenter' => '$(this).tooltip({ "container": "body" }).tooltip("show")',
+                'title' => 'Добавить значение в справочник приема',
+            ], parent::tag('span', [
                 'class' => 'glyphicon glyphicon-plus'
             ], ''));
             print parent::closeTag('div');

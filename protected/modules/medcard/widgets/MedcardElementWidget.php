@@ -142,7 +142,7 @@ class MedcardElementWidget extends Widget {
                 'id' => 'ba_'.$this->prefix.'_'.$this->element['guide_id'].'_'.$this->prefix.$this->element['id'],
                 'class' => 'btnAddValues btn btn-default btn-sm',
                 'onmouseenter' => '$(this).tooltip("show")',
-                'title' => 'Добавить знаёчение в справочник',
+                'title' => 'Добавить значение в справочник',
             ], Html::tag('span', [
                 'class' => 'glyphicon glyphicon-book'
             ]));
