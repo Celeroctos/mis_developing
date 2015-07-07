@@ -48,6 +48,24 @@ class MedcardTemplateWidget extends Widget {
         } else {
             $this->_categories = MedcardTemplateEx::model()->fetchCategories($this->template['id']);
         }
+        usort($this->_categories, function($left, $right) {
+            $val = -1;
+            if ($right['path'] === $left['path']) {
+                return 0;
+            } else if (!$right = explode('.', $right['path'])) {
+                return 0;
+            } else if (!$left = explode('.', $left['path'])) {
+                return 0;
+            }
+            foreach ($left as $i => $p) {
+                if (!isset($right[$i])) {
+                    return count($right) - count($left);
+                } else if ((int) $right[$i] !== (int) $p) {
+                    return (int) $p - (int) $right[$i];
+                }
+            }
+            return $val;
+        });
 	}
 
 	public function run() {

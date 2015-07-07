@@ -72,9 +72,9 @@ class MedcardElementWidget extends Widget {
             return ;
         }
         if ($this->element['type'] == MedcardElementEx::TYPE_TABLE) {
-            $this->element['config'] = $element['value'];
+//            $this->element['config'] = $element['value'];
         } else {
-            $this->element['config'] = $element['config'];
+//            $this->element['config'] = $element['config'];
         }
         $this->element['default_value'] = $element['value'];
         $this->element['label'] = $element['label_before'];
@@ -150,6 +150,7 @@ class MedcardElementWidget extends Widget {
 		print Html::closeTag('tr');
 		print Html::closeTag('table');
         print Html::closeTag('div');
+        return null;
 	}
 
 	protected function renderLabelBefore() {
@@ -291,7 +292,12 @@ class MedcardElementWidget extends Widget {
 	protected function getConfig($key, $default = null) {
 		if ($this->_config == null) {
             if ($this->element['type'] == MedcardElementEx::TYPE_TABLE) {
-                $this->_config = json_decode($this->element['default_value'], true);
+                if (!empty($this->element['default_value']) && $this->element['default_value'][0] == '{') {
+                    $config = $this->element['default_value'];
+                } else {
+                    $config = $this->element['config'];
+                }
+                $this->_config = json_decode($config, true);
             } else {
                 $this->_config = json_decode($this->element['config'], true);
             }

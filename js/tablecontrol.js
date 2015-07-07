@@ -1,16 +1,15 @@
+var serializeTableControl;
+
 $(document).ready(function() {
     var controls = $('.controltable');
 
     $.fn['tableControl'] = {
         init: function(newControl) {
             initTableControlInternal(newControl);
-        },
-        serialize: function() {
-            return serialize($(this));
         }
     };
 
-    var serialize = function(table) {
+    var serialize = serializeTableControl = function(table) {
         /**
          * numCols - Количество сотлбцов
          * numRows - Количество строк
@@ -18,7 +17,7 @@ $(document).ready(function() {
          * rows - Заголовки строк
          * values - Значения типа X_Y = V
          */
-        var cols = [], rows = [], values = {}, count = 0;
+        var cols = [], rows = [], values = {};
         table.find("> thead > tr > td").each(function(i, c) {
             cols.push($(c).text());
         });
@@ -35,11 +34,10 @@ $(document).ready(function() {
                     rows.push($(c).text());
                 }
             });
-            ++count;
         });
         var config = {
-            numRows: count,
-            numCols: cols.length,
+            numRows: table.find("> tbody > tr").length,
+            numCols: table.find("> tbody > tr:first > td").length,
             rows: rows,
             cols: cols,
             values: values

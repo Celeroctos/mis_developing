@@ -283,7 +283,9 @@
         if (globalVariables.savingProcessing) {
             return;
         }
-
+        $(".controltable").each(function(i, t) {
+            serializeTableControl($(t));
+        });
         globalVariables.savingProcessing = true;
 
         // Берём кнопки с классом

@@ -144,7 +144,7 @@ WITH h AS (
         element_id = -1
     ORDER BY history_id DESC
     LIMIT 1
-) SELECT p.*, p.real_categorie_id as id FROM
+) SELECT p.*, p.real_categorie_id AS id FROM
     mis.medcard_elements_patient AS p, h
 WHERE
     p.categorie_id = :category_id AND
