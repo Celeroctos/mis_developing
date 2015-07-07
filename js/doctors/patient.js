@@ -1678,7 +1678,7 @@ var whenTemplateLoaded = function(values) {
 };
 
 $(document).ready(function() {
-    $("select[onchage!='']").trigger("change");
+    $(".medcard-element select[onchage!='']").trigger("change");
 });
 
 /* var initMedcardMenu = function(menu) {
