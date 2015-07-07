@@ -208,6 +208,9 @@ class MedcardHtml extends Html {
     }
 
 	public static function tableInput($name, $config, $options = []) {
+        if ($name == 'FormTemplateDefault[f1|1|4_282]') {
+            print null;
+        }
 		$cols = $config['numCols'];
 		$rows = $config['numRows'];
 		if (isset($config['rows'])) {

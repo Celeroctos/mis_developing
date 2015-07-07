@@ -335,6 +335,14 @@ class PrintController extends Controller {
             }
         }
 
+        foreach ($changedElements as $i => $element) {
+            if ($element['type'] != MedcardElementEx::TYPE_TABLE) {
+                continue;
+            } else if (!empty($element['value']) && $element['value'][0] == '{') {
+                $changedElements[$i]['config'] = $element['value'];
+            }
+        }
+
         // Создадим виджет
         $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
 

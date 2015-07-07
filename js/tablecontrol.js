@@ -22,22 +22,25 @@ $(document).ready(function() {
             cols.push($(c).text());
         });
         table.find("> tbody > tr").each(function(i, tr) {
+            var k = 0;
             $(tr).find("> td").each(function(j, c) {
-                if (!$(c).hasClass(".control-table-header")) {
+                if (!$(c).hasClass("control-table-header")) {
                     var input = $(c).find("> input");
                     if (input.length > 0) {
-                        values[i + "_" + j] = input.val();
+                        values[i + "_" + k++] = input.val();
                     } else {
-                        values[i + "_" + j] = $(c).text();
+                        values[i + "_" + k++] = $(c).text();
                     }
                 } else {
                     rows.push($(c).text());
                 }
             });
         });
+        var c = table.find("> tbody > tr:first > td").length,
+            r = table.find("> tbody > tr").length;
         var config = {
-            numRows: table.find("> tbody > tr").length,
-            numCols: table.find("> tbody > tr:first > td").length,
+            numRows: r,
+            numCols: rows.length > 0 ? c - 1 : c,
             rows: rows,
             cols: cols,
             values: values
