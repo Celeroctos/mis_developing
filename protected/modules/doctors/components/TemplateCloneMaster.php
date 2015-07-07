@@ -100,10 +100,19 @@ class TemplateCloneMaster {
             $path = $previous->{'path'};
         }
         if (!$config = json_decode($previous->{'config'}, true)) {
-            $config = [];
+            $previousConfig = [];
         }
         if (is_array($value)) {
             $value = json_encode($value);
+        }
+        if ($previous->{'type'} == MedcardElementEx::TYPE_TABLE) {
+            if (!empty($value) && $value[0] == '{') {
+                $config = $value;
+            } else {
+                $config = $previous->{'config'};
+            }
+        } else {
+            $config = $previous->{'config'};
         }
         $element = new MedcardElementPatientEx();
         $element->setAttributes([
@@ -124,10 +133,10 @@ class TemplateCloneMaster {
             'template_id' => $this->templateId,
             'template_name' => null,
             'guide_id' => $previous->{'guide_id'},
-            'is_dynamic' => isset($config['isDynamic']) ? $config['isDynamic'] : 0,
+            'is_dynamic' => isset($previousConfig['isDynamic']) ? $previousConfig['isDynamic'] : 0,
             'real_categorie_id' => null,
             'allow_add' => $previous->{'allow_add'},
-            'config' => $previous->{'config'},
+            'config' => $config,
             'is_required' => $previous->{'is_required'},
             'is_record' => false,
             'record_id' => $this->recordId,
