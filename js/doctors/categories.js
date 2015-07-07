@@ -83,6 +83,9 @@ var categoryReady = (function() {
             if (  $(globalVariables.domElement).is('select') ) {
                 $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
                 $(globalVariables.domElement).val(ajaxData.id);
+                if (globalVariables.domElement.hasClass("selectpicker")) {
+                    globalVariables.domElement.selectpicker("refresh");
+                }
             } else {
                 if (  $(globalVariables.domElement).is('input') ) {
                     // Ищем таблицу
@@ -94,6 +97,8 @@ var categoryReady = (function() {
            showErrors(ajaxData);
         }
     });
+
+
 
     $("#add-greeting-value-form").on('success', function(eventObj, ajaxData, status, jqXHR) {
         var element = $(globalVariables.domElement);
