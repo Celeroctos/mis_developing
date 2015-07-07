@@ -33,7 +33,7 @@ class DirectionController extends ControllerEx {
 				throw new CException("Unresolved laboratory's medcard identification number \"{$id}\"");
 			}
 			$widget = $this->getWidget("AutoForm", [
-				"model" => new LDirectionForm("laboratory.treatment.register", [
+				"model" => new Laboratory_Form_Direction("laboratory.treatment.register", [
 					"medcard_id" => $id
 				])
 			]);
@@ -72,8 +72,8 @@ class DirectionController extends ControllerEx {
 
 		try {
 
-			// require LDirectionFormEx model from post request with next attributes
-			$form = $this->requireModel("LDirectionFormEx", [
+			// require Laboratory_Form_DirectionEx model from post request with next attributes
+			$form = $this->requireModel("Laboratory_Form_DirectionEx", [
 				"analysis_type_id",
 				"analysis_parameters",
 				"pregnant",
@@ -200,23 +200,23 @@ class DirectionController extends ControllerEx {
 		$propertyForm = Yii::app()->getRequest()->getPost("PropertyForm");
 
 		// Require form for medcard and patient with next attributes
-		$patientForm = $this->requireModel("LPatientForm", [
+		$patientForm = $this->requireModel("Laboratory_Form_Patient", [
 			"surname", "name", "patronymic", "sex", "birthday", "contact", "work_place"
 		]);
-		$medcardForm = $this->requireModel("LMedcardForm", [
+		$medcardForm = $this->requireModel("Laboratory_Form_Medcard", [
 			"mis_medcard", "card_number", "enterprise_id"
 		]);
 
 		// Require passport and policy forms if have it's properties active
 		if (isset($propertyForm["passport"])) {
-			$passportForm = $this->requireModel("LPassportForm", [
+			$passportForm = $this->requireModel("Laboratory_Form_Passport", [
 				"series", "number", "subdivision_name", "subdivision_code", "issue_date"
 			]);
 		} else {
 			$passportForm = null;
 		}
 		if (isset($propertyForm["policy"])) {
-			$policyForm = $this->requireModel("LPolicyForm", [
+			$policyForm = $this->requireModel("Laboratory_Form_Policy", [
 				"number", "issue_date", "insurance_id"
 			]);
 		} else {
@@ -345,7 +345,7 @@ class DirectionController extends ControllerEx {
 				throw new CException("Can't resolve analysis type identification number");
 			} else {
 				$this->leave([
-					"component" => $this->getWidget("AnalysisParameterChecker", [
+					"component" => $this->getWidget("Laboratory_Widget_AnalysisParameterChecker", [
 						"parameters" => AnalysisType::model()->findAnalysisParameters($id)
 					])
 				]);
@@ -407,7 +407,7 @@ class DirectionController extends ControllerEx {
 
 	public function actionLaboratory() {
 		try {
-			$form = $this->requireModel("LAboutDirectionForm");
+			$form = $this->requireModel("Laboratory_Form_AboutDirection");
 			if ($form->hasErrors()) {
 				$this->postErrors($form->errors);
 			}
@@ -468,8 +468,8 @@ class DirectionController extends ControllerEx {
 
 	public function actionSearch() {
 		try {
-			if (!$form = Yii::app()->getRequest()->getPost("LDirectionSearchForm")) {
-				throw new CException("Direction search required [LDirectionSearchForm] form");
+			if (!$form = Yii::app()->getRequest()->getPost("Laboratory_Form_DirectionSearch")) {
+				throw new CException("Direction search required [Laboratory_Form_DirectionSearch] form");
 			}
 			$criteria = new CDbCriteria();
 			foreach ([ "surname", "name", "patronymic" ] as $k) {

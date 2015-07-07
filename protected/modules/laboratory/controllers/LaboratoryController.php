@@ -4,9 +4,7 @@ class LaboratoryController extends ControllerEx {
 
 	public function actionView() {
 		return $this->render('view', [
-			'analyzers' => $this->getAnalyzerTabs(),
-			'total' => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
-			'ready' => LDirection::model()->getCountOf(LDirection::STATUS_READY),
+			'analyzers' => $this->getAnalyzerTabs()
 		]);
 	}
 
@@ -30,8 +28,8 @@ class LaboratoryController extends ControllerEx {
 
 	public function actionConfirm() {
 		try {
-			$form = new LAnalysisResultForm();
-			$form->setAttributes(Yii::app()->getRequest()->getPost('LAnalysisResultForm'));
+			$form = new Laboratory_Form_AnalysisResult();
+			$form->setAttributes(Yii::app()->getRequest()->getPost('Laboratory_Form_AnalysisResult'));
 			if (!$form->validate()) {
 				$this->postErrors($form->getErrors());
 			}

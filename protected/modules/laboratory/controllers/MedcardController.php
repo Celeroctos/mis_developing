@@ -41,7 +41,7 @@ class MedcardController extends ControllerEx {
 
 	/**
 	 * Search action, which accepts array with search serialized form
-	 * models (LMedcardSearchForm + LAnalysisSearchForm). That action will
+	 * models (Laboratory_Form_MedcardSearch + Laboratory_Form_AnalysisSearch). That action will
 	 * fetch form's values and build search condition form form model
 	 * and return Table widget with medcards
 	 *
@@ -53,7 +53,7 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionSearch() {
 		try {
-			$medcard = $this->requirePost("LMedcardSearchForm");
+			$medcard = $this->requirePost("Laboratory_Form_MedcardSearch");
 			$provider = $this->requirePost("provider");
 			$config = Yii::app()->getRequest()->getQuery("config", []);
 			$criteria = new CDbCriteria();

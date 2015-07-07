@@ -3,6 +3,6 @@
 class LAddress extends ActiveRecord {
 
 	public function tableName() {
-		return "lis.address";
+		return 'lis.address';
 	}
 }

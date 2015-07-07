@@ -345,10 +345,10 @@ var Laboratory_AnalysisResult_Widget = {
 	},
 	open: function(id, icon) {
 		var panel = icon.parents(".panel").panel("before");
-		Core.loadWidget("AnalysisResult", {
+		Core.loadWidget("Laboratory_Widget_AnalysisResult", {
 			direction: id
 		}, function(component) {
-			$("#laboratory-analysis-result-modal").modal("show").find(".modal-body").empty().append(component);
+			$("#laboratory-modal-analysis-result").modal("show").find(".modal-body").empty().append(component);
 		}).always(function() {
 			panel.panel("after");
 		});
