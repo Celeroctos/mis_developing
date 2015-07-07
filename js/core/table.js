@@ -13,12 +13,15 @@ var Core = Core || {};
 		}, selector);
 	});
 
-	Table.prototype.update = function(config, success) {
+	Table.prototype.update = function(config, success, overlay) {
+        overlay = overlay !== void 0 ? overlay : true;
 		var attr, me = this, table = this.selector();
 		if (this.selector().trigger("table.update") === false) {
 			return void 0;
 		}
-		this.before();
+        if (overlay == true) {
+            this.before();
+        }
 		if (attr = table.attr("data-config")) {
 			attr = $.parseJSON(attr);
 			for (var i in attr) {
@@ -28,12 +31,17 @@ var Core = Core || {};
 		attr = this.property("config") || {};
 		attr = $.extend(attr, config);
 		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), attr, function(response) {
-			me.after(function() {
-				me.selector().empty().append($(response).children());
-				me.selector().attr($(response).getAttributes());
-				me.selector().trigger("table.updated");
-				success && success(response);
-			});
+            var after = function() {
+                me.selector().empty().append($(response).children());
+                me.selector().attr($(response).getAttributes());
+                me.selector().trigger("table.updated");
+                success && success(response);
+            };
+            if (overlay == true) {
+                me.after(after);
+            } else {
+                after();
+            }
 		});
 	};
 

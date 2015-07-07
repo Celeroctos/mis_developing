@@ -8,7 +8,7 @@ class Laboratory_Modal_MedcardSearch extends Widget {
             'body' => CHtml::tag('div', [
                 'style' => 'padding: 10px'
             ], $this->getWidget('Laboratory_Widget_MedcardSearch', [
-                'provider' => 'MedcardExGridProvider',
+                'provider' => 'Laboratory_Grid_MedcardEx',
                 'config' => [
                     'emptyData' => 1
                 ]

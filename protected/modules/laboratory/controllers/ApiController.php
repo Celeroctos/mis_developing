@@ -51,7 +51,7 @@ class ApiController extends ControllerEx {
             }
 
             // Copy states to new just generated session
-            Yii::app()->user->login($userIdentity);
+            Yii::app()->{'user'}->login($userIdentity);
 
             // Save session user's login and password
             $this->getSession()->add("L_API/USER_LOGIN", $this->get("login"));

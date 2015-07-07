@@ -7,7 +7,7 @@ class Laboratory_Widget_MedcardSearch extends Widget {
 	 * 	MedcardTable or MedcardTable2
 	 * @see MedcardTable, MedcardTable2
 	 */
-	public $provider = "MedcardGridProvider";
+	public $provider = "Laboratory_Grid_Medcard";
 
 	/**
 	 * @var array - Default configuration for table provider

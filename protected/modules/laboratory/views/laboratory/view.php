@@ -37,7 +37,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 					<?php $this->widget('Laboratory_Widget_DirectionPanel', [
 						'title' => 'Все направления на анализ',
 						'body' => $this->createWidget('GridTable', [
-							'provider' => new QueueGridProvider()
+							'provider' => new Laboratory_Grid_Queue()
 						]),
 						'panelClass' => 'panel panel-default no-select',
 						'status' => LDirection::STATUS_LABORATORY,
@@ -113,7 +113,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 			<?php $this->widget('Laboratory_Widget_DirectionPanel', [
 				'title' => 'Завершенные направления',
 				'body' => $this->createWidget('GridTable', [
-					'provider' => new DirectionGridProvider([
+					'provider' => new Laboratory_Grid_Direction([
 						'status' => LDirection::STATUS_READY,
 						'menu' => [
 							'controls' => [

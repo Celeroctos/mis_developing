@@ -27,11 +27,11 @@ $this->widget('TabMenu', [
 <br>
 <div id="<?= $direction ?>">
 	<?php $this->widget('GridTable', [
-		'provider' => new DirectionGridProvider()
+		'provider' => new Laboratory_Grid_Direction()
 	]) ?>
 </div>
 <div id="<?= $medcard ?>">
 	<?php $this->widget('GridTable', [
-		'provider' => new MedcardGridProvider()
+		'provider' => new Laboratory_Grid_Medcard()
 	]) ?>
 </div>

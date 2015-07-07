@@ -1,6 +1,6 @@
 <?php
 
-class QueueGridProvider extends DirectionGridProvider {
+class Laboratory_Grid_Queue extends Laboratory_Grid_Direction {
 
 	public $status = LDirection::STATUS_LABORATORY;
 

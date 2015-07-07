@@ -1,6 +1,6 @@
 <?php
 
-class MedcardGridProvider extends GridProvider {
+class Laboratory_Grid_Medcard extends GridProvider {
 
 	public $columns = [
 		'card_number' => 'Номер',

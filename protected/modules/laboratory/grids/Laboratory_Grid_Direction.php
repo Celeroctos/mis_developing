@@ -1,6 +1,6 @@
 <?php
 
-class DirectionGridProvider extends GridProvider {
+class Laboratory_Grid_Direction extends GridProvider {
 
 	/**
 	 * @var int status of direction to display

@@ -42,11 +42,15 @@ var Core = Core || {};
 		}
 	};
 
-	Panel.prototype.before = function() {
+	Panel.prototype.before = function(overlay) {
+        overlay = overlay !== void 0 ? overlay : true;
 		if (this.selector().data("core-loading")) {
 			return void 0;
 		}
-		var refresh = this.selector().loading("render").find(".panel-update-button");
+        if (overlay) {
+            this.selector().loading("render");
+        }
+		var refresh = this.selector().find(".panel-update-button");
 		if (!refresh.length) {
 			return void 0;
 		}
@@ -75,11 +79,12 @@ var Core = Core || {};
 		if (this.selector().trigger("panel.update") === false) {
 			return void 0;
 		}
-		this.before();
+        this.before();
 		var content = this.selector().find(".panel-content > *");
 		if (content.length == 1 && content.is("table")) {
-			this.selector().find(".panel-content > table").table("update");
-			this.after();
+			this.selector().find(".panel-content > table").table("update", {}, function() {
+                me.after();
+            }, false);
 			this.selector().trigger("panel.updated");
 			return void 0;
 		}

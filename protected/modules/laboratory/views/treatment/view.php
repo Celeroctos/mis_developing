@@ -33,7 +33,7 @@ $this->widget('Laboratory_Modal_PatientCreator');
 			<?php $this->widget('Laboratory_Widget_DirectionPanel', [
 				'title' => 'Направления на анализ',
 				'body' => $this->createWidget('GridTable', [
-					'provider' => new DirectionGridProvider([
+					'provider' => new Laboratory_Grid_Direction([
 						'status' => LDirection::STATUS_TREATMENT_ROOM
 					])
 				]),
@@ -44,7 +44,7 @@ $this->widget('Laboratory_Modal_PatientCreator');
 			<?php $this->widget('Laboratory_Widget_DirectionPanel', [
 				'title' => 'Направления на повторный забор образца',
 				'body' => $this->createWidget('GridTable', [
-					'provider' => new DirectionGridProvider([
+					'provider' => new Laboratory_Grid_Direction([
 						'status' => LDirection::STATUS_TREATMENT_REPEAT
 					])
 				]),
