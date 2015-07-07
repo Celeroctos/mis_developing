@@ -22,7 +22,7 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 	/**
 	 * @var int - Direction status (for extra menu)
 	 */
-	public $status = LDirection::STATUS_TREATMENT_ROOM;
+	public $status = Laboratory_Direction::STATUS_TREATMENT_ROOM;
 
 	public function init() {
 		if (empty($this->date)) {
@@ -58,8 +58,8 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 		} else {
 			$this->controls = [];
 		}
-		if ($this->status == LDirection::STATUS_TREATMENT_ROOM ||
-			$this->status == LDirection::STATUS_READY
+		if ($this->status == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
+			$this->status == Laboratory_Direction::STATUS_READY
 		) {
 			$this->controls += [
 				"panel-date-button" => [

@@ -1,8 +1,8 @@
 <?php
 /**
  * @var $this Laboratory_Widget_AboutDirection - Instance of widget associated with that view file
- * @var $direction LDirection - Row with information about direction
- * @var $analysis LAnalysisType - Row with information about type of direction's analysis
+ * @var $direction Laboratory_Direction - Row with information about direction
+ * @var $analysis Laboratory_AnalysisType - Row with information about type of direction's analysis
  * @var $parameters array - Array with analysis type parameters
  * @var $samples array - Array with analysis type sample types
  */
@@ -30,7 +30,7 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 				<label><b>Состояние: </b></label>
 			</div>
 			<div class="col-xs-8 text-left">
-				<span><?= LDirection::listStatuses()[$direction->{'status'}] ?></span>
+				<span><?= Laboratory_Direction::listStatuses()[$direction->{'status'}] ?></span>
 			</div>
 		</div>
 		<div class="row no-padding">
@@ -105,8 +105,8 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 <hr>
 <div class="col-xs-12 text-center">
 	<button id="send-to-laboratory-button" class="btn btn-default">
-		<?php if ($direction->{'status'} == LDirection::STATUS_TREATMENT_ROOM ||
-			$direction->{'status'} == LDirection::STATUS_TREATMENT_REPEAT): ?>
+		<?php if ($direction->{'status'} == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
+			$direction->{'status'} == Laboratory_Direction::STATUS_TREATMENT_REPEAT): ?>
 			<span class="glyphicon glyphicon-sort"></span> Передать в лабораторию
 		<?php else: ?>
 			<span class="glyphicon glyphicon-save"></span> Сохранить

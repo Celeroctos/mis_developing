@@ -1,6 +1,6 @@
 <?php
 
-class LAddress extends ActiveRecord {
+class Laboratory_Address extends ActiveRecord {
 
 	public function tableName() {
 		return 'lis.address';

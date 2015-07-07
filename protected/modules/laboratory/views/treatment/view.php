@@ -17,7 +17,7 @@ $this->widget('Laboratory_Modal_PatientCreator');
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
 				<span>Повторный забор образцов</span>
 				<span class="badge" id="treatment-repeat-counts">
-					<?= LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT) ?>
+					<?= Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT) ?>
 				</span>
 			</button>
 		</div>
@@ -34,10 +34,10 @@ $this->widget('Laboratory_Modal_PatientCreator');
 				'title' => 'Направления на анализ',
 				'body' => $this->createWidget('GridTable', [
 					'provider' => new Laboratory_Grid_Direction([
-						'status' => LDirection::STATUS_TREATMENT_ROOM
+						'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
 					])
 				]),
-				'status' => LDirection::STATUS_TREATMENT_ROOM
+				'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
 			]) ?>
 		</div>
 		<div id="treatment-repeated-grid-wrapper" class="no-display">
@@ -45,10 +45,10 @@ $this->widget('Laboratory_Modal_PatientCreator');
 				'title' => 'Направления на повторный забор образца',
 				'body' => $this->createWidget('GridTable', [
 					'provider' => new Laboratory_Grid_Direction([
-						'status' => LDirection::STATUS_TREATMENT_REPEAT
+						'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
 					])
 				]),
-				'status' => LDirection::STATUS_TREATMENT_REPEAT
+				'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			]) ?>
 		</div>
 	</div>

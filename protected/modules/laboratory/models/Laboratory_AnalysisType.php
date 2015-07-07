@@ -1,6 +1,6 @@
 <?php
 
-class LAnalysisType extends ActiveRecord {
+class Laboratory_AnalysisType extends ActiveRecord {
 
 	public function findWithParametersAndSamples($pk) {
 		if (!$row = $this->findByPk($pk)) {

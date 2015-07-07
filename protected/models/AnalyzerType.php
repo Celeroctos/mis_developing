@@ -35,7 +35,7 @@ class AnalyzerType extends GActiveRecord {
 		];
     }
 
-	public function findDirections($id, $status = LDirection::STATUS_LABORATORY) {
+	public function findDirections($id, $status = Laboratory_Direction::STATUS_LABORATORY) {
 		$rows = $this->getDbConnection()->createCommand()
 			->select("d.*")
 			->from("lis.direction as d")

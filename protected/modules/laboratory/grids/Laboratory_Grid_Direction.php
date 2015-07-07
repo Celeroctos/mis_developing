@@ -93,7 +93,7 @@ class Laboratory_Grid_Direction extends GridProvider {
 				'pageSize' => 25
 			],
 			'extra' => [
-				'data-dates' => LDirection::model()->getDates($this->status)
+				'data-dates' => Laboratory_Direction::model()->getDates($this->status)
 			],
 			'textNoData' => 'На этот день нет направлений',
 			'primaryKey' => 'id',
@@ -101,6 +101,6 @@ class Laboratory_Grid_Direction extends GridProvider {
 	}
 
 	public function model() {
-		return new LDirection();
+		return new Laboratory_Direction();
 	}
 }

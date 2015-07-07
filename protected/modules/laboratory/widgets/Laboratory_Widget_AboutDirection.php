@@ -7,13 +7,13 @@ class Laboratory_Widget_AboutDirection extends Widget {
 	public function run() {
 		if (empty($this->direction)) {
 			throw new CException('Can\'t resolve empty direction identification number');
-		} else if (!$direction = LDirection::model()->findByPk($this->direction)) {
+		} else if (!$direction = Laboratory_Direction::model()->findByPk($this->direction)) {
 			throw new CException('Can\'t resolve direction identification number "'. $this->direction .'"');
 		}
-		$analysis = LAnalysisType::model()->findWithParametersAndSamples(
+		$analysis = Laboratory_AnalysisType::model()->findWithParametersAndSamples(
 			$direction->{'analysis_type_id'}
 		);
-		$parameters = LDirection::model()->getAnalysisParameters(
+		$parameters = Laboratory_Direction::model()->getAnalysisParameters(
 			$direction->{'id'}
 		);
 		$this->render('AboutDirection', [

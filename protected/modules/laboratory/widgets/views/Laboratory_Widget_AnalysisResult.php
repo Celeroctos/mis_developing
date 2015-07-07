@@ -1,9 +1,9 @@
 <?php
 /**
  * @var $this Laboratory_Widget_AnalysisResult
- * @var $direction LDirection
- * @var $analysis LAnalysis
- * @var $results LAnalysisResult[]
+ * @var $direction Laboratory_Direction
+ * @var $analysis Laboratory_Analysis
+ * @var $results Laboratory_AnalysisResult[]
  * @var $allowed array
  */
 $model = new Laboratory_Form_AnalysisResult();

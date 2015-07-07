@@ -35,12 +35,12 @@ class LaboratoryController extends ControllerEx {
 			}
 			$total = 0;
 			foreach ($form->result as $id => $result) {
-				$total += LAnalysisResult::model()->updateByPk($id, [
+				$total += Laboratory_AnalysisResult::model()->updateByPk($id, [
 					'val' => $result
 				]);
 			}
-			LDirection::model()->updateByPk($form->id, [
-				'status' => LDirection::STATUS_CLOSED
+			Laboratory_Direction::model()->updateByPk($form->id, [
+				'status' => Laboratory_Direction::STATUS_CLOSED
 			]);
 			if ($total < count($form->result)) {
 				$this->error('Данные не были обновлены');

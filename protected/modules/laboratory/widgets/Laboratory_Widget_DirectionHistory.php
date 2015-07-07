@@ -14,11 +14,11 @@ class Laboratory_Widget_DirectionHistory extends Widget {
 	public function run() {
 		if (empty($this->medcard)) {
 			throw new CException('Can\'t resolve laboratory medcard with empty identification number');
-		} else if (!LMedcard::model()->findByPk($this->medcard)) {
+		} else if (!Laboratory_Medcard::model()->findByPk($this->medcard)) {
 			throw new CException('Can\'t resolve laboratory medcard with "'. $this->medcard .'" identification number');
 		}
 		$this->render(__CLASS__, [
-			'directions' => LDirection::model()->getWithAnalysis('medcard_id = :medcard_id', [
+			'directions' => Laboratory_Direction::model()->getWithAnalysis('medcard_id = :medcard_id', [
 				':medcard_id' => $this->medcard
 			])
 		]);

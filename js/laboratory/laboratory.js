@@ -367,7 +367,7 @@ $(document).ready(function() {
 			table.table("before", 1);
 		}
 		$.get(url("laboratory/direction/test"), {
-			id: p.barcode, status: 2 /* LDirection::STATUS_LABORATORY */
+			id: p.barcode, status: 2 /* Laboratory_Direction::STATUS_LABORATORY */
 		}, function(response) {
 			if (!response["status"]) {
 				Core.createMessage({

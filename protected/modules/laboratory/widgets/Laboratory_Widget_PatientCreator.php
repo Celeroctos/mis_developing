@@ -19,7 +19,7 @@ class Laboratory_Widget_PatientCreator extends Widget {
 			$number = $this->number;
 		}
 		if ($this->number != null) {
-			if (!($model = LMedcardEx::model()->fetchInformation($this->number))) {
+			if (!($model = Laboratory_MedcardEx::model()->fetchInformation($this->number))) {
 				throw new CException('Unresolved medcard number "'. $this->number .'"');
 			}
 		} else {

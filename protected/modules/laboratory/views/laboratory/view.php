@@ -18,7 +18,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 		<div class="col-xs-6 no-padding treatment-center-block">
 			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#laboratory-ready-grid-wrapper" type="button">
 				<span>Готовые результаты</span>
-				<span class="badge" id="laboratory-ready-counts"><?= LDirection::model()->getCountOf(LDirection::STATUS_READY) ?></span>
+				<span class="badge" id="laboratory-ready-counts"><?= Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY) ?></span>
 			</button>
 		</div>
 	</div>
@@ -40,7 +40,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 							'provider' => new Laboratory_Grid_Queue()
 						]),
 						'panelClass' => 'panel panel-default no-select',
-						'status' => LDirection::STATUS_LABORATORY,
+						'status' => Laboratory_Direction::STATUS_LABORATORY,
 					]) ?>
 				</div>
 				<div class="col-xs-6" style="padding-right: 0">
@@ -114,7 +114,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 				'title' => 'Завершенные направления',
 				'body' => $this->createWidget('GridTable', [
 					'provider' => new Laboratory_Grid_Direction([
-						'status' => LDirection::STATUS_READY,
+						'status' => Laboratory_Direction::STATUS_READY,
 						'menu' => [
 							'controls' => [
 								'direction-result-icon' => [
@@ -131,7 +131,7 @@ $this->widget('Laboratory_Modal_QueueGuide');
 					]),
 				]),
 				'search' => false,
-				'status' => LDirection::STATUS_READY
+				'status' => Laboratory_Direction::STATUS_READY
 			]) ?>
 			<hr>
 			<button class="btn btn-primary btn-lg">

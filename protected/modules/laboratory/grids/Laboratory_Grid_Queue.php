@@ -2,7 +2,7 @@
 
 class Laboratory_Grid_Queue extends Laboratory_Grid_Direction {
 
-	public $status = LDirection::STATUS_LABORATORY;
+	public $status = Laboratory_Direction::STATUS_LABORATORY;
 
 	public $columns = [
 		'id' => '#',

@@ -55,6 +55,6 @@ class Laboratory_Grid_MedcardEx extends GridProvider {
 	}
 
 	public function model() {
-		return new LMedcardEx();
+		return new Laboratory_MedcardEx();
 	}
 }

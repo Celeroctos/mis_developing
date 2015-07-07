@@ -1,6 +1,6 @@
 <?php
 
-class LDirectionParameter extends ActiveRecord {
+class Laboratory_DirectionParameter extends ActiveRecord {
 
 	public function findByDirection($id) {
 		$rows = $this->getDbConnection()->createCommand()
@@ -14,6 +14,6 @@ class LDirectionParameter extends ActiveRecord {
 	}
 
 	public function tableName() {
-		return "lis.direction_parameter";
+		return 'lis.direction_parameter';
 	}
 }

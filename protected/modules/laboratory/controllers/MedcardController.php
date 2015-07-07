@@ -27,7 +27,7 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionLoad() {
 		try {
-			$row = LMedcardEx::model()->fetchInformationLaboratoryLike($this->get("number"));
+			$row = Laboratory_MedcardEx::model()->fetchInformationLaboratoryLike($this->get("number"));
 			if ($row == null) {
 				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
 			}
@@ -122,6 +122,6 @@ class MedcardController extends ControllerEx {
      * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
-        return new LMedcard();
+        return new Laboratory_Medcard();
     }
 }

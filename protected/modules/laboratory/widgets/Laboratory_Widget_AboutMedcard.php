@@ -16,10 +16,10 @@ class Laboratory_Widget_AboutMedcard extends Widget {
 		if (empty($this->medcard)) {
 			throw new CException('Medcard viewer requires medcard identification number, see [AboutMedcard::medcard]');
 		}
-		if (($medcard = LMedcard::model()->findByPk($this->medcard)) == null) {
+		if (($medcard = Laboratory_Medcard::model()->findByPk($this->medcard)) == null) {
 			throw new CException('Unresolved medcard identification number "'. $this->medcard .'"');
 		}
-		if (($patient = LPatient::model()->findByPk($medcard->{'patient_id'})) == null) {
+		if (($patient = Laboratory_Patient::model()->findByPk($medcard->{'patient_id'})) == null) {
 			throw new CException('Unresolved patient identification number "'. $medcard->{'patient_id'} .'"');
 		}
 		$age = DateTime::createFromFormat('Y-m-d', $patient->{'birthday'})
@@ -38,10 +38,10 @@ class Laboratory_Widget_AboutMedcard extends Widget {
 		if (empty($medcard->{'mis_medcard'})) {
 			$medcard->{'mis_medcard'} = 'Нет';
 		}
-		if (!$address = LAddress::model()->findByPk($patient->{'address_id'})) {
+		if (!$address = Laboratory_Address::model()->findByPk($patient->{'address_id'})) {
 			throw new CException('Unresolved address identification number "'. $patient->{'address_id'} .'"');
 		}
-		if (!$registerAddress = LAddress::model()->findByPk($patient->{'register_address_id'})) {
+		if (!$registerAddress = Laboratory_Address::model()->findByPk($patient->{'register_address_id'})) {
 			throw new CException('Unresolved address identification number "'. $patient->{'register_address_id'} .'"');
 		}
 		$this->render(__CLASS__, [

@@ -29,7 +29,7 @@ class DirectionController extends ControllerEx {
 			if (($id = Yii::app()->getRequest()->getQuery("medcard")) == null) {
 				throw new CException("Can't resolve \"medcard\" identification number as query parameter");
 			}
-			if (LMedcard::model()->findByPk($id) == null) {
+			if (Laboratory_Medcard::model()->findByPk($id) == null) {
 				throw new CException("Unresolved laboratory's medcard identification number \"{$id}\"");
 			}
 			$widget = $this->getWidget("AutoForm", [
@@ -91,7 +91,7 @@ class DirectionController extends ControllerEx {
 			if (!$form->{"medcard_id"}) {
 				$medcard->{"id"} = $this->registerMedcardForDirection($patient, $medcard, false);
 			} else {
-				$medcard = LMedcard::model()->findByPk($form->{"medcard_id"});
+				$medcard = Laboratory_Medcard::model()->findByPk($form->{"medcard_id"});
 			}
 
 			// Post validation errors
@@ -100,7 +100,7 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load table model for patient category with next attributes
-			$category = LPatientCategory::load([
+			$category = Laboratory_PatientCategory::load([
 				"pregnant" => $form->{"pregnant"},
 				"smokes" => $form->{"smokes"},
 				"gestational_age" => $form->{"gestational_age"},
@@ -130,9 +130,9 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load table model for direction
-			$direction = LDirection::load([
+			$direction = Laboratory_Direction::load([
 				"barcode" => null,
-				"status" => LDirection::STATUS_TREATMENT_ROOM,
+				"status" => Laboratory_Direction::STATUS_TREATMENT_ROOM,
 				"comment" => $form->{"comment"},
 				"analysis_type_id" => $form->{"analysis_type_id"},
 				"medcard_id" => $medcard->{"id"},
@@ -151,13 +151,13 @@ class DirectionController extends ControllerEx {
 			}
 
 			// After saving we have to set it's barcode as primary key (maybe changed)
-			LDirection::model()->updateByPk($direction->{"id"}, [
+			Laboratory_Direction::model()->updateByPk($direction->{"id"}, [
 				"barcode" => $direction->{"id"}
 			]);
 
 			// Register direction parameters in database
 			foreach ($form->{"analysis_parameters"} as $id) {
-				$dp = LDirectionParameter::load([
+				$dp = Laboratory_DirectionParameter::load([
 					"direction_id" => $direction->{"id"},
 					"analysis_type_parameter_id" => $id
 				]);
@@ -186,9 +186,9 @@ class DirectionController extends ControllerEx {
 
 	/**
 	 * That function registers information about patient
-	 * @param LPatient $patient - Instance with just registered
+	 * @param Laboratory_Patient $patient - Instance with just registered
 	 *  patient active record
-	 * @param LMedcard $medcard - Instance with just registered
+	 * @param Laboratory_Medcard $medcard - Instance with just registered
 	 *  patient's medcard
 	 * @param bool $withTransaction - Shall use transaction
 	 * @return int - Medcard identification number
@@ -243,13 +243,13 @@ class DirectionController extends ControllerEx {
 		try {
 			// Create model for address and address of registration
 			// and insert it in database
-			$address = LAddress::loadFromModel($addressForm, [
+			$address = Laboratory_Address::loadFromModel($addressForm, [
 				"string" => $patientForm["address_id"]
 			]);
 			if (!$address->save(true)) {
 				$this->postErrors($address->errors);
 			}
-			$registerAddress = LAddress::loadFromModel($registerAddressForm, [
+			$registerAddress = Laboratory_Address::loadFromModel($registerAddressForm, [
 				"string" => $patientForm["register_address_id"]
 			]);
 			if (!$registerAddress->save(true)) {
@@ -258,7 +258,7 @@ class DirectionController extends ControllerEx {
 
 			// Load models for passport and policy and save it in database
 			if ($passportForm != null) {
-				$passport = LPassport::loadFromModel($passportForm, [
+				$passport = Laboratory_Passport::loadFromModel($passportForm, [
 					"surname" => $patientForm["surname"],
 					"name" => $patientForm["name"],
 					"patronymic" => $patientForm["patronymic"],
@@ -271,7 +271,7 @@ class DirectionController extends ControllerEx {
 				$passport = null;
 			}
 			if ($policyForm != null) {
-				$policy = LPolicy::loadFromModel($policyForm, [
+				$policy = Laboratory_Policy::loadFromModel($policyForm, [
 					"surname" => $patientForm["surname"],
 					"name" => $patientForm["name"],
 					"patronymic" => $patientForm["patronymic"],
@@ -286,7 +286,7 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load model for patient and register it in database
-			$patient = LPatient::loadFromModel($patientForm, [
+			$patient = Laboratory_Patient::loadFromModel($patientForm, [
 				"address_id" => $address->{"id"},
 				"register_address_id" => $registerAddress->{"id"},
 				"passport_id" => $passport != null ? $passport->{"id"} : null,
@@ -297,7 +297,7 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load model for medcard and register it in database
-			$medcard = LMedcard::loadFromModel($medcardForm, [
+			$medcard = Laboratory_Medcard::loadFromModel($medcardForm, [
 				"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
 				"patient_id" => $patient->{"id"}
 			]);
@@ -332,7 +332,7 @@ class DirectionController extends ControllerEx {
 				"component" => $this->getWidget($class, [
 						"date" => Yii::app()->getRequest()->getQuery("date")
 					] + $attributes),
-				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+				"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -369,16 +369,16 @@ class DirectionController extends ControllerEx {
 	 */
 	public function actionRepeat() {
 		try {
-			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_TREATMENT_REPEAT
+			$r = Laboratory_Direction::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
 			} else {
 				$this->leave([
 					"message" => "Направление отправлено на повторный забор образца",
-					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+					"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
+					"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -388,16 +388,16 @@ class DirectionController extends ControllerEx {
 
 	public function actionRestore() {
 		try {
-			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_TREATMENT_ROOM
+			$r = Laboratory_Direction::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => Laboratory_Direction::STATUS_TREATMENT_ROOM
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было установлено как новое");
 			} else {
 				$this->leave([
 					"message" => "Направление восстановлено как новое",
-					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+					"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
+					"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -411,31 +411,31 @@ class DirectionController extends ControllerEx {
 			if ($form->hasErrors()) {
 				$this->postErrors($form->errors);
 			}
-			$direction = LDirection::model()->findByPk($form->{"direction_id"});
+			$direction = Laboratory_Direction::model()->findByPk($form->{"direction_id"});
 			$parameters = [
 				"sample_type_id" => $form->{"sample_type_id"},
 				"sending_date" => $form->{"sending_date"}." ".$form->{"sending_time"}.".000000",
 				"comment" => $form->{"comment"}
 			];
-			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
-				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
+			if ($direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
+				$direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			) {
 				$parameters += [
-					"status" => LDirection::STATUS_LABORATORY
+					"status" => Laboratory_Direction::STATUS_LABORATORY
 				];
 			}
-			$r = LDirection::model()->updateByPk($form->{"direction_id"}, $parameters);
+			$r = Laboratory_Direction::model()->updateByPk($form->{"direction_id"}, $parameters);
 			if (!$r) {
 				throw new CException("Can't refresh direction");
 			}
-			$params = LDirection::getIds(LDirection::model()->getAnalysisParameters(
+			$params = Laboratory_Direction::getIds(Laboratory_Direction::model()->getAnalysisParameters(
 				$form->{"direction_id"}, false
 			));
 			foreach ($form->{"analysis_parameters"} as $id) {
 				if ($this->arrayInDrop([ "id" => $id ], $params)) {
 					continue;
 				}
-				$ar = LDirectionParameter::load([
+				$ar = Laboratory_DirectionParameter::load([
 					"direction_id" => $form->{"direction_id"},
 					"analysis_type_parameter_id" => $id
 				]);
@@ -449,8 +449,8 @@ class DirectionController extends ControllerEx {
 					":d" => $form->{"direction_id"}, ":a" => $id
 				]);
 			}
-			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
-				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
+			if ($direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
+				$direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			) {
 				$msg = "Направление отправлено в лабораторию";
 			} else {
@@ -458,8 +458,8 @@ class DirectionController extends ControllerEx {
 			}
 			$this->leave([
 				"message" => $msg,
-				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM),
-				"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
+				"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM),
+				"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -514,10 +514,10 @@ class DirectionController extends ControllerEx {
 		try {
 			if (!$id = Yii::app()->getRequest()->getQuery("id")) {
 				throw new CException("Test action requires direction identification number");
-			} else if (!$direction = LDirection::model()->findByAttributes([ "id" => $id ])) {
+			} else if (!$direction = Laboratory_Direction::model()->findByAttributes([ "id" => $id ])) {
 				throw new CHttpException(404, "Направление с номером ($id) не зарегистрировано в системе");
 			} else {
-				$status = Yii::app()->getRequest()->getQuery("status", LDirection::STATUS_LABORATORY);
+				$status = Yii::app()->getRequest()->getQuery("status", Laboratory_Direction::STATUS_LABORATORY);
 			}
 			if ($direction->{"status"} != $status) {
 				$this->error("Направление с номером ($id) не отправлялось в лабораторию");
@@ -534,14 +534,14 @@ class DirectionController extends ControllerEx {
 			if (!$directions = Yii::app()->getRequest()->getPost("directions")) {
 				$this->leave([
 					"ready" => [],
-					"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+					"total" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)
 				]); exit();
 			} else if (!$status = Yii::app()->getRequest()->getPost("status")) {
 				throw new Exception("Check action requires direction status");
 			}
 			$ready = [];
 			foreach ($directions as $pk) {
-				if (!$d = LDirection::model()->findByPk($pk)) {
+				if (!$d = Laboratory_Direction::model()->findByPk($pk)) {
 					continue;
 				}
 				if ($d->{"status"} == $status) {
@@ -550,7 +550,7 @@ class DirectionController extends ControllerEx {
 			}
 			$this->leave([
 				"ready" => $ready,
-				"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+				"total" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -562,6 +562,6 @@ class DirectionController extends ControllerEx {
      * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
-        return new LDirection();
+        return new Laboratory_Direction();
     }
 }
