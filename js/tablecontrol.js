@@ -1,11 +1,51 @@
 $(document).ready(function() {
     var controls = $('.controltable');
 
-    $.fn['tableControl']= {
-        init: function(newControl)
-        {
+    $.fn['tableControl'] = {
+        init: function(newControl) {
             initTableControlInternal(newControl);
+        },
+        serialize: function() {
+            return serialize($(this));
         }
+    };
+
+    var serialize = function(table) {
+        /**
+         * numCols - Количество сотлбцов
+         * numRows - Количество строк
+         * cols - Заголовки столбцов
+         * rows - Заголовки строк
+         * values - Значения типа X_Y = V
+         */
+        var cols = [], rows = [], values = {}, count = 0;
+        table.find("> thead > tr > td").each(function(i, c) {
+            cols.push($(c).text());
+        });
+        table.find("> tbody > tr").each(function(i, tr) {
+            $(tr).find("> td").each(function(j, c) {
+                if (!$(c).hasClass(".control-table-header")) {
+                    var input = $(c).find("> input");
+                    if (input.length > 0) {
+                        values[i + "_" + j] = input.val();
+                    } else {
+                        values[i + "_" + j] = $(c).text();
+                    }
+                } else {
+                    rows.push($(c).text());
+                }
+            });
+            ++count;
+        });
+        var config = {
+            numRows: count,
+            numCols: cols.length,
+            rows: rows,
+            cols: cols,
+            values: values
+        };
+        table.next("input").val(JSON.stringify(config));
+        return config;
     };
 
     function initTableControlInternal(control) {
@@ -42,31 +82,28 @@ $(document).ready(function() {
         };
 
         var keyDownFunc = function(e) {
-            currentControlTable =  $(this).parents('.controltable')[0];
+            var currentControlTable =  $(this).parents('.controltable')[0];
             // Смотрим - если нажали на таб - надо прейти на следующую ячейку
             if (e.keyCode == 9  || e.keyCode == 13)
             {
                 // Ищем родителя у текущего элемента
 
-
                 // Дальше надо найти следующий элемент с контентом в таблице и затриггерить событие click для ячейки
                 tdFromTable = $(currentControlTable).find('td.controlTableContentCell');
                 // Найдём ячейку, в котором мы находимся
                 i = 0;
-                while ( $(tdFromTable[i]).find('input').length<=0 && (i<tdFromTable.length) )
-                {
+                while ( $(tdFromTable[i]).find('input').length<=0 && (i<tdFromTable.length) ) {
                     i++;
                 }
 
                 // Мы находимся в i-ой ячейке
                 // Если i = length-1, то идём в первую. Иначе - в следующую (i+1)
-                if (i == tdFromTable.length -1 )
-                {
+                if (i == tdFromTable.length -1 ) {
+                    serialize($(currentControlTable));
                     return;
-                }
-                else
-                {
+                } else {
                     $(tdFromTable[i+1]).click();
+                    serialize($(currentControlTable));
                 }
 
                 e.preventDefault();

@@ -71,6 +71,11 @@ class MedcardElementWidget extends Widget {
         if ($element == null) {
             return ;
         }
+        if ($this->element['type'] == MedcardElementEx::TYPE_TABLE) {
+            $this->element['config'] = $element['value'];
+        } else {
+            $this->element['config'] = $element['config'];
+        }
         $this->element['default_value'] = $element['value'];
         $this->element['label'] = $element['label_before'];
         $this->element['label_after'] = $element['label_after'];
@@ -285,7 +290,11 @@ class MedcardElementWidget extends Widget {
 
 	protected function getConfig($key, $default = null) {
 		if ($this->_config == null) {
-			$this->_config = json_decode($this->element['config'], true);
+            if ($this->element['type'] == MedcardElementEx::TYPE_TABLE) {
+                $this->_config = json_decode($this->element['default_value'], true);
+            } else {
+                $this->_config = json_decode($this->element['config'], true);
+            }
 		}
 		if (isset($this->_config[$key])) {
 			return $this->_config[$key];

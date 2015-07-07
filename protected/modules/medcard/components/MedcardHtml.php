@@ -215,7 +215,7 @@ class MedcardHtml extends Html {
 		} else {
 			$labels = [];
 		}
-		print parent::openTag('table', [ 'name' => $name, 'width' => '100%' ] + $options + [
+		print parent::openTag('table', [ 'width' => '100%',
 				'class' => 'table table-bordered table-striped table-condensed controltable'
 			]);
 		if (isset($config['cols']) && !empty($config['cols'])) {
@@ -225,7 +225,7 @@ class MedcardHtml extends Html {
 				print parent::tag('td', [ 'align' => 'left' ]);
 			}
 			foreach ($config['cols'] as $c) {
-				print parent::tag('td', [ 'align' => 'left' ],
+				print parent::tag('td', [ 'align' => 'left', 'class' => 'control-table-header' ],
 					parent::tag('b', [], $c)
 				);
 			}
@@ -247,7 +247,7 @@ class MedcardHtml extends Html {
 		for ($i = 0; $i < $rows; $i++) {
 			print parent::openTag('tr');
 			if (isset($labels[$i])) {
-				print parent::tag('td', [],
+				print parent::tag('td', [ 'class' => 'control-table-header' ],
 					parent::tag('b', [], $labels[$i])
 				);
 			}
@@ -262,6 +262,9 @@ class MedcardHtml extends Html {
 		}
 		print parent::closeTag('tbody');
 		print parent::closeTag('table');
+        print parent::textField($name, json_encode($config), $options + [
+                'style' => 'display: none;',
+            ]);
 		return null;
 	}
 

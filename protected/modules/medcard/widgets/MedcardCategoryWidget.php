@@ -92,6 +92,7 @@ class MedcardCategoryWidget extends Widget {
     }
 
 	public function run() {
+        $prefix = UniqueGenerator::generate('collapse');
 		print Html::openTag('div', [
 			'class' => 'accordion medcard-category',
             'id' => $this->createKey('accordion', 'a' . $this->_parent, '')
@@ -99,7 +100,7 @@ class MedcardCategoryWidget extends Widget {
 		print Html::openTag('div', [
 			'class' => 'accordion-group'
 		]);
-		print Html::tag('div', [ 'class' => 'accordion-heading' ], $this->getLink());
+		print Html::tag('div', [ 'class' => 'accordion-heading' ], $this->getLink($prefix));
         if ($this->category['is_wrapped'] == 0) {
             $collapse = ' collapse';
         } else {
@@ -107,7 +108,7 @@ class MedcardCategoryWidget extends Widget {
         }
 		print Html::openTag('div', [
 			'class' => 'accordion-body'.$collapse,
-			'id' => $this->createKey('collapse', 'a' . $this->_parent, ''),
+			'id' => $this->createKey($prefix, 'a' . $this->_parent, ''),
 			'style' => 'height: auto;',
 		]);
 		print Html::openTag('div', [
@@ -236,7 +237,7 @@ class MedcardCategoryWidget extends Widget {
         return $card.'|'.$row.'|'.$this->category['path'].'|'.$this->_parent.'|'.$this->category['id'];
     }
 
-	protected function getLink() {
+	protected function getLink($prefix) {
         if ($this->category['is_dynamic'] && !isset($this->category['copy_id']) && $this->mode == MedcardElementWidget::MODE_DEFAULT) {
             if (isset($this->category['copy_id'])) {
                 $class = 'accordion-unclone-btn';
@@ -252,7 +253,7 @@ class MedcardCategoryWidget extends Widget {
         } else {
             $button = '';
         }
-		return Html::link($this->getLabel(), $this->createKey('#collapse', 'a' .  $this->_parent, ''), [ 'data-parent' => $this->createKey('#accordion', 'a' . $this->_parent, ''),
+		return Html::link($this->getLabel(), $this->createKey('#'.$prefix, 'a' .  $this->_parent, ''), [ 'data-parent' => $this->createKey('#accordion', 'a' . $this->_parent, ''),
 			'data-toggle' => 'collapse', 'class' => 'accordion-toggle',
 		]) . $button;
 	}
