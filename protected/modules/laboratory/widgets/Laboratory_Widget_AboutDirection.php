@@ -16,7 +16,7 @@ class Laboratory_Widget_AboutDirection extends Widget {
 		$parameters = Laboratory_Direction::model()->getAnalysisParameters(
 			$direction->{'id'}
 		);
-		$this->render('AboutDirection', [
+		$this->render('Laboratory_Widget_AboutDirection', [
 			'direction' => $direction,
 			'parameters' => $parameters,
 			'samples' => $analysis['samples'],

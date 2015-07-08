@@ -1,39 +1,27 @@
 
-var Laboratory_Treatment_Header = {
+var Laboratory_Menu_Treatment = {
 	ready: function() {
-		var me = this;
-		$("button.treatment-header-rounded:not([data-target])").click(function() {
-			me.active && me.active.removeClass("treatment-header-wrapper-active");
-			me.active = $(this).addClass("treatment-header-wrapper-active");
-		});
-		this.active = $(".treatment-header").find(".treatment-header-wrapper-active");
-		if (!this.active.length) {
-			this.active = null;
-		}
-		$("button.treatment-header-rounded[data-tab]").click(function() {
-			$("button.treatment-header-rounded[data-tab]").each(function(i, t) {
-				$($(t).data("tab")).addClass("no-display");
-			});
-			$($(this).data("tab")).removeClass("no-display")
-				.trigger("change");
-			/* $(".panel[data-widget]").panel("update"); */
-		});
-		$("#header-register-direction-button").click(function() {
-			var me = $(this);
-			me.loading({
-				image: url("images/ajax-loader.gif"),
-				width: 30,
-				height: 30
-			}).loading("render");
-			Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
-				$("#laboratory-medcard-number, span[id='card_number']").val(response["number"]);
-				$(me.attr("data-target")).modal("show");
-			}).always(function() {
-				me.loading("reset");
-			});
-		});
-	},
-	active: null
+        $(".nav > li > a[data-tab='treatment-direction-creator-wrapper']").click(function() {
+            if ($(this).parent().hasClass("active")) {
+                return void 0;
+            }
+            var panel = null;
+            setTimeout(function() {
+                panel = $(".laboratory-panel-patient-creator-medcard").loading({
+                    image: url("images/ajax-loader-4.gif"),
+                    width: 40,
+                    height: 40
+                }).loading("render");
+            }, 0);
+            Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
+                $(".treatment-direction-creator-wrapper").find("#laboratory-medcard-number, [id='card_number']").val(response["number"]);
+            }).always(function() {
+                if (panel != null) {
+                    panel.loading("reset");
+                }
+            });
+        });
+	}
 };
 
 var Laboratory_Modal_PatientCreator = {
@@ -178,13 +166,24 @@ var Laboratory_Modal_PatientCreator = {
 
 var Laboratory_Widget_MedcardSearch = {
 	ready: function() {
-		var me = this;
+		var me = this, ajax = null;
 		$(document).on("click", "[id='medcard-search-button']", function() {
 			me.search($(this).parents(".medcard-search-wrapper:eq(0)"));
 		});
 		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
 			me.reset();
 		});
+        var allowedKeys = [ 13, 10, 8, 9 ];
+        $(".medcard-search-handler").keydown(function(e) {
+            if (ajax != null) {
+                ajax.abort();
+            }
+            if (String.fromCharCode(e.keyCode).match(/[a-zA-Z0-9]/ig) ||
+                $.inArray(e.keyCode, allowedKeys)
+            ) {
+                ajax = me.search($(this).parents('.medcard-search-wrapper:eq(0)'));
+            }
+        });
 	},
 	search: function(wrapper) {
 		wrapper.find("#medcard-search-button").button("loading");
@@ -192,7 +191,7 @@ var Laboratory_Widget_MedcardSearch = {
 		var data = wrapper.find("#medcard-search-form").serialize() + "&" +
 			wrapper.find("#medcard-range-form").serialize() + "&provider=" + table.attr("data-provider");
 		data += "&config=" + encodeURIComponent(table.attr("data-config"));
-		Core.sendPost("laboratory/medcard/search", data, function(json) {
+		return Core.sendPost("laboratory/medcard/search", data, function(json) {
 			table.replaceWith($(json["component"]));
 			Core.createMessage({
 				message: "Таблица обновлена",
@@ -384,7 +383,7 @@ var Laboratory_DirectionTable_Widget = {
 		} else {
 			panel = $(from).parents('table').loading("render");
 		}
-		Core.loadWidget("AboutDirection", {
+		Core.loadWidget("Laboratory_Widget_AboutDirection", {
 			direction: id
 		}, function (component) {
 			$("#laboratory-modal-about-direction").modal().find(".modal-body")
@@ -693,7 +692,7 @@ var Laboratory_TabMenu_Widget = {
 
 $(document).ready(function() {
 
-	Laboratory_Treatment_Header.ready();
+	Laboratory_Menu_Treatment.ready();
 	Laboratory_Modal_PatientCreator.ready();
 	Laboratory_Widget_MedcardSearch.ready();
 	Laboratory_Modal_MedcardSearch.ready();

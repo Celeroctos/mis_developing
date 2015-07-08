@@ -6,7 +6,7 @@ class MedcardController extends ControllerEx {
 	 * Render page with medcards
 	 */
     public function actionNew() {
-		if (!$number = Yii::app()->getRequest()->getQuery("n")) {
+		if (!$number = Yii::app()->getRequest()->getQuery('n')) {
 			$number = LCardNumberGenerator::getGenerator()->generate();
 		}
         $this->render("new", [
@@ -27,12 +27,12 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionLoad() {
 		try {
-			$row = Laboratory_MedcardEx::model()->fetchInformationLaboratoryLike($this->get("number"));
+			$row = Laboratory_MedcardEx::model()->fetchInformationLaboratoryLike($this->get('number'));
 			if ($row == null) {
-				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
+				throw new CException('Unresolved medcard number "'. $this->get('number') .'"');
 			}
 			$this->leave([
-				"model" => $row
+				'model' => $row
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -53,16 +53,15 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionSearch() {
 		try {
-			$medcard = $this->requirePost("Laboratory_Form_MedcardSearch");
-			$provider = $this->requirePost("provider");
-			$config = Yii::app()->getRequest()->getQuery("config", []);
+			$medcard = $this->requirePost('Laboratory_Form_MedcardSearch');
+			$provider = $this->requirePost('provider');
+			$config = Yii::app()->getRequest()->getQuery('config', []);
 			$criteria = new CDbCriteria();
 			$like = [
-				"card_number",
-				"surname",
-				"name",
-				"patronymic",
-				"phone",
+				'card_number',
+				'surname',
+				'name',
+				'patronymic',
 			];
 			$compare = [];
 			foreach ($medcard as $key => $value) {
@@ -70,7 +69,7 @@ class MedcardController extends ControllerEx {
 					continue;
 				}
 				if (in_array($key, $like)) {
-					$criteria->addSearchCondition($key, $value);
+					$criteria->addSearchCondition("lower($key)", strtolower($value));
 				} else {
 					$compare[$key] = $value;
 				}
@@ -80,15 +79,15 @@ class MedcardController extends ControllerEx {
 			}
 			if (!empty($criteria->condition)) {
 				$config += [
-					"condition" => [
-						"condition" => $criteria->condition,
-						"params" => $criteria->params,
+					'condition' => [
+						'condition' => $criteria->condition,
+						'params' => $criteria->params,
 					]
 				];
 			}
 			$this->leave([
-				"component" => $this->getWidget("GridTable", [
-					"provider" => new $provider($config)
+				'component' => $this->getWidget('GridTable', [
+					'provider' => new $provider($config)
 				])
 			]);
 		} catch (Exception $e) {
@@ -109,8 +108,8 @@ class MedcardController extends ControllerEx {
 	public function actionGenerate() {
 		try {
 			$this->leave([
-				"message" => "Номер карты сгенерирован",
-				"number" => LCardNumberGenerator::getGenerator()->generate()
+				'message' => 'Номер карты сгенерирован',
+				'number' => LCardNumberGenerator::getGenerator()->generate()
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);

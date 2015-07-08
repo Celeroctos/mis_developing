@@ -118,7 +118,7 @@ $sendingTime = substr($direction->{"sending_date"}, strpos($direction->{"sending
 </div>
 <?php $this->endWidget("Panel") ?>
 <hr>
-<?php $this->widget('AboutMedcard', [
+<?php $this->widget('Laboratory_Widget_AboutMedcard', [
 	'medcard' => $direction->{'medcard_id'}
 ]) ?>
 <?= CHtml::closeTag('div') ?>

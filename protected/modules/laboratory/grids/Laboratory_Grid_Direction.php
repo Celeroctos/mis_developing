@@ -27,8 +27,12 @@ class Laboratory_Grid_Direction extends GridProvider {
 			'label' => 'Отчество',
 			'relation' => 'medcard.patient',
 		],
+        'mis_medcard' => [
+            'label' => 'ЭМК',
+            'relation' => 'medcard',
+        ],
 		'card_number' => [
-			'label' => 'Номер',
+			'label' => 'ЛКП',
 			'relation' => 'medcard',
 		],
 		'enterprise_id' => [

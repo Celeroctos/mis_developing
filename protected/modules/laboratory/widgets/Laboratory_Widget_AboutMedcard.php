@@ -14,7 +14,7 @@ class Laboratory_Widget_AboutMedcard extends Widget {
 	 */
 	public function run() {
 		if (empty($this->medcard)) {
-			throw new CException('Medcard viewer requires medcard identification number, see [AboutMedcard::medcard]');
+			throw new CException('Medcard viewer requires medcard identification number, see [Laboratory_Widget_AboutMedcard::medcard]');
 		}
 		if (($medcard = Laboratory_Medcard::model()->findByPk($this->medcard)) == null) {
 			throw new CException('Unresolved medcard identification number "'. $this->medcard .'"');
@@ -44,7 +44,7 @@ class Laboratory_Widget_AboutMedcard extends Widget {
 		if (!$registerAddress = Laboratory_Address::model()->findByPk($patient->{'register_address_id'})) {
 			throw new CException('Unresolved address identification number "'. $patient->{'register_address_id'} .'"');
 		}
-		$this->render(__CLASS__, [
+		$this->render('Laboratory_Widget_AboutMedcard', [
 			'medcard' => $medcard,
 			'age' => $age,
 			'patient' => $patient,

@@ -6,12 +6,12 @@ var Core = Core || {};
 
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			image: url("images/ajax-loader2.gif"),
-			width: 150,
-			height: 25,
-			velocity: "fast",
-			color: "lightgray",
-			opacity: 0.5
+			image: url("images/ajax-loader-4.gif"),
+			width: 50,
+			height: 50,
+			velocity: "normal",
+			color: "#666",
+			opacity: 0.25
 		}, selector);
 		this.native = selector;
 	});

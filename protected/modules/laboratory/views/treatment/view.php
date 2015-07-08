@@ -5,60 +5,62 @@
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_MedcardSearch');
 $this->widget('Laboratory_Modal_PatientCreator');
-?>
-<div class="treatment-header-wrapper row">
-	<div class="treatment-header">
-		<div class="col-xs-4 no-padding treatment-center-block">
-			<button class="btn btn-default btn-block treatment-header-rounded treatment-header-wrapper-active" data-tab="#treatment-direction-grid-wrapper" type="button">
-				<span>Направления</span>
-			</button>
-		</div>
-		<div class="col-xs-4 no-padding treatment-center-block">
-			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
-				<span>Повторный забор образцов</span>
-				<span class="badge" id="treatment-repeat-counts">
-					<?= Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT) ?>
-				</span>
-			</button>
-		</div>
-		<div class="col-xs-4 no-padding treatment-center-block">
-			<button id="header-register-direction-button" class="btn btn-default btn-block treatment-header-rounded" type="button" data-target="#laboratory-modal-patient-creator" aria-expanded="false">
-				<span>Создать направление</span>
-			</button>
-		</div>
-	</div>
-	<div class="treatment-table-wrapper table-wrapper">
-		<hr>
-		<div id="treatment-direction-grid-wrapper">
-			<?php $this->widget('Laboratory_Widget_DirectionPanel', [
-				'title' => 'Направления на анализ',
-				'body' => $this->createWidget('GridTable', [
-					'provider' => new Laboratory_Grid_Direction([
-						'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
-					])
-				]),
-				'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
-			]) ?>
-		</div>
-		<div id="treatment-repeated-grid-wrapper" class="no-display">
-			<?php $this->widget('Laboratory_Widget_DirectionPanel', [
-				'title' => 'Направления на повторный забор образца',
-				'body' => $this->createWidget('GridTable', [
-					'provider' => new Laboratory_Grid_Direction([
-						'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
-					])
-				]),
-				'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
-			]) ?>
-		</div>
-	</div>
-	<hr>
-	<?php $this->widget('Panel', [
-		'title' => 'Медицинские карты лаборатории',
-		'body' => $this->createWidget('Laboratory_Widget_MedcardSearchEx'),
-		'id' => 'treatment-laboratory-medcard-table-panel',
-		'collapsible' => false
-	]) ?>
+
+$this->widget('TabMenu', [
+    'style' => TabMenu::STYLE_GREEN_JUSTIFIED,
+    'items' => [
+        'direction/active' => [
+            'label' => 'Направления',
+            'data-tab' => 'treatment-direction-grid-wrapper',
+        ],
+        'direction/repeat' => [
+            'label' => 'Повторный забор образцов&nbsp;' . CHtml::tag('span', [
+                    'class' => 'badge', 'id' => 'treatment-repeat-counts'
+                ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT)),
+            'data-tab' => 'treatment-repeated-grid-wrapper'
+        ],
+        'direction/create' => [
+            'label' => 'Создать направление',
+            'data-tab' => 'treatment-direction-creator-wrapper',
+        ],
+    ],
+    'active' => 'direction/active',
+]) ?>
+
+<div class="treatment-table-wrapper table-wrapper">
+    <hr>
+    <div id="treatment-direction-grid-wrapper">
+        <?php $this->widget('Laboratory_Widget_DirectionPanel', [
+            'title' => 'Направления на анализ',
+            'body' => $this->createWidget('GridTable', [
+                'provider' => new Laboratory_Grid_Direction([
+                    'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
+                ])
+            ]),
+            'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
+        ]) ?>
+        <hr>
+        <?php $this->widget('Panel', [
+            'title' => 'Медицинские карты лаборатории',
+            'body' => $this->createWidget('Laboratory_Widget_MedcardSearchEx'),
+            'id' => 'treatment-laboratory-medcard-table-panel',
+            'collapsible' => false
+        ]) ?>
+    </div>
+    <div id="treatment-repeated-grid-wrapper" style="display: none;">
+        <?php $this->widget('Laboratory_Widget_DirectionPanel', [
+            'title' => 'Направления на повторный забор образца',
+            'body' => $this->createWidget('GridTable', [
+                'provider' => new Laboratory_Grid_Direction([
+                    'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
+                ])
+            ]),
+            'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
+        ]) ?>
+    </div>
+    <div id="treatment-direction-creator-wrapper" style="display: none;">
+        <?php $this->widget('Laboratory_Widget_PatientCreator') ?>
+    </div>
 </div>
 <script>
 $(document).ready(function() {

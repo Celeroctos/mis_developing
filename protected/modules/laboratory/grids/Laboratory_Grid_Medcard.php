@@ -68,6 +68,8 @@ class Laboratory_Grid_Medcard extends GridProvider {
 		];
 	}
 
+    public $menuWidth = 100;
+
 	public function model() {
 		return new Laboratory_Medcard();
 	}

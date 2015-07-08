@@ -11,6 +11,7 @@ $this->widget('Laboratory_Modal_DirectionCreator');
 $this->widget('Laboratory_Modal_AboutMedcard');
 
 $this->widget('TabMenu', [
+    'style' => TabMenu::STYLE_GREEN_JUSTIFIED,
 	'items' => [
 		'history-direction-button' => [
 			'label' => 'Направления',
@@ -24,14 +25,22 @@ $this->widget('TabMenu', [
 	'active' => 'history-direction-button'
 ]) ?>
 
-<br>
+<hr>
 <div id="<?= $direction ?>">
-	<?php $this->widget('GridTable', [
-		'provider' => new Laboratory_Grid_Direction()
-	]) ?>
+    <?php $this->widget('Panel', [
+        'title' => 'Направления лаборатории',
+        'body' => $this->createWidget('GridTable', [
+            'provider' => new Laboratory_Grid_Direction()
+        ]),
+        'bodyClass' => 'panel-body no-padding',
+    ]) ?>
 </div>
 <div id="<?= $medcard ?>">
-	<?php $this->widget('GridTable', [
-		'provider' => new Laboratory_Grid_Medcard()
-	]) ?>
+    <?php $this->widget('Panel', [
+        'title' => 'Медицинские карты лаборатории',
+        'body' => $this->createWidget('GridTable', [
+            'provider' => new Laboratory_Grid_Medcard()
+        ]),
+        'bodyClass' => 'panel-body no-padding',
+    ]) ?>
 </div>

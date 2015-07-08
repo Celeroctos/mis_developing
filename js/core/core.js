@@ -284,7 +284,10 @@ var Core = Core || {};
 				});
 			}
 			success && success(json);
-		}, "json").fail(function() {
+		}, "json").fail(function(e, status) {
+            if (status == "abort") {
+                return void 0;
+            }
 			return Core.createMessage({
 				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
 			});
