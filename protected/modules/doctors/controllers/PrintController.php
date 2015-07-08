@@ -362,6 +362,12 @@ class PrintController extends Controller {
 
         $sortedElements = $categorieWidget->dividedCats;
 
+        foreach ($sortedElements as $i => $template) {
+            if ($template['name'] == null) {
+                $sortedElements[$i]['name'] = MedcardTemplateEx::model()->findByPk($i)->{'name'};
+            }
+        }
+
         // Вытащим диагнозы
 
         $pd = PatientDiagnosis::model()->findDiagnosis($greetingId, 0);

@@ -58,7 +58,7 @@ class TemplateCloneMaster {
             'categorie_id' => $previous->{'parent_id'},
             'type' => -1,
             'template_id' => $this->templateId,
-            'template_name' => null,
+            'template_name' => $this->template->{'name'},
             'guide_id' => null,
             'is_dynamic' => $previous->{'is_dynamic'},
             'real_categorie_id' => $previous->{'id'},
