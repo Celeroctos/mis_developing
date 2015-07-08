@@ -964,12 +964,13 @@
 
                     var toggleDataParent = $(toggle).data()['parent'];
                     var toggleDataHref = $(toggle).prop('href');
-                    $(accClone).find('.accordion-clone-btn:eq(0)')
+                    var c = $(accClone).find('.accordion-clone-btn:eq(0)')
                         .removeClass('accordion-clone-btn')
                         .addClass('accordion-unclone-btn')
                         .find('span.glyphicon-plus')
                         .removeClass('glyphicon-plus')
                         .addClass('glyphicon-minus');
+                    c.parent("button").attr("title", "Удалить категорию");
 
                     $(accClone).find('.accordion-heading button:not(:eq(0))').remove();
 

@@ -245,7 +245,12 @@ class MedcardCategoryWidget extends Widget {
                 $class = 'accordion-clone-btn';
                 $icon = 'glyphicon glyphicon-plus';
             }
-            $button = Html::tag('button', [ 'class' => 'btn btn-default btn-sm '. $class, 'type' => 'button' ],
+            $button = Html::tag('button', [
+                'class' => 'btn btn-default btn-sm '. $class,
+                'type' => 'button',
+                'onmouseenter' => '$(this).tooltip({ "container": "body" }).tooltip("show")',
+                'title' => 'Клонировать категорию',
+            ],
                 Html::tag('span', [ 'class' => $icon ], '').
                 Html::tag('span', [ 'class' => 'no-display pr-key' ], $this->createAccordionKey())
             );
