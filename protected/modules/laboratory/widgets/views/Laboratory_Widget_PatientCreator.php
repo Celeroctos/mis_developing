@@ -4,6 +4,7 @@
  * @var string $number - Generated card number
  */
 ?>
+<div class="laboratory-wrapper-patient-creator">
 <form name="PropertyForm" class="form-horizontal">
 <input id="laboratory-medcard-number" type="hidden" data-cleanup="false">
 <div class="row">
@@ -15,10 +16,16 @@
 					'card_number' => $number
 				])
 			]),
+            'controls' => [
+                'laboratory-patient-creator-question' => [
+                    'label' => 'Если во время сохранения полученный номер карты будет использован другим врачем, то номер будет сгенерирован заново',
+                    'icon' => 'glyphicon glyphicon-paperclip',
+                ],
+            ],
             'panelClass' => 'panel panel-default laboratory-panel-patient-creator-medcard',
 			'headingClass' => 'panel-heading panel-heading-narrow row no-margin',
 			'collapsible' => true,
-			'controlMode' => ControlMenu::MODE_NONE
+			'controlMode' => ControlMenu::MODE_ICON,
 		]) ?>
 		<?php $this->widget('Panel', [
 			'title' => 'Пациент',
@@ -32,7 +39,7 @@
 		<?php $this->widget('CheckPanel', [
 			'title' => 'Документ',
 			'body' => $this->createWidget('AutoForm', [
-				'model' => new Laboratory_Form_Passport('treatment')
+				'model' => new Laboratory_Form_Document('treatment')
 			]),
 			'name' => 'PropertyForm[passport]',
 			'headingClass' => 'panel-heading panel-heading-narrow row no-margin',
@@ -63,7 +70,7 @@
         <hr>
         <?php $this->widget('ControlMenu', [
             'controls' => [
-                'find-medcard-button' => [
+                'laboratory-button-find-patient' => [
                     'label' => 'Найти в МИС',
                     'class' => 'btn btn-success btn-lg',
                     'icon' => 'glyphicon glyphicon-search',
@@ -71,7 +78,7 @@
                     'data-toggle' => 'modal',
                     'data-target' => '#laboratory-modal-medcard-search',
                 ],
-                'save' => [
+                'laboratory-button-save-patient' => [
                     'label' => 'Сохранить',
                     'class' => 'btn btn-primary btn-lg',
                     'icon' => 'glyphicon glyphicon-floppy-disk',
@@ -83,3 +90,4 @@
 	</div>
 </div>
 </form>
+</div>

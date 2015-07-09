@@ -6,7 +6,7 @@ var Core = Core || {};
 
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			image: url("images/ajax-loader-4.gif"),
+			image: url("images/ajax-loader-3.gif"),
 			width: 50,
 			height: 50,
 			velocity: "normal",

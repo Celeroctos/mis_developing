@@ -8,5 +8,5 @@ return array(
 	'connectionString' => 'pgsql:host=localhost;port=5432;dbname=moniiag;',
 	'username' => 'postgres',
 	'password' => '12345',
-	'defaultSchema'=>'public',
+	'defaultSchema' => 'system',
 );

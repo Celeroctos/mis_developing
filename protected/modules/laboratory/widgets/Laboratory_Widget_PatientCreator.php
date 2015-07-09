@@ -14,7 +14,7 @@ class Laboratory_Widget_PatientCreator extends Widget {
 	 */
 	public function run() {
 		if ($this->number == null) {
-			$number = LCardNumberGenerator::getGenerator()->generate();
+			$number = Laboratory_CardNumberGenerator::getGenerator()->generate();
 		} else {
 			$number = $this->number;
 		}
@@ -26,8 +26,8 @@ class Laboratory_Widget_PatientCreator extends Widget {
 			$model = null;
 		}
 		$this->render(__CLASS__, [
-			"number" => $number,
-			"model" => $model
+			'number' => $number,
+			'model' => $model
 		]);
 	}
 }

@@ -155,9 +155,9 @@
     margin-left: 10px;
 }
 
-.treatment-table-wrapper,
 .laboratory-table-wrapper,
-.treatment-table-wrapper .table,
+.laboratory-table-wrapper,
+.laboratory-table-wrapper .table,
 .laboratory-table-wrapper .table{
     padding: 0;
     margin: 0;
@@ -218,13 +218,6 @@
 #treatment-direction-creator {
     padding-top: 20px;
     padding-bottom: 20px;
-}
-
-.treatment-table-wrapper {
-    /*margin-top: 75px;*/
-}
-.laboratory-table-wrapper {
-    margin-top: 55px;
 }
 
 #treatment-laboratory-medcard-table-panel table:last-child {
@@ -488,10 +481,20 @@ body > .analyzer-queue-helper * {
     color: black;
 }
 
+.nav-green > li.active:hover > a {
+    cursor: default !important;
+}
+
 .panel[data-widget='GridTable'] > .panel-body {
     padding: 0;
 }
 
 #laboratory-modal-medcard-search .modal-body {
     padding: 0;
+}
+
+.analysis-type-params-wrapper {
+    height: 275px;
+    overflow-y: scroll;
+    margin-top: 10px;
 }

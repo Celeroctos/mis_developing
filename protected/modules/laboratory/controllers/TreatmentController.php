@@ -6,7 +6,7 @@ class TreatmentController extends ControllerEx {
 		$this->render("view");
 	}
 
-	public function getModel() {
-		return null;
-	}
+    public function actionHistory() {
+        $this->render('history');
+    }
 }

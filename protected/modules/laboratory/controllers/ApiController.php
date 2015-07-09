@@ -32,7 +32,7 @@ class ApiController extends ControllerEx {
     public function actionLogin() {
         try {
             // Authenticate user
-            $userIdentity = new Laboratory_UserIdentity(
+            $userIdentity = new Laboratory_UserAuthManager(
                 $this->get("login"),
                 $this->get("password")
             );

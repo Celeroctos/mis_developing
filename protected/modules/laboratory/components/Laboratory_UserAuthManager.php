@@ -1,6 +1,6 @@
 <?php
 
-class Laboratory_UserIdentity extends CUserIdentity {
+class Laboratory_UserAuthManager extends CUserIdentity {
 
     public function authenticate() {
 		/** @var mixed $record */

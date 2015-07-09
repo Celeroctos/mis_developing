@@ -1,6 +1,6 @@
 <?php
 
-class Laboratory_Form_Passport extends FormModel {
+class Laboratory_Form_Document extends FormModel {
 
 	public $id;
 	public $series;
@@ -8,6 +8,7 @@ class Laboratory_Form_Passport extends FormModel {
 	public $subdivision_name;
 	public $issue_date;
 	public $subdivision_code;
+	public $type;
 
 	public function backward() {
 		return [
@@ -45,7 +46,16 @@ class Laboratory_Form_Passport extends FormModel {
 				'label' => 'Код подразделения',
 				'type' => 'number',
 				'rules' => 'required'
-			]
+			],
+            'type' => [
+                'label' => 'Тип документа',
+                'type' => 'dropdown',
+                'table' => [
+                    'name' => 'mis.doctypes',
+                    'key' => 'id',
+                    'value' => 'name',
+                ],
+            ],
 		];
 	}
 }

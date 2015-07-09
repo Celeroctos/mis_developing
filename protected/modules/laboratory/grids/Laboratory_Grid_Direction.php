@@ -99,7 +99,7 @@ class Laboratory_Grid_Direction extends GridProvider {
 			'extra' => [
 				'data-dates' => Laboratory_Direction::model()->getDates($this->status)
 			],
-			'textNoData' => 'На этот день нет направлений',
+			'textNoData' => $this->date != null ? 'На этот день нет направлений' : 'Нет направлений',
 			'primaryKey' => 'id',
 		];
 	}

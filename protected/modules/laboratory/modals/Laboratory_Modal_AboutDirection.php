@@ -9,6 +9,7 @@ class Laboratory_Modal_AboutDirection extends Widget {
                 'class' => 'text-center',
             ], 'Направление не выбрано'),
             'id' => 'laboratory-modal-about-direction',
+            'class' => 'modal-lg-2',
         ]);
     }
 }

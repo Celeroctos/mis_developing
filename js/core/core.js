@@ -303,7 +303,10 @@ var Core = Core || {};
 	};
 
 	Core.resetFormErrors = function(where) {
-		$(where).find(".form-group").removeClass("has-error");
+		$(where).find(".form-group")
+            .removeClass("has-success")
+            .removeClass("has-error")
+            .removeClass("has-warning");
 	};
 
 	Core.Component = Component;

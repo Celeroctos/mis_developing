@@ -7,7 +7,7 @@ class MedcardController extends ControllerEx {
 	 */
     public function actionNew() {
 		if (!$number = Yii::app()->getRequest()->getQuery('n')) {
-			$number = LCardNumberGenerator::getGenerator()->generate();
+			$number = Laboratory_CardNumberGenerator::getGenerator()->generate();
 		}
         $this->render("new", [
 			"number" => $number
@@ -69,7 +69,7 @@ class MedcardController extends ControllerEx {
 					continue;
 				}
 				if (in_array($key, $like)) {
-					$criteria->addSearchCondition("lower($key)", strtolower($value));
+					$criteria->addSearchCondition("lower($key)", mb_strtolower($value, 'UTF-8'));
 				} else {
 					$compare[$key] = $value;
 				}
@@ -109,7 +109,7 @@ class MedcardController extends ControllerEx {
 		try {
 			$this->leave([
 				'message' => 'Номер карты сгенерирован',
-				'number' => LCardNumberGenerator::getGenerator()->generate()
+				'number' => Laboratory_CardNumberGenerator::getGenerator()->generate()
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);

@@ -1,35 +1,50 @@
 
 var Laboratory_Menu_Treatment = {
 	ready: function() {
-        $(".nav > li > a[data-tab='treatment-direction-creator-wrapper']").click(function() {
+        var me = this;
+        $(".nav > li > a[data-tab='laboratory-container-direction-active']").click(function() {
+            me.updatePanel($(this).attr("data-tab"));
+        });
+        $(".nav > li > a[data-tab='laboratory-container-direction-repeat']").click(function() {
+            me.updatePanel($(this).attr("data-tab"));
+        });
+        $(".nav > li > a[data-tab='laboratory-container-direction-create']").click(function() {
             if ($(this).parent().hasClass("active")) {
                 return void 0;
             }
             var panel = null;
             setTimeout(function() {
                 panel = $(".laboratory-panel-patient-creator-medcard").loading({
-                    image: url("images/ajax-loader-4.gif"),
+                    image: url("images/ajax-loader-3.gif"),
                     width: 40,
                     height: 40
                 }).loading("render");
             }, 0);
             Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
-                $(".treatment-direction-creator-wrapper").find("#laboratory-medcard-number, [id='card_number']").val(response["number"]);
+                $(".laboratory-container-direction-create").find("#laboratory-medcard-number, [id='card_number']").val(response["number"]);
             }).always(function() {
                 if (panel != null) {
                     panel.loading("reset");
                 }
             });
+            $("#" + $(this).attr("data-tab")).cleanup()
+                .find("select#analysis_type_id")
+                .trigger("change");
         });
-	}
+	},
+    updatePanel: function(tab) {
+        setTimeout(function() {
+            $("#" + tab).find(".panel:eq(0)").panel("update");
+        }, 0);
+    }
 };
 
 var Laboratory_Modal_PatientCreator = {
 	check: function() {
 		if (this.copied !== false) {
-			$("#laboratory-modal-patient-creator #insert-button").removeProp("disabled");
+			$("#laboratory-modal-patient-creator").find("#insert-button").removeProp("disabled");
 		} else {
-			$("#laboratory-modal-patient-creator #insert-button").prop("disabled", true);
+			$("#laboratory-modal-patient-creator").find("#insert-button").prop("disabled", true);
 		}
 	},
 	ready: function() {
@@ -38,62 +53,20 @@ var Laboratory_Modal_PatientCreator = {
 			modal.find("input#card_number").val(v = $("#laboratory-medcard-number").val());
 			modal.find("span#card_number").text(v);
 			me.check();
-			$("#laboratory-modal-patient-creator select#analysis_type_id").trigger("change");
+			$("#laboratory-modal-patient-creator").find("select#analysis_type_id").trigger("change");
 		}).on("shown.bs.modal", function() {
-			$("#laboratory-modal-patient-creator select#analysis_type_id").trigger("change");
+			$("#laboratory-modal-patient-creator").find("select#analysis_type_id").trigger("change");
 		});
-		modal.find("#copy-button").click(function() {
-			var json = [];
-			modal.find("form").each(function(i, f) {
-				var j = {};
-				$(f).find("input, select, textarea").each(function(i, it) {
-					j[$(it).attr("id")] = $(it).val();
-				});
-				json[$(f).attr("id")] = j;
-			});
-			me.copied = json;
-			me.check();
-			Core.createMessage({
-				message: "Данные скопированы",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#insert-button").click(function() {
-			if (me.copied === false) {
-				return void 0;
-			}
-			var json = me.copied;
-			for (var i in json) {
-				var f = $("[id='" + i + "']");
-				for (var j in json[i]) {
-					f.find($("[id='" + j + "']")).val(json[i][j]);
-				}
-			}
-			Core.createMessage({
-				message: "Данные вставлены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#clear-button").click(function() {
-			Core.Common.cleanup(modal);
-			me.check();
-			Core.createMessage({
-				message: "Данные очищены",
-				sign: "ok",
-				type: "success"
-			});
-		});
-		modal.find("#save-button").click(function() {
-			Core.resetFormErrors(modal);
+		$(".laboratory-button-save-patient").click(function() {
+            var wrapper = $(this).parents(".laboratory-wrapper-patient-creator");
+			Core.resetFormErrors(wrapper);
 			var forms = [];
-			modal.find("form").each(function(i, f) {
+            wrapper.find("form").each(function(i, f) {
 				forms.push($(f).serialize());
 			});
 			$.post(url("laboratory/direction/register"), forms.join("&"), function(json) {
 				if (json["errors"]) {
-					Core.postFormErrors(modal, json);
+					Core.postFormErrors(wrapper, json);
 				} else {
 					if (!json["status"]) {
 						return Core.createMessage({
@@ -101,20 +74,20 @@ var Laboratory_Modal_PatientCreator = {
 						});
 					} else if (json["message"]) {
 						Core.createMessage({
-							type: "success",
+							type: json["type"] || "success",
 							sign: "ok",
 							message: json["message"]
 						});
 					}
 				}
 				if (json["status"]) {
-					$("#treatment-laboratory-medcard-table-panel .table:eq(0)").table("update");
-					modal.modal("hide");
+					$("#treatment-laboratory-medcard-table-panel").find(".table:eq(0)").table("update");
+                    wrapper.modal("hide");
 					Laboratory_DirectionTable_Widget.show(json["direction"]);
 				}
 			}, "json");
 		});
-		modal.find("#treatment-document-control-wrapper label[data-target]").click(function() {
+        $("#treatment-document-control-wrapper").find("label[data-target]").click(function() {
 			$($(this).attr("data-target")).slideToggle("normal");
 			if ($(this).children("input[type='checkbox']").prop("checked")) {
 				$(this).children(".glyphicon").rotate(360, 350, "swing", 180);
@@ -173,14 +146,13 @@ var Laboratory_Widget_MedcardSearch = {
 		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
 			me.reset();
 		});
-        var allowedKeys = [ 13, 10, 8, 9 ];
+        var allowedKeys = [ 13 ];
         $(".medcard-search-handler").keydown(function(e) {
             if (ajax != null) {
                 ajax.abort();
             }
-            if (String.fromCharCode(e.keyCode).match(/[a-zA-Z0-9]/ig) ||
-                $.inArray(e.keyCode, allowedKeys)
-            ) {
+            /* String.fromCharCode(e.keyCode).match(/[a-zA-Z0-9]/ig) */
+            if ($.inArray(e.keyCode, allowedKeys) != -1) {
                 ajax = me.search($(this).parents('.medcard-search-wrapper:eq(0)'));
             }
         });
@@ -308,7 +280,7 @@ var Laboratory_DirectionTable_Widget = {
 		$("#direction-register-modal, #laboratory-modal-patient-creator").on("show.bs.modal", function() {
 			Core.Common.cleanup(this);
 		});
-		$("#treatment-direction-grid-wrapper > .panel").on("panel.updated", function() {
+		$("#laboratory-container-direction-active > .panel").on("panel.updated", function() {
 			setTimeout(function() {
 				me.refreshDatePicker()
 			}, 250);
@@ -369,7 +341,7 @@ var Laboratory_DirectionTable_Widget = {
 			.bind("panel.updated", handler);
 	},
 	update: function(success) {
-		var panel = $(".treatment-table-wrapper .panel");
+		var panel = $(".laboratory-table-wrapper .panel");
 		if (!panel.length) {
 			panel = $(".laboratory-table-wrapper .panel");
 		}
@@ -454,14 +426,18 @@ var Laboratory_Medcard_Table = {
 				$(this).parents("tr:eq(0)").attr("data-id")
 			);
 		}).on("click", ".medcard-show-icon", function() {
-			var loading = $(this).parents("table");
+			var loading = $(this).parents(".panel:eq(0)");
 			if (loading.length > 0) {
-				loading.loading("render")
-			}
+				loading.panel("before")
+			} else {
+                loading = $(this).parents(".table:eq(0)").loading("render");
+            }
 			Laboratory_Widget_AboutMedcard.load($(this).parents("tr:eq(0)").attr("data-id")).always(function() {
-				if (loading.length > 0) {
-					loading.loading("reset");
-				}
+                if (loading.is(".panel")) {
+                    loading.panel("after");
+                } else {
+                    loading.loading("reset");
+                }
 			});
 		});
 	}
@@ -474,10 +450,15 @@ var Laboratory_Widget_AboutMedcard = {
 			$(this).parents("form:eq(0)").cleanup();
 		}).on("click", ".direction-creator-register", function() {
 			var f = $(this).parents(".direction-creator-wrapper").children("form");
-			f.loading("render").form("send", function(status) {
+            var loading = $(this).parents(".panel:eq(0)");
+            if (!loading.length) {
+                loading = f;
+            }
+            loading.loading("render");
+			f.form("send", function(status) {
 				if (status) { $(this).panel("update"); }
 			}).always(function() {
-				f.loading("destroy");
+                loading.loading("destroy");
 			});
 		});
 	},
@@ -556,7 +537,7 @@ var Laboratory_DirectionFormEx_Form = {
 				c.children().remove();
 				return void 0;
 			}
-			me.loading({ width: 100, height: 15 }).loading("render");
+			me.loading({ width: 15, height: 15 }).loading("render");
 			Core.sendQuery("laboratory/direction/params", {
 				id: me.val()
 			}, function(response) {
@@ -570,7 +551,7 @@ var Laboratory_DirectionFormEx_Form = {
 				me.loading("reset");
 			});
 		});
-		$(document).on("change","[name='Laboratory_Form_DirectionEx[pregnant]']", function() {
+		$(document).on("change", "[name='Laboratory_Form_DirectionEx[pregnant]']", function() {
 			var fields = [
 				"[name='Laboratory_Form_DirectionEx[gestational_age]']",
 				"[name='Laboratory_Form_DirectionEx[menstruation_cycle]']"
@@ -716,8 +697,6 @@ $(document).ready(function() {
 		setTimeout(function() {
 			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
 		}, 0);
-	}).on("show.bs.modal", ".modal", function() {
-		$(this).animate({ scrollTop: 0 }, 'slow');
 	});
 
 	$('[data-toggle="popover"]').popover()
