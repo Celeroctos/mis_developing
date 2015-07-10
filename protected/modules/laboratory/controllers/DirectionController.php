@@ -29,11 +29,11 @@ class DirectionController extends ControllerEx {
 			if (($id = Yii::app()->getRequest()->getQuery("medcard")) == null) {
 				throw new CException("Can't resolve \"medcard\" identification number as query parameter");
 			}
-			if (LMedcard::model()->findByPk($id) == null) {
+			if (Laboratory_Medcard::model()->findByPk($id) == null) {
 				throw new CException("Unresolved laboratory's medcard identification number \"{$id}\"");
 			}
 			$widget = $this->getWidget("AutoForm", [
-				"model" => new LDirectionForm("laboratory.treatment.register", [
+				"model" => new Laboratory_Form_Direction("laboratory.treatment.register", [
 					"medcard_id" => $id
 				])
 			]);
@@ -72,26 +72,28 @@ class DirectionController extends ControllerEx {
 
 		try {
 
-			// require LDirectionFormEx model from post request with next attributes
-			$form = $this->requireModel("LDirectionFormEx", [
-				"analysis_type_id",
-				"analysis_parameters",
-				"pregnant",
-				"smokes",
-				"gestational_age",
-				"menstruation_cycle",
-				"race",
-				"history",
-				"comment",
-				"medcard_id"
+			// require Laboratory_Form_DirectionEx model from post request with next attributes
+			$form = $this->requireModel('Laboratory_Form_DirectionEx', [
+				'analysis_type_id',
+				'analysis_parameters',
+				'pregnant',
+				'smokes',
+				'gestational_age',
+				'menstruation_cycle',
+				'race',
+				'history',
+				'comment',
+				'medcard_id'
 			]);
+
+            $card = null;
 
 			// If we have not medcard identification number, then we must
 			// register information about patient in database before
-			if (!$form->{"medcard_id"}) {
-				$medcard->{"id"} = $this->registerMedcardForDirection($patient, $medcard, false);
+			if (!$form->{'medcard_id'}) {
+				$medcard->{'id'} = $this->registerMedcardForDirection($patient, $medcard, $card, false);
 			} else {
-				$medcard = LMedcard::model()->findByPk($form->{"medcard_id"});
+				$medcard = Laboratory_Medcard::model()->findByPk($form->{'medcard_id'});
 			}
 
 			// Post validation errors
@@ -100,12 +102,12 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load table model for patient category with next attributes
-			$category = LPatientCategory::load([
-				"pregnant" => $form->{"pregnant"},
-				"smokes" => $form->{"smokes"},
-				"gestational_age" => $form->{"gestational_age"},
-				"menstruation_cycle" => $form->{"menstruation_cycle"},
-				"race" => $form->{"race"}
+			$category = Laboratory_PatientCategory::load([
+				'pregnant' => $form->{'pregnant'},
+				'smokes' => $form->{'smokes'},
+				'gestational_age' => $form->{'gestational_age'},
+				'menstruation_cycle' => $form->{'menstruation_cycle'},
+				'race' => $form->{'race'}
 			]);
 
 			// Try to save model in database
@@ -115,34 +117,34 @@ class DirectionController extends ControllerEx {
 
 			// Get mis medcard identification number to provider
 			// auto loading
-			# TODO "Add mis medcard autoload"
-			if (isset($form->{"mis_medcard"})) {
-				$mis_medcard = $form->{"mis_medcard"};
+			# TODO 'Add mis medcard autoload'
+			if (isset($form->{'mis_medcard'})) {
+				$mis_medcard = $form->{'mis_medcard'};
 			} else {
 				$mis_medcard = null;
 			}
 
 			// Get sender's identification number
-			if (isset($form->{"sender_id"}) && !empty($form->{"sender_id"})) {
-				$sender = $form->{"sender_id"};
+			if (isset($form->{'sender_id'}) && !empty($form->{'sender_id'})) {
+				$sender = $form->{'sender_id'};
 			} else {
-				$sender = Yii::app()->{"user"}->{"getState"}("doctorId");
+				$sender = Yii::app()->{'user'}->{'getState'}('doctorId');
 			}
 
 			// Load table model for direction
-			$direction = LDirection::load([
-				"barcode" => null,
-				"status" => LDirection::STATUS_TREATMENT_ROOM,
-				"comment" => $form->{"comment"},
-				"analysis_type_id" => $form->{"analysis_type_id"},
-				"medcard_id" => $medcard->{"id"},
-				"sender_id" => $sender,
-				"sending_date" => date("Y-m-d H:i:s.u"),
-				"treatment_room_employee_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
-				"laboratory_employee_id" => null,
-				"history" => $form->{"history"},
-				"ward_id" => null,
-				"patient_category_id" => $category->{"id"}
+			$direction = Laboratory_Direction::load([
+				'barcode' => null,
+				'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM,
+				'comment' => $form->{'comment'},
+				'analysis_type_id' => $form->{'analysis_type_id'},
+				'medcard_id' => $medcard->{'id'},
+				'sender_id' => $sender,
+				'sending_date' => date('Y-m-d H:i:s.u'),
+				'treatment_room_employee_id' => Yii::app()->{'user'}->{'getState'}('doctorId'),
+				'laboratory_employee_id' => null,
+				'history' => $form->{'history'},
+				'ward_id' => null,
+				'patient_category_id' => $category->{'id'}
 			]);
 
 			// Try to save direction in database
@@ -151,23 +153,23 @@ class DirectionController extends ControllerEx {
 			}
 
 			// After saving we have to set it's barcode as primary key (maybe changed)
-			LDirection::model()->updateByPk($direction->{"id"}, [
-				"barcode" => $direction->{"id"}
+			Laboratory_Direction::model()->updateByPk($direction->{'id'}, [
+				'barcode' => $direction->{'id'}
 			]);
 
 			// Register direction parameters in database
-			foreach ($form->{"analysis_parameters"} as $id) {
-				$dp = LDirectionParameter::load([
-					"direction_id" => $direction->{"id"},
-					"analysis_type_parameter_id" => $id
+			foreach ($form->{'analysis_parameters'} as $id) {
+				$dp = Laboratory_DirectionParameter::load([
+					'direction_id' => $direction->{'id'},
+					'analysis_type_parameter_id' => $id
 				]);
 				# Hot! Hot! Hot!
 				if (!$dp->validate()) {
 					$this->postErrors($dp->errors);
 				} else {
-					Yii::app()->getDb()->createCommand()->insert("lis.direction_parameter", [
-						"direction_id" => $direction->{"id"},
-						"analysis_type_parameter_id" => $id
+					Yii::app()->getDb()->createCommand()->insert('lis.direction_parameter', [
+						'direction_id' => $direction->{'id'},
+						'analysis_type_parameter_id' => $id
 					]);
 				}
 			}
@@ -175,8 +177,9 @@ class DirectionController extends ControllerEx {
 			// Commit all changes and return response with new direction's id
 			$transaction->commit();
 			$this->leave([
-				"message" => "Направление успешно зарегистрировано",
-				"direction" => $direction->{"id"}
+				'message' => 'Направление успешно зарегистрировано',
+				'direction' => $direction->{'id'},
+                'type' => $card != null ? 'warning' : 'success',
 			]);
 		} catch (Exception $e) {
 			$transaction->rollback();
@@ -186,38 +189,53 @@ class DirectionController extends ControllerEx {
 
 	/**
 	 * That function registers information about patient
-	 * @param LPatient $patient - Instance with just registered
+     *
+	 * @param Laboratory_Patient $patient - Instance with just registered
 	 *  patient active record
-	 * @param LMedcard $medcard - Instance with just registered
+     *
+	 * @param Laboratory_Medcard $medcard - Instance with just registered
 	 *  patient's medcard
+     *
+     * @param string $card - Number of regenerated medcard number if
+     *  received in use
+     *
 	 * @param bool $withTransaction - Shall use transaction
+     *
 	 * @return int - Medcard identification number
 	 * @throws Exception
 	 */
-	private function registerMedcardForDirection(&$patient, &$medcard, $withTransaction = true) {
+	private function registerMedcardForDirection(&$patient, &$medcard, &$card = null, $withTransaction = true) {
 
 		// Get form with properties, like checked passport or policy
-		$propertyForm = Yii::app()->getRequest()->getPost("PropertyForm");
+		$propertyForm = Yii::app()->getRequest()->getPost('PropertyForm');
 
 		// Require form for medcard and patient with next attributes
-		$patientForm = $this->requireModel("LPatientForm", [
-			"surname", "name", "patronymic", "sex", "birthday", "contact", "work_place"
+		$patientForm = $this->requireModel('Laboratory_Form_Patient', [
+			'surname', 'name', 'patronymic', 'sex', 'birthday', 'contact', 'work_place'
 		]);
-		$medcardForm = $this->requireModel("LMedcardForm", [
-			"mis_medcard", "card_number", "enterprise_id"
+		$medcardForm = $this->requireModel('Laboratory_Form_Medcard', [
+			'mis_medcard', 'card_number', 'enterprise_id'
 		]);
 
+        // Check if we already has medcard with that number
+        $card = Laboratory_Medcard::model()->findByAttributes([
+            'card_number' => $medcardForm['card_number'],
+        ]);
+        if ($card != null) {
+            $medcardForm['card_number'] = $card = Laboratory_CardNumberGenerator::getGenerator()->generate();
+        }
+
 		// Require passport and policy forms if have it's properties active
-		if (isset($propertyForm["passport"])) {
-			$passportForm = $this->requireModel("LPassportForm", [
-				"series", "number", "subdivision_name", "subdivision_code", "issue_date"
+		if (isset($propertyForm['passport'])) {
+			$passportForm = $this->requireModel('Laboratory_Form_Document', [
+				'series', 'number', 'subdivision_name', 'subdivision_code', 'issue_date'
 			]);
 		} else {
 			$passportForm = null;
 		}
-		if (isset($propertyForm["policy"])) {
-			$policyForm = $this->requireModel("LPolicyForm", [
-				"number", "issue_date", "insurance_id"
+		if (isset($propertyForm['policy'])) {
+			$policyForm = $this->requireModel('Laboratory_Form_Policy', [
+				'number', 'issue_date', 'insurance_id'
 			]);
 		} else {
 			$policyForm = null;
@@ -225,8 +243,8 @@ class DirectionController extends ControllerEx {
 
 		// Require forms with addresses, but remove last _1/_2 symbols, cuz
 		// form's name is AddressForm
-		$registerAddressForm = $this->requireModel("AddressForm_1", null, "/_\\d+$/");
-		$addressForm = $this->requireModel("AddressForm_2", null, "/_\\d+$/");
+		$registerAddressForm = $this->requireModel('AddressForm_1', null, "/_\\d+$/");
+		$addressForm = $this->requireModel('AddressForm_2', null, "/_\\d+$/");
 
 		// If we have any validation errors, then post it
 		if ($this->hasErrors()) {
@@ -243,14 +261,14 @@ class DirectionController extends ControllerEx {
 		try {
 			// Create model for address and address of registration
 			// and insert it in database
-			$address = LAddress::loadFromModel($addressForm, [
-				"string" => $patientForm["address_id"]
+			$address = Laboratory_Address::loadFromModel($addressForm, [
+				'string' => $patientForm['address_id']
 			]);
 			if (!$address->save(true)) {
 				$this->postErrors($address->errors);
 			}
-			$registerAddress = LAddress::loadFromModel($registerAddressForm, [
-				"string" => $patientForm["register_address_id"]
+			$registerAddress = Laboratory_Address::loadFromModel($registerAddressForm, [
+				'string' => $patientForm['register_address_id']
 			]);
 			if (!$registerAddress->save(true)) {
 				$this->postErrors($registerAddress->errors);
@@ -258,11 +276,11 @@ class DirectionController extends ControllerEx {
 
 			// Load models for passport and policy and save it in database
 			if ($passportForm != null) {
-				$passport = LPassport::loadFromModel($passportForm, [
-					"surname" => $patientForm["surname"],
-					"name" => $patientForm["name"],
-					"patronymic" => $patientForm["patronymic"],
-					"birthday" => $patientForm["birthday"]
+				$passport = Laboratory_Document::loadFromModel($passportForm, [
+					'surname' => $patientForm['surname'],
+					'name' => $patientForm['name'],
+					'patronymic' => $patientForm['patronymic'],
+					'birthday' => $patientForm['birthday']
 				]);
 				if (!$passport->save(true)) {
 					$this->postErrors($passport->errors);
@@ -271,12 +289,12 @@ class DirectionController extends ControllerEx {
 				$passport = null;
 			}
 			if ($policyForm != null) {
-				$policy = LPolicy::loadFromModel($policyForm, [
-					"surname" => $patientForm["surname"],
-					"name" => $patientForm["name"],
-					"patronymic" => $patientForm["patronymic"],
-					"birthday" => $patientForm["birthday"],
-					"document_type" => null
+				$policy = Laboratory_Policy::loadFromModel($policyForm, [
+					'surname' => $patientForm['surname'],
+					'name' => $patientForm['name'],
+					'patronymic' => $patientForm['patronymic'],
+					'birthday' => $patientForm['birthday'],
+					'document_type' => null
 				]);
 				if (!$policy->save(true)) {
 					$this->postErrors($policy->errors);
@@ -286,20 +304,20 @@ class DirectionController extends ControllerEx {
 			}
 
 			// Load model for patient and register it in database
-			$patient = LPatient::loadFromModel($patientForm, [
-				"address_id" => $address->{"id"},
-				"register_address_id" => $registerAddress->{"id"},
-				"passport_id" => $passport != null ? $passport->{"id"} : null,
-				"policy_id" => $policy != null ? $policy->{"id"} : null
+			$patient = Laboratory_Patient::loadFromModel($patientForm, [
+				'address_id' => $address->{'id'},
+				'register_address_id' => $registerAddress->{'id'},
+				'passport_id' => $passport != null ? $passport->{'id'} : null,
+				'policy_id' => $policy != null ? $policy->{'id'} : null
 			]);
 			if (!$patient->save(true)) {
 				$this->postErrors($patient->errors);
 			}
 
 			// Load model for medcard and register it in database
-			$medcard = LMedcard::loadFromModel($medcardForm, [
-				"sender_id" => Yii::app()->{"user"}->{"getState"}("doctorId"),
-				"patient_id" => $patient->{"id"}
+			$medcard = Laboratory_Medcard::loadFromModel($medcardForm, [
+				'sender_id' => Yii::app()->{'user'}->{'getState'}('doctorId'),
+				'patient_id' => $patient->{'id'}
 			]);
 			if (!$medcard->save(true)) {
 				$this->postErrors($medcard->errors);
@@ -332,7 +350,7 @@ class DirectionController extends ControllerEx {
 				"component" => $this->getWidget($class, [
 						"date" => Yii::app()->getRequest()->getQuery("date")
 					] + $attributes),
-				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+				"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -345,7 +363,7 @@ class DirectionController extends ControllerEx {
 				throw new CException("Can't resolve analysis type identification number");
 			} else {
 				$this->leave([
-					"component" => $this->getWidget("AnalysisParameterChecker", [
+					"component" => $this->getWidget("Laboratory_Widget_AnalysisParameterChecker", [
 						"parameters" => AnalysisType::model()->findAnalysisParameters($id)
 					])
 				]);
@@ -369,16 +387,16 @@ class DirectionController extends ControllerEx {
 	 */
 	public function actionRepeat() {
 		try {
-			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_TREATMENT_REPEAT
+			$r = Laboratory_Direction::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было отправлено на повторный забор образца");
 			} else {
 				$this->leave([
 					"message" => "Направление отправлено на повторный забор образца",
-					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+					"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
+					"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -388,16 +406,16 @@ class DirectionController extends ControllerEx {
 
 	public function actionRestore() {
 		try {
-			$r = LDirection::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
-				"status" => LDirection::STATUS_TREATMENT_ROOM
+			$r = Laboratory_Direction::model()->updateByPk(Yii::app()->getRequest()->getPost("id"), [
+				"status" => Laboratory_Direction::STATUS_TREATMENT_ROOM
 			]);
 			if (!$r) {
 				$this->error("Произошла ошибка при обновлении данных. Направление не было установлено как новое");
 			} else {
 				$this->leave([
 					"message" => "Направление восстановлено как новое",
-					"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
-					"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM)
+					"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
+					"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM)
 				]);
 			}
 		} catch (Exception $e) {
@@ -407,35 +425,35 @@ class DirectionController extends ControllerEx {
 
 	public function actionLaboratory() {
 		try {
-			$form = $this->requireModel("LAboutDirectionForm");
+			$form = $this->requireModel("Laboratory_Form_AboutDirection");
 			if ($form->hasErrors()) {
 				$this->postErrors($form->errors);
 			}
-			$direction = LDirection::model()->findByPk($form->{"direction_id"});
+			$direction = Laboratory_Direction::model()->findByPk($form->{"direction_id"});
 			$parameters = [
 				"sample_type_id" => $form->{"sample_type_id"},
 				"sending_date" => $form->{"sending_date"}." ".$form->{"sending_time"}.".000000",
 				"comment" => $form->{"comment"}
 			];
-			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
-				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
+			if ($direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
+				$direction->{"status"} == Laboratory_Direction::STATUS_TREATMENT_REPEAT
 			) {
 				$parameters += [
-					"status" => LDirection::STATUS_LABORATORY
+					"status" => Laboratory_Direction::STATUS_LABORATORY
 				];
 			}
-			$r = LDirection::model()->updateByPk($form->{"direction_id"}, $parameters);
+			$r = Laboratory_Direction::model()->updateByPk($form->{"direction_id"}, $parameters);
 			if (!$r) {
 				throw new CException("Can't refresh direction");
 			}
-			$params = LDirection::getIds(LDirection::model()->getAnalysisParameters(
+			$params = Laboratory_Direction::getIds(Laboratory_Direction::model()->getAnalysisParameters(
 				$form->{"direction_id"}, false
 			));
 			foreach ($form->{"analysis_parameters"} as $id) {
 				if ($this->arrayInDrop([ "id" => $id ], $params)) {
 					continue;
 				}
-				$ar = LDirectionParameter::load([
+				$ar = Laboratory_DirectionParameter::load([
 					"direction_id" => $form->{"direction_id"},
 					"analysis_type_parameter_id" => $id
 				]);
@@ -449,17 +467,19 @@ class DirectionController extends ControllerEx {
 					":d" => $form->{"direction_id"}, ":a" => $id
 				]);
 			}
-			if ($direction->{"status"} == LDirection::STATUS_TREATMENT_ROOM ||
-				$direction->{"status"} == LDirection::STATUS_TREATMENT_REPEAT
-			) {
+            $moved = [
+                Laboratory_Direction::STATUS_TREATMENT_ROOM,
+                Laboratory_Direction::STATUS_TREATMENT_REPEAT,
+            ];
+			if (in_array($direction->{"status"}, $moved)) {
 				$msg = "Направление отправлено в лабораторию";
 			} else {
 				$msg = "Направление сохранено";
 			}
 			$this->leave([
 				"message" => $msg,
-				"dates" => LDirection::model()->getDates(LDirection::STATUS_TREATMENT_ROOM),
-				"repeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT),
+				"dates" => Laboratory_Direction::model()->getDates(Laboratory_Direction::STATUS_TREATMENT_ROOM),
+				"repeats" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT),
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -468,41 +488,41 @@ class DirectionController extends ControllerEx {
 
 	public function actionSearch() {
 		try {
-			if (!$form = Yii::app()->getRequest()->getPost("LDirectionSearchForm")) {
-				throw new CException("Direction search required [LDirectionSearchForm] form");
+			if (!$form = Yii::app()->getRequest()->getPost('Laboratory_Form_DirectionSearch')) {
+				throw new CException('Direction search requires [Laboratory_Form_DirectionSearch] form');
 			}
 			$criteria = new CDbCriteria();
-			foreach ([ "surname", "name", "patronymic" ] as $k) {
+			foreach ([ 'surname', 'name', 'patronymic' ] as $k) {
 				if (isset($form[$k]) && !empty($form[$k])) {
 					$criteria->addSearchCondition($k, (string) $form[$k]);
 				}
 			}
-			if (isset($form["card_number"]) && !empty($form["card_number"])) {
-				$criteria->addSearchCondition("card_number", $form["card_number"]);
+			if (isset($form['card_number']) && !empty($form['card_number'])) {
+				$criteria->addSearchCondition('card_number', $form['card_number']);
 			}
-			if (isset($form["analysis_type_id"]) && $form["analysis_type_id"] != -1) {
+			if (isset($form['analysis_type_id']) && $form['analysis_type_id'] != -1) {
 				$criteria->addColumnCondition([
-					"analysis_type_id" => $form["analysis_type_id"]
+					'analysis_type_id' => $form['analysis_type_id']
 				]);
 			}
-			if (isset($form["config"])) {
-				$config = json_decode($form["config"], true);
+			if (isset($form['config'])) {
+				$config = json_decode($form['config'], true);
 			} else {
 				$config = [];
 			}
 			if (empty($config)) {
 				$config = [];
 			}
-			$widget = $this->createWidget($form["widget"], [
-				"provider" => new $form["provider"]($config + [
-					"condition" => [
-						"condition" => $criteria->condition,
-						"params" => $criteria->params
+			$widget = $this->createWidget($form['widget'], [
+				'provider' => new $form['provider']($config + [
+					'condition' => [
+						'condition' => $criteria->condition,
+						'params' => $criteria->params
 					]
 				])
 			]);
 			if (!$widget instanceof CWidget) {
-				throw new Exception("Loaded widget must be an instance of [app\\core\\Widget] class");
+				throw new Exception('Loaded widget must be an instance of [app\\core\\Widget] class');
 			}
 			$widget->run();
 		} catch (Exception $e) {
@@ -514,10 +534,10 @@ class DirectionController extends ControllerEx {
 		try {
 			if (!$id = Yii::app()->getRequest()->getQuery("id")) {
 				throw new CException("Test action requires direction identification number");
-			} else if (!$direction = LDirection::model()->findByAttributes([ "id" => $id ])) {
+			} else if (!$direction = Laboratory_Direction::model()->findByAttributes([ "id" => $id ])) {
 				throw new CHttpException(404, "Направление с номером ($id) не зарегистрировано в системе");
 			} else {
-				$status = Yii::app()->getRequest()->getQuery("status", LDirection::STATUS_LABORATORY);
+				$status = Yii::app()->getRequest()->getQuery("status", Laboratory_Direction::STATUS_LABORATORY);
 			}
 			if ($direction->{"status"} != $status) {
 				$this->error("Направление с номером ($id) не отправлялось в лабораторию");
@@ -534,14 +554,14 @@ class DirectionController extends ControllerEx {
 			if (!$directions = Yii::app()->getRequest()->getPost("directions")) {
 				$this->leave([
 					"ready" => [],
-					"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+					"total" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)
 				]); exit();
 			} else if (!$status = Yii::app()->getRequest()->getPost("status")) {
 				throw new Exception("Check action requires direction status");
 			}
 			$ready = [];
 			foreach ($directions as $pk) {
-				if (!$d = LDirection::model()->findByPk($pk)) {
+				if (!$d = Laboratory_Direction::model()->findByPk($pk)) {
 					continue;
 				}
 				if ($d->{"status"} == $status) {
@@ -550,7 +570,7 @@ class DirectionController extends ControllerEx {
 			}
 			$this->leave([
 				"ready" => $ready,
-				"total" => LDirection::model()->getCountOf(LDirection::STATUS_READY)
+				"total" => Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -562,6 +582,6 @@ class DirectionController extends ControllerEx {
      * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
-        return new LDirection();
+        return new Laboratory_Direction();
     }
 }

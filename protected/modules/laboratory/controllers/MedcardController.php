@@ -6,8 +6,8 @@ class MedcardController extends ControllerEx {
 	 * Render page with medcards
 	 */
     public function actionNew() {
-		if (!$number = Yii::app()->getRequest()->getQuery("n")) {
-			$number = LCardNumberGenerator::getGenerator()->generate();
+		if (!$number = Yii::app()->getRequest()->getQuery('n')) {
+			$number = Laboratory_CardNumberGenerator::getGenerator()->generate();
 		}
         $this->render("new", [
 			"number" => $number
@@ -27,12 +27,12 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionLoad() {
 		try {
-			$row = LMedcardEx::model()->fetchInformationLaboratoryLike($this->get("number"));
+			$row = Laboratory_MedcardEx::model()->fetchInformationLaboratoryLike($this->get('number'));
 			if ($row == null) {
-				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
+				throw new CException('Unresolved medcard number "'. $this->get('number') .'"');
 			}
 			$this->leave([
-				"model" => $row
+				'model' => $row
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -41,7 +41,7 @@ class MedcardController extends ControllerEx {
 
 	/**
 	 * Search action, which accepts array with search serialized form
-	 * models (LMedcardSearchForm + LAnalysisSearchForm). That action will
+	 * models (Laboratory_Form_MedcardSearch + Laboratory_Form_AnalysisSearch). That action will
 	 * fetch form's values and build search condition form form model
 	 * and return Table widget with medcards
 	 *
@@ -53,16 +53,15 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionSearch() {
 		try {
-			$medcard = $this->requirePost("LMedcardSearchForm");
-			$provider = $this->requirePost("provider");
-			$config = Yii::app()->getRequest()->getQuery("config", []);
+			$medcard = $this->requirePost('Laboratory_Form_MedcardSearch');
+			$provider = $this->requirePost('provider');
+			$config = Yii::app()->getRequest()->getQuery('config', []);
 			$criteria = new CDbCriteria();
 			$like = [
-				"card_number",
-				"surname",
-				"name",
-				"patronymic",
-				"phone",
+				'card_number',
+				'surname',
+				'name',
+				'patronymic',
 			];
 			$compare = [];
 			foreach ($medcard as $key => $value) {
@@ -70,7 +69,7 @@ class MedcardController extends ControllerEx {
 					continue;
 				}
 				if (in_array($key, $like)) {
-					$criteria->addSearchCondition($key, $value);
+					$criteria->addSearchCondition("lower($key)", mb_strtolower($value, 'UTF-8'));
 				} else {
 					$compare[$key] = $value;
 				}
@@ -80,15 +79,15 @@ class MedcardController extends ControllerEx {
 			}
 			if (!empty($criteria->condition)) {
 				$config += [
-					"condition" => [
-						"condition" => $criteria->condition,
-						"params" => $criteria->params,
+					'condition' => [
+						'condition' => $criteria->condition,
+						'params' => $criteria->params,
 					]
 				];
 			}
 			$this->leave([
-				"component" => $this->getWidget("GridTable", [
-					"provider" => new $provider($config)
+				'component' => $this->getWidget('GridTable', [
+					'provider' => new $provider($config)
 				])
 			]);
 		} catch (Exception $e) {
@@ -109,8 +108,8 @@ class MedcardController extends ControllerEx {
 	public function actionGenerate() {
 		try {
 			$this->leave([
-				"message" => "Номер карты сгенерирован",
-				"number" => LCardNumberGenerator::getGenerator()->generate()
+				'message' => 'Номер карты сгенерирован',
+				'number' => Laboratory_CardNumberGenerator::getGenerator()->generate()
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -122,6 +121,6 @@ class MedcardController extends ControllerEx {
      * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
-        return new LMedcard();
+        return new Laboratory_Medcard();
     }
 }

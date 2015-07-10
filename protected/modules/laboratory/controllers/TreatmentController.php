@@ -2,24 +2,11 @@
 
 class TreatmentController extends ControllerEx {
 
-	/**
-	 * Default view action
-	 */
 	public function actionView() {
-		$this->render("view", [
-			"directionRepeats" => LDirection::model()->getCountOf(LDirection::STATUS_TREATMENT_REPEAT)
-		]);
+		$this->render("view");
 	}
 
-	public function actionGuide() {
-		$this->render("guide");
-	}
-
-	/**
-	 * Override that method to return controller's model
-	 * @return ActiveRecord - Controller's model instance
-	 */
-	public function getModel() {
-		return null;
-	}
+    public function actionHistory() {
+        $this->render('history');
+    }
 }

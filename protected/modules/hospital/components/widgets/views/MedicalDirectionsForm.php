@@ -113,7 +113,11 @@
 					</div>
 					<div class="tab-pane fade" id="doctor-schedule-on-direction">
 						<br>
-						<?php $this->widget("application.modules.laboratory.widgets.DirectionCreator", [
+						<?php try {
+							Yii::import('application.modules.laboratory.widgets.Laboratory_Widget_DirectionCreator');
+						} catch (Exception $ignore) {
+						}
+						$this->widget("Laboratory_Widget_DirectionCreator", [
 							"defaults" => [
 								"mis_medcard" => Yii::app()->getRequest()->getQuery("cardid")
 							]

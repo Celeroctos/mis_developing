@@ -6,13 +6,12 @@ var Core = Core || {};
 
 	var Loading = Core.createComponent(function(properties, selector) {
 		Core.Component.call(this, properties, {
-			image: url("images/ajax-loader2.gif"),
-			width: 150,
-			height: 25,
-			velocity: "fast",
-			color: "lightgray",
-			opacity: 0.5,
-            align: "center"
+			image: url("images/loader.gif"),
+			width: 50,
+			height: 50,
+			velocity: "normal",
+			color: "#666",
+			opacity: 0.25
 		}, selector);
 		this.native = selector;
 	});
@@ -29,19 +28,13 @@ var Core = Core || {};
 			index = 1;
 		}
 		if (this.property("image") && (typeof this.property("image") == "string")) {
-            var top = 0;
-            if (this.property("align") == "center") {
-                top = height / 2 - imageHeight / 2;
-            } else if (this.property("align") == "top") {
-                top = imageHeight / 2 + 50;
-            }
 			this.image = $("<img>", {
 				css: {
 					"position": "absolute",
 					"height": imageHeight,
 					"width": imageWidth,
 					"left": "calc(50% - " + (imageWidth / 2) + "px)",
-					"margin-top": top,
+					"margin-top": height / 2 - imageHeight / 2,
 					"z-index": index + 1
 				},
 				src: this.property("image")
@@ -66,8 +59,7 @@ var Core = Core || {};
 				"background-color": this.property("color"),
 				"opacity": this.property("opacity"),
 				"z-index": index
-			},
-            class: "loading"
+			}
 		}).addClass(this.selector().attr("class")).fadeIn(this.property("velocity"))).before(
 			this.image.fadeIn(this.property("velocity"))
 		);

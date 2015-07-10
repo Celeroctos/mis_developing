@@ -8,6 +8,9 @@ class TabMenu extends Widget {
 	const STYLE_PILLS = 'nav nav-pills';
 	const STYLE_PILLS_JUSTIFIED = 'nav nav-pills nav-justified';
 	const STYLE_PILLS_STACKED = 'nav nav-pills nav-stacked';
+    const STYLE_GREEN = 'nav nav-pills nav-green';
+    const STYLE_GREEN_JUSTIFIED = 'nav nav-pills nav-justified nav-green';
+    const STYLE_GREEN_STACKED = 'nav nav-pills nav-stacked nav-green';
 
 	/**
 	 * @var string identification number of current
@@ -62,14 +65,15 @@ class TabMenu extends Widget {
 			if (isset($item['href'])) {
 				$href = $item['href'];
 			} else {
-				$href = 'javascript:void(0)';
+//				$href = '#'.$class;
+                $href = 'javascript:void(0)';
 			}
 			$options = [
 				'role' => 'presentation'
 			];
 			if ($root && !empty($this->special)) {
 				if (isset($options['class'])) {
-					$options['class'] .= ' '.$this->special;
+					$options['class'] .= ' $this->special';
 				} else {
 					$options['class'] = $this->special;
 				}
@@ -102,6 +106,6 @@ class TabMenu extends Widget {
 			}
 			print Html::closeTag('li');
 		}
-		print Html::closeTag('ul');
+		print Html::closeTag("ul");
 	}
 }

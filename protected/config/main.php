@@ -126,7 +126,7 @@ return array(
 				'application.modules.laboratory.grids.*',
 				'application.vendor.barcodegen.*',
 				'application.vendor.barcodegen.drawer.*',
-
+                'application.modules.laboratory.modals.*',
             )
         ),
 		'medcard' => array(

@@ -42,16 +42,20 @@ class Widget extends CWidget {
 		if ($attributes === null) {
 			$attributes = $this;
 		}
+        if ($excepts == null) {
+            $excepts = [ 'skin' ];
+        }
 		foreach ($attributes as $key => $value) {
-			if ($excepts !== null && in_array($key, $excepts) || $key === "_config") {
+			if (in_array($key, $excepts) || $key === "_config") {
 				continue;
 			}
 			if ((is_scalar($value) || is_array($value)) && !empty($value)) {
 				$params[$key] = $value;
-			} else if ($string !== null && in_array($key, $string)) {
+			} else if (is_object($value) && $value instanceof CActiveRecord && is_string($value->getTableSchema()->primaryKey)) {
+                $params[$key] = $value->getAttribute($value->getTableSchema()->primaryKey);
+            } else if ($string !== null && in_array($key, $string)) {
 				if (is_object($value)) {
-					/** @var \stdClass $value */
-					$params[$key] = get_class($value);
+                    $params[$key] = get_class($value);
 				} else if (is_scalar($value)) {
 					$params[$key] = (string) $value;
 				} else {

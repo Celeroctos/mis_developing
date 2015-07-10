@@ -38,13 +38,17 @@ class ControlMenu extends Widget {
 	 */
 	const MODE_BUTTON = 3;
 
+    const MODE_BUTTON_XS = 4;
+    const MODE_BUTTON_SM = 5;
+    const MODE_BUTTON_LG = 6;
+
 	/**
 	 * Control elements displays as dropdown list, attributes:
 	 *  + label - menu item label
 	 *  + [icon] - glyphicon before item's text
 	 *  + ... - other HTML attributes
 	 */
-	const MODE_MENU   = 4;
+	const MODE_MENU = 7;
 
 	/**
 	 * @var int - How to display control elements, set it
@@ -145,7 +149,7 @@ class ControlMenu extends Widget {
 		}
 	}
 
-	public function renderButtonControls() {
+	public function renderButtonControls($btn = null) {
 		foreach ($this->controls as $class => $options) {
 			$required = $this->prepareControl($class, $options);
 			if (empty($required["label"])) {
@@ -158,6 +162,9 @@ class ControlMenu extends Widget {
 					"class" => $required["icon"]
 				], "") ."&nbsp;&nbsp;". $label;
 			}
+            if ($btn != null && isset($options['class'])) {
+                $options['class'] .= ' '.$btn;
+            }
 			print CHtml::tag("button", $options, $label);
 		}
 	}
@@ -227,6 +234,15 @@ class ControlMenu extends Widget {
 			case self::MODE_BUTTON:
 				$this->renderButtonControls();
 				break;
+            case self::MODE_BUTTON_XS:
+                $this->renderButtonControls('btn-xs');
+                break;
+            case self::MODE_BUTTON_SM:
+                $this->renderButtonControls('btn-sm');
+                break;
+            case self::MODE_BUTTON_LG:
+                $this->renderButtonControls('btn-lg');
+                break;
 			case self::MODE_MENU:
 				$this->renderMenuControls();
 				break;

@@ -4,9 +4,7 @@ class LaboratoryController extends ControllerEx {
 
 	public function actionView() {
 		return $this->render('view', [
-			'analyzers' => $this->getAnalyzerTabs(),
-			'total' => LDirection::model()->getCountOf(LDirection::STATUS_LABORATORY),
-			'ready' => LDirection::model()->getCountOf(LDirection::STATUS_READY),
+			'analyzers' => $this->getAnalyzerTabs()
 		]);
 	}
 
@@ -30,19 +28,19 @@ class LaboratoryController extends ControllerEx {
 
 	public function actionConfirm() {
 		try {
-			$form = new LAnalysisResultForm();
-			$form->setAttributes(Yii::app()->getRequest()->getPost('LAnalysisResultForm'));
+			$form = new Laboratory_Form_AnalysisResult();
+			$form->setAttributes(Yii::app()->getRequest()->getPost('Laboratory_Form_AnalysisResult'));
 			if (!$form->validate()) {
 				$this->postErrors($form->getErrors());
 			}
 			$total = 0;
 			foreach ($form->result as $id => $result) {
-				$total += LAnalysisResult::model()->updateByPk($id, [
+				$total += Laboratory_AnalysisResult::model()->updateByPk($id, [
 					'val' => $result
 				]);
 			}
-			LDirection::model()->updateByPk($form->id, [
-				'status' => LDirection::STATUS_CLOSED
+			Laboratory_Direction::model()->updateByPk($form->id, [
+				'status' => Laboratory_Direction::STATUS_CLOSED
 			]);
 			if ($total < count($form->result)) {
 				$this->error('Данные не были обновлены');
@@ -56,26 +54,13 @@ class LaboratoryController extends ControllerEx {
 
 	public function getAnalyzerTabs() {
 		$analyzers = Analyzer::model()->listTabs();
-		if (count($analyzers) != 0) {
-			return $analyzers;
-		};
-		return $analyzers + [
-			'empty' => [
-				'label' => 'Нет доступных анализаторов',
-				'disabled' => 'true'
-			]
-		];
-	}
-
-	public function actionHistory() {
-		return $this->render('history');
-	}
-
-	/**
-	 * Override that method to return controller's model
-	 * @return ActiveRecord - Controller's model instance
-	 */
-	public function getModel() {
-		return null;
+		if (empty($analyzers)) {
+            return [ 'empty' => [
+                'label' => 'Нет доступных анализаторов',
+                'disabled' => 'true'
+            ] ];
+		} else {
+            return $analyzers;
+        }
 	}
 }
