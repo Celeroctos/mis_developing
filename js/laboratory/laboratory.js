@@ -11,7 +11,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
 			me.createDraggable();
 		});
-		$("#analyzer-task-viewer .panel-body").droppable({
+		$("#analyzer-task-viewer").find(".panel-body").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
 			}
@@ -49,23 +49,33 @@ var Laboratory_AnalyzerQueue_Widget = {
 		});
 	},
 	renderItem: function(tr) {
-		var me = this;
-		var string = tr.children("td:eq(1)").text() + ", В: " +
-			tr.children("td:eq(2)").text() + ", Н: "+
-			tr.children("td:eq(3)").text();
-		if (string.length > 45) {
-			string = string.substr(0, 45) + " ...";
+		var me = this, code = tr.children("td:eq(0)").text();
+        if (code.length < BARCODE_SEQUENCE_LENGTH) {
+            var len = BARCODE_SEQUENCE_LENGTH - code.length;
+            for (var i = 0; i < len; i++) {
+                code = "0" + code;
+            }
+        }
+		var string = code +" - " +
+            tr.children("td:eq(1)").text() + " " +
+			tr.children("td:eq(2)").text();
+		if (string.length > 35) {
+			string = string.substr(0, 35) + " ...";
 		}
 		var container = $(".analyzer-queue-container:visible"),
 			index = container.children("li").length + 1;
+        var checkbox = $("<input>", {
+            "type": "checkbox",
+            "checked": "true",
+            "style": "margin-right: 15px;"
+        });
 		return $("<a></a>", {
 			"class": "col-xs-12"
 		}).append($("<div></div>", {
 			"class": "col-xs-2 text-left no-padding"
-		}).append($("<b></b>", {
+		}).append(checkbox).append($("<b></b>", {
 			"class": "queue-index",
-			"text": "№ " + index
-		})).append($("<span></span>", {
+		}).append("№ " + index)).append($("<span></span>", {
 			/* "class": "glyphicon glyphicon-sort" */
 		}))).append($("<div></div>", {
 			"html": string,
@@ -84,14 +94,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 	},
 	drop: function(tr) {
 		var me = this;
+        var container = $(".analyzer-queue-container:visible"),
+            index = container.children("li").length + 1;
 		if (tr.parents(".analyzer-queue-container").length > 0) {
 			return false;
-		} else if ($(".analyzer-queue-container:visible").attr("data-locked")) {
+		} else if (container.attr("data-locked")) {
 			return false;
 		}
 		this.lock(tr.attr("data-id"));
-		var container = $(".analyzer-queue-container:visible"),
-			index = container.children("li").length + 1;
 		var a = this.renderItem(tr);
 		container.append($("<li></li>", {
 			"data-id": tr.attr("data-id"),
@@ -100,8 +110,8 @@ var Laboratory_AnalyzerQueue_Widget = {
 				var tr =$("#laboratory-direction-table")
 					.find("> tbody > tr[data-id='"+ $(this).attr("data-id") +"']");
 				$(".laboratory-tr-pointer").css({
-					"left": tr.position().left - 20,
-					"top": tr.position().top + 205
+					"left": tr.position().left - 30,
+					"top": tr.position().top + 140
 				}).show();
 				tr.addClass("success");
 			},
@@ -121,12 +131,12 @@ var Laboratory_AnalyzerQueue_Widget = {
 		}).disableSelection();
 	},
 	createDraggable: function() {
-		var me = this;
+		var me = this, table = $("#laboratory-direction-table");
 		try {
-			$("#laboratory-direction-table tbody > tr").draggable("destroy");
+            table.find("tbody > tr").draggable("destroy");
 		} catch (ignored) {
 		}
-		$("#laboratory-direction-table tbody > tr").draggable({
+        table.find("tbody > tr").draggable({
 			helper: function() {
 				var item = $("<ul></ul>", {
 					class: "nav nav-pills nav-stacked analyzer-queue-helper"
@@ -139,7 +149,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 	},
 	lock: function(id, mode) {
 		mode = mode || STRONG_LOCK;
-		var tr = $("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']")
+		var tr = $("#laboratory-direction-table").find("> tbody > tr[data-id='"+ id +"']")
 			.loading("reset").loading({
 				image: mode === WEAK_LOCK ? false : url("images/locked59.png"),
 				width: 15,
@@ -157,7 +167,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */
 	},
 	unlock: function(id) {
-		$("#laboratory-direction-table > tbody > tr[data-id='"+ id +"']").loading("destroy")
+		$("#laboratory-direction-table").find("> tbody > tr[data-id='"+ id +"']").loading("destroy")
 			.removeClass("danger");
 		delete this.locked[id];
 		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */

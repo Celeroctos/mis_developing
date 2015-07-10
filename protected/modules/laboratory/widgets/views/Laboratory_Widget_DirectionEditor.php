@@ -60,7 +60,7 @@ $sendingTime = substr($direction->{'sending_date'}, strpos($direction->{'sending
             </div>
             <div class="col-xs-8 text-left">
                 <div class="input-group">
-                    <input name="LAboutDirectionForm[sending_date]" style="margin-top: 0" data-provide="datepicker" data-date-language="ru-RU" data-date-format="yyyy-mm-dd" class="form-control" value="<?= $sendingDate ?>" title="" aria-describedby="basic-addon">
+                    <input name="Laboratory_Form_AboutDirection[sending_date]" style="margin-top: 0" data-provide="datepicker" data-date-language="ru-RU" data-date-format="yyyy-mm-dd" class="form-control" value="<?= $sendingDate ?>" title="" aria-describedby="basic-addon">
 					<span class="input-group-addon" id="basic-addon" onclick="$(this).parent().children('input').val('<?= $sendingDate ?>')">
 						<span class="glyphicon glyphicon-calendar" onmouseenter="$(this).tooltip('show')" data-placement="top" data-original-title="Восстановить"></span>
 					</span>
@@ -73,7 +73,7 @@ $sendingTime = substr($direction->{'sending_date'}, strpos($direction->{'sending
             </div>
             <div class="col-xs-8 text-left">
                 <div class="input-group">
-                    <input name="LAboutDirectionForm[sending_time]" readonly style="margin-top: 0" class="form-control" value="<?= $sendingTime ?>" title="" aria-describedby="basic-addon">
+                    <input name="Laboratory_Form_AboutDirection[sending_time]" readonly style="margin-top: 0" class="form-control" value="<?= $sendingTime ?>" title="" aria-describedby="basic-addon">
 					<span class="input-group-addon" id="basic-addon">
 						<span class="glyphicon glyphicon-time"></span>
 					</span>
@@ -85,7 +85,7 @@ $sendingTime = substr($direction->{'sending_date'}, strpos($direction->{'sending
                 <label><b>Комментарий: </b></label>
             </div>
             <div class="col-xs-8 text-left">
-                <textarea name="LAboutDirectionForm[comment]" class="form-control" rows="6" style="resize: vertical" title=""><?= $direction->{'comment'} ?></textarea>
+                <textarea name="Laboratory_Form_AboutDirection[comment]" class="form-control" rows="6" style="resize: vertical" title=""><?= $direction->{'comment'} ?></textarea>
             </div>
         </div>
     </div>

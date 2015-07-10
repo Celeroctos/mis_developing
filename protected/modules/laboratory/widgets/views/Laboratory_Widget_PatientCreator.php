@@ -70,22 +70,22 @@
         <hr>
         <?php $this->widget('ControlMenu', [
             'controls' => [
+                'laboratory-button-save-patient' => [
+                    'label' => 'Сохранить',
+                    'class' => 'btn btn-primary',
+                    'icon' => 'glyphicon glyphicon-floppy-disk',
+                    'type' => 'button',
+                ],
                 'laboratory-button-find-patient' => [
                     'label' => 'Найти в МИС',
-                    'class' => 'btn btn-success btn-lg',
+                    'class' => 'btn btn-success',
                     'icon' => 'glyphicon glyphicon-search',
                     'type' => 'button',
                     'data-toggle' => 'modal',
                     'data-target' => '#laboratory-modal-medcard-search',
                 ],
-                'laboratory-button-save-patient' => [
-                    'label' => 'Сохранить',
-                    'class' => 'btn btn-primary btn-lg',
-                    'icon' => 'glyphicon glyphicon-floppy-disk',
-                    'type' => 'button',
-                ]
             ],
-            'mode' => ControlMenu::MODE_BUTTON,
+            'mode' => ControlMenu::MODE_BUTTON_LG,
         ]) ?>
 	</div>
 </div>

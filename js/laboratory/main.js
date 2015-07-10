@@ -9,27 +9,9 @@ var Laboratory_Menu_Treatment = {
             me.updatePanel($(this).attr("data-tab"));
         });
         $(".nav > li > a[data-tab='laboratory-container-direction-create']").click(function() {
-            if ($(this).parent().hasClass("active")) {
-                return void 0;
+            if (!$(this).parent().hasClass("active")) {
+                Laboratory_Widget_PatientCreator.cleanup($("#" + $(this).attr("data-tab")));
             }
-            var panel = null;
-            setTimeout(function() {
-                panel = $(".laboratory-panel-patient-creator-medcard").loading({
-                    image: url("images/ajax-loader-3.gif"),
-                    width: 40,
-                    height: 40
-                }).loading("render");
-            }, 0);
-            Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
-                $(".laboratory-container-direction-create").find("#laboratory-medcard-number, [id='card_number']").val(response["number"]);
-            }).always(function() {
-                if (panel != null) {
-                    panel.loading("reset");
-                }
-            });
-            $("#" + $(this).attr("data-tab")).cleanup()
-                .find("select#analysis_type_id")
-                .trigger("change");
         });
 	},
     updatePanel: function(tab) {
@@ -39,54 +21,12 @@ var Laboratory_Menu_Treatment = {
     }
 };
 
-var Laboratory_Modal_PatientCreator = {
-	check: function() {
-		if (this.copied !== false) {
-			$("#laboratory-modal-patient-creator").find("#insert-button").removeProp("disabled");
-		} else {
-			$("#laboratory-modal-patient-creator").find("#insert-button").prop("disabled", true);
-		}
-	},
+var Laboratory_Widget_PatientCreator = {
 	ready: function() {
-		var me = this, modal = $("#laboratory-modal-patient-creator"), v;
-		modal.on("show.bs.modal", function() {
-			modal.find("input#card_number").val(v = $("#laboratory-medcard-number").val());
-			modal.find("span#card_number").text(v);
-			me.check();
-			$("#laboratory-modal-patient-creator").find("select#analysis_type_id").trigger("change");
-		}).on("shown.bs.modal", function() {
-			$("#laboratory-modal-patient-creator").find("select#analysis_type_id").trigger("change");
-		});
-		$(".laboratory-button-save-patient").click(function() {
-            var wrapper = $(this).parents(".laboratory-wrapper-patient-creator");
-			Core.resetFormErrors(wrapper);
-			var forms = [];
-            wrapper.find("form").each(function(i, f) {
-				forms.push($(f).serialize());
-			});
-			$.post(url("laboratory/direction/register"), forms.join("&"), function(json) {
-				if (json["errors"]) {
-					Core.postFormErrors(wrapper, json);
-				} else {
-					if (!json["status"]) {
-						return Core.createMessage({
-							message: json["message"]
-						});
-					} else if (json["message"]) {
-						Core.createMessage({
-							type: json["type"] || "success",
-							sign: "ok",
-							message: json["message"]
-						});
-					}
-				}
-				if (json["status"]) {
-					$("#treatment-laboratory-medcard-table-panel").find(".table:eq(0)").table("update");
-                    wrapper.modal("hide");
-					Laboratory_DirectionTable_Widget.show(json["direction"]);
-				}
-			}, "json");
-		});
+        var me = this;
+        $(".laboratory-wrapper-patient-creator").each(function(i, w) {
+            me.prepare($(w))
+        });
         $("#treatment-document-control-wrapper").find("label[data-target]").click(function() {
 			$($(this).attr("data-target")).slideToggle("normal");
 			if ($(this).children("input[type='checkbox']").prop("checked")) {
@@ -96,9 +36,45 @@ var Laboratory_Modal_PatientCreator = {
 			}
 		});
 	},
+    prepare: function(wrapper) {
+        var me = this;
+        $(".laboratory-button-save-patient").click(function() {
+            var wrapper = $(this).parents(".laboratory-wrapper-patient-creator");
+            Core.resetFormErrors(wrapper);
+            var forms = [];
+            wrapper.loading({
+                width: 100, height: 100
+            }).loading("render");
+            wrapper.find("form").each(function(i, f) {
+                forms.push($(f).serialize());
+            });
+            $.post(url("laboratory/direction/register"), forms.join("&"), function(json) {
+                if (json["errors"]) {
+                    Core.postFormErrors(wrapper, json);
+                } else {
+                    if (!json["status"]) {
+                        return Core.createMessage({
+                            message: json["message"]
+                        });
+                    } else if (json["message"]) {
+                        Core.createMessage({
+                            type: json["type"] || "success",
+                            sign: "ok",
+                            message: json["message"]
+                        });
+                    }
+                }
+                if (json["status"]) {
+                    Laboratory_DirectionTable_Widget.show(json["direction"]);
+                    me.cleanup(wrapper);
+                }
+            }, "json").always(function() {
+                wrapper.loading("reset");
+            });
+        });
+    },
 	load: function(model) {
-		var modal = $("#laboratory-modal-patient-creator");
-		Core.Common.cleanup(modal);
+		var wrapper = $(".laboratory-wrapper-patient-creator:visible");
 		var put = function(from, key, value) {
 			if (key == "card_number") {
 				return void 0;
@@ -121,20 +97,38 @@ var Laboratory_Modal_PatientCreator = {
 		};
 		for (var i in model) {
 			var m = model[i], f, base;
-			if (i in forms && (f = modal.find(forms[i])).length) {
+			if (i in forms && (f = wrapper.find(forms[i])).length) {
 				base = f;
-			} else if ((f = modal.find("#" + i)).length > 0 && f.data("form")) {
+			} else if ((f = wrapper.find("#" + i)).length > 0 && f.data("form")) {
 				base = $("#" + f.data("form"));
 			} else {
-				base = modal.find(".modal-body");
+				base = wrapper;
 			}
 			for (var j in m) {
 				put(base, j, m[j]);
 			}
 		}
-		modal.find("input[data-laboratory='address']").address("calculate");
+		wrapper.find("input[data-laboratory='address']").address("calculate");
 	},
-	copied: false
+    cleanup: function(wrapper) {
+        var panel = null;
+        setTimeout(function() {
+            panel = wrapper.find(".laboratory-panel-patient-creator-medcard").loading({
+                image: url("images/loader.gif"),
+                width: 40,
+                height: 40
+            }).loading("render");
+        }, 0);
+        Core.sendQuery("laboratory/medcard/generate", {}, function(response) {
+            wrapper.find("[id='card_number']").val(response["number"]);
+        }).always(function() {
+            if (panel != null) {
+                panel.loading("reset");
+            }
+        });
+        wrapper.cleanup().find("select#analysis_type_id")
+            .trigger("change");
+    }
 };
 
 var Laboratory_Widget_MedcardSearch = {
@@ -197,11 +191,14 @@ var Laboratory_Modal_MedcardSearch = {
 		var me = this;
 		var modal = $("#laboratory-modal-medcard-search");
 		modal.on("show.bs.modal", function() {
-			$(this).find("#load").prop("disabled", "disabled");
+			$(this).find("button#load").prop("disabled", "disabled");
 		});
 		modal.on("click", "tr[data-id]", function() {
 			me.id = $(this).data("id");
+            $(this).parents("table:eq(0)").find(".laboratory-active-tr")
+                .removeClass("laboratory-active-tr");
 			$(modal.find("#load")[0]).text("Открыть (" + me.id + ")").removeProp("disabled");
+            $(this).addClass("laboratory-active-tr");
 		});
 		modal.find("#load").click(function() {
 			if (!me.id) {
@@ -223,7 +220,7 @@ var Laboratory_Modal_MedcardSearch = {
 						message: json["message"]
 					});
 				}
-				Laboratory_Modal_PatientCreator.load(json["model"]);
+				Laboratory_Widget_PatientCreator.load(json["model"]);
 				modal.modal("hide");
 			}, "json")
 				.always(function() {
@@ -235,6 +232,8 @@ var Laboratory_Modal_MedcardSearch = {
 				})
 		});
 	},
+    prepare: function(wrapper) {
+    },
 	id: null
 };
 
@@ -341,11 +340,10 @@ var Laboratory_DirectionTable_Widget = {
 			.bind("panel.updated", handler);
 	},
 	update: function(success) {
-		var panel = $(".laboratory-table-wrapper .panel");
-		if (!panel.length) {
-			panel = $(".laboratory-table-wrapper .panel");
-		}
-		panel.panel("update", success);
+        $(".laboratory-table-wrapper > div > .panel:visible").each(function(i, p) {
+            $(p).panel("update");
+        });
+        success && success();
 	},
 	show: function(id, from) {
 		var panel = from ? $(from).parents(".panel:eq(0)") :
@@ -479,13 +477,15 @@ var Laboratory_AboutDirection_Widget = {
 			Laboratory_Printer.print('.barcode-wrapper')
 		}).on("click", "#send-to-laboratory-button", function() {
 			var me = $(this);
-			me.parents(".panel").loading("render");
+			me.parents(".panel:eq(0)").loading("render");
 			me.parents(".about-direction").find(".direction-info-wrapper").form({
 				success: function(response) {
 					Laboratory_DirectionTable_Widget.refreshDatePicker(response["dates"]);
 					$("#treatment-repeat-counts").text(response["repeats"]);
-					Laboratory_DirectionTable_Widget.update();
-					$("#laboratory-modal-about-direction").modal("hide");
+                    Laboratory_DirectionTable_Widget.update();
+                    setTimeout(function() {
+                        $("#laboratory-modal-about-direction").modal("hide");
+                    }, 1000);
 				}
 			}).form("send").always(function() {
 				me.parents(".panel").loading("reset");
@@ -674,7 +674,7 @@ var Laboratory_TabMenu_Widget = {
 $(document).ready(function() {
 
 	Laboratory_Menu_Treatment.ready();
-	Laboratory_Modal_PatientCreator.ready();
+	Laboratory_Widget_PatientCreator.ready();
 	Laboratory_Widget_MedcardSearch.ready();
 	Laboratory_Modal_MedcardSearch.ready();
 	Laboratory_Medcard_Table.ready();
@@ -699,5 +699,16 @@ $(document).ready(function() {
 		}, 0);
 	});
 
-	$('[data-toggle="popover"]').popover()
+	$('[data-toggle="popover"]').popover();
+
+    var modals = [
+        "#laboratory-modal-about-direction",
+        "#laboratory-modal-medcard-search"
+    ];
+
+    for (var i in modals) {
+        $(modals[i]).on("shown.bs.modal", function() {
+            $("#" + $(this).attr("id")).stop().animate({ scrollTop: 0 }, '250', 'swing');
+        });
+    }
 });

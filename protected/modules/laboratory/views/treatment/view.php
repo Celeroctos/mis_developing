@@ -4,27 +4,26 @@
  */
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_MedcardSearch');
-$this->widget('Laboratory_Modal_PatientCreator');
 
 $this->widget('TabMenu', [
     'style' => TabMenu::STYLE_GREEN_JUSTIFIED,
     'items' => [
-        'direction/active' => [
+        'direction-active' => [
             'label' => 'Направления',
             'data-tab' => 'laboratory-container-direction-active',
         ],
-        'direction/repeat' => [
+        'direction-repeat' => [
             'label' => 'Повторный забор образцов&nbsp;' . CHtml::tag('span', [
                     'class' => 'badge', 'id' => 'treatment-repeat-counts'
                 ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT)),
             'data-tab' => 'laboratory-container-direction-repeat'
         ],
-        'direction/create' => [
+        'direction-create' => [
             'label' => 'Создать направление',
             'data-tab' => 'laboratory-container-direction-create',
         ],
     ],
-    'active' => 'direction/active',
+    'active' => 'direction-active',
 ]) ?>
 
 <div class="laboratory-table-wrapper table-wrapper">

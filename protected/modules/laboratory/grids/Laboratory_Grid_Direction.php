@@ -58,6 +58,9 @@ class Laboratory_Grid_Direction extends GridProvider {
 	];
 
 	public function search() {
+        if ($this->date === null) {
+            $this->date = date('Y-m-d');
+        }
 		$criteria = new CDbCriteria([
 			'with' => [
 				'medcard',
@@ -94,7 +97,7 @@ class Laboratory_Grid_Direction extends GridProvider {
 				]
 			],
 			'pagination' => [
-				'pageSize' => 25
+				'pageSize' => 50
 			],
 			'extra' => [
 				'data-dates' => Laboratory_Direction::model()->getDates($this->status)

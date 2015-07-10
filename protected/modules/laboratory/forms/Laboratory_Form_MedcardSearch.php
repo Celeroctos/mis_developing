@@ -11,19 +11,19 @@ class Laboratory_Form_MedcardSearch extends FormModel {
         return [
 			'surname' => [
 				'label' => 'Фамилия',
-				'type' => 'text'
+				'type' => 'text',
 			],
 			'name' => [
 				'label' => 'Имя',
-				'type' => 'text'
+				'type' => 'text',
 			],
 			'patronymic' => [
 				'label' => 'Отчество',
-				'type' => 'text'
+				'type' => 'text',
 			],
             'card_number' => [
-                'label' => 'Номер ЛКП',
-                'type' => 'text'
+                'label' => 'Номер ЭМК/ЛКП',
+                'type' => 'text',
             ],
         ];
     }

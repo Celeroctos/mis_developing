@@ -54,14 +54,13 @@ class LaboratoryController extends ControllerEx {
 
 	public function getAnalyzerTabs() {
 		$analyzers = Analyzer::model()->listTabs();
-		if (count($analyzers) != 0) {
-			return $analyzers;
-		};
-		return $analyzers + [
-			'empty' => [
-				'label' => 'Нет доступных анализаторов',
-				'disabled' => 'true'
-			]
-		];
+		if (empty($analyzers)) {
+            return [ 'empty' => [
+                'label' => 'Нет доступных анализаторов',
+                'disabled' => 'true'
+            ] ];
+		} else {
+            return $analyzers;
+        }
 	}
 }

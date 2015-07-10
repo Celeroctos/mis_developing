@@ -93,6 +93,7 @@ var Core = Core || {};
 			params = {};
 		}
 		Core.loadPanel(this.selector().attr("data-widget"), params, function(component) {
+            me.after();
 			me.replace(component);
 			var back;
 			if (me.selector().data("core-loading")) {
@@ -108,8 +109,8 @@ var Core = Core || {};
 				me.selector().trigger("panel.updated");
 			}
 			success && success.call(me, component);
-		}).always(function() {
-			me.after();
+		}).fail(function() {
+            me.after();
 		});
 	};
 

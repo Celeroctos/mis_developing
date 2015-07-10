@@ -498,3 +498,17 @@ body > .analyzer-queue-helper * {
     overflow-y: scroll;
     margin-top: 10px;
 }
+
+.laboratory-active-tr > td {
+    background-color: #c3e8f7 !important;
+}
+
+.laboratory-wrapper-patient-creator {
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+}
+
+.laboratory-wrapper-patient-creator .col-xs-6 > .panel:last-child {
+    margin-bottom: 0 !important;
+}
