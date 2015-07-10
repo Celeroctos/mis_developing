@@ -10,28 +10,32 @@
 ?>
 
 <div class="medcard-viewer">
-<?php $this->beginWidget('Panel', [
-	'title' => 'Реквизитная информация',
-	'controls' => [
-		'panel-edit-button' => [
-			'icon' => 'glyphicon glyphicon-pencil',
-			'class' => 'btn btn-default btn-sm',
-			'label' => 'Редактировать',
-			'onclick' => '',
-		],
-	],
-	'collapsible' => true
-]); ?>
-<span class="medcard-info">
-	<b>Номер абмулаторной карты:&nbsp;</b> <?= $medcard->card_number ?><br>
-	<b>Номер ЭМК:&nbsp;</b> <?= $medcard->mis_medcard ?><br>
-	<b>ФИО:&nbsp;</b> <?= $patient->surname." ".$patient->name." ".$patient->patronymic ?>&nbsp;<br>
-	<b>Возраст:&nbsp;</b> <?= $age ?>&nbsp;<br>
-	<b>Адрес:&nbsp;</b> <?= $address->string ?><br>
-	<b>Телефон:&nbsp;</b> <?= $patient->contact ?><br>
-	<b>Место работы:&nbsp;</b> <?= $patient->work_place ?>
-</span>
-<?php $this->endWidget(); ?>
+<?= Html::hiddenField('', $patient->id, [ 'id' => 'laboratory-about-medcard-patient-id' ]) ?>
+<?php $this->widget('Panel', [
+    'title' => 'Реквизитная информация',
+    'controls' => [
+        'laboratory-about-medcard-panel-edit-button' => [
+            'icon' => 'glyphicon glyphicon-pencil',
+            'class' => 'btn btn-default btn-sm',
+            'label' => 'Редактировать',
+            'onclick' => '',
+        ],
+        'panel-update-button' => [
+            'icon' => 'glyphicon glyphicon-refresh',
+            'onclick' => '$(this).panel("update")',
+            'label' => 'Обновить',
+            'class' => 'btn btn-default'
+        ],
+    ],
+    'body' => $this->createWidget('Laboratory_Widget_AboutPatient', [
+        'medcard' => $medcard,
+        'patient' => $patient,
+        'address' => $address,
+    ]),
+    'titleWrapperClass' => 'col-xs-6 text-left no-padding',
+    'controlsWrapperClass' => 'col-xs-6 text-right no-padding',
+    'controlMode' => ControlMenu::MODE_BUTTON_SM,
+]) ?>
 <?php $this->widget('Panel', [
 	'title' => 'Направления',
 	'id' => 'treatment-direction-history-panel',

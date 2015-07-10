@@ -1,5 +1,17 @@
 <?php
 
+namespace laboratory\controllers;
+
+use ActiveRecord;
+use CDbCriteria;
+use CException;
+use ControllerEx;
+use Exception;
+use Laboratory_CardNumberGenerator;
+use Laboratory_Medcard;
+use Laboratory_MedcardEx;
+use Yii;
+
 class MedcardController extends ControllerEx {
 
 	/**

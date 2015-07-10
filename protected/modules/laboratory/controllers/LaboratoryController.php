@@ -1,5 +1,15 @@
 <?php
 
+namespace laboratory\controllers;
+
+use Analyzer;
+use ControllerEx;
+use Exception;
+use Laboratory_AnalysisResult;
+use Laboratory_Direction;
+use Laboratory_Form_AnalysisResult;
+use Yii;
+
 class LaboratoryController extends ControllerEx {
 
 	public function actionView() {

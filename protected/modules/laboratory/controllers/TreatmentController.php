@@ -1,5 +1,9 @@
 <?php
 
+namespace laboratory\controllers;
+
+use ControllerEx;
+
 class TreatmentController extends ControllerEx {
 
 	public function actionView() {

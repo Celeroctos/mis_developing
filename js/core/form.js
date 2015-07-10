@@ -139,7 +139,7 @@ var Core = Core || {};
 		});
     };
 
-	Core.createPlugin("form", function(selector, properties) {
+    $.fn.form = Core.createPlugin("form", function(selector, properties) {
 		return Core.createObject(new Form(properties, $(selector)), selector, false);
 	});
 

@@ -1,11 +1,13 @@
 <?php
 
-class ApiController extends ControllerEx {
+namespace laboratory\controllers;
+
+class ApiController extends \ControllerEx {
 
     /**
      * Override that method to add your chains, if path will be
      * api validation, than access won't be denied
-     * @param $filterChain CFilterChain - Chain filter
+     * @param $filterChain \CFilterChain - Chain filter
      */
     public function filterGetAccessHierarchy($filterChain) {
         if ($this->route != "laboratory/api/test" && !$this->checkAccess()) {
@@ -32,7 +34,7 @@ class ApiController extends ControllerEx {
     public function actionLogin() {
         try {
             // Authenticate user
-            $userIdentity = new Laboratory_UserAuthManager(
+            $userIdentity = new \Laboratory_UserAuthManager(
                 $this->get("login"),
                 $this->get("password")
             );
@@ -47,11 +49,11 @@ class ApiController extends ControllerEx {
 
             // Authenticate user
             if (!$userIdentity->authenticate()) {
-                throw new CException("Can't resolve user's login or password");
+                throw new \CException("Can't resolve user's login or password");
             }
 
             // Copy states to new just generated session
-            Yii::app()->{'user'}->login($userIdentity);
+            \Yii::app()->{'user'}->login($userIdentity);
 
             // Save session user's login and password
             $this->getSession()->add("L_API/USER_LOGIN", $this->get("login"));
@@ -63,7 +65,7 @@ class ApiController extends ControllerEx {
                 "session" => $this->getSession()->getSessionID(),
                 "status" => true
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
@@ -93,7 +95,7 @@ class ApiController extends ControllerEx {
                 "message" => "Session has been successfully closed",
                 "status" => true
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
@@ -114,7 +116,7 @@ class ApiController extends ControllerEx {
                 "session" => $this->get("session"),
                 "status" => $this->checkAccess()
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
@@ -151,7 +153,7 @@ class ApiController extends ControllerEx {
                     $_POST[$key] = $value;
                 }
             } else if (strtoupper($method) != "GET") {
-                throw new CException("Invalid method type ({$this->get("method")})");
+                throw new \CException("Invalid method type ({$this->get("method")})");
             }
 
             while (strlen($path) > 0 && $path[0] == "/") {
@@ -161,11 +163,11 @@ class ApiController extends ControllerEx {
             // Invoke controller's action
             try {
                 $this->forward($path, true);
-            } catch (CException $e) {
+            } catch (\CException $e) {
                 $this->error("Path ({$path}) doesn't exist in laboratory scope");
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
     }
@@ -180,8 +182,8 @@ class ApiController extends ControllerEx {
     /**
      * Check current user's session id for access
      * @return bool - True if user has access to API
-     * @throws Exception
-     * @throws CException
+     * @throws \Exception
+     * @throws \CException
      */
     protected function checkAccess() {
         try {
@@ -206,23 +208,15 @@ class ApiController extends ControllerEx {
             }
 
             // Fetch user's model from database
-            if (!User::model()->fetchByLoginAndPassword(
+            if (!\User::model()->fetchByLoginAndPassword(
                 $this->getSession()->get("L_API/USER_LOGIN"),
                 $this->getSession()->get("L_API/USER_PASSWORD")
             )) {
                 return false;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
         return true;
-    }
-
-    /**
-     * Override that method to return controller's model
-     * @return ActiveRecord - Controller's model instance
-     */
-    public function getModel() {
-        return null;
     }
 }

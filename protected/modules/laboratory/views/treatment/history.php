@@ -13,6 +13,7 @@ $medcard = UniqueGenerator::generate('tab');
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_DirectionCreator');
 $this->widget('Laboratory_Modal_AboutMedcard');
+$this->widget('Laboratory_Modal_PatientEditor');
 
 $this->widget('TabMenu', [
     'style' => TabMenu::STYLE_GREEN_JUSTIFIED,

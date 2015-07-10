@@ -1,5 +1,27 @@
 <?php
 
+namespace laboratory\controllers;
+
+use ActiveRecord;
+use AnalysisType;
+use CDbCriteria;
+use CException;
+use CHttpException;
+use ControllerEx;
+use CWidget;
+use Exception;
+use Laboratory_Address;
+use Laboratory_CardNumberGenerator;
+use Laboratory_Direction;
+use Laboratory_DirectionParameter;
+use Laboratory_Document;
+use Laboratory_Form_Direction;
+use Laboratory_Medcard;
+use Laboratory_Patient;
+use Laboratory_PatientCategory;
+use Laboratory_Policy;
+use Yii;
+
 class DirectionController extends ControllerEx {
 
 	/**

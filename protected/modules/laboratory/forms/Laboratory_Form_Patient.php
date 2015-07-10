@@ -17,7 +17,8 @@ class Laboratory_Form_Patient extends FormModel {
 
 	public function backward() {
 		return [
-			[ 'id', 'hide', 'on' => 'treatment' ]
+            [ [ 'passport_id', 'policy_id', 'register_address_id', 'address_id' ], 'hide', 'on' => 'edit' ],
+			[ 'id', 'hide', 'on' => 'treatment' ],
 		];
 	}
     
