@@ -58,7 +58,7 @@ class Laboratory_Grid_Direction extends GridProvider {
 	];
 
 	public function search() {
-        if ($this->date === null) {
+        if ($this->date === true) {
             $this->date = date('Y-m-d');
         }
 		$criteria = new CDbCriteria([

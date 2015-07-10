@@ -9,12 +9,13 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 
 	public $search = true;
 
-	public $controlsWrapperClass = "col-xs-6 text-right no-padding";
-	public $titleWrapperClass = "col-xs-6 text-left no-padding";
+	public $controlsWrapperClass = 'col-xs-6 text-right no-padding';
+	public $titleWrapperClass = 'col-xs-6 text-left no-padding';
 
 	/**
 	 * @var int - Default panel's control mode is button, don't
 	 * 	change it, cuz it uses inline button elements
+     *
 	 * @internal
 	 */
 	public $controlMode = ControlMenu::MODE_BUTTON;
@@ -25,7 +26,7 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 	public $status = Laboratory_Direction::STATUS_TREATMENT_ROOM;
 
 	public function init() {
-		if (empty($this->date)) {
+		if (empty($this->date) && $this->date !== false) {
 			$this->date = date("Y-m-d");
 		}
 		if ($this->body instanceof GridTable) {
@@ -38,20 +39,20 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 		}
 		if ($this->search) {
 			$this->controls = [
-				"panel-search-button" => [
-					"class" => "btn btn-default",
-					"icon" => "glyphicon glyphicon-search",
-					"label" => "Фильтр",
-					"title" => "Поиск направления",
-					"data-container" => "body",
-					"data-trigger" => "click",
-					"data-toggle" => "popover",
-					"data-placement" => "bottom",
-					"data-html" => "true",
-					"data-content" => $this->getWidget("Laboratory_Widget_DirectionSearch", [
-						"widget" => get_class($this->body),
-						"provider" => $provider,
-						"config" => $config
+				'panel-search-button' => [
+					'class' => 'btn btn-default',
+					'icon' => 'glyphicon glyphicon-search',
+					'label' => 'Фильтр',
+					'title' => 'Поиск направления',
+					'data-container' => 'body',
+					'data-trigger' => 'click',
+					'data-toggle' => 'popover',
+					'data-placement' => 'bottom',
+					'data-html' => 'true',
+					'data-content' => $this->getWidget('Laboratory_Widget_DirectionSearch', [
+						'widget' => get_class($this->body),
+						'provider' => $provider,
+						'config' => $config
 					])
 				],
 			];
@@ -62,30 +63,37 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 			$this->status == Laboratory_Direction::STATUS_READY
 		) {
 			$this->controls += [
-				"panel-date-button" => [
-					"class" => "btn btn-default",
-					"icon" => "glyphicon glyphicon-calendar",
-					"label" => "Дата&nbsp;(" . CHtml::tag("span", [
-							"class" => "direction-date"
-						], $this->date) . ")",
+				'panel-date-button' => [
+					'class' => 'btn btn-default',
+					'icon' => 'glyphicon glyphicon-calendar',
+					'label' => 'Дата&nbsp;(' . CHtml::tag('span', [
+							'class' => 'direction-date'
+						], $this->date) . ')',
 				],
-				"panel-update-button" => [
-					"class" => "btn btn-default",
-					"icon" => "glyphicon glyphicon-refresh",
-					"onclick" => "$(this).panel('update')",
-					"label" => "Обновить",
+				'panel-update-button' => [
+					'class' => 'btn btn-default',
+					'icon' => 'glyphicon glyphicon-refresh',
+					'onclick' => '$(this).panel("update")',
+					'label' => 'Обновить',
 				]
 			];
 		} else {
 			$this->controls += [
-				"panel-update-button" => [
-					"class" => "btn btn-default",
-					"icon" => "glyphicon glyphicon-refresh",
-					"onclick" => "$(this).panel('update')",
-					"label" => "Обновить",
+				'panel-update-button' => [
+					'class' => 'btn btn-default',
+					'icon' => 'glyphicon glyphicon-refresh',
+					'onclick' => '$(this).panel("update")',
+					'label' => 'Обновить',
 				]
 			];
 		}
+        if (empty($this->body)) {
+            $this->body = $this->createWidget('GridTable', [
+                'provider' => new Laboratory_Grid_Direction([
+                    'status' => $this->status,
+                ])
+            ]);
+        }
 		parent::init();
 	}
 }

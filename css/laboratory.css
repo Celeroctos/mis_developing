@@ -249,7 +249,7 @@
 
 /* Fix for DatePicker popup */
 .panel > .datepicker {
-    margin-top: 105px;
+    margin-top: 105px !important;
     margin-left: 18px;
 }
 
@@ -456,10 +456,10 @@ body > .analyzer-queue-helper * {
     text-align: center;
 }
 
-.nav-green > li:not(:first-child) {
+.nav-green:not(.nav-stacked) > li:not(:first-child) {
     padding-left: 10px;
 }
-.nav-green > li:not(:last-child) {
+.nav-green:not(.nav-stacked) > li:not(:last-child) {
     padding-right: 10px;
 }
 
@@ -479,6 +479,18 @@ body > .analyzer-queue-helper * {
     border: 1px solid #47a247 !important;
     border-radius: 5px;
     color: black;
+}
+
+.nav-green.nav-stacked > li:not(:first-child) {
+    padding-top: 3px;
+}
+.nav-green.nav-stacked > li:not(:last-child) {
+    padding-bottom: 3px;
+}
+
+.nav-green.nav-stacked > li > a {
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .nav-green > li.active:hover > a {

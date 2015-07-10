@@ -31,23 +31,13 @@ $this->widget('TabMenu', [
     <div id="laboratory-container-direction-active">
         <?php $this->widget('Laboratory_Widget_DirectionPanel', [
             'title' => 'Направления на анализ',
-            'body' => $this->createWidget('GridTable', [
-                'provider' => new Laboratory_Grid_Direction([
-                    'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
-                ])
-            ]),
             'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
         ]) ?>
     </div>
     <div id="laboratory-container-direction-repeat" style="display: none;">
         <?php $this->widget('Laboratory_Widget_DirectionPanel', [
             'title' => 'Направления на повторный забор образца',
-            'body' => $this->createWidget('GridTable', [
-                'provider' => new Laboratory_Grid_Direction([
-                    'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
-                ])
-            ]),
-            'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT
+            'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT,
         ]) ?>
     </div>
     <div id="laboratory-container-direction-create" style="display: none;">

@@ -334,8 +334,8 @@ var Laboratory_DirectionTable_Widget = {
 			me.updateByDate($(this).parents(".panel:eq(0)").find(".table"), $.datepicker.formatDate("yy-mm-dd", $(this).datepicker("getDate")),
 				function () {
 					$(element).parents(".panel:eq(0)").trigger("panel.updated");
-					$this.datepicker("hide");
 				});
+            setTimeout(function() { $this.datepicker("hide"); }, 100);
 		}).parents(".panel:eq(0)").unbind("panel.updated", handler)
 			.bind("panel.updated", handler);
 	},
@@ -656,16 +656,14 @@ var Laboratory_BarcodeReader = {
 
 var Laboratory_TabMenu_Widget = {
 	ready: function() {
-		var menu = $("ul.nav[id*=tabmenu]");
-		menu.find("a[data-tab]:not(:first)").each(function(i, a) {
-			$("#" + $(a).attr("data-tab")).hide();
-		});
-		menu.find("li").click(function() {
-			menu.find("a[data-tab]").each(function(i, a) {
+		$("ul.nav[id*=tabmenu]").find(" > li").click(function() {
+            var menu = $(this).parents("ul:eq(0)");
+            menu.find(" > li > a[data-tab]").each(function(i, a) {
 				$("#" + $(a).attr("data-tab")).hide();
 			});
+            console.log($(this).children("a").attr("data-tab"));
 			$("#" + $(this).children("a").attr("data-tab")).show();
-			menu.find("li").removeClass("active");
+			menu.find(" > li").removeClass("active");
 			$(this).addClass("active");
 		});
 	}

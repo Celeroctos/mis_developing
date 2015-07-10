@@ -39,17 +39,6 @@ $this->widget('TabMenu', [
     ]) ?>
 </div>
 <div id="<?= $direction ?>" style="display: none;">
-    <?php foreach (Laboratory_Direction::listStatuses() as $status => $message) {
-        $this->widget('Panel', [
-            'title' => $message,
-            'body' => $this->createWidget('GridTable', [
-                'provider' => new Laboratory_Grid_Direction([
-                    'status' => $status
-                ])
-            ]),
-            'bodyClass' => 'panel-body no-padding',
-        ]);
-        print Html::tag('hr');
-    } ?>
+    <?php $this->widget('Laboratory_Widget_DirectionTabs') ?>
     <hr>
 </div>

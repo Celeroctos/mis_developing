@@ -124,6 +124,16 @@ class Laboratory_Direction extends ActiveRecord {
 		];
 	}
 
+    public static function listStatusesShort() {
+        return [
+            static::STATUS_TREATMENT_ROOM => 'Процедурный кабинет',
+            static::STATUS_LABORATORY => 'Лаборатория',
+            static::STATUS_READY => 'Произведен анализ',
+            static::STATUS_TREATMENT_REPEAT => 'Повторный забор образца',
+            static::STATUS_CLOSED => 'Выполнено',
+        ];
+    }
+
     public function tableName() {
         return 'lis.direction';
     }
