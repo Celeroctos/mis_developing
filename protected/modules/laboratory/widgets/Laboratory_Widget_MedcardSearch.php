@@ -3,9 +3,7 @@
 class Laboratory_Widget_MedcardSearch extends Widget {
 
 	/**
-	 * @var string - Medcard table widget, like
-	 * 	MedcardTable or MedcardTable2
-	 * @see MedcardTable, MedcardTable2
+	 * @var string - Medcard grid provider
 	 */
 	public $provider = "Laboratory_Grid_Medcard";
 

@@ -4,6 +4,9 @@
  */
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_MedcardSearch');
+$this->widget('Laboratory_Modal_PatientSearch');
+$this->widget('Laboratory_Modal_DirectionCreator');
+$this->widget('Laboratory_Modal_AboutMedcard');
 
 $this->widget('TabMenu', [
     'style' => TabMenu::STYLE_GREEN_JUSTIFIED,

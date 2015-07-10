@@ -20,6 +20,11 @@ button.panel-control-button:not(:last-child) {
     margin-right: 2px;
 }
 
+.btn-group > button.panel-control-button {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
 .panel-content > *:first-child {
     margin-top: 0;
 }

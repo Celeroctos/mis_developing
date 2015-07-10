@@ -49,6 +49,7 @@ class ControlMenu extends Widget {
 	 *  + ... - other HTML attributes
 	 */
 	const MODE_MENU = 7;
+    const MODE_GROUP = 8;
 
 	/**
 	 * @var int - How to display control elements, set it
@@ -77,6 +78,13 @@ class ControlMenu extends Widget {
 	 * 	only for [MODE_MENU] mode
 	 */
 	public $menuTrigger = null;
+
+    /**
+     * @var array with extra configuration for control elements
+     *  renderer, like HTML options or something else, ready doc
+     *  for every render method for more information
+     */
+    public $config = [];
 
 	/**
 	 * Run widget to render control elements
@@ -220,32 +228,64 @@ class ControlMenu extends Widget {
 		print CHtml::closeTag("div");
 	}
 
+    public function renderGroupControls() {
+        print Html::beginTag('div', [
+            'class' => $this->getConfig('class', 'btn-group btn-group-lg btn-group-justified'),
+        ]);
+        foreach ($this->controls as $class => $options) {
+            $required = $this->prepareControl($class, $options);
+            if (empty($required["label"])) {
+                throw new CException("Panel's controls mode [CONTROL_MODE_BUTTON] requires [label] attribute");
+            } else {
+                $label = $required["label"];
+            }
+            if (!empty($required["icon"])) {
+                $label = CHtml::tag("span", [
+                        "class" => $required["icon"]
+                    ], "") ."&nbsp;&nbsp;". $label;
+            }
+            print CHtml::tag('a', $options, $label);
+        }
+        print Html::closeTag('div');
+    }
+
 	/**
 	 * Render menu with control elements
 	 */
 	public function renderControls() {
 		switch ($this->mode) {
-			case self::MODE_TEXT:
+			case static::MODE_TEXT:
 				$this->renderTextControls();
 				break;
-			case self::MODE_ICON:
+			case static::MODE_ICON:
 				$this->renderIconControls();
 				break;
-			case self::MODE_BUTTON:
+			case static::MODE_BUTTON:
 				$this->renderButtonControls();
 				break;
-            case self::MODE_BUTTON_XS:
+            case static::MODE_BUTTON_XS:
                 $this->renderButtonControls('btn-xs');
                 break;
-            case self::MODE_BUTTON_SM:
+            case static::MODE_BUTTON_SM:
                 $this->renderButtonControls('btn-sm');
                 break;
-            case self::MODE_BUTTON_LG:
+            case static::MODE_BUTTON_LG:
                 $this->renderButtonControls('btn-lg');
                 break;
-			case self::MODE_MENU:
+			case static::MODE_MENU:
 				$this->renderMenuControls();
 				break;
+            case static::MODE_GROUP:
+                $this->renderGroupControls();
+                break;
 		}
 	}
+
+    private function getConfig($key, $default = null) {
+        if (isset($this->config[$key])) {
+            return $this->config[$key];
+        } else {
+            return $default;
+        }
+    }
 }

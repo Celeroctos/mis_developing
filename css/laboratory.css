@@ -524,3 +524,10 @@ body > .analyzer-queue-helper * {
 .laboratory-wrapper-patient-creator .col-xs-6 > .panel:last-child {
     margin-bottom: 0 !important;
 }
+
+.btn-group-justified > a:hover:not(.btn-default) {
+    color: white !important;
+}
+.btn-group-justified > a.btn-default:hover {
+    color: black !important;
+}
