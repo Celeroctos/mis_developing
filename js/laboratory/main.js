@@ -661,7 +661,6 @@ var Laboratory_TabMenu_Widget = {
             menu.find(" > li > a[data-tab]").each(function(i, a) {
 				$("#" + $(a).attr("data-tab")).hide();
 			});
-            console.log($(this).children("a").attr("data-tab"));
 			$("#" + $(this).children("a").attr("data-tab")).show();
 			menu.find(" > li").removeClass("active");
 			$(this).addClass("active");
@@ -705,8 +704,11 @@ $(document).ready(function() {
     ];
 
     for (var i in modals) {
-        $(modals[i]).on("shown.bs.modal", function() {
-            $("#" + $(this).attr("id")).stop().animate({ scrollTop: 0 }, '250', 'swing');
+        $(modals[i]).on("show.bs.modal", function() {
+            var me = this;
+            setTimeout(function() {
+                $("#" + $(me).attr("id")).stop().animate({ scrollTop: 0 }, 250, 'swing');
+            }, 100);
         });
     }
 });

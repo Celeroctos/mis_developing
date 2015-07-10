@@ -1003,7 +1003,5 @@ $('.buttonUpContainer').click(function () {
         setTimeout(function() {
             $('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
         }, 0);
-    }).on("show.bs.modal", ".modal", function() {
-        $(this).animate({ scrollTop: 0 }, 'slow');
     });
 });
