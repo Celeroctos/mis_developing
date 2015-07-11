@@ -1,7 +1,8 @@
 <?php
 /**
- * @var TreatmentController $this - Self instance
+ * @var laboratory\controllers\TreatmentController $this - Self instance
  */
+
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_MedcardSearch');
 $this->widget('Laboratory_Modal_PatientSearch');

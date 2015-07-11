@@ -91,6 +91,7 @@ class Laboratory_Widget_DirectionPanel extends Panel {
             $this->body = $this->createWidget('GridTable', [
                 'provider' => new Laboratory_Grid_Direction([
                     'status' => $this->status,
+                    'date' => $this->date != null ? $this->date : date('Y-m-d'),
                 ])
             ]);
         }
