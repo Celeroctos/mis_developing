@@ -22,6 +22,12 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(".analyzer-queue-start-button").click(function() {
 			me.start();
 		});
+        $(".analyzer-queue-stop-button").click(function() {
+            $(this).prop("disabled", "true");
+            me.stop();
+            $(".analyzer-queue-start-button, .analyzer-queue-clear-button")
+                .removeProp("disabled");
+        }).prop("disabled", "true");
 		this.createDraggable();
 	},
 	remove: function(id) {
@@ -108,7 +114,6 @@ var Laboratory_AnalyzerQueue_Widget = {
                 message: "На этот анализатор поддерживат ограниченное количество образцов ("+ limit +")"
             });
         }
-
 		this.lock(tr.attr("data-id"));
 		var a = this.renderItem(tr);
 		container.append($("<li></li>", {
@@ -200,8 +205,11 @@ var Laboratory_AnalyzerQueue_Widget = {
 			return Core.createMessage({
 				message: "Не выбраны направления для анализа"
 			});
-		}
-		var panel = container.parents(".panel").loading("render");
+		} else {
+            $(".analyzer-queue-stop-button").removeProp("disabled");
+        }
+		var panel = container.parents(".panel-body:eq(0)").loading("render").parents(".panel:eq(0)");
+        panel.find(".analyzer-queue-start-button, .analyzer-queue-clear-button").prop("disabled", "true");
 		var time = $(".analyzer-task-menu-item.active > a").attr("data-time");
 		panel.find(".panel-footer > .progress > .progress-bar").animate({
 			width: "100%"
@@ -214,6 +222,17 @@ var Laboratory_AnalyzerQueue_Widget = {
 		});
 		me.await(container);
 	},
+    stop: function() {
+        var container = $(".analyzer-queue-container:visible"),
+            key = container.parents(".laboratory-tab-container").attr("id");
+        var panel = container.parents(".panel-body:eq(0)").loading("reset")
+            .parents(".panel:eq(0)");
+        panel.find(".panel-footer > .progress > .progress-bar").stop().css({
+            width: "0%"
+        });
+        container.removeAttr("data-locked");
+        this.clear();
+    },
 	await: function(container) {
 		var me = this, done = false;
 		container = container || $(".analyzer-queue-container:visible");
@@ -223,9 +242,11 @@ var Laboratory_AnalyzerQueue_Widget = {
 			container.children("li:not(.active)").each(function(i, li) {
 				directions.push($(li).attr("data-id"));
 			});
-			Core.sendPost("laboratory/direction/check", {
-				directions: directions,
-				status: 3 /* STATUS_READY */
+            if (directions.length == 0) {
+                return void 0;
+            }
+            Core.sendPost("laboratory/direction/check", {
+				directions: directions, status: 3 /* STATUS_READY */
 			}, function(response) {
 				var ready = response["ready"] || [];
 				for (var i in ready) {
