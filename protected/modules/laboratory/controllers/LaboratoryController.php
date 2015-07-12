@@ -37,6 +37,7 @@ class LaboratoryController extends ControllerEx {
 	}
 
 	public function actionConfirm() {
+        $transaction = Yii::app()->getDb()->beginTransaction();
 		try {
 			$form = new Laboratory_Form_AnalysisResult();
 			$form->setAttributes(Yii::app()->getRequest()->getPost('Laboratory_Form_AnalysisResult'));
@@ -53,11 +54,14 @@ class LaboratoryController extends ControllerEx {
 				'status' => Laboratory_Direction::STATUS_CLOSED
 			]);
 			if ($total < count($form->result)) {
-				$this->error('Данные не были обновлены');
+                $transaction->rollback();
+				$this->error('Произошла ошибка. Данные не были обновлены');
 			} else {
+                $transaction->commit();
 				$this->success('Данные сохранены, направление закрыто');
 			}
 		} catch (Exception $e) {
+            $transaction->rollback();
 			$this->exception($e);
 		}
 	}

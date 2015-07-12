@@ -11,7 +11,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
 			me.createDraggable();
 		});
-		$("#analyzer-task-viewer").find(".panel-body").droppable({
+		$(".laboratory-tab-container").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
 			}
@@ -101,6 +101,14 @@ var Laboratory_AnalyzerQueue_Widget = {
 		} else if (container.attr("data-locked")) {
 			return false;
 		}
+        var tab = $("#analyzer-tab-menu").find("a[data-tab='"+ container.parents(".laboratory-tab-container").attr("id") +"']"),
+            limit = tab.attr("data-limit") || 0;
+        if (container.find(" > li").length >= limit) {
+            return Core.createMessage({
+                message: "На этот анализатор поддерживат ограниченное количество образцов ("+ limit +")"
+            });
+        }
+
 		this.lock(tr.attr("data-id"));
 		var a = this.renderItem(tr);
 		container.append($("<li></li>", {
