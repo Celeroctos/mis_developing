@@ -330,42 +330,43 @@ var Laboratory_Analyzer_TabMenu = {
 			}
 			me.activateTab($(this));
 		});
-		var activate = function() {
-			if (/^#\d+$/.test(window.location.hash || "")) {
-				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parent("li"));
-			} else {
-				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parent("li"));
-			}
-		};
-		activate();
-		$(".panel").on("panel.updated", function() {
-			activate();
-		});
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
-			activate();
-		});
-		var fetch = function() {
-			var menu = $("#analyzer-tab-menu"), $this = $(this);
-			/* We must lock table and panel update to fetch extra tab information */
-			$.ajax({
-				url: url("laboratory/laboratory/tabs"),
-				dataType: "json"
-			}).done(function(response) {
-				if (!response["status"]) {
-					return Core.createMessage({
-						message: response["message"]
-					});
-				}
-				var dirs = response["result"];
-				for (var i in dirs) {
-					menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
-				}
-                $this.table("update", void 0, false, true);
-			});
-            return false;
-		};
-		$(document).on("table.update", "#laboratory-direction-table", fetch);
-	}
+            me.afterUpdate($(this));
+		}).on("table.update", "#laboratory-direction-table", function(e, result) {
+            result.overlay = false;
+        });
+        me.activate();
+	},
+    activate: function() {
+        var menu = $("#analyzer-tab-menu");
+        if (/^#\d+$/.test(window.location.hash || "")) {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parents("li:eq(0)"));
+        } else {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parents("li:eq(0)"));
+        }
+    },
+    afterUpdate: function(table) {
+        var menu = $("#analyzer-tab-menu"),
+            me = this;
+        /* We must lock table and panel update to fetch extra tab information */
+        $.ajax({
+            url: url("laboratory/laboratory/tabs"),
+            dataType: "json"
+        }).done(function(response) {
+            if (!response["status"]) {
+                return Core.createMessage({
+                    message: response["message"]
+                });
+            }
+            var dirs = response["result"];
+            for (var i in dirs) {
+                menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
+            }
+            me.activate();
+        }).always(function() {
+            table.table("after");
+        });
+    }
 };
 
 var Laboratory_AnalysisResult_Widget = {
