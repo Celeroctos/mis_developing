@@ -1,18 +1,11 @@
-@default-margin: 10px;
-
-.default-margin-bottom {
-  margin-bottom: @default-margin;
-}
-
-.tabmark {
-  display: none;
-}
-
 #hospitalizationNavbar, #bedsstockNavbar {
 	li {
 		width: 25%;
 		text-align: center;
 		position: relative;
+        .tabmark {
+          display: none;
+        }
 		.roundedLabel {
 			position: absolute;
 			border: 1px solid #000000;
@@ -35,7 +28,6 @@
 		}
 	}
 }
-
 #refuseCommentContainer {
   display: none;
 }
@@ -84,21 +76,7 @@
   top: 60px;
   left: 90%;
 }
-
-.bedsstockTablesCont, .armdTablesCont  {
-  .tab-pane {
-    min-height: 150px;
-    padding-top: 10px;
-    overflow: hidden;
-    .ajaxLoader {
-      position: relative;
-      top: 55px;
-      left: 45%;
-    }
-  }
-}
-
-.bedsstockExpanderBody, .relocationExpanderBody, .settingsFormCont, .bedsEditCont, .bedSettingsFormCont, .addPatientFormCont {
+.bedsstockExpanderBody, .relocationExpanderBody, .settingsForm {
   display: none;
 }
 
@@ -164,7 +142,7 @@
     padding: 10px;
     button {
       position: relative;
-      top: -5px;
+      top: 10px;
     }
   }
 
@@ -175,15 +153,10 @@
     overflow: hidden;
     font-size: 14px;
     font-weight: bold;
-    margin-top: 5px;
     li {
       float: left;
       list-style: none;
       margin-right: 10px;
-      label {
-        padding-left: 0;
-        margin-right: 10px;
-      }
       ul {
         font-weight: normal;
         padding: 0;
@@ -192,11 +165,8 @@
         }
       }
       input[type="checkbox"] {
-        margin-left: -20px;
-        margin-top: 4px;
-      }
-      .resetFilter {
-        margin-top: 17px;
+        margin-right: 10px;
+        margin-left: -5px;
       }
     }
     #wardType {
@@ -212,6 +182,8 @@
       text-align: center;
       padding: 0 5px 5px 0;
       margin-right: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .3), -23px 0 20px -23px rgba(0, 0, 0, .8), 23px 0 20px -23px rgba(0, 0, 0, .8), 0 0 40px rgba(0, 0, 0, .1) inset;
       cursor: pointer;
       .wardType, .paidType, .numFree {
@@ -220,18 +192,6 @@
     }
     .numFree {
       margin-top: 50px;
-    }
-    .new { // Suck.
-      position: relative;
-      top: 15px;
-      #addNewWard {
-        position: absolute;
-        top: 50px;
-        font-size: 35px;
-        left: 50px;
-        width: 50px;
-        padding: 0;
-      }
     }
   }
   ul.bedsList {
@@ -272,314 +232,5 @@
         left: 130px;
       }
     }
-  }
-  .filter {
-    .roundedLabel {
-      border: 0;
-      border-radius: 10px;
-      z-index: 99;
-      background: #ff1263;
-      padding: 2px 10px;
-    }
-    .roundedLabelText {
-      z-index: 100;
-      width: 20px;
-      max-width: 20px;
-      text-align: center;
-      left: 10px;
-      margin-left: -14px;
-      color: #ffffff;
-      font-weight: bold;
-    }
-  }
-
-  ul.bedsSettingsList {
-    margin-top: 10px;
-    li {
-      float: none;
-      width: 100%;
-      height: 50px;
-      text-align: left;
-      margin-bottom: 10px;
-      padding: 0 10px;
-      cursor: pointer;
-      position: relative;
-      .bed-settings, .bed-add {
-        position: absolute;
-        left: 90%;
-        top: 10px;
-        font-size: 25px;
-      }
-    }
-    li:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
-
-.popover-wardedit, .popover-wardadd, .popover-bedsedit, .popover-bededit {
-  min-width: 600px;
-  cursor: default;
-  .popover-title {
-    margin-top: 0;
-  }
-  .popover-content {
-    width: 100%;
-    padding: 0 25px;
-    .control-label {
-      display: inline-block;
-      text-align: left;
-      padding-left: 0;
-    }
-  }
-  .settingsForm {
-    .form-group {
-      margin: 5px 0;
-    }
-  }
-}
-
-.no-float {
-  float: none;
-}
-
-@keyframes blink-cog {
-  0%   {color: #000000;}
-  25%  {color: #250b23;}
-  50%  {color: #ffc21d;}
-  75%  {color: #250b23;}
-  100% {color: #000000;}
-}
-@-webkit-keyframes blink-cog {
-  0%   {color: #000000;}
-  25%  {color: #250b23;}
-  50%  {color: #ffc21d;}
-  75%  {color: #250b23;}
-  100% {color: #000000;}
-}
-.cog-blinking-css {
-  animation: blink-cog 1.5s steps(20, start) infinite;
-  -webkit-animation: blink-cog 1.5s steps(20, start) infinite;
-}
-
-#deleteWard {
-  margin-top: 8px;
-}
-
-.addPatientForm {
-  width: 80%;
-  margin: 0 auto;
-}
-
-.popover-helpsystem {
-  @link-color: #FF4500;
-  .popover-title {
-    font-size: 14px;
-    color: #000000;
-  }
-  .popover-content {
-    width: auto;
-    min-width: 150px;
-    font-size: 13px;
-    line-height: normal;
-    font-weight: normal;
-  }
-  .popover-footer {
-    text-align: right;
-    padding: 0 15px 10px 0;
-    font-size: 13px;
-    a {
-      color: @link-color !important;
-    }
-  }
-}
-
-.popover-helpsystem-mode {
-  @background: #0b211e;
-  @font-color : #ffffff;
-  .arrow::after {
-    border-bottom-color: @background !important;
-  }
-  .popover-content, .popover-title {
-    background: @background;
-    width: 280px;
-    color: @font-color;
-  }
-  .popover-title {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-  }
-  .popover-content {
-    font-weight: 13px;
-    a {
-      color: @font-color !important;
-    }
-    h6 {
-      font-weight: bold;
-      color: #f9ffd7;
-    }
-  }
-}
-
-#voiceIcon {
-  height: 64px;
-  width : 64px;
-  position: fixed;
-  top: 130px;
-  left: 90%;
-  border: 1px;
-}
-
-/* ARMD for Doctor */
-
-#myPatientsGrid, #patientsGrid {
-  tr {
-    cursor: pointer;
-  }
-}
-
-.popover-window {
-  position: absolute;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .3), -23px 0 20px -23px rgba(0, 0, 0, .8), 23px 0 20px -23px rgba(0, 0, 0, .8), 0 0 40px rgba(0, 0, 0, .1) inset;
-  cursor: pointer;
-  .popover-title, .popover-content, .popover-footer {
-    background: #ffffff;
-  }
-  .popover-content {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-ul.balooned {
-  border-bottom: none;
-  li.baloon {
-    a {
-      background: #ecffff;
-    }
-  }
-  li.baloon.active {
-    a {
-      background: #c3f7ff;
-      border: 0;
-    }
-  }
-}
-
-ul.desktopTab {
-  border: 0;
-  margin-top: 10px;
-  li {
-    position: relative;
-    a {
-      border-bottom: 1px;
-      background: #ffffe3;
-      padding-bottom: 3px;
-      padding-top: 3px;
-    }
-    span.closeTab {
-      position: absolute;
-      left: 85%;
-      top: -5px;
-      z-index: 99;
-      border: 1px solid #ffcf00;
-      padding: 1px 1px 2px 1px;
-      border-radius: 10px;
-      color: #ffffff;
-      background: #ffcf00;
-    }
-  }
-  li.active {
-    a {
-      border: 0;
-      background: #fffadb;
-    }
-  }
-  li.last {
-    a {
-      padding: 3px 10px;
-      background:  #ffffe3;
-    }
-  }
-}
-
-#armd-show-patient {
-  .tab-content {
-    margin-top: 10px;
-  }
-  .tab-pane {
-    background: #ffffff;
-    border: 1px solid #f5f5f5;
-  }
-  .btnPanel {
-    margin-top: 10px;
-    display: none;
-    #saveTemplate {
-      margin-left: 40%;
-    }
-    #cancelTemplate {
-      margin-left: 10px;
-    }
-  }
-}
-
-body .popover-templates-list {
-  min-width: 310px;
-  .popover-content {
-    width: 300px;
-    li {
-      padding: 2px 5px;
-      input[type="checkbox"] {
-        margin-right: 10px;
-        position: relative;
-        top: 3px;
-      }
-      a {
-        background : #ffffff;
-      }
-      .template-choose {
-
-      }
-    }
-  }
-}
-
-
-#armd-patient-diagnosis {
-  .form-group {
-    margin-bottom: 10px;
-  }
-}
-
-#armd-patient-purpose {
-  h6 {
-    text-align: center;
-    font-weight: bold;
-  }
-  .btnPanel {
-    text-align: center;
-  }
-  .panel2, .panel3 {
-    float: left;
-  }
-  .panel1, .panel2, .panel3 {
-    width: 990px;
-  }
-
-  .panel3 {
-    h5 {
-      text-align: center;
-      font-weight: bold;
-    }
-    .left {
-      float: left;
-    }
-    .right {
-      float: right;
-    }
-  }
-  .wrap {
-    width: 3000px;
   }
 }

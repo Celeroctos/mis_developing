@@ -24,7 +24,7 @@ var Core = Core || {};
         }, this.property("animation"));
         this.property("parent") && this.property("parent").find(".refresh-button").replaceWith(
             $("<img>", {
-                src: url("images/ajax-loader.gif"),
+                src: url("/images/ajax-loader.gif"),
                 width: "25px",
                 class: "refresh-image"
             })
@@ -61,26 +61,24 @@ var Core = Core || {};
             id: form.attr("id"),
             model: form.data("form"),
             url: form.attr("action")
-        }, function(response) {
-			if (typeof response == "string" && response.charAt(0) == "{") {
-				var json = $.parseJSON(response);
-				if (!json.status) {
-					me.after();
-					me.activate();
-					return Core.createMessage({
-						message: json.message
-					});
-				}
-			} else {
-				me.selector().replaceWith(me.selector(response));
-			}
+        }, function(json) {
+            if (!json.status) {
+                me.after();
+                me.activate();
+                return Core.createMessage({
+                    message: json.message
+                });
+            }
+            me.selector().replaceWith(
+                me.selector($(json["component"]))
+            );
             me.selector().find(".form-group").css("opacity",
                 me.property("opacity")
             );
             me.after();
             me.activate();
             after && after(me);
-        });
+        }, "json");
     };
 
     Form.prototype.activate = function() {
@@ -88,7 +86,7 @@ var Core = Core || {};
         this.property("parent") && this.property("parent").find(".refresh-button").click(function() {
             $(this).replaceWith(
                 $("<img>", {
-                    src: url("images/ajax-loader.gif"),
+                    src: url("/images/ajax-loader.gif"),
                     width: "25px",
                     class: "refresh-image"
                 })
@@ -97,49 +95,47 @@ var Core = Core || {};
         });
     };
 
-    Form.prototype.send = function(callback) {
+    Form.prototype.send = function(after) {
 		if (this.property("disabled")) {
-			return void 0;
+			return false;
 		}
         this.selector().find(".form-group").removeClass("has-error");
         var form = this.selector();
-        if (!this.property("url") && !this.property("url", this.selector().attr("action"))) {
+        if (!this.property("url")) {
             return Core.createMessage({
                 message: "Missed 'url' property for AutoForm component"
             });
         }
         var me = this;
-        return $.post(this.property("url"), form.serialize(), function(response) {
+        $.post(this.property("url"), {
+            model: form.serialize()
+        }, function(json) {
             me.after();
-			if (typeof response == "string" && response.charAt(0) == "{") {
-				var json = $.parseJSON(response);
-				if (!json["status"]) {
-					callback && callback.call(me.selector(), false);
-					return Core.postFormErrors(me.selector(), json);
-				}
-				if (json["message"]) {
-					Core.createMessage({
-						type: "success",
-						sign: "ok",
-						message: json["message"]
-					});
-				}
-			} else {
-				$("#" + me.selector().attr("id")).trigger("success", response);
-			}
-			if (me.property("success")) {
-				me.property("success").call(me.selector(), response);
-			}
-			callback && callback.call(me.selector(), true);
-        }).fail(function() {
-			Core.createMessage({
-				message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-			});
-			callback && callback.call(me.selector(), false, arguments[2]);
+            if (!json["status"]) {
+                after && after(me, false);
+				return Core.postFormErrors(me.selector(), json);
+            } else {
+                if (me.property("success")) {
+                    me.property("success").call(me, json);
+                }
+                after && after(me, true);
+            }
+            if (json["message"]) {
+                Core.createMessage({
+                    type: "success",
+                    sign: "ok",
+                    message: json["message"]
+                });
+            }
+            $("#" + me.selector().attr("id")).trigger("success", json);
+        }, "json").fail(function() {
+			after && after(me, false, arguments[2]);
 		});
+        form.serialize();
+        return true;
     };
 
-    $.fn.form = Core.createPlugin("form", function(selector, properties) {
+	Core.createPlugin("form", function(selector, properties) {
 		return Core.createObject(new Form(properties, $(selector)), selector, false);
 	});
 

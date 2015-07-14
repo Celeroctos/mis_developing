@@ -19,12 +19,12 @@ $form = $this->beginWidget('CActiveForm', [
 ]); ?>
 
 <?php foreach ($model->getConfig() as $key => $value): ?>
-    <div class="form-group row no-margin <?= $this->isHidden($key) ? "hidden" : "" ?>" style="margin: 3px">
+    <div class="form-group <?= $this->isHidden($key) ? "hidden" : "" ?>">
 		<?php if ($this->labels == true): ?>
 			<?= $form->labelEx($model, $key, array(
 					'class' => 'col-xs-4 control-label'
 				)); ?>
-			<div class="col-xs-8">
+			<div class="col-xs-7">
 				<?= $this->renderField($form, $key); ?>
 			</div>
 		<?php else: ?>
@@ -32,9 +32,9 @@ $form = $this->beginWidget('CActiveForm', [
 				<?= $this->renderField($form, $key); ?>
 			</div>
 		<?php endif ?>
-<!--		<div class="col-xs-1"></div>-->
+		<div class="col-xs-1">
+		</div>
     </div>
 <?php endforeach; ?>
 
-<?php $this->renderButtons(); ?>
-<?php $this->endWidget("CActiveForm"); ?>
+<?php $this->endWidget(); ?>

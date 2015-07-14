@@ -4,9 +4,9 @@
  */
 
 return array(
-	'class' => 'DbConnection',
-	'connectionString' => 'pgsql:host=localhost;port=5432;dbname=work;',
-	'username' => 'postgres',
+	'class'=>'DbConnection',
+	'connectionString' => 'pgsql:host=localhost;port=5432;dbname=postgres;',
+	'username' => 'moniiag',
 	'password' => '12345',
-	'defaultSchema' => 'public',
+	'defaultSchema'=>'system', //используется исключительно в консоли.
 );

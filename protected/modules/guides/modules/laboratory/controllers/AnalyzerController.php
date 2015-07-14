@@ -7,6 +7,6 @@ class AnalyzerController extends GController {
 	 * @return ActiveRecord - Controller's model instance
 	 */
 	public function getModel() {
-		return new Analyzer();
+		return null;
 	}
 }

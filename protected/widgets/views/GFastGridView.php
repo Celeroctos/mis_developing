@@ -5,9 +5,9 @@
  */
 
 $this->widget("zii.widgets.grid.CGridView", [
-//	"ajaxType" => "GET",
+	"ajaxType" => "GET",
 	"dataProvider" => $this->model->search(),
-//	"ajaxUrl" => [$this->url],
+	"ajaxUrl" => [$this->url],
 //	"pager" => [
 //		"class" => "CLinkPager",
 //		"selectedPageCssClass" => "active",

@@ -1,25 +1,15 @@
 <div class="wardsWidget">
     <ul class="filter">
         <li>Палаты
-            <span class="tabmark" id="allWardsTabmark">
-                <span class="roundedLabel"></span>
-                <span class="roundedLabelText"></span>
-            </span>
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidWard" />Платные<span class="tabmark" id="paidWardsTabmark">
-                            <span class="roundedLabel"></span>
-                            <span class="roundedLabelText"></span>
-                        </span>
+                        <input type="checkbox" id="paidWard">Платные
                     </label>
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidWard" />Бесплатные<span class="tabmark" id="notPaidWardsTabmark">
-                            <span class="roundedLabel"></span>
-                            <span class="roundedLabelText"></span>
-                        </span>
+                        <input type="checkbox" id="notPaidWard">Бесплатные
                     </label>
                 </li>
             </ul>
@@ -28,221 +18,96 @@
             <ul>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="paidBeds" />Платные<span class="tabmark" id="paidBedsTabmark">
-                            <span class="roundedLabel"></span>
-                            <span class="roundedLabelText"></span>
-                        </span>
+                        <input type="checkbox" id="paidBeds">Платные
                     </label>
                 </li>
                 <li>
                     <label class="checkbox-inline">
-                        <input type="checkbox" id="notPaidBeds" />Бесплатные<span class="tabmark" id="notPaidBedsTabmark">
-                            <span class="roundedLabel"></span>
-                            <span class="roundedLabelText"></span>
-                        </span>
+                        <input type="checkbox" id="notPaidBeds">Бесплатные
                     </label>
                 </li>
             </ul>
         </li>
         <li>Тип палаты
             <select class="form-control col-xs-3" id="wardType">
-                <option value="-1">%any type%</option>
+                <option>%any type%</option>
             </select>
         </li>
+    </ul>
+    <ul class="wardsList">
         <li>
-            <button class="btn btn-success resetFilter">Сбросить фильтр</button>
+            <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree"><strong class="text-danger">Карантин</strong></span>
+        </li>
+        <li>
+            <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree"><strong class="text-danger">Занята</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
+        </li>
+        <li>
+            <h4>Палата №1</h4>
+            <span class="wardType">Обычная</span>
+            <span class="paidType">Платная</span>
+            <span class="numFree">Свободно: <strong>3</strong></span>
         </li>
     </ul>
-    <div class="row">
-        <ul class="wardsList">
-            <li>
-                <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree"><strong class="text-danger">Карантин</strong></span>
-            </li>
-            <li>
-                <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree"><strong class="text-danger">Занята</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li class="new">
-                <button class="btn btn-success" title="Добавить новую палату" id="addNewWard">+</button>
-            </li>
-        </ul>
-    </div>
-    <div class="bedsEditCont">
-        <ul class="list-group bedsSettingsList">
-            <li class="list-group-item">
-                <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b1"></span>
-            </li>
-            <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="Койка занята: Иванова Ивана Ивановна" width="48" height="48" />
-                <a href="#" class="reservedBed">Иванова Ивана Ивановна</a>
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
-            </li>
-            <li class="list-group-item">
-                <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
-            </li>
-            <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="Койка занята: Сидорова Сидора Сидоровна" width="48" height="48" />
-                <a href="#" class="reservedBed">Сидорова Сидора Сидоровна</a>
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b4"></span>
-            </li>
-            <li class="list-group-item">
-                <span class="glyphicon glyphicon-plus bed-add" title="Добавить койку" id="b5"></span>
-            </li>
-        </ul>
-    </div>
-    <div class="bedAddCont">
-
-    </div>
-    <div class="bedSettingsFormCont">
-        <form class="bedSettingsForm form-horizontal">
-            <div class="form-group">
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Платная
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Бесплатная
-                </label>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">№ палаты</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Статус</label>
-                <div class="col-xs-8">
-                    <select class="form-control"></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Зарезервировать до</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Комментарий</label>
-                <div class="col-xs-8">
-                    <textarea cols="30" rows="10" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-danger deleteBed">Удалить койку</button>
-                <button class="btn btn-primary acceptBed">Применить</button>
-                <button class="btn btn-success closeBed">Закрыть</button>
-            </div>
-        </form>
-    </div>
-    <div class="addPatientFormCont">
-        <form class="addPatientForm form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-xs-4">ФИО</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Год рождения</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Дата выписки</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Врач</label>
-                <div class="col-xs-8">
-                    <select class="form-control"></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Зарезервировать до</label>
-                <div class="col-xs-8">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-4">Комментарий</label>
-                <div class="col-xs-8">
-                    <textarea cols="30" rows="3" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="form-group col-xs-12">
-                <div class="col-xs-2"></div>
-                <div class="col-xs-10">
-                    <button class="btn btn-warning dischargePatient">Выписать</button>
-                    <button class="btn btn-primary acceptPatient">Подтвердить</button>
-                    <button class="btn btn-success closePatientForm">Закрыть</button>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>

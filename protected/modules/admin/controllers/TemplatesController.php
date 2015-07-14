@@ -286,8 +286,6 @@ class TemplatesController extends Controller {
 					"parent_id" => $child->category,
                     "path" => $path
 				));
-				# 13644/1
-				CategoriesController::changePaths($child->id);
 			}
 		}
 

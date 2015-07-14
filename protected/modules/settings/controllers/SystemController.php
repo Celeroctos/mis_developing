@@ -444,5 +444,236 @@ class SystemController extends Controller {
 		$conn->createCommand($sql)->execute();
 	
 	}*/
+	
+	public function actionFillOmsField() {
+		$conn = Yii::app()->db2;
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_tap_10874 DISABLE TRIGGER trt_tap_10874_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = "SELECT DISTINCT
+	t5.*
+FROM t_policy_43176 t5
+WHERE
+t5.type_07731 = 5
+AND LEN(t5.number_12574) < 15";
+		
+		$patients = $conn->createCommand($sql)->queryAll();
+		echo "<pre>";
+	
+		foreach($patients as $pat) {
+			$sql = "UPDATE t_policy_43176
+				SET 
+					number_12574 = '".$pat['series_14820'].$pat['number_12574']."',
+					series_14820 = NULL
+				WHERE uid = ".$pat['uid'];
+
+			$conn->createCommand($sql)->execute();
+			//exit();
+		}
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 ENABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_tap_10874 ENABLE TRIGGER trt_tap_10874_update';
+		$conn->createCommand($sql)->execute();
+	}
+	
+	function actionDeleteDoubleOms() {
+		ini_set('max_execution_time', 0);
+		$conn = Yii::app()->db2;
+	
+		$sql = 'ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_delete';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_tap_10874 DISABLE TRIGGER trt_tap_10874_update';
+		$conn->createCommand($sql)->execute();
+
+		$sql = "SELECT 
+					t3.number_12574, 
+					COUNT(t3.number_12574) AS num
+				FROM t_book_65067 t1
+				JOIN t_patient_10905 t2 ON t2.uid = t1.patientuid_37756
+				JOIN t_policy_43176 t3 ON t3.patientuid_09882 =  t1.patientuid_37756
+				WHERE t1.version_end = 9223372036854775807
+					AND t2.version_end = 9223372036854775807
+					AND t3.type_07731 = 5
+				GROUP BY t3.number_12574
+				HAVING COUNT(t3.number_12574) > 1
+				ORDER BY 2 DESC";
+	
+		$doubled = $conn->createCommand($sql)->queryAll();
+		echo "<pre>";
+		foreach($doubled as $double) {
+			if($double['num'] < 2) {
+				continue;
+			}
+			
+			$sql = "SELECT * FROM t_policy_43176 WHERE 
+						version_end = 9223372036854775807
+					AND number_12574 = '".$double['number_12574']."'
+					AND type_07731 = 5";
+			
+			$currentDoubled = $conn->createCommand($sql)->queryAll();
+			// Берём полис. Ищем дубликаты. НЕ-дубликат - первый полис из списка. Со всех остальных - обновляем ключи
+			
+			$mainPolicy = array_shift($currentDoubled);
+			$ids = [];
+			foreach($currentDoubled as $one) {
+				$ids[] = $one['uid'];
+			}
+			
+			if(count($ids) > 0) {
+				echo "Дубликаты: <br />";
+				print_r($currentDoubled);
+				
+				$sql = "UPDATE t_tap_10874 
+						SET policyuid_53853 = ".$mainPolicy['uid']."
+						WHERE version_end = 9223372036854775807
+						AND policyuid_53853 IN(".implode(',', $ids).")";
+				
+				$conn->createCommand($sql)->execute();
+				
+				$sql = "UPDATE t_policy_43176 
+						SET voiddate_10849 = null
+						WHERE version_end = 9223372036854775807
+						AND uid = ".$mainPolicy['uid'];
+						
+				$conn->createCommand($sql)->execute();
+				
+				// Удаляем дубликат
+				$sql = "DELETE FROM t_policy_43176 
+						WHERE 
+							version_end = 9223372036854775807
+							AND uid IN(".implode(',', $ids).")";
+				
+				$conn->createCommand($sql)->execute();
+				
+				
+			}
+			echo "---------------------------------<br />";
+		}
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 ENABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 ENABLE TRIGGER trt_policy_43176_delete';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'ALTER TABLE dbo.t_tap_10874 ENABLE TRIGGER trt_tap_10874_update';
+		$conn->createCommand($sql)->execute();
+	}
+	
+	
+	public function actionDeleteDoubledAddress() {
+		$conn = Yii::app()->db2;
+	
+		$sql = 'ALTER TABLE dbo.t_address_47256 DISABLE TRIGGER trt_address_47256_delete';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = 'SELECT COUNT(*) as num, patientuid_32736, addresstype_31280 
+						FROM dbo.t_address_47256 t1
+						WHERE version_end = 9223372036854775807
+						GROUP BY patientuid_32736, addresstype_31280 
+						ORDER BY num DESC';
+
+		$doubled = $conn->createCommand($sql)->queryAll();
+		//var_dump($doubled);
+		//exit();
+		echo "<pre>";
+		foreach($doubled as $double) {
+			if($double['num'] < 2) {
+				continue;
+			}
+			
+			$sql = "SELECT DISTINCT uid
+					FROM dbo.t_address_47256 t1
+					WHERE version_end = 9223372036854775807
+					AND patientuid_32736 = ".$double['patientuid_32736']."
+					AND addresstype_31280 = ".$double['addresstype_31280'];
+				
+			$currentDoubled = $conn->createCommand($sql)->queryAll();
+			
+			// Берём полис. Ищем дубликаты. НЕ-дубликат - первый полис из списка. Со всех остальных - обновляем ключи
+			
+			$mainAddress = array_shift($currentDoubled);
+			$ids = [];
+			foreach($currentDoubled as $one) {
+				$ids[] = $one['uid'];
+			}
+			
+			if(count($ids) > 0) {
+				echo "Дубликаты: <br />";
+				print_r($currentDoubled);
+
+				// Удаляем дубликаты
+				$sql = "DELETE FROM t_address_47256
+						WHERE 
+							version_end = 9223372036854775807
+							AND uid IN(".implode(',', $ids).")";
+				
+				$conn->createCommand($sql)->execute(); 
+				
+				
+			}
+			echo "---------------------------------<br />";
+		}
+		
+				
+		$sql = 'ALTER TABLE dbo.t_address_47256 ENABLE TRIGGER trt_address_47256_delete';
+		$conn->createCommand($sql)->execute();
+		
+	}
+	
+	
+	public function actionUpdateTasuOmsStatus() {
+		ini_set('max_execution_time', 0);
+		$conn = Yii::app()->db2;
+	
+		$sql = 'ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+		
+		$sql = "SELECT 
+					t3.*
+				FROM t_book_65067 t1
+				JOIN t_patient_10905 t2 ON t2.uid = t1.patientuid_37756
+				JOIN t_policy_43176 t3 ON t3.patientuid_09882 =  t1.patientuid_37756
+				WHERE t1.version_end = 9223372036854775807
+					AND t2.version_end = 9223372036854775807
+					AND t3.version_end = 9223372036854775807
+					AND t3.type_07731 = 5
+					AND t1.number_50713 LIKE '%/15'
+				ORDER BY 2 DESC";
+		
+		$policies = $conn->createCommand($sql)->queryAll();
+		echo "<pre>";
+		foreach($policies as $policy) {
+			$omsInMis = Oms::model()->find('oms_series_number = :a', [':a' => $policy['number_12574']]);
+			if(!$omsInMis) {
+				continue;
+			}
+
+			if($omsInMis['status'] == 1 || $omsInMis['status'] == 3) {
+				var_dump($omsInMis);
+				$sql = "UPDATE t_policy_43176 
+						SET state_19333 = ".$omsInMis['status']."
+						WHERE version_end = 9223372036854775807
+						AND uid = ".$policy['uid'];
+						
+				$conn->createCommand($sql)->execute(); 
+				echo "----------------------<br>";
+			}
+		}
+		
+		$sql = 'ALTER TABLE dbo.t_policy_43176 ENABLE TRIGGER trt_policy_43176_update';
+		$conn->createCommand($sql)->execute();
+	}
+
 }
 ?>

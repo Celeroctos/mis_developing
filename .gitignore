@@ -1,7 +1,6 @@
-/nbproject
-/protected/runtime/*
+/protected/runtime/
 /.htaccess
 /protected/config/db/db.php
 /.idea/
+/assets/
 /uploads/
-/yii/

@@ -2,7 +2,7 @@
 /**
  * @var string $content
  */
-MainAsset::register();
+MainAsset::register()
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,10 +10,7 @@ MainAsset::register();
     <title>МИС МОНИИАГ</title>
     <script type="text/javascript">
         var globalVariables = {
-            baseUrl : '<?= Yii::app()->request->baseUrl; ?>',
-			widget: '<?= Widget::createUrl("widget") ?>',
-			table: '<?= Widget::createUrl("table") ?>',
-			panel: '<?= Widget::createUrl("panel") ?>'
+            baseUrl : '<?php echo Yii::app()->request->baseUrl; ?>'
         };
     </script>
 	<?= AssetBundleManager::getManager()->render() ?>

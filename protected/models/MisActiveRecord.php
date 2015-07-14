@@ -1,24 +1,16 @@
 <?php
 class MisActiveRecord extends CActiveRecord {
 
-    public function getTableName($alias = null) {
-        if ($alias != null) {
-            return $this->tableName().' as '.$alias;
-        } else {
-            return $this->tableName();
-        }
+    public function __construct($scenario = 'insert') {
+        parent::__construct($scenario);
     }
 
-    /**
-	 * @param string|null $className
-	 * @return static
-	 */
-	public static function model($className = null) {
-		if ($className == null) {
-			$className = get_called_class();
-		}
-		return parent::model($className);
-	}
+    protected function beforeSave() {
+       /* foreach($this->attributes as $key => $attr) {
+            $this->attributes->$key] = CHtml::encode(strip_tags($attr));
+        } */
+        return true;
+    }
 
 	/**
 	 * This method is invoked after saving a record successfully.
@@ -29,9 +21,11 @@ class MisActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$this->{$this->tableSchema->primaryKey} = Yii::app()->getDb()->getLastInsertID(
-				$this->tableName()."_id_seq"
-			);
+			if(!$this->id) {
+				$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
+					$this->tableName()."_id_seq"
+				);
+			}
 		} catch (Exception $ignored) {
 			/* We can't be sure, that we've just inserted new row in db */
 		}

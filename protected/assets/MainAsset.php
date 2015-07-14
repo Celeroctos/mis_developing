@@ -8,7 +8,6 @@ class MainAsset extends AssetBundle {
         "js/datecontrol.js",
         "js/keyboard.js",
         "js/pagination.js",
-		"js/side-menu.js",
         "js/keyboardcnf.js",
         "js/ajaxbutton.js",
     ];

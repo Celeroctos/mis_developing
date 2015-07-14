@@ -1,11 +1,3 @@
-<?php
-/**
- * @var $this GuidesTabMenu
- * @var $controller string
- * @var $module string
- * @var $action string
- */
-?>
 <ul class="nav nav-tabs  default-margin-bottom">
     <?php
     if (Yii::app()->user->checkAccess('guideEditEnterprise') ||
@@ -122,7 +114,7 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')||
     ?>
         <li <?php echo
     (
-    ($module == 'guides/laboratory')||
+    ($controller == 'analysissampletype')||
     ($controller == 'analysisparam')||
     ($controller == 'analysistype')||
     ($controller == 'analysistypeparam')||
@@ -130,7 +122,7 @@ if ( Yii::app()->user->checkAccess('guideEditAnalysisSample')||
     ($controller == 'analyzertypeanalysis')
     ) ? 'class="active"' : '';
     ?>>
-    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysistype')) ?>
+    <?php echo CHtml::link('Лаборатория', array('/guides/laboratory/analysisType')) ?>
         </li>
 <?php } ?>
 </ul>

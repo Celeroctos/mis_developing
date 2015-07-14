@@ -292,7 +292,7 @@ class ElementsController extends Controller {
 
         // Теперь посчитаем путь до элемента. Посмотрим на категорию, выберем иерархию категорий и прибавим введённую позицию
         $partOfPath = $this->getElementPath($element->categorie_id);
-        $element->path = implode('.', array_reverse(explode('.', $partOfPath)));
+        $element->path = implode('.', array_reverse(explode('.', $partOfPath))) .".". $element->position;
 
         if($element->save()) {
             echo CJSON::encode(array(

@@ -1163,35 +1163,34 @@ class TasuController extends Controller {
 		
 		if(!(trim($docserie) == '' && trim($medcard->docnumber) == '')) {
 			$sql = "SELECT * FROM PDPStdStorage.dbo.t_dul_44571
-					WHERE
+					WHERE 
 						[dulseries_30145] = '".$docserie."'
 						AND [dulnumber_50657] = '".$medcard->docnumber."'
 						AND [version_end] = '".$this->version_end."'";
-
+			
 			$result = $conn->createCommand($sql)->queryRow();
 			if(!$result) {
 				$sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
-					SET
-						[dulseries_30145] = '" . $docserie . "',
-						[dulnumber_50657] = '" . $medcard->docnumber . "',
-						[issuedate_42162] = '" . $givedDate . "'
-					WHERE
-						[patientuid_53984] = " . $patientUid . "
-						AND [version_end] = '" . $this->version_end . "'";
+					SET 
+						[dulseries_30145] = '".$docserie."',
+						[dulnumber_50657] = '".$medcard->docnumber."',
+						[issuedate_42162] = '".$givedDate."'
+					WHERE 
+						[patientuid_53984] = ".$patientUid." 
+						AND [version_end] = '".$this->version_end."'";
 			} elseif($result['patientuid_53984'] != $patientUid) {
 				$sql = "SELECT * FROM PDPStdStorage.dbo.t_dul_44571
-						WHERE
+						WHERE 
 							[dulseries_30145] = '".$docserie."'
 							AND [dulnumber_50657] = '".$medcard->docnumber."'
 							AND [version_end] = '".$this->version_end."'
 							AND [patientuid_53984] = ".$patientUid;
-
 				$result = $conn->createCommand($sql)->queryRow();
 				if(!$result) {
 					$sql = "UPDATE PDPStdStorage.dbo.t_dul_44571
-						SET
-							[patientuid_53984] = ".$patientUid."
-						WHERE
+						SET 
+							[patientuid_53984] = ".$patientUid." 
+						WHERE 
 							[dulseries_30145] = '".$docserie."'
 							AND [dulnumber_50657] = '".$medcard->docnumber."'
 							AND [version_end] = '".$this->version_end."'";
@@ -1205,7 +1204,6 @@ class TasuController extends Controller {
 				exit();
 			}
 		}
-			
 		$sql = "ALTER TABLE dbo.t_dul_44571 ENABLE TRIGGER trt_dul_44571_update";
 		$conn->createCommand($sql)->execute();
 	}
@@ -1456,12 +1454,12 @@ class TasuController extends Controller {
 
                 $sql = "ALTER TABLE dbo.t_policy_43176 DISABLE TRIGGER trt_policy_43176_update";
                 $conn->createCommand($sql)->execute();
-    
+				
 				if($oms->type == 5) {
 					$number = $serie.$number;
 					$serie = '';
 				}
-	
+
                 $sql = "EXEC PDPStdStorage.dbo.p_patsetpol_48135
                             ".$patientRow['PatientUID'].",
                             0,
@@ -1480,7 +1478,6 @@ class TasuController extends Controller {
                             NULL,
                             NULL,
                             NULL";
-
                 try {
                     $result = $conn->createCommand($sql)->execute();
                     $sql = "ALTER TABLE dbo.t_policy_43176 ENABLE TRIGGER trt_policy_43176_update";
@@ -2449,7 +2446,6 @@ class TasuController extends Controller {
 	// mode - режим работы, 1 - принудительное обновление, даже если есть данные по региону и страховой
 	public function getTasuPatientByPolicy($oms, $mode = 0) {
 		// Если серии нет, то нужно брать номер полиса в качестве опоры
-        return true;
 		if($oms->region != null && $oms->insurance != null && !$mode) {
 			return true;
 		}		
@@ -2476,8 +2472,8 @@ class TasuController extends Controller {
 					return false;
 				}
 			} else {
-				$series = $policyParts[0];
-				$number = $policyParts[1];
+				$series = trim($policyParts[0]);
+				$number = trim($policyParts[1]);
 			}
 
 			if($oms->type == 5 || $oms->type == 3) {
@@ -2522,6 +2518,7 @@ class TasuController extends Controller {
 					) 
 			INNER JOIN PDPStdStorage.dbo.t_smo_30821 AS [s] ON [oms].[smouid_20464] = [s].[uid]
 			WHERE O.ENP = '".str_replace(' ', '', $series.$number)."'";
+			
 			$tasuOmsRow = $conn3->createCommand($sql)->queryRow();
 			if($tasuOmsRow == null) {
 				return false;

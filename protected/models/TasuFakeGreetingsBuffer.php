@@ -21,9 +21,9 @@ class TasuFakeGreetingsBuffer extends MisActiveRecord {
 
     public function afterSave() {
         parent::afterSave();
-        if(!$this->id) {
-            $this->id = Yii::app()->db->getLastInsertID('mis.tasu_fake_greetings_id_seq');
-        }
+		if(!$this->id) {
+			$this->id = Yii::app()->db->getLastInsertID('mis.tasu_fake_greetings_id_seq');
+		}
         return true;
     }
 

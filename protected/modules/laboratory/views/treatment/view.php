@@ -1,57 +1,180 @@
 <?php
 /**
  * @var TreatmentController $this - Self instance
+ * @var int $directionRepeats - Count of direction repeats
  */
-$this->widget('Laboratory_Modal_AboutDirection');
-$this->widget('Laboratory_Modal_MedcardSearch');
-$this->widget('Laboratory_Modal_PatientSearch');
-$this->widget('Laboratory_Modal_DirectionCreator');
-$this->widget('Laboratory_Modal_AboutMedcard');
-$this->widget('Laboratory_Modal_PatientEditor');
 
-$this->widget('TabMenu', [
-    'style' => TabMenu::STYLE_GREEN_JUSTIFIED,
-    'items' => [
-        'direction-active' => [
-            'label' => 'Направления',
-            'data-tab' => 'laboratory-container-direction-active',
-        ],
-        'direction-repeat' => [
-            'label' => 'Повторный забор образцов&nbsp;' . CHtml::tag('span', [
-                    'class' => 'badge', 'id' => 'treatment-repeat-counts'
-                ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_TREATMENT_REPEAT)),
-            'data-tab' => 'laboratory-container-direction-repeat'
-        ],
-        'direction-create' => [
-            'label' => 'Создать направление',
-            'data-tab' => 'laboratory-container-direction-create',
-        ],
-    ],
-    'active' => 'direction-active',
-]) ?>
+$this->widget("Modal", [
+	"title" => "Создать направление",
+	"body" => $this->getWidget("AutoForm", [
+		"model" => new LDirectionForm(),
+		"id" => "direction-register-form",
+		"url" => Yii::app()->getBaseUrl() . "/laboratory/direction/register"
+	]),
+	"id" => "direction-register-modal",
+	"buttons" => [
+		"register" => [
+			"text" => "Создать",
+			"class" => "btn btn-primary",
+			"type" => "submit"
+		]
+	]
+]);
 
-<div class="laboratory-table-wrapper table-wrapper">
-    <hr>
-    <div id="laboratory-container-direction-active">
-        <?php $this->widget('Laboratory_Widget_DirectionPanel', [
-            'title' => 'Направления на анализ',
-            'status' => Laboratory_Direction::STATUS_TREATMENT_ROOM
-        ]) ?>
-    </div>
-    <div id="laboratory-container-direction-repeat" style="display: none;">
-        <?php $this->widget('Laboratory_Widget_DirectionPanel', [
-            'title' => 'Направления на повторный забор образца',
-            'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT,
-        ]) ?>
-    </div>
-    <div id="laboratory-container-direction-create" style="display: none;">
-        <?php $this->widget('Laboratory_Widget_PatientCreator') ?>
-    </div>
+$this->widget("Modal", [
+	"title" => "Поиск медкарты в МИС",
+	"body" => CHtml::tag("div", [
+		"style" => "padding: 10px"
+	], $this->getWidget("MedcardSearch", [
+		"tableWidget" => "MedcardTable2"
+	])),
+	"id" => "mis-medcard-search-modal",
+	"buttons" => [
+		"load" => [
+			"text" => "Открыть",
+			"class" => "btn btn-primary",
+			"attributes" => [
+				"data-loading-text" => "Загрузка ..."
+			],
+			"type" => "button"
+		]
+	],
+	"class" => "modal-lg"
+]);
+
+$this->widget("Modal", [
+	"title" => "Поиск медкарты в ЛИС",
+	"body" => CHtml::tag("div", [
+		"style" => "padding: 10px"
+	], $this->getWidget("MedcardSearch", [
+		"tableWidget" => "MedcardTable"
+	])),
+	"id" => "lis-medcard-search-modal",
+	"buttons" => [
+		"load" => [
+			"text" => "Открыть",
+			"class" => "btn btn-primary",
+			"attributes" => [
+				"data-loading-text" => "Загрузка ..."
+			],
+			"type" => "button"
+		]
+	],
+	"class" => "modal-lg"
+]);
+
+$this->widget("Modal", [
+	"title" => "Новое направление",
+	"body" => CHtml::tag("div", [
+		"style" => "padding: 10px"
+	], $this->getWidget("DirectionCreator"))
+]);
+
+$this->widget("Modal", [
+	"title" => "Медицинская карта № " . CHtml::tag("span", [
+			"id" => "card_number"
+		], ""),
+	"body" => $this->getWidget("MedcardEditableViewer"),
+	"id" => "medcard-editable-viewer-modal",
+	"buttons" => [
+		"save-button" => [
+			"text" => "Сохранить",
+			"type" => "button",
+			"class" => "btn btn-primary"
+		],
+		"copy-button" => [
+			"text" => "Копировать",
+			"class" => "btn btn-default",
+			"type" => "button",
+			"align" => "left"
+		],
+		"insert-button" => [
+			"text" => "Вставить",
+			"class" => "btn btn-default",
+			"type" => "button",
+			"align" => "left"
+		],
+		"clear-button" => [
+			"text" => "Очистить",
+			"class" => "btn btn-warning",
+			"type" => "button",
+			"align" => "left"
+		],
+		"mis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент МИС",
+			"class" => "btn btn-default",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#mis-medcard-search-modal"
+			],
+			"align" => "center"
+		],
+		"lis-find-button" => [
+			"text" => "<span class='glyphicon glyphicon-search'></span>&nbsp;&nbsp;Пациент ЛИС",
+			"class" => "btn btn-success",
+			"type" => "button",
+			"attributes" => [
+				"data-toggle" => "modal",
+				"data-target" => "#lis-medcard-search-modal"
+			],
+			"align" => "center"
+		]
+	],
+	"class" => "modal-90"
+]);
+
+$this->widget("Modal", [
+	"title" => "Регистрация направления",
+	"body" => $this->getWidget("AutoForm", [
+		"model" => new LDirectionForm("treatment.edit")
+	]),
+	"id" => "direction-register-modal"
+]); ?>
+
+<div class="treatment-header-wrapper row">
+	<div class="treatment-header">
+<!--		<div class="treatment-header-rounded">-->
+<!--			<div class="row col-xs-12">-->
+<!--				<span class="col-xs-10">-->
+<!--					<b>Процедурный кабинет</b><br>-->
+<!--					<span>--><!--</span>-->
+<!--				</span>-->
+<!--				<button class="btn btn-default col-xs-2 logout-button">Выйти</button>-->
+<!--			</div>-->
+<!--		</div>-->
+		<div class="col-xs-4 no-padding">
+			<button class="btn btn-default btn-block treatment-header-rounded active" data-tab="#treatment-direction-grid-wrapper" type="button">
+				<span>Направления</span>
+			</button>
+		</div>
+		<div class="col-xs-4 no-padding treatment-center-block">
+			<button class="btn btn-default btn-block treatment-header-rounded" data-tab="#treatment-repeated-grid-wrapper" type="button">
+				<span>Повторный забор образцов</span>
+				<span class="badge">
+					<?= $directionRepeats ?>
+				</span>
+			</button>
+		</div>
+		<div class="col-xs-4 no-padding">
+			<button class="btn btn-default btn-block treatment-header-rounded" type="button" data-toggle="modal" data-target="#medcard-editable-viewer-modal" aria-expanded="false">
+				<span>Создать направление</span>
+			</button>
+		</div>
+	</div>
+	<div class="treatment-table-wrapper treatment-header-rounded">
+		<div id="treatment-direction-grid-wrapper">
+			<?php $this->widget("DirectionTable", [
+				"where" => "status <> 3"
+			]) ?>
+		</div>
+		<div id="treatment-repeated-grid-wrapper" class="no-display">
+			<?php $this->widget("DirectionTable", [
+				"where" => "status = 3"
+			]) ?>
+		</div>
+	</div>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-	$(document).on('barcode.captured', function(e, p) {
-		Laboratory_DirectionTable_Widget.show(p.barcode);
-	});
-});
-</script>
+<br>
+<br>
+<?php $this->widget("DoctorTable") ?>

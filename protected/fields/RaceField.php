@@ -13,8 +13,8 @@ class RaceField extends DropDown {
 	 */
 	public function data() {
 		return [
-			1 => "Европеоид",
-			2 => "Монголоид",
+			0 => "Европеоид",
+			1 => "Монголоид",
 			3 => "Негроид",
 			4 => "Американоид"
 		];
@@ -33,6 +33,6 @@ class RaceField extends DropDown {
 	 * @return String - Label
 	 */
 	public function name() {
-		return "Расовая принадлежность";
+		return "Раса";
 	}
 }

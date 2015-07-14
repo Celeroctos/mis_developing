@@ -38,7 +38,7 @@
 			// Set this flag to true, if
 			// you want to render table
 			// with empty values in rows
-			$isRenderEmptyTable = true;
+			$isRenderEmptyTable = false;
 
 			// Decoded json response from element
 			$valuesArr = CJSON::decode($element['value']);
@@ -67,7 +67,7 @@
 
 					// Get value from array or
 					// declare it as null
-					$value = !isset($valuesArr[$i][$j]) ? null
+					$value = !isset($valuesArr[$i][$j]) ? " "							
 						: $valuesArr[$i][$j];
 
 					// If fetched value is null, then don't

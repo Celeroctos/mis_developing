@@ -5,42 +5,13 @@ abstract class ActiveRecord extends CActiveRecord {
 	/**
 	 * Get model's instance from cache
 	 * @param string $className - Class's name
-	 * @return static - Cached model instance
+	 * @return ActiveRecord - Cached model instance
 	 */
 	public static function model($className = null) {
 		if ($className == null) {
 			$className = get_called_class();
 		}
 		return parent::model($className);
-	}
-
-	/**
-	 * Load model from form model instance and return it
-	 * @param FormModel $formModel - Form model instance with
-	 *    attributes that should be copied to model
-	 * @param array $data - Extra form fields
-	 * @return static - New just created instance with
-	 *    form model attributes
-	 */
-	public static function loadFromModel(FormModel $formModel, $data = []) {
-		$self = new static();
-		if ($formModel !== null) {
-			foreach ($formModel->getAttributes() as $key => $value) {
-				$self->$key = $value;
-			}
-		}
-		foreach ($data as $key => $value) {
-			$self->$key = $value;
-		}
-		return $self;
-	}
-
-	public static function load($data = []) {
-		$self = new static();
-		foreach ($data as $key => $value) {
-			$self->$key = $value;
-		}
-		return $self;
 	}
 
 	/**
@@ -52,14 +23,9 @@ abstract class ActiveRecord extends CActiveRecord {
 	protected function afterSave() {
 		parent::afterSave();
 		try {
-			$pk = Yii::app()->getDb()->getLastInsertID(
+			$this->{"id"} = Yii::app()->getDb()->getLastInsertID(
 				$this->tableName()."_id_seq"
 			);
-			if (!empty($this->tableSchema->primaryKey)) {
-				$this->{$this->tableSchema->primaryKey} = $pk;
-			} else {
-				$this->{$this->primaryKey} = $pk;
-			}
 		} catch (Exception $ignored) {
 			/* We can't be sure, that we've just inserted new row in db */
 		}
@@ -204,7 +170,7 @@ abstract class ActiveRecord extends CActiveRecord {
         foreach ($this->getKeys() as $key => $ignored) {
             $criteria->compare($key, $this->$key, true, '');
         }
-        return new CActiveDataProvider($this, [
+        return new ActiveDataProvider($this, [
             'criteria' => $criteria,
             'sort' => [
                 'defaultOrder' => [
@@ -216,6 +182,61 @@ abstract class ActiveRecord extends CActiveRecord {
             ]
         ]);
     }
+
+    /**
+	 * Override that method to return command for jqGrid
+	 * @return CDbCommand - Command with query
+	 * @throws CDbException
+	 */
+	public function getJqGrid() {
+		return $this->getDbConnection()->createCommand()
+			->select("*")
+			->from($this->tableName());
+	}
+
+	/**
+	 * Override that method to return command for table widget
+	 * @return CDbCommand - Command with selection query
+	 * @throws CDbException
+	 */
+	public function getTable() {
+		return $this->getDbConnection()->createCommand()
+			->select("*")
+			->from($this->tableName());
+	}
+
+	/**
+	 * Override that method to return count of rows in table
+	 * @param CDbCriteria $criteria - Search criteria
+	 * @return int - Count of rows in current table
+	 * @throws CDbException
+	 */
+	public function getTableCount(CDbCriteria $criteria = null) {
+		$query = $this->getDbConnection()->createCommand()
+			->select("count(1) as count")
+			->from($this->tableName());
+		if ($criteria != null && $criteria instanceof CDbCriteria) {
+			$query->andWhere($criteria->condition, $criteria->params);
+		}
+		return $query->queryRow()["count"];
+	}
+
+	/**
+	 * That method will return rows for jqGrid table
+	 * @param bool $sidx - Sort index
+	 * @param bool $sord - Sort order
+	 * @param bool $start - Start index position
+	 * @param bool $limit - Offset from start position
+	 * @return array - Array with rows for jqGrid
+	 */
+	public function getRows($sidx = false, $sord = false, $start = false, $limit = false) {
+		$query = $this->getJqGrid();
+		if($sidx !== false && $sord !== false && $start !== false && $limit !== false) {
+			$query->order($sidx.' '.$sord);
+			$query->limit($limit, $start);
+		}
+		return $query->queryAll();
+	}
 
 	/**
 	 * Get instance of default table provider for current table

@@ -1,5 +1,4 @@
-<div id="helperIcon"></div>
-<div id="voiceIcon"></div>
+<div id="helperIcon" xmlns="http://www.w3.org/1999/html"></div>
 <div class="col-xs-12 row">
     <ul class="nav nav-tabs" id="bedsstockNavbar">
         <li role="navigation" class="active">
@@ -33,7 +32,7 @@
     </ul>
 </div>
 <div class="row col-xs-12 tableBlock">
-    <div class="bedsstockTablesCont col-xs-11">
+    <div class="bedssotckTablesCont col-xs-11">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="patients">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
@@ -44,7 +43,7 @@
             <div role="tabpanel" class="tab-pane" id="relocations">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
             </div>
-            <div role="tabpanel" class="tab-pane wardsSettings" id="wards">
+            <div role="tabpanel" class="tab-pane" id="wards">
                 <?php $this->widget('application.modules.hospital.components.widgets.Wards', array(
                     'showSettingsIcon' => true
                 )); ?>
@@ -54,7 +53,7 @@
 </div>
 <div class="bedsstockExpanderBody">
     <div class="wrap">
-        <div class="cont left wardsChoose">
+        <div class="cont left">
             <?php $this->widget('application.modules.hospital.components.widgets.Wards'); ?>
         </div>
         <div class="cont left">
@@ -68,14 +67,14 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option value="-1">%any doctor%</option>
+                                <option>%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="patientCheckoutDate">Дата выписки</label>
                             <input type="text" class="form-control" id="patientCheckoutDate">
                         </div>
-                        <button class="btn btn-success acceptReserve" type="button">Подтвердить</button>
+                        <button class="btn btn-success" type="button">Подтвердить</button>
                     </form>
                 </li>
                 <li class="list-group-item">
@@ -88,7 +87,7 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option value="-1">%any doctor%</option>
+                                <option>%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -108,7 +107,7 @@
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
                             <select class="form-control col-xs-3" id="doctorId">
-                                <option value="-1">%any doctor%</option>
+                                <option>%any doctor%</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -125,93 +124,53 @@
 <div class="relocationExpanderBody">
     <form class="form-inline relocationForm">
         <div class="form-group">
-            <label for="wardId" class="col-xs-5">Выберите отделение для перевода</label>
-            <div class="col-xs-7">
-                <select class="form-control" id="wardId">
-                    <option>%any ward%</option>
-                </select>
-            </div>
+            <label for="wardId">Выберите отделение для перевода</label>
+            <select class="form-control col-xs-3" id="wardId">
+                <option>%any doctor%</option>
+            </select>
         </div>
         <div class="form-group">
-            <button class="btn btn-success acceptRelocation" type="button">Подтвердить</button>
+            <button class="btn btn-success" type="button">Подтвердить</button>
         </div>
     </form>
 </div>
-<div class="settingsFormCont">
-    <form class="col-xs-12 settingsForm form-horizontal">
-        <div class="row">
-            <div class="col-xs-5">
-                <div>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Платная
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Бесплатная
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">№ палаты</label>
-                    <div class="col-xs-8">
-                        <input type="text" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Тип палаты</label>
-                    <div class="col-xs-8">
-                        <select class="form-control"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Пол</label>
-                    <div class="col-xs-8">
-                        <select class="form-control"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Кол-во коек</label>
-                    <div class="col-xs-8">
-                        <input type="text" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Платных</label>
-                    <div class="col-xs-8">
-                        <input type="text" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-danger" id="deleteWard">Удалить палату</button>
+<div class="settingsForm">
+    <form>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-2 control-label">№ палаты</label>
+                <div class="col-xs-10">
+                    <input type="text" class="form-control">
                 </div>
             </div>
-            <div class="col-xs-7">
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Отделение</label>
-                    <div class="col-xs-8">
-                        <select class="form-control"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Статус</label>
-                    <div class="col-xs-8">
-                        <select class="form-control"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Врач</label>
-                    <div class="col-xs-8">
-                        <select class="form-control"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Комментарий</label>
-                    <div class="col-xs-8">
-                        <textarea class="form-control" cols="30" rows="5"></textarea>
-                    </div>
-                </div>
-                <div class="form-group col-xs-12 col-sm-offset-3">
-                    <button class="btn btn-primary" id="changeWard">Применить</button>
-                    <button class="btn btn-success" id="closeWard">Закрыть</button>
-                </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+
             </div>
         </div>
     </form>

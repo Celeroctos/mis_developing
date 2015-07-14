@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $this AnalysistypeController
+ * @var $this AnalysisTypeController
  * @var $model GActiveRecord
  */
 $this->widget("LaboratoryTabMenu");
@@ -48,7 +48,7 @@ $this->widget("AutoForm", [
 ]);
 
 $this->widget("GGridView", [
-	"url" => "guides/laboratory/analysistype",
+	"url" => "guides/laboratory/analysisType",
 	"title" => "Типы анализов",
 	"content" => ob_get_clean(),
 	"model" => $model,

@@ -20,15 +20,12 @@ abstract class FormModel extends CFormModel {
 	protected $config = [];
 
 	/**
-	 * Construct form model with scenario and default data
-	 * @param string $scenario - Name of the scenario that this model is used in
-	 * @param array $data - Array with data
+	 * Constructor.
+	 * @param string $scenario name of the scenario that this model is used in.
+	 * See {@link CModel::scenario} on how scenario is used by models.
 	 * @see getScenario
 	 */
-	public function __construct($scenario = "", $data = []) {
-		foreach ($data as $key => $value) {
-			$this->$key = $value;
-		}
+	public function __construct($scenario = "") {
 		parent::__construct($scenario);
 	}
 
@@ -190,8 +187,6 @@ abstract class FormModel extends CFormModel {
             // Dynamically declare empty variable
 			if (isset($field["value"])) {
 				$this->$key = $field["value"];
-			} else if (isset($this->$key) && !empty($this->$key)) {
-				$field["value"] = $this->$key;
 			} else {
 				$this->$key = null;
 			}

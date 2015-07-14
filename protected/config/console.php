@@ -7,21 +7,7 @@ return array(
 	// preloading 'log' component
 	'preload'=>array('log'),
 	'import'=>array(
-		'application.models.*',
-		'application.models.forms.*',
 		'application.components.*',
-		'application.controllers.*',
-		'application.assets.*',
-		'application.widgets.*',
-		'application.forms.*',
-		'application.fields.*',
-		'application.validators.*',
-        'application.modules.medcard.components.*',
-        'application.modules.medcard.controllers.*',
-        'application.modules.medcard.models.*',
-        'application.modules.medcard.forms.*',
-        'application.modules.medcard.widgets.*',
-        'application.modules.medcard.grids.*',
 	),
 	// application components
 	'components'=>array(

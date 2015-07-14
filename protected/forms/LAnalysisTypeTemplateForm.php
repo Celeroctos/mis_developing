@@ -47,7 +47,7 @@ class LAnalysisTypeTemplateForm extends FormModel {
 					"value" => "name"
 				]
 			],
-			"checked" => [
+			"is_default" => [
 				"label" => "Сделать по умолчанию",
 				"type" => "YesNo",
 				"rules" => "required"

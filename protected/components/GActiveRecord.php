@@ -64,7 +64,7 @@ abstract class GActiveRecord extends ActiveRecord {
 				$criteria->compare($key, $this->getAttribute($key));
 			}
 		}
-		return new GActiveDataProvider($this, [
+		return new ActiveDataProvider($this, [
 			"sort" => [
 				"defaultOrder" => "id asc"
 			],

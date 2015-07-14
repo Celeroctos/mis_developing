@@ -2,9 +2,9 @@
 
 class FormTasuFilterMedcardsExport extends CFormModel
 {
-    public $dateFrom;
+	public $dateFrom;
     public $dateTo;
-    public $medcard;
+	public $medcard;
 
     public function rules()
     {
@@ -18,9 +18,9 @@ class FormTasuFilterMedcardsExport extends CFormModel
     public function attributeLabels()
     {
         return array(
-            'dateFrom' => 'С',
+			'dateFrom' => 'С',
             'dateTo' => 'По',
-            'medcard' => 'Номер карты'
+			'medcard' => 'Номер карты'
         );
     }
 }

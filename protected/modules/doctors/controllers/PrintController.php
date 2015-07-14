@@ -335,19 +335,6 @@ class PrintController extends Controller {
             }
         }
 
-        foreach ($changedElements as $i => $element) {
-            if ($element['type'] != MedcardElementEx::TYPE_TABLE) {
-                continue;
-            } else if (!empty($element['value']) && $element['value'][0] == '{') {
-                if ($json = json_decode($element['value']) && isset($json['value'])) {
-                    $value = $json['values'];
-                } else {
-                    $value = [];
-                }
-                $changedElements[$i]['value'] = $value;
-            }
-        }
-
         // Создадим виджет
         $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
 
@@ -361,12 +348,6 @@ class PrintController extends Controller {
         $categorieWidget->divideTreebyCats();
 
         $sortedElements = $categorieWidget->dividedCats;
-
-        foreach ($sortedElements as $i => $template) {
-            if ($template['name'] == null) {
-                $sortedElements[$i]['name'] = MedcardTemplateEx::model()->findByPk($i)->{'name'};
-            }
-        }
 
         // Вытащим диагнозы
 
@@ -388,13 +369,12 @@ class PrintController extends Controller {
         );
         if($greetingIn === false) {
             if(!$returnResult) {
-                /* @var $mPDF mPDF */
-                $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0, 'Times New Roman');
+                $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L');
                 $mPDF->SetDisplayMode('fullpage');
                 $mPDF->list_indent_first_level = 0;
 
                 if ($printRecom){
-                    $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0, 'Times New Roman', 8, 8, 8, 8, 8, 8);
+                    $mPDF = Yii::app()->ePdf->mpdf('', 'A5-L', 0,'',8,8,8,8,8,8);
                 }
                 $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot.css').'/paper.less');
                 $mPDF->WriteHTML($stylesheet, 1);

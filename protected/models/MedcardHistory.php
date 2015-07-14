@@ -50,7 +50,6 @@ class MedcardHistory extends MisActiveRecord {
 						':policy_id' => $omsId
 					 ))
 			->andWhere(array('like', 'm.to', $prefix.'%'.$postfix));
-
 		return $medcard->queryRow();
 	}
 }

@@ -5,7 +5,6 @@
 <!DOCTYPE html>
 <head>
     <title>МИС МОНИИАГ</title>
-    <meta http-equiv="Cache-Control" content="max-age=3600, must-revalidate">
     <script type="text/javascript">
         var globalVariables = {
             baseUrl : '<?php echo Yii::app()->request->baseUrl; ?>'

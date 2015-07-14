@@ -1,3 +1,4 @@
+
 /**
  * @type {TemplateEngine} - Глобальный объект, предоставляющий API для работы с
  *      TemplateEngine. Сюда можно добавлять любые методы, какие необходимы и
@@ -2367,8 +2368,8 @@ var TemplateEngine = TemplateEngine || {};
 						CategoryPatcher.put(prevPath, ref);
 						c.append(ref);
 					}
-					++offset;
 				}
+				++offset;
 			}
 			c.append(item);
 		}
@@ -2467,9 +2468,9 @@ var TemplateEngine = TemplateEngine || {};
 		$(".template-engine-widget").each(function(i, w) {
 			WidgetCollection.register($(w));
 		});
-		/* $(document).contextmenu(function() {
+		$(document).contextmenu(function() {
 			return false;
-		}); */
+		});
 	});
 
 	var collection = WidgetCollection._templateCollection;

@@ -17,7 +17,23 @@ class UtilitesController extends Controller {
         )->execute();
 
         echo "OK!";
-        
     }
+	
+	public function actionAddUserToDoctor() {
+		$users = User::model()->findAll();
+		echo Yii::app()->db->connectionString;
+		echo "<pre>";
+		foreach($users as $user) {
+			if(!$user['employee_id']) {
+				continue;
+			}
+			$doc = Doctor::model()->findByPk($user['employee_id']);
+			print_r($doc);
+			if($doc) {
+				$doc->user_id = $user['id'];
+				$doc->save();
+			}
+		}
+	}
 }
 ?>

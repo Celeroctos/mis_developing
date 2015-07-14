@@ -4,15 +4,9 @@ class TableProvider extends CComponent {
 
 	/**
 	 * @var CActiveRecord|string - Database active
-	 * 	record instance or it's class name
+	 * 	record instance or class name
 	 */
 	public $activeRecord = null;
-
-	/**
-	 * @var TablePagination|false - Table pagination
-	 *	instance, set it to false to disable pagination
-	 */
-	public $pagination = null;
 
 	/**
 	 * @var CDbCommand - Query to fetch data from
@@ -34,15 +28,15 @@ class TableProvider extends CComponent {
 	/**
 	 * Construct table provider with [tableName] check
 	 * @param CActiveRecord|string $activeRecord - Active record instance
-	 *  or class name
+	 *    or class name
 	 * @param CDbCommand $fetchQuery - Query to fetch rows from
-	 *  database's table
-	 * @param array|null $config - Array with classes table provider
-	 * 	configuration
+	 *    database's table
+	 * @param CDbCommand $countQuery - Query to count rows from
+	 *    database's table
 	 * @throws CException
 	 * @see activeRecord
 	 */
-	public function __construct($activeRecord = null, $fetchQuery = null, $config = null) {
+	public function __construct($activeRecord = null, $fetchQuery = null, $countQuery = null) {
 		if (($this->activeRecord = $activeRecord) == null) {
 			throw new CException("Table provider can't resolve [null] active record instance");
 		}
@@ -54,17 +48,20 @@ class TableProvider extends CComponent {
 		} else {
 			$this->fetchQuery = $fetchQuery;
 		}
-		$this->countQuery = clone $this->fetchQuery;
-		$this->countQuery->select("count(1) as count");
-		$this->countQuery->setJoin(null);
-		if ($this->pagination !== false) {
-			$this->pagination = $this->getPagination();
+		if ($countQuery == null) {
+			$this->countQuery = $this->getCountQuery();
+		} else {
+			$this->countQuery = $countQuery;
 		}
-		if ($config !== null) {
-			foreach ($config as $key => $value) {
-				$this->$key = $value;
-			}
-		}
+	}
+
+	/**
+	 * Create static adapter for active record database model
+	 * @param ActiveRecord $activeRecord - Active record instance
+	 * @return TableProvider - Just adapted table provider
+	 */
+	public static function createActiveRecordAdapter(ActiveRecord $activeRecord) {
+		return new TableProvider($activeRecord->tableName());
 	}
 
 	/**
@@ -82,24 +79,24 @@ class TableProvider extends CComponent {
 	}
 
 	/**
+	 * Override that method to return count of rows in table
+	 * @return CDbCommand - Command to get count of rows
+	 */
+	public function getCountQuery() {
+		if ($this->countQuery !== null) {
+			return $this->countQuery;
+		}
+		return $this->getDbConnection()->createCommand()
+			->select("count(1) as count")
+			->from($this->activeRecord->tableName());
+	}
+
+	/**
 	 * Fetch rows from query
 	 * @return array - Array with fetched data
 	 */
 	public function fetchData() {
-//		$this->fetchQuery = $this->getDbConnection()->createCommand()
-//			->select("*")->from("(". $this->fetchQuery->getText() .") as _");
-//		$this->countQuery = $this->getDbConnection()->createCommand()
-//			->select("*")->from("(". $this->countQuery->getText() .") as _");
-		if ($this->getPagination()->optimizedMode) {
-			$this->applyCriteria($this->getCriteria(), function($query) {
-				/** @var $query CDbCommand */
-				$query->limit($this->getPagination()->pageLimit + 1,
-					$this->getPagination()->pageLimit * $this->getPagination()->currentPage
-				);
-			});
-		} else {
-			$this->applyCriteria($this->getCriteria());
-		}
+		$this->applyCriteria($this->getCriteria());
 		if (($row = $this->countQuery->queryRow()) != null) {
 			$count = $row["count"];
 		} else {
@@ -115,21 +112,13 @@ class TableProvider extends CComponent {
 	/**
 	 * Apply criteria to provider's query
 	 * @param CDbCriteria $criteria - Database criteria
-	 * @param callable $custom - Custom function for count query
 	 * @return CDbCriteria - Same criteria instance
 	 */
-	public function applyCriteria($criteria, $custom = null) {
-		if ($custom == null) {
-			$queries = [
-				$this->countQuery,
-				$this->fetchQuery
-			];
-		} else {
-			$queries = [
-				$this->fetchQuery
-			];
-			$custom($this->countQuery);
-		}
+	public function applyCriteria($criteria) {
+		$queries = [
+			$this->countQuery,
+			$this->fetchQuery
+		];
 		foreach ($queries as $query) {
 			/** @var $query CDbCommand */
 			$query->where($criteria->condition, $criteria->params);

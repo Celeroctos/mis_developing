@@ -1,6 +1,6 @@
 var applyInsertForSelect;
 
-var categoryReady = (function() {
+$(document).ready(function() {
 
     $.fn['categories'] = {
         initSelectOnClick: function(controlToInit)  {
@@ -83,9 +83,6 @@ var categoryReady = (function() {
             if (  $(globalVariables.domElement).is('select') ) {
                 $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
                 $(globalVariables.domElement).val(ajaxData.id);
-                if (globalVariables.domElement.hasClass("selectpicker")) {
-                    globalVariables.domElement.selectpicker("refresh");
-                }
             } else {
                 if (  $(globalVariables.domElement).is('input') ) {
                     // Ищем таблицу
@@ -98,23 +95,21 @@ var categoryReady = (function() {
         }
     });
 
-
-
     $("#add-greeting-value-form").on('success', function(eventObj, ajaxData, status, jqXHR) {
-        var element = $(globalVariables.domElement);
-        ajaxData = $.parseJSON(ajaxData);
+        var ajaxData = $.parseJSON(ajaxData);
         if(ajaxData.success == 'true') { // Запрос прошёл удачно, закрываем окно для добавления нового предприятия, перезагружаем jqGrid
             $('#addGreetingComboValuePopup').modal('hide');
             //$("#add-greeting-value-form")[0].reset(); // Сбрасываем форму
-            if (element.is('select')) {
-                element.find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
+            if (  $(globalVariables.domElement).is('select') )
+            {
+                $(globalVariables.domElement).find('option:first').before('<option value="' + ajaxData.id + '">' + ajaxData.display + '</option>');
                 //$(globalVariables.domElement).val(ajaxData.id);
-                if (element.hasClass("selectpicker")) {
-                    element.selectpicker("refresh");
-                }
-            } else {
-                if (element.is('input')) {
-                    $.fn[element.attr('id')].addSelected(ajaxData.id,ajaxData.display);
+            }
+            else
+            {
+                if (  $(globalVariables.domElement).is('input') )
+                {
+                    $.fn[ $(globalVariables.domElement).attr('id') ].addSelected(ajaxData.id,ajaxData.display);
                 }
             }
         } else {
@@ -362,17 +357,4 @@ var categoryReady = (function() {
 		}
 		window.open(url);
 	});
-
-    $(document).on('DOMAttrModified', '.bootstrap-select .btn-default', function(e) {
-        var title = $(this).prop('title');
-        var variants = $(this).parents('.input-group').next();
-        if($.trim(title) != '') {
-            $(variants).css({'display' : 'block'});
-            $(variants).html(title);
-        } else {
-            $(variants).css({'display' : 'none'});
-        }
-    });
 });
-
-$(document).ready(categoryReady);

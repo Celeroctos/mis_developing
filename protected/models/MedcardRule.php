@@ -2,16 +2,7 @@
 class MedcardRule extends MisActiveRecord 
 {
 	public $id;
-	public $prefix_id;
-	public $postfix_id;
-	public $value;
-	public $parent_id;
 	public $name;
-	public $participle_mode_prefix;
-	public $participle_mode_postfix;
-	public $prefix_separator_id;
-	public $postfix_separator_id;
-	public $type;
 	
     public function getDbConnection(){
         return Yii::app()->db;

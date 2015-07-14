@@ -1,5 +1,4 @@
-<?php
-
+﻿<?php
 $siteName = '';
 define('_STATIC', 'static_src'); //папка с ресурсами (для дальнейших публикаций). См. CAssetManager
 
@@ -76,18 +75,7 @@ return array(
             'import'=>array(
                 'application.modules.doctors.models.*',
                 'application.modules.doctors.components.*',
-                'application.modules.doctors.controllers.*'.
-				# import components for doctor module
-				'application.modules.laboratory.widgets.*',
-				'application.modules.laboratory.forms.*',
-				'application.modules.laboratory.models.*',
-                # import medcard components
-                'application.modules.medcard.components.*',
-                'application.modules.medcard.controllers.*',
-                'application.modules.medcard.models.*',
-                'application.modules.medcard.forms.*',
-                'application.modules.medcard.widgets.*',
-                'application.modules.medcard.grids.*',
+                'application.modules.doctors.controllers.*'
             ),
         ),
         'settings' => array(
@@ -123,24 +111,8 @@ return array(
                 'application.modules.laboratory.models.*',
                 'application.modules.laboratory.forms.*',
                 'application.modules.laboratory.widgets.*',
-				'application.modules.laboratory.grids.*',
-				'application.vendor.barcodegen.*',
-				'application.vendor.barcodegen.drawer.*',
-                'application.modules.laboratory.modals.*',
             )
-        ),
-		'medcard' => array(
-			'class' => 'application.modules.medcard.MedcardModule',
-			'import' => array(
-				'application.modules.medcard.components.*',
-				'application.modules.medcard.controllers.*',
-				'application.modules.medcard.models.*',
-				'application.modules.medcard.forms.*',
-				'application.modules.medcard.widgets.*',
-				'application.modules.medcard.grids.*',
-
-			)
-		)
+        )
 	),
 
 	// application components
@@ -179,23 +151,6 @@ return array(
 					'header' => '',
 					'selectedPageCssClass' => 'active',
 				],
-				'LinkPager' => [
-					'cssFile' => false,
-					'htmlOptions' => [
-						'class' => 'pagination'
-					],
-					'prevPageLabel' => '<span class="glyphicon glyphicon-chevron-left"></span>',
-					'nextPageLabel' => '<span class="glyphicon glyphicon-chevron-right"></span>',
-					'firstPageLabel' => '<span class="glyphicon glyphicon-fast-backward"></span>',
-					'lastPageLabel' => '<span class="glyphicon glyphicon-fast-forward"></span>',
-					'hiddenPageCssClass' => 'disabled',
-					'header' => '',
-					'selectedPageCssClass' => 'active',
-				],
-				'CButtonColumn' => [
-					'deleteConfirmation' => false,
-					'deleteButtonUrl' => false
-				]
 			],
 		],
         'clientScript' => array(
@@ -237,19 +192,23 @@ return array(
 		// uncomment the following to use a MySQL database
 		'db2' => array(
 			'class'=>'system.db.CDbConnection',
-				'connectionString' => 'sqlsrv:Server=7.79.78.102\HISSQLEE,1433;Database=PDPStdStorage',
+				//'connectionString' => 'sqlsrv:Server=moniiag-7d87f93\HISSQLEE,1433;Database=PDPStdStorage',
+				'connectionString' => 'sqlsrv:Server=cgb-srv\HISSQLEE,1921;Database=PDPStdStorage',
 				'username' => 'sa',
-				'password' => 'system54@nof',
+				//'password' => 'system54@nof',
+				'password' => 'system',
 				'charset' => 'utf8'
 			),
 		
 		'db3' => array(
 			'class'=>'system.db.CDbConnection',
-				    'connectionString' => 'sqlsrv:Server=7.79.78.102\HISSQLEE,1433;Database=PDPRegStorage',
-				    'username' => 'sa',
-				    'password' => 'system54@nof',
-				    'charset' => 'utf8'
-			    ),
+				//'connectionString' => 'sqlsrv:Server=moniiag-7d87f93\HISSQLEE,1433;Database=PDPRegStorage',
+				'connectionString' => 'sqlsrv:Server=cgb-srv\HISSQLEE,1921;Database=PDPStdStorage',
+				'username' => 'sa',
+				//'password' => 'system54@nof',
+				'password' => 'system',
+				'charset' => 'utf8'
+			),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'index/error',
@@ -274,7 +233,7 @@ return array(
 			'class'         => 'ext.yii-pdf-0_3_2.EYiiPdf',
 			'params'        => array(
 			    'mpdf'     => array(
-				'librarySourcePath' => 'application.vendor.mpdf6.*',
+				'librarySourcePath' => 'application.vendor.mpdf.*',
 				'constants'         => array(
 				    '_MPDF_TEMP_PATH' => Yii::getPathOfAlias('application.runtime'),
 				),

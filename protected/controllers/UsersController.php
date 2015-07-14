@@ -15,6 +15,8 @@ class UsersController extends Controller {
 													 'data' => Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl));
 						} else {
 							Yii::app()->user->setState('authStep', 1);
+							var_dump(Yii::app()->user->id);
+							exit();
 							echo CJSON::encode(array(
 								'success' => 'true',
 								'data' => Doctor::model()->findAll('user_id = :user_id', array(':user_id' => Yii::app()->user->id))
@@ -81,15 +83,15 @@ class UsersController extends Controller {
 			}
 		}
 	}
-
-
-    public function actionIsLogged() {
-        echo CJSON::encode(
-            array(
-                'success' => !Yii::app()->user->getIsGuest(),
+	
+	
+	public function actionIsLogged() {
+		echo CJSON::encode(
+			array(
+				'success' => !Yii::app()->user->getIsGuest(),
             )
-        );
-    }
+		);
+	}
 }
 
 ?>

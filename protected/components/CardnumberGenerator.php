@@ -150,6 +150,7 @@ class CardnumberGenerator extends CComponent {
 		$prefix = $this->generatePrefix($rule);
 		$postfix = $this->generatePostfix($rule);
 		$medcard = MedcardHistory::model()->getByPrefixPostfixAndOms($prefix, $postfix, $omsId, $rule);
+		//var_dump($medcard);
 		return $medcard != null;
 	}
 	

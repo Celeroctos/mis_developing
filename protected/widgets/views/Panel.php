@@ -1,29 +1,21 @@
 <?php
 /**
- * @var $this Panel
- * @var $content string
- * @var $widget string
- * @var $parameters string
+ * Panel $this - Widget's controller with render properties
  */
 ?>
 
-<div class="<?= $this->panelClass ?>" <?= $this->renderAttributes() ?>>
-    <div class="<?= $this->headingClass ?>">
-		<div class="<?= $this->titleWrapperClass ?>">
-			<span <?= $this->collapsible ? "onclick=\"$(this).panel('toggle')\"" : "" ?> class="<?= $this->titleClass ?>"><?= $this->title ?></span>
-		</div>
-		<div class="<?= $this->controlsWrapperClass ?>">
-			<?php $this->renderControls() ?>
-		</div>
+<div class="panel panel-default" id="<?=$this->id?>">
+    <div class="panel-heading">
+        <table width="100%">
+            <tr><td style="font-size: 15px"><b><?=$this->title?></b></td>
+            <td align="right">
+                <span class="glyphicon glyphicon-refresh refresh-button hidden"></span>
+                <div class="img-circle">
+                    <span class="glyphicon glyphicon-chevron-up collapse-button <?= !$this->collapse ? "hidden" : "" ?>"></span>
+                </div>
+            </td>
+            </tr>
+        </table>
     </div>
-    <div class="<?= $this->bodyClass ?>" <?= $this->collapsed ? "style=\"display: none\"" : "" ?>>
-		<div class="row no-padding no-margin">
-			<div class="<?= $this->contentClass ?>">
-				<?= $content ?>
-			</div>
-		</div>
-	</div>
-	<?php if (!empty($this->footer)): ?>
-		<div class="panel-footer"><?= $this->footer ?></div>
-	<?php endif ?>
-</div>
+    <div class="panel-body">
+        <?=$this->body?>

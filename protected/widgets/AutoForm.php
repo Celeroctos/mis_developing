@@ -25,25 +25,6 @@ class AutoForm extends Widget {
 	 */
 	public $labels = true;
 
-	/**
-	 * @var array|null - Array with buttons, that should be
-	 * 	displayed after form, where key is button's class and
-	 * 	value is array with HTML attributes
-	 */
-	public $buttons = null;
-
-	/**
-	 * @var bool - Shall form be divided from buttons
-	 *  via HTML <hr> element
-	 */
-	public $divide = false;
-
-	/**
-	 * @var array - Array with default form values, it
-	 * 	copies to FormModel instance
-	 */
-	public $defaults = [];
-
     /**
      * Override that method to return just rendered component
      * @throws CException
@@ -64,10 +45,7 @@ class AutoForm extends Widget {
         } else {
             $this->test($this->model);
         }
-		foreach ($this->defaults as $key => $value) {
-			$this->model->$key = $value;
-		}
-        $this->render("application.widgets.views.AutoForm", [
+        $this->render(__CLASS__, [
             "model" => $this->model,
             "class" => __CLASS__
         ]);
@@ -89,12 +67,12 @@ class AutoForm extends Widget {
         return true;
     }
 
-	/**
-	 * Format every data field with specific format, it will get data format field's
-	 * from model
-	 * @param String $format - String with data format, for example ${id} or ${surname}
-	 * @param Array $data - Array with data to format
-	 */
+    /**
+     * Format every data field with specific format, it will get data format field's
+     * from model
+     * @param String $format - String with data format, for example ${id} or ${surname}
+     * @param Array $data - Array with data to format
+     */
     public static function format($format, array& $data) {
         foreach ($data as $i => &$value) {
 			if (is_object($value)) {
@@ -108,7 +86,7 @@ class AutoForm extends Widget {
                 $value = $format;
                 if (count($matches)) {
                     foreach ($matches[1] as $m) {
-                        $value = preg_replace("/\\%{{$m}}/", $model[$m], $value);
+                        $value = preg_replace("/%\\{([({$m})]+)\\}/", $model[$m], $value);
                     }
                 }
             } else if (is_callable($format)) {
@@ -251,30 +229,6 @@ class AutoForm extends Widget {
 			return false;
 		}
 		return $config["form"];
-	}
-
-	/**
-	 * Render form's buttons with submit type
-	 */
-	public function renderButtons() {
-		if (empty($this->buttons)) {
-			return ;
-		} else if ($this->divide) {
-			print "<hr>";
-		}
-		foreach ($this->buttons as $class => $options) {
-			if (isset($options["class"])) {
-				$options["class"] .= " ".$class;
-			} else {
-				$options["class"] = $class;
-			}
-			if (isset($options["label"])) {
-				$label = $options["label"];
-			} else {
-				$label = "";
-			}
- 			print CHtml::button($label, $options);
-		}
 	}
 
     /**

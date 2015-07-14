@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     var choosers = $('.chooser');
     $(choosers).each(function() {
         (function(chooser) {
@@ -33,7 +34,6 @@ $(document).ready(function() {
 				getLastUserInput: function() {
 					return lastUserInput;
 				},
-
                 clearAll: function() {
 					current = null;
                     choosedElements = [];

@@ -85,11 +85,12 @@ class Role extends MisActiveRecord  {
                 $actionModel = new CheckedAction();
                 $roleActions = $actionModel->getByRole($roles[$i]['id']);
                 foreach($roleActions as $key => $action) {
-                    $role['actions'][$action['accessKey']] = $action;
-//                    $role['actions'][$action['action_id']] = $action['accessKey'];
+                    $role['actions'][$action['action_id']] = $action['accessKey'];
                 }
             }
             return $role;
         }
     }
 }
+
+?>

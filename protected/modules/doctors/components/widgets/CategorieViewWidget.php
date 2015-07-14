@@ -24,9 +24,6 @@ class CategorieViewWidget extends CWidget {
     public $model = null;
 
     public function run() {
-
-        $time_start = microtime(true); // TODO
-
         ini_set('max_execution_time', 60);
         $this->createFormModel();
         // Найдём имя шаблона
@@ -48,7 +45,6 @@ class CategorieViewWidget extends CWidget {
         if($this->currentDate == null) {
             $this->currentDate = date('Y-m-d h:i');
         }
-
         // Категории нужны, чтобы сформировать первичный шаблон для пациента в том случае, когда у пациента нет перенесённых записей о данном приёме в хистори. Для начала проверим, есть ли шаблон приёма. Если нет - вынимаем категории и помещаем их в историю
         // Т.е. в приём не вносили изменений, шаблона истории нет
         if(($this->greetingId == null || $this->medcard == null) && !$this->previewMode) {
@@ -75,10 +71,6 @@ class CategorieViewWidget extends CWidget {
 			'templateType' => $this->templateType,
             'templateName' => $this->templateName,
         ), true);
-
-        $time_end = microtime(true);
-        $time = $time_end - $time_start;
-
         if(!Yii::app()->request->isAjaxRequest) {
             echo $answer;
         } else {
@@ -174,7 +166,6 @@ class CategorieViewWidget extends CWidget {
         $elementModel = new MedcardElement();
         $typesList = $elementModel->getTypesList();
         $categoriesResult = array();
-
         foreach($templates as $key => $template) {
             $categorieTemplateFill = array();
             // В случае выпадающих списков с множественным выборов стоит разобрать идентификаторы их
@@ -213,10 +204,11 @@ class CategorieViewWidget extends CWidget {
             );
 
         }
-
-       // echo "<pre>";
+       //echo "<pre>";
 		//var_dump($categoriesResult);
-       // exit();
+		//var_dump( $this->formModel);
+		//exit();
+        //exit();
         return $categoriesResult;
     }
 
@@ -451,19 +443,27 @@ class CategorieViewWidget extends CWidget {
                     if(isset($elementResult['guide_id']) && $elementResult['guide_id'] != null) {
                         $medguideValuesModel = new MedcardGuideValue();
                         $medguideValues = $medguideValuesModel->getRows(false, $elementResult['guide_id'], 'value', 'asc',  false, false, $elementResult['path'], $this->greetingId);
+                        //var_dump($medguideValues);
                         $guideValues = array();
-
-                        if(count($medguideValues) > 0) {
+						if(count($medguideValues) > 0) {
                            // var_dump($medguideValues);
                             $guideValues = array();
                             foreach($medguideValues as $value) {
                                 // Если значение из справочника равно "-3" и тип не равен 7ми, то добавим значение
-                                $guideValues[$value['id']] = $value['value'];
+                               // if (!(($value['id']==-3)&& ($elementResult['type']==7)))
+                                //{
+                                    //var_dump("!");
+                                    //var_dump($value['value']);
+                                    $guideValues[$value['id']] = $value['value'];
+                                //}
                             }
                             $elementResult['guide'] = $guideValues;
                         } else {
                             $elementResult['guide'] = array();
                         }
+                        //var_dump($elementResult['guide']);
+                        //echo ("|");
+
                     }
 
                     // Добавляем в форму
@@ -625,6 +625,7 @@ class CategorieViewWidget extends CWidget {
 
     // Заполнить форму значениями
     public function getFormValue($element, $historyId = false) {
+
         $medcardId = $this->currentPatient;
         if($this->formModel->medcardId == null) {
             $this->formModel->medcardId = $medcardId;
@@ -658,13 +659,11 @@ class CategorieViewWidget extends CWidget {
         );
 
         if($elementFinded != null) {
-
             $fieldName = 'f'.$element['undotted_path'].'_'.$element['id'];
             // Если это комбо с множественным выбором или двухколоночный список
             if($element['type'] == 3 || $element['type'] == 7) {
                 $element['selected'] = array();
                 $element['value'] = CJSON::decode($elementFinded['value']);
-
                 if($element['value'] != null)
 				{
 					// Если $element['value'] - не массив, то считаем это один айдишник - 
@@ -684,7 +683,9 @@ class CategorieViewWidget extends CWidget {
             if($element['type'] == 2) {
                 $element['selected'] = array($element['id'] => array('selected' => $elementFinded['value']));
             }
+			
             $this->formModel->$fieldName = $elementFinded->value;
+
         } else {
             $element['selected'] = array();
         }
@@ -880,7 +881,7 @@ class CategorieViewWidget extends CWidget {
 	// Функция принимает элмент истории и делает из него узел дерева
 	private function getTreeNode($historyElement)
 	{
-        $nodeContent = array();
+		$nodeContent = array();
 		if ($historyElement['element_id'] == -1)
 		{
 			$nodeContent['name'] = $historyElement['categorie_name'];
@@ -914,7 +915,6 @@ class CategorieViewWidget extends CWidget {
                             $medguideValues = $medguideValuesModel->getRows(false, $nodeContent['guide_id'], 'value', 'asc', false, false, $nodeContent['path'], $historyElement['greeting_id']);
                             // Проинициализируем пустым массивом массив значений
 			    			$nodeContent['guide'] = array();
-                            $medguideValues = array();
 			    			if(count($medguideValues) > 0)
 			    			{
                                 // Если не список множественного выбора

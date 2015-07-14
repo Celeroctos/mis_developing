@@ -3,40 +3,24 @@
 class Pagination extends Widget {
 
 	/**
-	 * @var int - Current page number, default
-	 * 	value is first page
+	 * @var int - Current page
 	 */
-	public $currentPage = 1;
+	public $page = 1;
 
 	/**
-	 * @var int - Total count of pages for
-	 * 	current query
+	 * @var int - Total pages
 	 */
-	public $totalPages = 0;
+	public $pages = 0;
 
 	/**
-	 * @var int - Maximum of displayed rows per
-	 * 	one page
+	 * @var int - Maximum displayed pages
 	 */
-	public $pageLimit = 10;
+	public $limit = 10;
 
 	/**
-	 * @var bool - Shall pagination use optimized mode
-	 * 	for high performance
+	 * @var string - JavaScript change action
 	 */
-	public $optimizedMode = false;
-
-	/**
-	 * @var TablePagination - Table pagination instance, if
-	 * 	not null, the upper values get it
-	 */
-	public $tablePagination = null;
-
-	/**
-	 * @var callback - Callback function which sets page
-	 * 	change pagination action
-	 */
-	public $clickAction = null;
+	public $action = "console.log";
 
 	/**
 	 * Get string for <li> with onclick action
@@ -45,10 +29,10 @@ class Pagination extends Widget {
 	 * @return string - Result string
 	 */
 	public function getClick($condition = true, $accumulator = 0) {
-		$page = $this->currentPage + $accumulator;
-		if ($condition && is_callable($this->clickAction)) {
-			return "onclick=\"".call_user_func($this->clickAction, $page)."\"" . (
-				$page == $this->currentPage ? "class=\"active\"" : ""
+		$page = $this->page + $accumulator;
+		if ($condition) {
+			return "onclick=\"$this->action(this, {$page})\"".(
+				$this->page == $page ? "class=\"active\"" : ""
 			);
 		} else {
 			return "class=\"disabled\"";
@@ -56,17 +40,12 @@ class Pagination extends Widget {
 	}
 
 	/**
-	 * Run widget to return just rendered content
-	 * @return string - Just rendered content
+	 * Executes the widget.
+	 * This method is called by {@link CBaseController::endWidget}.
 	 */
 	public function run() {
-		if ($this->tablePagination !== null) {
-			foreach ($this->tablePagination as $key => $value) {
-				$this->$key = $value;
-			}
-		}
-		$offset = $this->pageLimit - $this->totalPages + $this->currentPage;
-		return $this->render(__CLASS__, [
+		$offset = $offset = $this->limit - $this->pages + $this->page;
+		$this->render(__CLASS__, [
 			"offset" => $offset > 0 ? -$offset : 0,
 			"step" => $offset < 0 ? 1 : -1
 		]);

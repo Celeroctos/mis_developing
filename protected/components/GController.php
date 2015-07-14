@@ -1,6 +1,6 @@
 <?php
 
-abstract class GController extends ControllerEx {
+abstract class GController extends LController {
 
 	/**
 	 * @var string - Guide default layout
@@ -158,30 +158,23 @@ abstract class GController extends ControllerEx {
 	 * @throws CException
 	 */
 	public function actionDelete() {
-		try {
-			if (!Yii::app()->getRequest()->getIsPostRequest()) {
-				throw new CHttpException(405, "Request method not allowed, requires POST");
-			}
-			if (!$_POST["id"]) {
-				throw new CException("Can't resolve component's identification number \"id\" in POST request");
-			}
-			if (!$this->getModel()->deleteByPk(Yii::app()->getRequest()->getPost("id"))) {
-				$this->leave([
-					"message" => "Произошла ошибка при удалении данных, данные не были удалены",
-					"status" => false
-				]);
-			}
-			$model = [];
-			$this->after("delete", $model, null);
+		if (!Yii::app()->getRequest()->getIsPostRequest()) {
+			throw new CHttpException(405, "Request method not allowed, requires POST");
+		}
+		if (!$_POST["id"]) {
+			throw new CException("Can't resolve component's identification number \"id\" in POST request");
+		}
+		if (!$this->getModel()->deleteByPk(Yii::app()->getRequest()->getPost("id"))) {
 			$this->leave([
-				"message" => "Данные были успешно удалены"
-			]);
-		} catch (Exception $e) {
-			$this->leave([
-				"message" => "Невозможно удалить элемент, от которого зависят другие компоненты",
+				"message" => "Произошла ошибка при удалении данных, данные не были удалены",
 				"status" => false
 			]);
 		}
+		$model = [];
+		$this->after("delete", $model, null);
+		$this->leave([
+			"message" => "Данные были успешно удалены"
+		]);
 	}
 
 	/**

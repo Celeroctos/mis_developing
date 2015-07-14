@@ -2,6 +2,15 @@
 
 class AnalysisType extends GActiveRecord {
 
+	/**
+	 * Get analysis type model
+	 * @param null $className - Name of class or null
+	 * @return AnalysisType - Cached model
+	 */
+	public static function model($className = null) {
+		return parent::model($className);
+	}
+
 	public function getForm() {
 		return new AnalysisTypeForm();
 	}

@@ -166,11 +166,11 @@ abstract class Field extends CComponent {
 		return $this->options;
 	}
 
-	public $value;
-	public $key;
-	public $type;
-	public $name;
-	public $data;
-	public $label;
-	public $options;
+	private $value;
+	private $key;
+	private $type;
+	private $name;
+	private $data;
+	private $label;
+	private $options;
 }

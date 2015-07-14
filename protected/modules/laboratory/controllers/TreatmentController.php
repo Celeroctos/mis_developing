@@ -1,16 +1,21 @@
 <?php
 
-namespace laboratory\controllers;
+class TreatmentController extends LController {
 
-use ControllerEx;
-
-class TreatmentController extends ControllerEx {
-
+	/**
+	 * Default view action
+	 */
 	public function actionView() {
-		$this->render("view");
+		$this->render("view", [
+			"directionRepeats" => LDirection::model()->getCountOfRepeats()
+		]);
 	}
 
-    public function actionHistory() {
-        $this->render('history');
-    }
+	/**
+	 * Override that method to return controller's model
+	 * @return ActiveRecord - Controller's model instance
+	 */
+	public function getModel() {
+		return null;
+	}
 }

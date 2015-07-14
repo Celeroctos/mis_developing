@@ -1,8 +1,7 @@
 <?php
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 ob_start();
 // change the following paths if necessary
-$yii1Path = '/../yii';
+$yii1Path = '/../yii_1.1.16';
 $yii1 = dirname(__FILE__).$yii1Path.'/yii.php';
 
 $yii2Path = '/../yii2/';
@@ -16,7 +15,7 @@ defined('YII_DEBUG') or define('YII_DEBUG',true);
 // specify how many levels of call stack should be shown in each log message
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
-require_once("../yii/yii.php");
+require_once("../yii_1.1.16/yii.php");
 //require_once($yii2);
 
 //new yii\web\Application($yii2Config);

@@ -8,7 +8,7 @@ class AssetBundleManager extends CComponent {
 
     public static function getManager() {
         if (self::$instance == null) {
-            return self::$instance = new AssetBundleManager();
+            return (self::$instance = new AssetBundleManager());
         } else {
             return self::$instance;
         }
@@ -31,23 +31,15 @@ class AssetBundleManager extends CComponent {
             return false;
         }
         $b = new $bundle();
-		if (isset($this->_fix[$bundle]) && $this->_fix[$bundle] === true) {
-			throw new CException("Looks like recursive bundle's dependencies");
-		} else {
-			$this->_fix[$bundle] = true;
-		}
         $this->names[] = $bundle;
         foreach ($b->dependencies as $dependency) {
             if (!in_array($dependency, $this->names)) {
                 $this->register($dependency);
             }
         }
-		$this->_fix[$bundle] = false;
         $this->bundles[] = $b;
         return true;
     }
-
-	private $_fix = [];
 
     /**
      * Prepare all bundles to render, it will load all scripts

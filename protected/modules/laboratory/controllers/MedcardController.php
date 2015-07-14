@@ -1,29 +1,12 @@
 <?php
 
-namespace laboratory\controllers;
-
-use ActiveRecord;
-use CDbCriteria;
-use CException;
-use ControllerEx;
-use Exception;
-use Laboratory_CardNumberGenerator;
-use Laboratory_Medcard;
-use Laboratory_MedcardEx;
-use Yii;
-
-class MedcardController extends ControllerEx {
+class MedcardController extends LController {
 
 	/**
 	 * Render page with medcards
 	 */
-    public function actionNew() {
-		if (!$number = Yii::app()->getRequest()->getQuery('n')) {
-			$number = Laboratory_CardNumberGenerator::getGenerator()->generate();
-		}
-        $this->render("new", [
-			"number" => $number
-		]);
+    public function actionView() {
+        $this->render("view");
     }
 
 	/**
@@ -39,12 +22,12 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionLoad() {
 		try {
-			$row = Laboratory_MedcardEx::model()->fetchInformationLaboratoryLike($this->get('number'));
+			$row = LMedcard2::model()->fetchInformationLaboratoryLike($this->get("number"));
 			if ($row == null) {
-				throw new CException('Unresolved medcard number "'. $this->get('number') .'"');
+				throw new CException("Unresolved medcard number \"{$this->get("number")}\"");
 			}
 			$this->leave([
-				'model' => $row
+				"model" => $row
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -53,7 +36,7 @@ class MedcardController extends ControllerEx {
 
 	/**
 	 * Search action, which accepts array with search serialized form
-	 * models (Laboratory_Form_MedcardSearch + Laboratory_Form_AnalysisSearch). That action will
+	 * models (LMedcardSearchForm + LAnalysisSearchForm). That action will
 	 * fetch form's values and build search condition form form model
 	 * and return Table widget with medcards
 	 *
@@ -65,15 +48,22 @@ class MedcardController extends ControllerEx {
 	 */
 	public function actionSearch() {
 		try {
-			$medcard = $this->requirePost('Laboratory_Form_MedcardSearch');
-			$provider = $this->requirePost('provider');
-			$config = Yii::app()->getRequest()->getQuery('config', []);
+			if (!($medcard = Yii::app()->getRequest()->getPost("LMedcardSearchForm"))) {
+				throw new CException("Can't resolve search form for medcard \"LMedcardSearchForm\"");
+			}
+			if (!($analysis = Yii::app()->getRequest()->getPost("LAnalysisSearchForm"))) {
+				throw new CException("Can't resolve search form for analysis \"LAnalysisSearchForm\"");
+			}
 			$criteria = new CDbCriteria();
+			if (isset($analysis["begin_date"]) && isset($analysis["end_date"])) {
+				$criteria->addBetweenCondition("registration_date", $analysis["begin_date"], $analysis["end_date"]);
+			}
 			$like = [
-				'card_number',
-				'surname',
-				'name',
-				'patronymic',
+				"card_number",
+				"phone",
+				"first_name",
+				"middle_name",
+				"last_name"
 			];
 			$compare = [];
 			foreach ($medcard as $key => $value) {
@@ -81,7 +71,7 @@ class MedcardController extends ControllerEx {
 					continue;
 				}
 				if (in_array($key, $like)) {
-					$criteria->addSearchCondition("lower($key)", mb_strtolower($value, 'UTF-8'));
+					$criteria->addSearchCondition($key, $value);
 				} else {
 					$compare[$key] = $value;
 				}
@@ -89,17 +79,9 @@ class MedcardController extends ControllerEx {
 			if (count($compare) > 0) {
 				$criteria->addColumnCondition($compare);
 			}
-			if (!empty($criteria->condition)) {
-				$config += [
-					'condition' => [
-						'condition' => $criteria->condition,
-						'params' => $criteria->params,
-					]
-				];
-			}
 			$this->leave([
-				'component' => $this->getWidget('GridTable', [
-					'provider' => new $provider($config)
+				"component" => $this->getWidget(Yii::app()->getRequest()->getPost("widget"), [
+					"criteria" => $criteria
 				])
 			]);
 		} catch (Exception $e) {
@@ -108,20 +90,32 @@ class MedcardController extends ControllerEx {
 	}
 
 	/**
-	 * That action will generate card number for laboratory
+	 * Register some form's values in database, it will automatically
+	 * fetch model from $_POST["model"], decode it, build it's FormModel
+	 * object and save into database. But you must override
+	 * LController::getModel and return instance of controller's model else
+	 * it will throw an exception
 	 *
+	 * @in (POST):
+	 *  + model - String with serialized client form via $("form").serialize(), if you're
+	 * 		using Modal or Panel widgets that it will automatically find button with
+	 * 		submit type and send ajax request
 	 * @out (JSON):
-	 *  + [number] - Just generated card number for laboratory
-	 *  + status - Response status, true or false
-	 *  + [message] - Message with response
+	 *  + message - Message with status
+	 *  + status - True if everything ok
 	 *
-	 * @throws Exception
+	 * @see LController::getModel
+	 * @see LModal
+	 * @see LPanel
 	 */
-	public function actionGenerate() {
+	public function actionRegister() {
 		try {
+			$model = $this->getFormModel("model", "post");
+			
+			$attributes = [];
+			LMedcard::model()->insert();
 			$this->leave([
-				'message' => 'Номер карты сгенерирован',
-				'number' => Laboratory_CardNumberGenerator::getGenerator()->generate()
+				"message" => "Данные медкарты были успешно сохранены"
 			]);
 		} catch (Exception $e) {
 			$this->exception($e);
@@ -133,6 +127,6 @@ class MedcardController extends ControllerEx {
      * @return ActiveRecord - Controller's model instance
      */
     public function getModel() {
-        return new Laboratory_Medcard();
+        return new LMedcard();
     }
 }
