@@ -97,6 +97,29 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 		if ($this->getCriteria() != null && $this->condition != null) {
 			$this->getCriteria()->mergeWith($this->condition);
 		}
+        # Build condition SQL string
+        if (!empty($this->condition['condition']) && !empty($this->condition['params'])) {
+            $params = $this->condition['params'];
+            foreach ($params as $key => &$value) {
+                if (is_string($value)) {
+                    $value = "'$value'";
+                }
+            }
+            $this->condition['condition'] = strtr(
+                $this->condition['condition'], $params
+            );
+            unset($this->condition['params']);
+            $params = $this->config['condition']['params'];
+            foreach ($params as $key => &$value) {
+                if (is_string($value)) {
+                    $value = "'$value'";
+                }
+            }
+            $this->config['condition']['condition'] = strtr(
+                $this->config['condition']['condition'], $params
+            );
+            unset($this->config['condition']['params']);
+        }
 	}
 
 	/**

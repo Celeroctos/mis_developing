@@ -43,6 +43,7 @@ $this->widget('TabMenu', [
         <?php $this->widget('Laboratory_Widget_DirectionPanel', [
             'title' => 'Направления на повторный забор образца',
             'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT,
+            'date' => false,
         ]) ?>
     </div>
     <div id="laboratory-container-direction-create" style="display: none;">

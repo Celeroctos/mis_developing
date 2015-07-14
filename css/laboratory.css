@@ -296,9 +296,8 @@
 .popover.fade {
     z-index: -1;
 }
-
 .popover.fade.in {
-    z-index: 2;
+    z-index: 200;
 }
 
 .analyzer-queue-container > tr {
@@ -473,8 +472,8 @@ body > .analyzer-queue-helper * {
 }
 
 .nav-green > li > a {
-    padding-top: 17px;
-    padding-bottom: 17px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     font-size: 15px;
     border: 1px solid #47a247 !important;
     border-radius: 5px;

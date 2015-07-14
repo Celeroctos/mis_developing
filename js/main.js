@@ -731,8 +731,6 @@ $('.buttonUpContainer').click(function () {
     {
         // Выбираем все focus-able элементы
         var focusables = $(':tabbable, .controlTableContentCell').filter(':not(.prev, .next)');
-		console.log(focusables);
-		console.log($(document.activeElement));
 		for (var i = 0; i < focusables.length; i++) {
             // Проверяем - является ли и-тый элемент из фокусабельных элементом,
             //    на котором сейчас стоит фокус

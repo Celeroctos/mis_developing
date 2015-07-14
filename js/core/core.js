@@ -462,9 +462,12 @@ var Core = Core || {};
 		return str.join("&");
 	};
 
-	$.fn.cleanup = function() {
+	$.fn.cleanup = function(except) {
 		return this.each(function(i, e) {
-			Core.Common.cleanup(e);
+            if (except && $(e).is(except)) {
+                return void 0;
+            }
+            Core.Common.cleanup(e);
 		});
 	};
 
