@@ -111,7 +111,7 @@ var Laboratory_AnalyzerQueue_Widget = {
             limit = tab.attr("data-limit") || 0;
         if (container.find(" > li").length >= limit) {
             return Core.createMessage({
-                message: "На этот анализатор поддерживат ограниченное количество образцов ("+ limit +")"
+                message: "Текущий анализатор поддерживат ограниченное количество образцов ("+ limit +")"
             });
         }
 		this.lock(tr.attr("data-id"));
