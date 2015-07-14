@@ -112,6 +112,12 @@
                 }
             }
             globalVariables.isSavingErrors = false;
+
+            Core.createMessage({
+                message: "Приём автоматически сохранён",
+                type: "info",
+                sign: "ok"
+            });
         } else {
             ++globalVariables.numCalls;
         }
@@ -225,13 +231,19 @@
                             $('#accordionH .accordion-inner div:first').before(newDiv);
                         }
                     }
+
                 }
                 return;
             }
         });
     }
     $('#medcardContentSave, #sideMedcardContentSave').on('click', function (e) {
-        isThisPrint = false;
+        if (globalVariables.savingProcessing) {
+            return Core.createMessage({
+                message: "Подождите, идет автосохранение ..."
+            });
+        }
+        isThis = false;
         printHandler = 'accept-greeting-link';
         $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
         onStartSave();
@@ -691,10 +703,6 @@
 
     $('.print-greeting-link').on('print', function (e) {
         printDataToPrintPopup();
-        $('#greetingPrintNeed input').attr('checked', '');
-        // Отмечаем пункт "Приём", а остальные - нет
-        $('.bodyOverlay').remove();
-        $('#whatPrinting').modal({});
         return false;
     });
 
@@ -726,6 +734,11 @@
     });
 
     function printDataToPrintPopup() {
+        if (globalVariables.savingProcessing) {
+            return Core.createMessage({
+                message: "Подождите, идет автосохранение ..."
+            });
+        }
         // Делаем синхронный Ajax-запрос, разбираем данные, которые он вернул и выводим в поп-ап
         $.ajax({
             'url': '/doctors/print/getrecommendationtemplatesingreeting?greetingId='  + $('#greetingId').val(),
@@ -752,6 +765,10 @@
                             $('#recommendationTemplatesPrintNeed p').html() + templates[i].template_name+'<br>'
                         );
                     }
+                    $('#greetingPrintNeed input').attr('checked', '');
+                    // Отмечаем пункт "Приём", а остальные - нет
+                    $('.bodyOverlay').remove();
+                    $('#whatPrinting').modal({});
                 }
             }
         });
