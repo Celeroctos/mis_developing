@@ -345,11 +345,10 @@ var Laboratory_Analyzer_TabMenu = {
 			activate();
 		});
 		var fetch = function() {
-			var menu = $("#analyzer-tab-menu");
+			var menu = $("#analyzer-tab-menu"), $this = $(this);
 			/* We must lock table and panel update to fetch extra tab information */
 			$.ajax({
 				url: url("laboratory/laboratory/tabs"),
-				async: false,
 				dataType: "json"
 			}).done(function(response) {
 				if (!response["status"]) {
@@ -361,7 +360,9 @@ var Laboratory_Analyzer_TabMenu = {
 				for (var i in dirs) {
 					menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
 				}
+                $this.table("update", void 0, false, true);
 			});
+            return false;
 		};
 		$(document).on("table.update", "#laboratory-direction-table", fetch);
 	}

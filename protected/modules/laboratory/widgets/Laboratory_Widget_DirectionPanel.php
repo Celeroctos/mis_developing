@@ -66,9 +66,7 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 		} else {
 			$this->controls = [];
 		}
-		if ($this->status == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
-			$this->status == Laboratory_Direction::STATUS_READY
-		) {
+		if ($this->date !== false) {
 			$this->controls += [
 				'panel-date-button' => [
 					'class' => 'btn btn-default',

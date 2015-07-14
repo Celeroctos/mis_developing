@@ -65,13 +65,13 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 	 */
 	public function search() {
 		return [
-			"pagination" => [
-				"pageSize" => static::PAGE_SIZE
+			'pagination' => [
+				'pageSize' => static::PAGE_SIZE
 			],
-			"sort" => [
-				"attributes" => [ "id" ],
-				"defaultOrder" => [
-					"id" => CSort::SORT_ASC
+			'sort' => [
+				'attributes' => [ 'id' ],
+				'defaultOrder' => [
+					'id' => CSort::SORT_ASC
 				]
 			]
 		];
@@ -138,13 +138,9 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 	 * @return Fetcher class instance
 	 */
 	public function getFetcher() {
-		if ($this->_fetcher == null) {
-			return $this->_fetcher = new Fetcher([
-				"fetcher" => $this->fetcher
-			]);
-		} else {
-			return $this->_fetcher;
-		}
+        return $this->_fetcher == null ? $this->_fetcher = new Fetcher([
+            'fetcher' => $this->fetcher
+        ]) : $this->_fetcher;
 	}
 
 	private $_fetcher = null;

@@ -20,6 +20,7 @@ $this->widget('TabMenu', [
         ]),
         'panelClass' => 'panel panel-default no-select',
         'status' => Laboratory_Direction::STATUS_LABORATORY,
+        'date' => false,
     ]) ?>
 </div>
 <div class="col-xs-6" style="padding-right: 0">

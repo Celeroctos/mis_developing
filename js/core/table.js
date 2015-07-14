@@ -13,10 +13,11 @@ var Core = Core || {};
 		}, selector);
 	});
 
-	Table.prototype.update = function(config, success, overlay) {
+	Table.prototype.update = function(config, success, overlay, silent) {
         overlay = overlay !== void 0 ? overlay : true;
+        silent = silent !== void 0 ? silent : false;
 		var attr, me = this, table = this.selector();
-		if (this.selector().trigger("table.update") === false) {
+		if (silent == false && this.selector().trigger("table.update") === false) {
 			return void 0;
 		}
         if (overlay == true) {
@@ -34,7 +35,9 @@ var Core = Core || {};
             var after = function() {
                 me.selector().empty().append($(response).children());
                 me.selector().attr($(response).getAttributes());
-                me.selector().trigger("table.updated");
+                if (!silent) {
+                    me.selector().trigger("table.updated");
+                }
                 success && success(response);
             };
             if (overlay == true) {
