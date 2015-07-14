@@ -1,13 +1,13 @@
 <?php
 /**
- * Конфиг разработчика для создания на него символической ссылки.
+ * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
  * @author Dzhamal Tayibov <prohps@yandex.ru>
  */ 
 
 return array(
 	'class'=>'DbConnection',
-	'connectionString' => 'pgsql:host=localhost;port=5432;dbname=postgres;',
+	'connectionString' => 'pgsql:host=localhost;port=5432;dbname=prod;',
 	'username' => 'postgres',
 	'password' => '12345',
-	'defaultSchema'=>'system', //используется исключительно в консоли.
+	'defaultSchema'=>'system', //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 );
