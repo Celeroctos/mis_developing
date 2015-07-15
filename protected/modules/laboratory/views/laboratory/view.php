@@ -19,13 +19,13 @@ $this->widget('TabMenu', [
             'data-tab' => 'laboratory-direction-grid-wrapper',
         ],
         'direction-ready' => [
-            'label' => 'Выполненые результаты&nbsp;' . CHtml::tag('span', [
+            'label' => 'Готовые результаты&nbsp;' . CHtml::tag('span', [
                     'class' => 'badge', 'id' => 'treatment-repeat-counts'
                 ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)),
             'data-tab' => 'laboratory-ready-grid-wrapper'
         ],
         'direction-closed' => [
-            'label' => 'Готовые результаты&nbsp;' . CHtml::tag('span', [
+            'label' => 'Закрытые направления&nbsp;' . CHtml::tag('span', [
                     'class' => 'badge', 'id' => 'treatment-repeat-counts'
                 ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_CLOSED)),
             'data-tab' => 'laboratory-closed-grid-wrapper'
