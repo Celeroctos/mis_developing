@@ -624,6 +624,7 @@ var Laboratory_Popover_DirectionSearch = {
             form = $("#direction-search-form");
         var panel = $(".panel[data-widget='"+ form.find("#widget").val() +"']:eq(0)")
             .panel("before");
+        form.find("#config").val(panel.find("table:eq(0)").attr("data-config"));
         form.form({
             success: function(response) {
                 panel.panel("replace", response);
@@ -638,6 +639,7 @@ var Laboratory_Popover_DirectionSearch = {
             form = $("#direction-search-form");
         var panel = $(".panel[data-widget='"+ form.find("#widget").val() +"']:eq(0)")
             .panel("before");
+        form.find("#config").val(panel.find("table:eq(0)").attr("data-config"));
         var except = [ "widget", "config", "provider" ];
         form.find("input, select, textarea").each(function(i, w) {
             var $w = $(w);
