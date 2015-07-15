@@ -1,13 +1,14 @@
-
 var Laboratory_Menu_Treatment = {
 	ready: function() {
-        var me = this;
-        $(".nav > li > a[data-tab='laboratory-container-direction-active']").click(function() {
-            me.updatePanel($(this).attr("data-tab"));
-        });
-        $(".nav > li > a[data-tab='laboratory-container-direction-repeat']").click(function() {
-            me.updatePanel($(this).attr("data-tab"));
-        });
+        var me = this, tabs = [
+            "laboratory-container-direction-active",
+            "laboratory-container-direction-repeat"
+        ];
+        for (var i in tabs) {
+            $(".nav > li > a[data-tab='"+ tabs[i] +"']").click(function() {
+                /* me.updatePanel($(this).attr("data-tab")); */
+            });
+        }
         $(".nav > li > a[data-tab='laboratory-container-direction-create']").click(function() {
             if (!$(this).parent().hasClass("active")) {
                 Laboratory_Widget_PatientCreator.cleanup($("#" + $(this).attr("data-tab")));
@@ -605,20 +606,60 @@ var Laboratory_DirectionFormEx_Form = {
 	}
 };
 
-var Laboratory_DirectionSearchForm_Popover = {
+var Laboratory_Popover_DirectionSearch = {
 	ready: function() {
+        var me = this;
 		$("body").on("click", ".direction-search-button", function() {
-			$("#direction-search-form").form({
-				success: function(response) {
-					$(".panel[data-widget='"+ this.find("#widget").val() +"']:eq(0)").panel("replace", response);
-				}
-			}).form("send");
-			$(".panel-search-button").popover("hide");
-		});
-		$("button[data-tab]").click(function() {
-			$(".panel-search-button").popover("hide");
-		});
-	}
+            me.search($(this));
+		}).on("click", ".direction-search-cancel-button", function() {
+            me.cancel($(this));
+        }).on("keydown", "#direction-search-form", function(e) {
+            if (e.keyCode == 13) {
+                me.search($(".direction-search-button"));
+            }
+        });
+	},
+    search: function(btn) {
+        var popover = btn.parents(".popover-content:eq(0)"),
+            form = $("#direction-search-form");
+        var panel = $(".panel[data-widget='"+ form.find("#widget").val() +"']:eq(0)")
+            .panel("before");
+        form.find("#config").val(panel.find("table:eq(0)").attr("data-config"));
+        form.form({
+            success: function(response) {
+                panel.panel("replace", response);
+            }
+        }).form("send").always(function() {
+            panel.panel("after");
+        });
+        $(".panel-search-button").popover("hide");
+    },
+    cancel: function(btn) {
+        var popover = btn.parents(".popover-content:eq(0)"),
+            form = $("#direction-search-form");
+        var panel = $(".panel[data-widget='"+ form.find("#widget").val() +"']:eq(0)")
+            .panel("before");
+        form.find("#config").val(panel.find("table:eq(0)").attr("data-config"));
+        var except = [ "widget", "config", "provider" ];
+        form.find("input, select, textarea").each(function(i, w) {
+            var $w = $(w);
+            if (except.indexOf($w.attr("id")) == -1) {
+                if ($w.is("select")) {
+                    $w.val("-1");
+                } else {
+                    $w.val("");
+                }
+            }
+        });
+        form.form({
+            success: function(response) {
+                panel.panel("replace", response);
+            }
+        }).form("send").always(function() {
+            panel.panel("after");
+        });
+        $(".panel-search-button").popover("hide");
+    }
 };
 
 var Laboratory_Printer = {
@@ -719,11 +760,11 @@ $(document).ready(function() {
 	Laboratory_AboutDirection_Widget.ready();
 	Laboratory_DirectionCreator_Modal.ready();
 	Laboratory_DirectionFormEx_Form.ready();
-	Laboratory_DirectionSearchForm_Popover.ready();
+	Laboratory_Popover_DirectionSearch.ready();
 	Laboratory_BarcodeReader.ready();
 	Laboratory_TabMenu_Widget.ready();
 
-	// fix for modal window backdrop
+	/* fix for modal window backdrop */
 	$(document).on("show.bs.modal", ".modal", function(e) {
         var total = $('.modal:visible').length;
 		if (!$(e.target).hasClass("modal")) {
@@ -738,7 +779,12 @@ $(document).ready(function() {
 		}, 0);
 	});
 
-	$('[data-toggle="popover"]').popover();
+    /* fix for popover hide with disabled animation */
+    $("body").on("hidden.bs.popover", function() {
+        $('.popover:not(.in)').hide().detach();
+    });
+
+	$("[data-toggle='popover']").popover();
 
     var modals = [
         "#laboratory-modal-about-direction",

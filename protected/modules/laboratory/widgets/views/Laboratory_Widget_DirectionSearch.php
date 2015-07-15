@@ -2,7 +2,10 @@
 /**
  * @var $this Laboratory_Widget_DirectionSearch
  */
-$this->widget('AutoForm', [
+?>
+<h4>Поиск</h4>
+<hr>
+<?php $this->widget('AutoForm', [
 	'id' => 'direction-search-form',
 	'url' => Yii::app()->createUrl('laboratory/direction/search'),
 	'model' => new Laboratory_Form_DirectionSearch(),
@@ -12,9 +15,12 @@ $this->widget('AutoForm', [
 		'config' => $this->config,
 	]
 ]) ?>
-<br>
-<div class="col-xs-12 text-center">
-	<button class="btn btn-success direction-search-button" style="width: 30%">
+<hr>
+<div class="btn-group btn-group-justified" style="margin-bottom: 10px;">
+	<a class="btn btn-success direction-search-button">
 		<span class="glyphicon glyphicon-search"></span> Найти
-	</button>
+	</a>
+    <a class="btn btn-default direction-search-cancel-button">
+        <span class="glyphicon glyphicon-remove"></span> Сбросить
+    </a>
 </div>

@@ -65,13 +65,13 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 	 */
 	public function search() {
 		return [
-			"pagination" => [
-				"pageSize" => static::PAGE_SIZE
+			'pagination' => [
+				'pageSize' => static::PAGE_SIZE
 			],
-			"sort" => [
-				"attributes" => [ "id" ],
-				"defaultOrder" => [
-					"id" => CSort::SORT_ASC
+			'sort' => [
+				'attributes' => [ 'id' ],
+				'defaultOrder' => [
+					'id' => CSort::SORT_ASC
 				]
 			]
 		];
@@ -97,6 +97,29 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 		if ($this->getCriteria() != null && $this->condition != null) {
 			$this->getCriteria()->mergeWith($this->condition);
 		}
+        # Build condition SQL string
+        if (!empty($this->condition['condition']) && !empty($this->condition['params'])) {
+            $params = $this->condition['params'];
+            foreach ($params as $key => &$value) {
+                if (is_string($value)) {
+                    $value = "'$value'";
+                }
+            }
+            $this->condition['condition'] = strtr(
+                $this->condition['condition'], $params
+            );
+            unset($this->condition['params']);
+            $params = $this->config['condition']['params'];
+            foreach ($params as $key => &$value) {
+                if (is_string($value)) {
+                    $value = "'$value'";
+                }
+            }
+            $this->config['condition']['condition'] = strtr(
+                $this->config['condition']['condition'], $params
+            );
+            unset($this->config['condition']['params']);
+        }
 	}
 
 	/**
@@ -115,13 +138,9 @@ abstract class ActiveDataProvider extends CActiveDataProvider {
 	 * @return Fetcher class instance
 	 */
 	public function getFetcher() {
-		if ($this->_fetcher == null) {
-			return $this->_fetcher = new Fetcher([
-				"fetcher" => $this->fetcher
-			]);
-		} else {
-			return $this->_fetcher;
-		}
+        return $this->_fetcher == null ? $this->_fetcher = new Fetcher([
+            'fetcher' => $this->fetcher
+        ]) : $this->_fetcher;
 	}
 
 	private $_fetcher = null;

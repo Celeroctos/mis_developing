@@ -1,7 +1,8 @@
 <?php
 /**
- * @var TreatmentController $this - Self instance
+ * @var laboratory\controllers\TreatmentController $this - Self instance
  */
+
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_MedcardSearch');
 $this->widget('Laboratory_Modal_PatientSearch');
@@ -42,6 +43,7 @@ $this->widget('TabMenu', [
         <?php $this->widget('Laboratory_Widget_DirectionPanel', [
             'title' => 'Направления на повторный забор образца',
             'status' => Laboratory_Direction::STATUS_TREATMENT_REPEAT,
+            'date' => false,
         ]) ?>
     </div>
     <div id="laboratory-container-direction-create" style="display: none;">

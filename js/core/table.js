@@ -13,11 +13,19 @@ var Core = Core || {};
 		}, selector);
 	});
 
-	Table.prototype.update = function(config, success, overlay) {
-        overlay = overlay !== void 0 ? overlay : true;
+	Table.prototype.update = function(config, success, overlay, silent) {
+        overlay = (overlay !== void 0 ? overlay : true);
+        silent = (silent !== void 0 ? silent : false);
 		var attr, me = this, table = this.selector();
-		if (this.selector().trigger("table.update") === false) {
-			return void 0;
+        var result = {
+            terminate: false,
+            overlay: true
+        };
+		if (silent != true) {
+            this.selector().trigger("table.update", [ result ]);
+            if (result.terminate) {
+                return void 0;
+            }
 		}
         if (overlay == true) {
             this.before();
@@ -30,14 +38,16 @@ var Core = Core || {};
 		}
 		attr = this.property("config") || {};
 		attr = $.extend(attr, config);
-		Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), attr, function(response) {
+		return Core.loadTable(table.attr("data-widget"), table.attr("data-provider"), attr, function(response) {
             var after = function() {
                 me.selector().empty().append($(response).children());
                 me.selector().attr($(response).getAttributes());
-                me.selector().trigger("table.updated");
+                if (!silent) {
+                    me.selector().trigger("table.updated");
+                }
                 success && success(response);
             };
-            if (overlay == true) {
+            if (overlay == true && result.overlay) {
                 me.after(after);
             } else {
                 after();

@@ -37,7 +37,7 @@ class GridTable extends Widget {
 				throw new Exception("Table provider must be an instance of [app\\core\\Table] class");
 			}
 		}
-		$this->provider->getData();
+		$this->provider->getData(true);
 		$this->config = array_merge($this->config, $this->provider->config);
 		$this->renderTable();
 	}

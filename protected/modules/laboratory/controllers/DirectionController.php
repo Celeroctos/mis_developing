@@ -516,32 +516,33 @@ class DirectionController extends ControllerEx {
 			$criteria = new CDbCriteria();
 			foreach ([ 'surname', 'name', 'patronymic' ] as $k) {
 				if (isset($form[$k]) && !empty($form[$k])) {
-					$criteria->addSearchCondition($k, (string) $form[$k]);
+					$criteria->addSearchCondition('lower(patient.'.$k.')', mb_strtolower((string) $form[$k], 'UTF-8'));
 				}
 			}
 			if (isset($form['card_number']) && !empty($form['card_number'])) {
-				$criteria->addSearchCondition('card_number', $form['card_number']);
+				$criteria->addSearchCondition('medcard.card_number', $form['card_number']);
 			}
 			if (isset($form['analysis_type_id']) && $form['analysis_type_id'] != -1) {
 				$criteria->addColumnCondition([
-					'analysis_type_id' => $form['analysis_type_id']
+					'analysis_type.analysis_type_id' => $form['analysis_type_id']
 				]);
 			}
 			if (isset($form['config'])) {
-				$config = json_decode($form['config'], true);
+                $config = json_decode($form['config'], true);
 			} else {
 				$config = [];
 			}
-			if (empty($config)) {
-				$config = [];
-			}
+            if ($config === false) {
+                $config = [];
+            }
+            $config = \CMap::mergeArray($config, [
+                'condition' => [
+                    'condition' => $criteria->condition,
+                    'params' => $criteria->params
+                ]
+            ]);
 			$widget = $this->createWidget($form['widget'], [
-				'provider' => new $form['provider']($config + [
-					'condition' => [
-						'condition' => $criteria->condition,
-						'params' => $criteria->params
-					]
-				])
+				'provider' => new $form['provider']($config)
 			]);
 			if (!$widget instanceof CWidget) {
 				throw new Exception('Loaded widget must be an instance of [app\\core\\Widget] class');

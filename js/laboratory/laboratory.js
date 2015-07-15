@@ -11,7 +11,7 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
 			me.createDraggable();
 		});
-		$("#analyzer-task-viewer").find(".panel-body").droppable({
+		$(".laboratory-tab-container").droppable({
 			drop: function(e, item) {
 				me.drop(item.draggable);
 			}
@@ -22,6 +22,12 @@ var Laboratory_AnalyzerQueue_Widget = {
 		$(".analyzer-queue-start-button").click(function() {
 			me.start();
 		});
+        $(".analyzer-queue-stop-button").click(function() {
+            $(this).prop("disabled", "true");
+            me.stop();
+            $(".analyzer-queue-start-button, .analyzer-queue-clear-button")
+                .removeProp("disabled");
+        }).prop("disabled", "true");
 		this.createDraggable();
 	},
 	remove: function(id) {
@@ -101,6 +107,13 @@ var Laboratory_AnalyzerQueue_Widget = {
 		} else if (container.attr("data-locked")) {
 			return false;
 		}
+        var tab = $("#analyzer-tab-menu").find("a[data-tab='"+ container.parents(".laboratory-tab-container").attr("id") +"']"),
+            limit = tab.attr("data-limit") || 0;
+        if (container.find(" > li").length >= limit) {
+            return Core.createMessage({
+                message: "Текущий анализатор поддерживат ограниченное количество образцов ("+ limit +")"
+            });
+        }
 		this.lock(tr.attr("data-id"));
 		var a = this.renderItem(tr);
 		container.append($("<li></li>", {
@@ -192,8 +205,11 @@ var Laboratory_AnalyzerQueue_Widget = {
 			return Core.createMessage({
 				message: "Не выбраны направления для анализа"
 			});
-		}
-		var panel = container.parents(".panel").loading("render");
+		} else {
+            $(".analyzer-queue-stop-button").removeProp("disabled");
+        }
+		var panel = container.parents(".panel-body:eq(0)").loading("render").parents(".panel:eq(0)");
+        panel.find(".analyzer-queue-start-button, .analyzer-queue-clear-button").prop("disabled", "true");
 		var time = $(".analyzer-task-menu-item.active > a").attr("data-time");
 		panel.find(".panel-footer > .progress > .progress-bar").animate({
 			width: "100%"
@@ -206,6 +222,17 @@ var Laboratory_AnalyzerQueue_Widget = {
 		});
 		me.await(container);
 	},
+    stop: function() {
+        var container = $(".analyzer-queue-container:visible"),
+            key = container.parents(".laboratory-tab-container").attr("id");
+        var panel = container.parents(".panel-body:eq(0)").loading("reset")
+            .parents(".panel:eq(0)");
+        panel.find(".panel-footer > .progress > .progress-bar").stop().css({
+            width: "0%"
+        });
+        container.removeAttr("data-locked");
+        this.clear();
+    },
 	await: function(container) {
 		var me = this, done = false;
 		container = container || $(".analyzer-queue-container:visible");
@@ -215,9 +242,11 @@ var Laboratory_AnalyzerQueue_Widget = {
 			container.children("li:not(.active)").each(function(i, li) {
 				directions.push($(li).attr("data-id"));
 			});
-			Core.sendPost("laboratory/direction/check", {
-				directions: directions,
-				status: 3 /* STATUS_READY */
+            if (directions.length == 0) {
+                return void 0;
+            }
+            Core.sendPost("laboratory/direction/check", {
+				directions: directions, status: 3 /* STATUS_READY */
 			}, function(response) {
 				var ready = response["ready"] || [];
 				for (var i in ready) {
@@ -301,41 +330,43 @@ var Laboratory_Analyzer_TabMenu = {
 			}
 			me.activateTab($(this));
 		});
-		var activate = function() {
-			if (/^#\d+$/.test(window.location.hash || "")) {
-				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parent("li"));
-			} else {
-				Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parent("li"));
-			}
-		};
-		activate();
-		$(".panel").on("panel.updated", function() {
-			activate();
-		});
 		$(document).on("table.updated", "#laboratory-direction-table", function() {
-			activate();
-		});
-		var fetch = function() {
-			var menu = $("#analyzer-tab-menu");
-			/* We must lock table and panel update to fetch extra tab information */
-			$.ajax({
-				url: url("laboratory/laboratory/tabs"),
-				async: false,
-				dataType: "json"
-			}).done(function(response) {
-				if (!response["status"]) {
-					return Core.createMessage({
-						message: response["message"]
-					});
-				}
-				var dirs = response["result"];
-				for (var i in dirs) {
-					menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
-				}
-			});
-		};
-		$(document).on("table.update", "#laboratory-direction-table", fetch);
-	}
+            me.afterUpdate($(this));
+		}).on("table.update", "#laboratory-direction-table", function(e, result) {
+            result.overlay = false;
+        });
+        me.activate();
+	},
+    activate: function() {
+        var menu = $("#analyzer-tab-menu");
+        if (/^#\d+$/.test(window.location.hash || "")) {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parents("li:eq(0)"));
+        } else {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parents("li:eq(0)"));
+        }
+    },
+    afterUpdate: function(table) {
+        var menu = $("#analyzer-tab-menu"),
+            me = this;
+        /* We must lock table and panel update to fetch extra tab information */
+        $.ajax({
+            url: url("laboratory/laboratory/tabs"),
+            dataType: "json"
+        }).done(function(response) {
+            if (!response["status"]) {
+                return Core.createMessage({
+                    message: response["message"]
+                });
+            }
+            var dirs = response["result"];
+            for (var i in dirs) {
+                menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
+            }
+            me.activate();
+        }).always(function() {
+            table.table("after");
+        });
+    }
 };
 
 var Laboratory_AnalysisResult_Widget = {

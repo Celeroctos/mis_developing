@@ -27,8 +27,15 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 
 	public function init() {
 		if (empty($this->date) && $this->date !== false) {
-			$this->date = date("Y-m-d");
+			$this->date = date('Y-m-d');
 		}
+        if (empty($this->body)) {
+            $this->body = $this->createWidget('GridTable', [
+                'provider' => new Laboratory_Grid_Direction([
+                    'status' => $this->status, 'date' => $this->date,
+                ])
+            ]);
+        }
 		if ($this->body instanceof GridTable) {
 			$provider = is_string($this->body->provider) ? $this->body->provider :
 				get_class($this->body->provider);
@@ -43,12 +50,12 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 					'class' => 'btn btn-default',
 					'icon' => 'glyphicon glyphicon-search',
 					'label' => 'Фильтр',
-					'title' => 'Поиск направления',
-					'data-container' => 'body',
+					'data-container' => '#'.$this->getId(),
 					'data-trigger' => 'click',
 					'data-toggle' => 'popover',
 					'data-placement' => 'bottom',
 					'data-html' => 'true',
+                    'data-animation' => 'false',
 					'data-content' => $this->getWidget('Laboratory_Widget_DirectionSearch', [
 						'widget' => get_class($this->body),
 						'provider' => $provider,
@@ -59,9 +66,7 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 		} else {
 			$this->controls = [];
 		}
-		if ($this->status == Laboratory_Direction::STATUS_TREATMENT_ROOM ||
-			$this->status == Laboratory_Direction::STATUS_READY
-		) {
+		if ($this->date !== false) {
 			$this->controls += [
 				'panel-date-button' => [
 					'class' => 'btn btn-default',
@@ -87,13 +92,6 @@ class Laboratory_Widget_DirectionPanel extends Panel {
 				]
 			];
 		}
-        if (empty($this->body)) {
-            $this->body = $this->createWidget('GridTable', [
-                'provider' => new Laboratory_Grid_Direction([
-                    'status' => $this->status,
-                ])
-            ]);
-        }
 		parent::init();
 	}
 }

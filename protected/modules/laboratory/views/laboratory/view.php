@@ -1,8 +1,9 @@
 <?php
 /**
- * @var $this LaboratoryController
+ * @var $this laboratory\controllers\LaboratoryController
  * @var $analyzers array
  */
+
 $this->widget('Laboratory_Modal_AboutDirection');
 $this->widget('Laboratory_Modal_AnalysisResult');
 $this->widget('Laboratory_Modal_QueueGuide');
@@ -22,6 +23,12 @@ $this->widget('TabMenu', [
                     'class' => 'badge', 'id' => 'treatment-repeat-counts'
                 ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_READY)),
             'data-tab' => 'laboratory-ready-grid-wrapper'
+        ],
+        'direction-closed' => [
+            'label' => 'Закрытые направления&nbsp;' . CHtml::tag('span', [
+                    'class' => 'badge', 'id' => 'treatment-repeat-counts'
+                ], Laboratory_Direction::model()->getCountOf(Laboratory_Direction::STATUS_CLOSED)),
+            'data-tab' => 'laboratory-closed-grid-wrapper'
         ],
     ],
     'active' => 'direction-analyzer',
@@ -55,6 +62,32 @@ $this->widget('TabMenu', [
                 ]),
             ]),
             'status' => Laboratory_Direction::STATUS_READY,
+            'search' => false,
+        ]) ?>
+    </div>
+    <div id="laboratory-closed-grid-wrapper" class="no-display text-left">
+        <hr>
+        <?php $this->widget('Laboratory_Widget_DirectionPanel', [
+            'title' => 'Завершенные направления',
+            'body' => $this->createWidget('GridTable', [
+                'provider' => new Laboratory_Grid_Direction([
+                    'status' => Laboratory_Direction::STATUS_CLOSED,
+                    'menu' => [
+                        'controls' => [
+                            'direction-result-icon' => [
+                                'icon' => 'glyphicon glyphicon-eye-open',
+                                'label' => 'Проверить результаты',
+                            ],
+                            'direction-show-icon' => [
+                                'icon' => 'glyphicon glyphicon-list',
+                                'label' => 'Открыть направление',
+                            ],
+                        ],
+                        'mode' => ControlMenu::MODE_ICON,
+                    ]
+                ]),
+            ]),
+            'status' => Laboratory_Direction::STATUS_CLOSED,
             'search' => false,
         ]) ?>
         <hr>
