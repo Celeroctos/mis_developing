@@ -625,7 +625,14 @@ class SheduleController extends Controller {
                 'text' => 'Ошибка запроса.'));
         }
 
-//        $transaction = Yii::app()->db->beginTransaction();
+        $master = new TemplateCloneMaster(
+            $_POST['FormTemplateDefault']['medcardId'],
+            $_POST['FormTemplateDefault']['greetingId'],
+            $_POST['FormTemplateDefault']['templateId']
+        );
+        $master->cloneTemplateElements($_POST['FormTemplateDefault']);
+
+//      $transaction = Yii::app()->db->beginTransaction();
 
         // Ищем recordId
         $recordId = MedcardElementForPatient::getMaxRecordId(
@@ -719,8 +726,11 @@ class SheduleController extends Controller {
             if(is_array($value)) {
                 $value = CJSON::encode($value);
             }
-			/** @var $historyCategorieElement MedcardElementForPatient */
+            /** @var $historyCategorieElement MedcardElementForPatient */
             $historyCategorieElement = $historyElementsPaths[$pathsToFields[$field]];
+            if ($historyCategorieElement == null) {
+                continue;
+            }
             $this->stepToNextState($historyCategorieElement, $value, $recordId );
             $answerCurrentDate = true;
 
@@ -753,7 +763,69 @@ class SheduleController extends Controller {
         );
         ob_end_clean();
         echo CJSON::encode($response);
+    }
 
+    private function getHistoryElements($mode = 'one', $data = array()) {
+        $conditions = '';
+        if(isset($data[':history_id'])) {
+            if($conditions == '') {
+                $conditions = 'history_id = :history_id';
+            } else {
+                $conditions .= ' AND history_id = :history_id';
+            }
+        }
+
+        if(isset($data[':greeting_id'])) {
+            if($conditions == '') {
+                $conditions = 'greeting_id = :greeting_id';
+            } else {
+                $conditions .= ' AND greeting_id = :greeting_id';
+            }
+        }
+
+        if(isset($data[':medcard_id'])) {
+            if($conditions == '') {
+                $conditions = 'medcard_id = :medcard_id';
+            } else {
+                $conditions .= ' AND medcard_id = :medcard_id';
+            }
+        }
+
+        if(isset($data[':path'])) {
+            if($conditions == '') {
+                $conditions = 'path = :path';
+            } else {
+                $conditions .= ' AND path = :path';
+            }
+        }
+
+        if(isset($data[':categorie_id'])) {
+            if($conditions == '') {
+                $conditions = 'categorie_id = :categorie_id';
+            } else {
+                $conditions .= ' AND categorie_id = :categorie_id';
+            }
+        }
+
+        if(isset($data[':element_id'])) {
+            if($conditions == '') {
+                $conditions = 'element_id != :element_id';
+            } else {
+                $conditions .= ' AND element_id != :element_id';
+            }
+        }
+
+        if($mode == 'one') {
+            return MedcardElementForPatient::model()->find(
+                $conditions,
+                $data
+            );
+        } elseif($mode == 'multiple') {
+            return MedcardElementForPatient::model()->findAll(
+                $conditions,
+                $data
+            );
+        }
     }
 
     // Получить пациентов для текущего дня расписания
@@ -1658,7 +1730,7 @@ class SheduleController extends Controller {
             $sheduleElement->comment = $mediateForm->comment;
             if(!$mediate->save()) {
                 echo CJSON::encode(array('success' => 'false',
-                                         'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
+                    'error' =>  'Не могу сохранить опосредованного пациента в базе!'));
                 exit();
             }
 

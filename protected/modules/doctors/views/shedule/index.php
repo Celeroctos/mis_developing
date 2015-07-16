@@ -1,4 +1,5 @@
-﻿<!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
+﻿﻿<?php /* @var $this SheduleController */ ?>
+<!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/patient.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/comments.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/categories.js"></script>-->
@@ -6,6 +7,7 @@
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/twocolumncontrol.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/ajaxbutton.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/libs/jquery-json.js"></script>-->
+<script type="text/javascript" src="<?php Yii::app()->getBaseUrl() ?>/js/laboratory/main.js"></script>
 <script type="text/javascript">
     globalVariables.patientsInCalendar = <?php echo $patientsInCalendar; ?>;
     globalVariables.reqDiagnosis = <?php echo CJSON::encode($requiredDiagnosis); ?>;
@@ -243,37 +245,23 @@
             </div>
         </div>
     </div>
+	<?php /* if (!Yii::app()->getRequest()->getQuery('rowid')): */ ?>
+		<script>
+			/* $(document).ready(function() {
+				patientReady(); categoryReady();
+			}); */
+		</script>
+	<?php /* endif */ ?>
     <?php
     if ($currentPatient !== false) {
         if ($templatesChoose == 0) {
             $counter = 0;
     ?>
 		<div class="greetingContentCont">
-			<p>
-				<a name="topMainTemplates"></a>
-			</p>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs templatesListNav">
-                    <?php foreach($templatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="t<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                    <?php
-                        $counter++;
-                    } ?>
-                </ul>
-
-            </div>
+			<p><a name="topMainTemplates"></a></p>
             <script>
-                //oldAddress = document.location.href;
-
-                //document.location.href=document.location.href+'#topMainTemplates';
-               // window.scrollBy(0,-50);
                 destinationAnchor = $('a[name=topMainTemplates]');
-                if (destinationAnchor!=undefined)
-                {
+                if (destinationAnchor != undefined) {
                     destination = $(destinationAnchor)[0].offsetTop;
                     $('body,html').animate({
                         scrollTop: destination
@@ -281,56 +269,13 @@
                 }
             </script>
             <script type="text/javascript">
-                if (globalVariables.elementsDependences == undefined)
-                {
-                    globalVariables.elementsDependences = new Array();
-                }
+                globalVariables.elementsDependences = globalVariables.elementsDependences || [];
             </script>
-            <?php
-            $counter = 0;
-            foreach ($templatesList as $key => $template) {
-                ?>
-                <div>
-
-                    <?php
-                    $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-                        'currentPatient' => $currentPatient,
-                        'templateType' => 0,
-                        'templateId' => $template['id'],
-                        'withoutSave' => 0,
-                        'greetingId' => $currentSheduleId,
-                        'canEditMedcard' => $canEditMedcard,
-                        'medcard' => $medcard,
-                        'currentDate' => $currentDate,
-                        'templatePrefix' => 'a' . $template['id'],
-                        'medcardRecordId' => $medcardRecordId,
-                        'isActiveTemplate' => $counter == 0,
-						//'form' => $formM
-                    )); ?>
-                </div>
-            <?php
-                $counter++;
-            } ?>
-            <?php
-            //$this->endWidget();
-            ?>
-            <?php $counter = 0; if (true){ ?>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs templatesListNav templatesListNavBottom">
-                    <?php foreach($templatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="t<?php echo $template['id']; ?>">
-                                <strong>
-                                    <?php echo $template['name']; ?>
-                                </strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-            </div>
-                <?php } ?>
+            <?php $this->widget('MedcardMenuWidget', [
+                'templates' => Yii::app()->getRequest()->getPost('templatesList', [
+                    /* With default parameters, current personal templates will be loaded */
+                ])
+            ]) ?>
 			<div class="modal fade error-popup" id="successEditPopup">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -371,7 +316,6 @@
                                 )
                             ));
                             ?>
-
                             <div class="form-group">
                                 <label for="doctor" class="col-xs-3 control-label">Клинический диагноз</label>
                                 <div class="col-xs-9">
@@ -429,7 +373,6 @@
                                     <input type="checkbox" id="onlyLikeDiagnosis">
                                 </div>
                             </div>
-
                             <div class="form-group chooser" id="primaryDiagnosisChooser">
                             <label for="doctor" class="col-xs-3 control-label">Основной диагноз по МКБ-10:</label>
                                 <div class="col-xs-9">
@@ -446,9 +389,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                             <div class="form-group chooser" id="complicationsDiagnosisChooser">
                                 <label for="doctor" class="col-xs-3 control-label">Осложнения основного диагноза по МКБ-10:</label>
                                 <div class="col-xs-9">
@@ -499,73 +439,12 @@
                 </div>
             </div>
             <div class="greetingHR"></div>
-			  <?php
-            echo CHtml::link('<span class="glyphicon glyphicon-print"></span>', '#' . $currentSheduleId,
-                array('title' => 'Печать рекомендаций',
-                    'class' => 'print-recomendation-link'));
-            ?>
-            <?php
-            $counter = 0;
-            //var_dump('-------');
-            //var_dump($referenceTemplatesList);
-            //exit();
-            ?>
-            <p><a name="topRecomTemplates"></a></p>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs recomTemplatesListNav">
-                            <?php foreach($referenceTemplatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="rt<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-
-            </div>
-            <?php
-            $counter = 0;
-            //var_dump($referenceTemplatesList);
-            //exit();
-            foreach ($referenceTemplatesList as $key => $template) {
-                ?>
-                <div class="default-margin-top">
-                    <?php $this->widget('application.modules.doctors.components.widgets.CategorieViewWidget', array(
-                        'currentPatient' => $currentPatient,
-                        'templateType' => 1,
-                        'templateId' => $template['id'],
-                        'withoutSave' => 0,
-                        'greetingId' => $currentSheduleId,
-                        'canEditMedcard' => $canEditMedcard,
-                        'medcard' => $medcard,
-                        'currentDate' => $currentDate,
-                        'templatePrefix' => 'r' . $template['id'],
-                        'medcardRecordId' => $medcardRecordId,
-						'isActiveTemplate' => $counter == 0,
-					//	'form' => $formM
-                    )); ?>
-                </div>
-                <?php
-                $counter++;
-            }
-			//	$this->endWidget();
-            $counter = 0;
-			?>
-            <div class="row col-xs-12">
-                <ul class="nav nav-tabs recomTemplatesListNav recomTemplatesListNavBottom">
-                    <?php foreach($referenceTemplatesList as $key => $template) { ?>
-                        <li <?php echo $counter == 0 ? 'class="active"' : ''; ?>>
-                            <a href="#" id="rt<?php echo $template['id']; ?>">
-                                <strong><?php echo $template['name']; ?></strong>
-                            </a>
-                        </li>
-                        <?php
-                        $counter++;
-                    } ?>
-                </ul>
-            </div>
+            <?= CHtml::link('<span class="glyphicon glyphicon-print"></span>', '#' . $currentSheduleId, [
+                'title' => 'Печать рекомендаций', 'class' => 'print-recomendation-link'
+            ]) ?>
+            <?php $this->widget('MedcardMenuWidget', [
+                'templates' => $referenceTemplatesList
+            ]) ?>
 		</div>
         <?php } ?>
     <?php } ?>
@@ -709,7 +588,7 @@
                 'id' => 'add-greeting-value-form',
                 'enableAjaxValidation' => true,
                 'enableClientValidation' => true,
-				// --> /doctors/patient/addvalueinguide
+				 // --> /doctors/patient/addvalueinguide
                 'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/admin/guides/addinguide'),
                 'htmlOptions' => array(
                     'class' => 'form-horizontal col-xs-12',
@@ -756,7 +635,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 <?php echo CHtml::ajaxSubmitButton(
                     'Добавить',
-						// --> /doctors/patient/addvalueinguide
+					// --> /doctors/patient/addvalueinguide
                     CHtml::normalizeUrl(Yii::app()->request->baseUrl . '/admin/guides/addinguide'),
                     array(
                         'success' => 'function(data, textStatus, jqXHR) {

@@ -52,11 +52,11 @@
 
 <!-- Секция направлений -->
 <?php
-  /*  $this->widget('application.modules.hospital.components.widgets.MedicalDirectionsForm', array(
+    $this->widget('application.modules.hospital.components.widgets.MedicalDirectionsForm', array(
         'currentOmsId' => $currentOmsId,
         'currentDoctorId' => $currentDoctorId,
         'currentMedcard' => $medcard['card_number']
-    ));  */?>
+    )); ?>
 <!-- Секция комментарии -->
 <div id="accordionC" class="accordion col-xs-12">
     <div class="accordion-group">

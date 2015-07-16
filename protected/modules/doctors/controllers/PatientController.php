@@ -1,28 +1,32 @@
 <?php
 class PatientController extends Controller {
+
     public function actionGetHistoryMedcard() {
+
         if(!Yii::app()->request->isAjaxRequest) {
             exit('Error!');
         }
-        if(!isset($_GET['date'], $_GET['medcardid'])) {
-            echo CJSON::encode(array('success' => true,
-                                     'data' => 'Не хватает данных для запроса!'));
-        }
 
-        $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
+        /* @var $categorieWidget CategorieViewWidget */
+//        $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
+//        $categorieWidget->createFormModel();
+//		$historyArr = $categorieWidget->getFieldsHistoryByDate(
+//            $_GET['medcardId'],
+//            $_GET['greetingId'],
+//            $_GET['templateId']
+//        );
 
-        $categorieWidget->createFormModel();
-		$historyArr = $categorieWidget->getFieldsHistoryByDate(
-            $_GET['medcardId'],
-            $_GET['greetingId'],
-            $_GET['templateId']
-
-        );
+        $content = $this->widget('MedcardTemplateWidget', [
+            'template' => $_GET['templateId'],
+            'greetingNumber' => $_GET['greetingId'],
+            'cardNumber' => $_GET['medcardId'],
+            'mode' => MedcardElementWidget::MODE_HISTORY,
+        ], true);
 
          // Получаем поля для всех полей относительно хистори
 		ob_end_clean();
         echo CJSON::encode(array('success' => 'true',
-                                 'data' => $historyArr));
+                                 'data' => $content));
         exit();
     }
 
@@ -126,7 +130,7 @@ class PatientController extends Controller {
     }
 
     // Клонирование элемента (категории)
-	public function actionCloneElement($pr_key, $recordId = false, $level = 0, $levelParts = array()) {
+	public function actionCloneElement($pr_key, $templateId, $greetingId, $medcardId, $recordId = false, $level = 0, $levelParts = array()) {
         $keyParts = explode('|', $pr_key);
         /* Порядок полей в ключе:
          * - Номер карты
@@ -140,6 +144,18 @@ class PatientController extends Controller {
             ':greeting_id' => $keyParts[1],
             ':path' => $keyParts[2],
             ':medcard_id' => $keyParts[0])
+        );
+
+        if($historyCategorie == null) {
+            $master = new TemplateCloneMaster($medcardId, $greetingId, $templateId);
+            $master->cloneTemplateCategory($keyParts[4]);
+        }
+
+        $historyCategorie = MedcardElementForPatient::model()->find('categorie_id = :categorie_id AND greeting_id = :greeting_id AND path = :path AND medcard_id = :medcard_id', array(
+                ':categorie_id' => $keyParts[3],
+                ':greeting_id' => $keyParts[1],
+                ':path' => $keyParts[2],
+                ':medcard_id' => $keyParts[0])
         );
 
         if($historyCategorie == null) {
@@ -172,25 +188,24 @@ class PatientController extends Controller {
 		$medcardCategorieClone->config = $historyCategorie->config;
         // Путь: бьём на составляющие и прибавляем к последнему элементу в позиции + 1 к максимальному номеру в иерархии в данной категории
         $pathParts = explode('.', $historyCategorie->path);
+        //
         $maxPosition = $pathParts[count($pathParts) - 1];
         // Удаляем последний элемент в клонируемой категории
-		array_splice($pathParts,count($pathParts) - 1);
-		// Ищем все элементы в иерархии, которые по позиции больше, чем текущий. Составим путь категории-родителя
-		if(count($pathParts) > 0) {
-			$elementsInCategorie = MedcardElementForPatient::model()->findAllPerGreeting($keyParts[1], implode('.',$pathParts),'like');
-
-			foreach($elementsInCategorie as $categorie) {
-				$pathParts2 = explode('.', $categorie['path']);
-				// Сравниваются пути с одинаковым количество элементов
-				if (count($pathParts2)==count($pathParts)+1)
-					if($maxPosition < $pathParts2[count($pathParts2) - 1]) {
-						$maxPosition = $pathParts2[count($pathParts2) - 1];
-					}
-			}
-		}
-		$pathParts[] = $maxPosition + 1;
-		$savedCategoriePosition = $maxPosition + 1; // Сохраняем позицию для изменения элементов пути
-		$medcardCategorieClone->path = implode('.', $pathParts);
+        array_splice($pathParts,count($pathParts)-1);
+        // Ищем все элементы в иерархии, которые по позиции больше, чем текущий. Составим путь категории-родителя
+//        $elementsInCategorie = MedcardElementForPatient::model()->findAllPerGreeting($keyParts[1], $historyCategorie->path);
+        $elementsInCategorie = MedcardElementForPatient::model()->findAllPerGreeting($keyParts[1], implode('.',$pathParts),'like');
+        foreach($elementsInCategorie as $categorie) {
+            $pathParts2 = explode('.', $categorie['path']);
+            // Сравниваются пути с одинаковым количество элементов
+            if (count($pathParts2)==count($pathParts)+1)
+                if($maxPosition < $pathParts2[count($pathParts2) - 1]) {
+                    $maxPosition = $pathParts2[count($pathParts2) - 1];
+                }
+        }
+        $pathParts[] = $maxPosition + 1;
+        $savedCategoriePosition = $maxPosition + 1; // Сохраняем позицию для изменения элементов пути
+        $medcardCategorieClone->path = implode('.', $pathParts);
 
         if(!$medcardCategorieClone->save()) {
             echo CJSON::encode(array('success' => false,
@@ -199,7 +214,8 @@ class PatientController extends Controller {
         }
 
         // Теперь смотрим все то, что находится в категории. И тоже клонируем, причём рекурсивно: там могут быть вложенные категории
-
+       // var_dump($keyParts[2]);
+       // exit();
         $elementsInCategorie = MedcardElementForPatient::model()->findAllPerGreeting($keyParts[1], $keyParts[2].'.', 'like');
         //    (сконкатенируем точку, т.к. при количестве категорий > 10
         //         функция выдаёт категории, которые находятся внутри этого же шаблона)
