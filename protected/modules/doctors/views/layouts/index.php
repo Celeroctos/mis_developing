@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/plot/jquery.jqplot.min.css">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.less" rel="stylesheet/less" media="screen">
     <link href="<?php echo Yii::app()->request->baseUrl; ?>/css/hospital/medical_directions_form.less" rel="stylesheet/less" media="screen">
+	<link href="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/bootstrap-select-1.7.2/dist/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" media="screen"  />
     <script type="text/javascript">
         var globalVariables = {
             baseUrl : '<?php echo Yii::app()->request->baseUrl; ?>'
@@ -32,6 +33,7 @@
     <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/chooser.js"></script>
 	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/consilium.js"></script>
     <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/patientAlarms.js"></script>
+	<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/bootstrap-select-1.7.2/dist/js/bootstrap-select.js"></script>
     <style>
         body {
             font-size: <?php echo Yii::app()->user->fontSize; ?>px !important;
