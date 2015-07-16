@@ -204,6 +204,7 @@ class Medcard extends MisActiveRecord
                     ':birthday' => is_array($oms) ? $oms['birthday'] :  $oms->birthday
                 )
             );
+
         return $medcards->queryAll();
     }
 

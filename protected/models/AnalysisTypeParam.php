@@ -28,10 +28,10 @@ class AnalysisTypeParam extends MisActiveRecord {
     public function rules() {
         return array(
             array('analysis_type_id, analysis_param_id', 'required'),
-            array('analysis_type_id, analysis_param_id, is_default, seq_number', 'numerical', 'integerOnly' => true),
+            array('analysis_type_id, analysis_param_id, checked, seq_number', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, analysis_type_id, analysis_param_id, is_default, seq_number', 'safe', 'on' => 'search'),
+            array('id, analysis_type_id, analysis_param_id, checked, seq_number', 'safe', 'on' => 'search'),
         );
     }
 
@@ -46,7 +46,7 @@ class AnalysisTypeParam extends MisActiveRecord {
             'analysis_param' => 'Наименование параметра анализа',
             'analysis_type_id' => 'Наименование типа анализа',
             'analysis_param_id' => 'Наименование параметра анализа',
-            'is_default' => 'Включен по умолчанию?',
+            'checked' => 'Включен по умолчанию?',
             'seq_number' => 'Порядковый номер параметра'
         ];
     }

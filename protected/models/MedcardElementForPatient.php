@@ -1,5 +1,6 @@
 <?php
 class MedcardElementForPatient extends MisActiveRecord {
+
     private $typesList = array( // Типы контролов
         'Текстовое поле',
         'Текстовая область',
@@ -9,11 +10,6 @@ class MedcardElementForPatient extends MisActiveRecord {
         'Числовое поле',
         'Дата'
     );
-
-    public static function model($className=__CLASS__)
-    {
-        return parent::model($className);
-    }
 
     public function tableName()
     {
@@ -70,34 +66,32 @@ class MedcardElementForPatient extends MisActiveRecord {
     }
 
     public function getElementsByCategorie($id) {
-        try {
-            $connection = Yii::app()->db;
-            $elements = $connection->createCommand()
-                ->select('mc.*')
-                ->from('mis.medcard_elements mc')
-                ->where('mc.categorie_id = :categorie_id', array(':categorie_id' => $id))
-                ->queryAll();
+        $rows = $this->getDbConnection()->createCommand()
+            ->select('*')
+            ->from('mis.medcard_elements')
+            ->where('categorie_id = :categorie_id', [
+                ':categorie_id' => $id
+            ])->queryAll();
+        return $rows;
+    }
 
-            return $elements;
-
-        } catch(Exception $e) {
-            echo $e->getMessage();
-        }
+    public function getElementsByCategory($id) {
+        return $this->getElementsByCategorie($id);
     }
 
 	public static function getTemplateName($recordId, $medcardId)
 	{
-		
+
 		try {
 			$connection = Yii::app()->db;
-			
-			
+
+
 			$values = $connection->createCommand()
 				->selectDistinct('SUBSTR(CAST(mep.change_date AS text), 0, CHAR_LENGTH(CAST(mep.change_date AS text)) - 2) AS change_date, mep.record_id, mep.medcard_id, mep2.template_name')
 				->from('mis.medcard_elements_patient mep')
 				->join('mis.medcard_elements_patient as mep2', 'mep.categorie_id=mep2.real_categorie_id')
 				->where('mep.medcard_id = :medcard_id AND mep.record_id=:ri', array(':medcard_id' => $medcardId, ':ri'=>$recordId));
-		
+
 			$result = $values->queryAll();
 
 			if (count($result)==0)
@@ -109,7 +103,7 @@ class MedcardElementForPatient extends MisActiveRecord {
 				return $result[0]['template_name'];
 			}
 			return 0;
-			
+
 		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
@@ -123,7 +117,7 @@ class MedcardElementForPatient extends MisActiveRecord {
 			// Если массив путей пуст - вернём пустой массив
 			if (count($elementPaths)==0)
 				return array();
-			
+
 			// Соберём строку из путей для условия WHERE IN
 			$pathsToSelect = '';
 			foreach ($elementPaths as $onePath)
@@ -215,8 +209,9 @@ class MedcardElementForPatient extends MisActiveRecord {
         try {
             $connection = Yii::app()->db;
             $templates = $connection->createCommand()
-                ->selectDistinct('template_id, template_name')
+                ->selectDistinct('template_id, t.name as template_name')
                 ->from('mis.medcard_elements_patient mep')
+                ->join('mis.medcard_templates as t', 't.id = mep.template_id')
                 ->where('mep.greeting_id = :greetingId
                         AND (NOT(template_id is NULL))
                         AND template_page_id = 1',
@@ -249,7 +244,7 @@ class MedcardElementForPatient extends MisActiveRecord {
         }
     }
 
-	
+
 	public function getHistoryPointsByCardId($medcard) {
 		try {
 
@@ -269,7 +264,7 @@ class MedcardElementForPatient extends MisActiveRecord {
 
 	public function getValuesByDate($medcardId, $greetingId,$templateId) {
 		try {
-			$connection = Yii::app()->db;		
+			$connection = Yii::app()->db;
 
             // Найдём для приёма и номера шаблона максимальный record_id, чтобы потом вытащить все элементы
 
@@ -288,7 +283,7 @@ class MedcardElementForPatient extends MisActiveRecord {
 				->select('mep.*, me.type')
 				->from('mis.medcard_elements_patient mep')
 				->leftJoin('mis.medcard_elements me', 'me.id = mep.element_id')
-				->where('(mep.medcard_id = :medcard_id AND mep.record_id = :record_id AND mep.element_id>0 AND mep.is_record=1)', 
+				->where('(mep.medcard_id = :medcard_id AND mep.record_id = :record_id AND mep.element_id>0 AND mep.is_record=1)',
 					array(':medcard_id' => $medcardId,
 						':record_id' => $historyId)
 					)
@@ -322,12 +317,12 @@ class MedcardElementForPatient extends MisActiveRecord {
 			$values = $connection->createCommand()
 				->select('MAX(mep.record_id) AS max_val')
 				->from('mis.medcard_elements_patient mep')
-				->where('mep.medcard_id = :medcard_id', 
+				->where('mep.medcard_id = :medcard_id',
 					array(':medcard_id' => $medcardId)
 					);
-			
+
 			$result = $values->queryAll();
-			
+
 			if (count($result)==0)
 			{
 				return 0;
@@ -337,7 +332,7 @@ class MedcardElementForPatient extends MisActiveRecord {
 				return $result[0]['max_val'];
 			}
 			return 0;
-			
+
 		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
