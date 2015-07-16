@@ -250,10 +250,10 @@ return array(
 			'password' => 'system54@nof',
 			'charset' => 'utf8'
 		),
-		'errorHandler'=>array(
+//		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-			'errorAction'=>'index/error',
-		),
+//			'errorAction'=>'index/error',
+//		),
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
