@@ -21,6 +21,7 @@ class CoreAsset extends AssetBundle {
 		"css/table.css",
 	];
 
+
 	public $dependencies = [
 		"DefaultAsset"
 	];
