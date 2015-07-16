@@ -96,7 +96,11 @@ class TabMenu extends Widget {
 				$label = CHtml::tag('span', [ 'class' => $item['icon'] ], '') .'&nbsp;'. $label;
 			}
 			if ($this->active !== false && $this->active == $class) {
-				$options['class'] .= ' active';
+				if (isset($options['class'])) {
+					$options['class'] = 'active';
+				} else {
+					$options['class'] .= ' active';
+				}
 			}
 			unset($item['label']);
 			print Html::openTag('li', $options);
