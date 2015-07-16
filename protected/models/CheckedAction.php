@@ -27,7 +27,7 @@ class CheckedAction extends MisActiveRecord  {
         try {
             $connection = Yii::app()->db;
             $checked = $connection->createCommand()
-                ->select('ra.*, aa.accessKey')
+                ->select('ra.*, aa.accessKey, ra.action_id as id')
                 ->from('mis.role_action ra')
                 ->join('mis.access_actions aa', 'ra.action_id = aa.id')
                 ->where('ra.role_id = :id', array(':id' => $id));
