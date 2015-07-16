@@ -57,9 +57,7 @@ class Controller extends CController {
 			}
         } elseif(!Yii::app()->user->isGuest && $this->route == 'index/index') {
 			$this->redirect(Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl);
-        } elseif ($this->route == 'index/error') {
-			return $filterChain->run();
-		}
+        }
 
         $roleModel = new Role();
         $currentRoles = $roleModel->getCurrentUserRoles();
