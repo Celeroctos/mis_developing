@@ -24,25 +24,25 @@ class Controller extends CController {
 		)
 	);
 
-    /* Неправильное использование, но пока непонятно, как переопределить конструктор */
-    // Фильтр для выполнения запроса по поводу прав доступа
-    public function filterGetAccessHierarchy($filterChain) {
-        // Здесь нужно писать логи...
+	/* Неправильное использование, но пока непонятно, как переопределить конструктор */
+	// Фильтр для выполнения запроса по поводу прав доступа
+	public function filterGetAccessHierarchy($filterChain) {
+		// Здесь нужно писать логи...
 
-        $action = Yii::app()->getController()->getAction();
-        if ($action->id=='acceptdata')
-        {
-            $filterChain->run();
-            return;
-        }
+		$action = Yii::app()->getController()->getAction();
+		if ($action->id=='acceptdata')
+		{
+			$filterChain->run();
+			return;
+		}
 
-        // Skip all that shit if we're using api action
+		// Skip all that shit if we're using api action
 		if (mb_strtolower($this->route) == 'users/api') {
 			$filterChain->run();
 			return;
 		}
-		
-        if((Yii::app()->user->isGuest &&
+
+		if((Yii::app()->user->isGuest &&
 				mb_strtolower($this->route) != 'index/index' &&
 				mb_strtolower($this->route) != 'users/login' &&
 				mb_strtolower($this->route) != 'users/loginstep2') || Yii::app()->user->getState('authStep', -1) != -1
@@ -51,17 +51,17 @@ class Controller extends CController {
 				Yii::app()->user->logout();
 				Yii::app()->user->setState('authStep', -1);
 			}
-            // Если гость, то не давать заходить куда-то. Только если это не второй шаг логина
+			// Если гость, то не давать заходить куда-то. Только если это не второй шаг логина
 			if(mb_strtolower($this->route) != 'users/loginstep2') {
 				$this->redirect('/');
 			}
-        } elseif(!Yii::app()->user->isGuest && $this->route == 'index/index') {
+		} elseif(!Yii::app()->user->isGuest && $this->route == 'index/index') {
 			$this->redirect(Yii::app()->request->baseUrl.''.Yii::app()->user->startpageUrl);
-        }
+		}
 
-        $roleModel = new Role();
-        $currentRoles = $roleModel->getCurrentUserRoles();
-		
+		$roleModel = new Role();
+		$currentRoles = $roleModel->getCurrentUserRoles();
+
 		// Выясняем права пользователя относительно текущего сотрудника. Что добавить, что не учитывать
 		$actionsDetached = array(); // Удалённые экшены из роли посредством задания их для сотрудника
 		$actionsAttached = array(); // Добавленные экшены на сотрудника
@@ -76,17 +76,17 @@ class Controller extends CController {
 			}
 		}
 
-        // Создаём иерархию для текущей роли пользователя
-        /* @var $auth CAuthManager */
-        $auth = Yii::app()->authManager;
-        $role = $auth->createRole('r'.$currentRoles['id'], '');
-        $result = $auth->assign('r'.$currentRoles['id'], Yii::app()->user->getId()); // Текущему юзеру назначаем эту роль
-        foreach($currentRoles['actions'] as $accessKey => $action) {
-            if(array_key_exists($action['id'], $actionsDetached) === false && array_key_exists($action['id'], $actionsAttached) === false) {
-                $auth->createOperation($accessKey);
-                $role->addChild($accessKey);
-            }
-        }
+		// Создаём иерархию для текущей роли пользователя
+		/* @var $auth CAuthManager */
+		$auth = Yii::app()->authManager;
+		$role = $auth->createRole('r'.$currentRoles['id'], '');
+		$result = $auth->assign('r'.$currentRoles['id'], Yii::app()->user->getId()); // Текущему юзеру назначаем эту роль
+		foreach($currentRoles['actions'] as $accessKey => $action) {
+			if(array_key_exists($action['id'], $actionsDetached) === false && array_key_exists($action['id'], $actionsAttached) === false) {
+				$auth->createOperation($accessKey);
+				$role->addChild($accessKey);
+			}
+		}
 
 		// Создаём иерархию дополнительно для сотрудника
 		foreach($actionsAttached as $key => $action) {
@@ -101,10 +101,10 @@ class Controller extends CController {
 		$logModel->changedate = date('Y-n-j');
 		$logModel->changetime = date('h:i:s');
 		$logModel->save();
-		
-        $filterChain->run();
-    }
-	
+
+		$filterChain->run();
+	}
+
 	public function filterSessionTimerHandler($filterChain) {
 		if(Yii::app()->request->isAjaxRequest) {
 			$module = $this->getModule();
@@ -124,20 +124,20 @@ class Controller extends CController {
 		$filterChain->run();
 	}
 
-    public function filters() {
-        return array(
+	public function filters() {
+		return array(
 			'SessionTimerHandler',
-            'GetAccessHierarchy'
-        );
-    }
+			'GetAccessHierarchy'
+		);
+	}
 
-    public function actionError() {
-        if($error = Yii::app()->errorHandler->error)  {
-            if(Yii::app()->request->isAjaxRequest) {
-                echo $error['message'];
-            } else {
-                $this->render('error', array('error' => $error));
-            }
-        }
-    }
+	public function actionError() {
+		if($error = Yii::app()->errorHandler->error)  {
+			if(Yii::app()->request->isAjaxRequest) {
+				echo $error['message'];
+			} else {
+				$this->render('error', array('error' => $error));
+			}
+		}
+	}
 }
