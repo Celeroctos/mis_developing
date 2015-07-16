@@ -1,336 +1,447 @@
-var ConfirmDelete = {
-    construct: function() {
-        $(document).on("click", ".confirm-delete", function(e) {
-            if (ConfirmDelete.lock) {
+
+const WEAK_LOCK = 1;
+const STRONG_LOCK = 2;
+
+var Laboratory_AnalyzerQueue_Widget = {
+	ready: function() {
+		var me = this;
+		/* $(".laboratory-table-wrapper .panel:eq(0)").on("panel.updated", function() {
+			me.createDraggable();
+		}); */
+		$(document).on("table.updated", "#laboratory-direction-table", function() {
+			me.createDraggable();
+		});
+		$(".laboratory-tab-container").droppable({
+			drop: function(e, item) {
+				me.drop(item.draggable);
+			}
+		});
+		$(".analyzer-queue-clear-button").click(function() {
+			me.clear();
+		});
+		$(".analyzer-queue-start-button").click(function() {
+			me.start();
+		});
+        $(".analyzer-queue-stop-button").click(function() {
+            $(this).prop("disabled", "true");
+            me.stop();
+            $(".analyzer-queue-start-button, .analyzer-queue-clear-button")
+                .removeProp("disabled");
+        }).prop("disabled", "true");
+		this.createDraggable();
+	},
+	remove: function(id) {
+		var container = $(".analyzer-queue-container:visible");
+		container.children("li[data-id='"+ id +"']").trigger("mouseleave").remove();
+		if (!container.children("li").length) {
+			$(".laboratory-tab-container:visible .panel-content").append(
+				"<h3 class=\"text-center\">Пусто</h3>"
+			).children("h3:not(:first)").remove();
+		}
+		this.unlock(id);
+		this.calculateIndexes(container);
+	},
+	clear: function() {
+		var me = this;
+		$(".analyzer-queue-container:visible").children("li").each(function(i, li) {
+			me.remove($(li).attr("data-id"));
+		});
+	},
+	calculateIndexes: function(container) {
+		container = (container || $(".analyzer-queue-container:visible"));
+		var k = 1;
+		container.children("li").each(function(i, li) {
+			$(li).attr("data-index", k).find(".queue-index").text("№ " + (k++));
+		});
+	},
+	renderItem: function(tr) {
+		var me = this, code = tr.children("td:eq(0)").text();
+        if (code.length < BARCODE_SEQUENCE_LENGTH) {
+            var len = BARCODE_SEQUENCE_LENGTH - code.length;
+            for (var i = 0; i < len; i++) {
+                code = "0" + code;
+            }
+        }
+		var string = code +" - " +
+            tr.children("td:eq(1)").text() + " " +
+			tr.children("td:eq(2)").text();
+		if (string.length > 35) {
+			string = string.substr(0, 35) + " ...";
+		}
+		var container = $(".analyzer-queue-container:visible"),
+			index = container.children("li").length + 1;
+        var checkbox = $("<input>", {
+            "type": "checkbox",
+            "checked": "true",
+            "style": "margin-right: 15px;"
+        });
+		return $("<a></a>", {
+			"class": "col-xs-12"
+		}).append($("<div></div>", {
+			"class": "col-xs-2 text-left no-padding"
+		}).append(checkbox).append($("<b></b>", {
+			"class": "queue-index",
+		}).append("№ " + index)).append($("<span></span>", {
+			/* "class": "glyphicon glyphicon-sort" */
+		}))).append($("<div></div>", {
+			"html": string,
+			"class": "col-xs-9 text-left no-padding"
+		})).append($("<div></div>", {
+			"html": $("<span></span>", {
+				"class": "glyphicon glyphicon-remove",
+				"data-original-title": "Удалить",
+				"onmouseenter": "$(this).tooltip('show')",
+				"data-placement": "right"
+			}).click(function () {
+				me.remove($(this).parents("li:eq(0)").attr("data-id"));
+			}),
+			"class": "col-xs-1 text-right no-padding"
+		}));
+	},
+	drop: function(tr) {
+		var me = this;
+        var container = $(".analyzer-queue-container:visible"),
+            index = container.children("li").length + 1;
+		if (tr.parents(".analyzer-queue-container").length > 0) {
+			return false;
+		} else if (container.attr("data-locked")) {
+			return false;
+		}
+        var tab = $("#analyzer-tab-menu").find("a[data-tab='"+ container.parents(".laboratory-tab-container").attr("id") +"']"),
+            limit = tab.attr("data-limit") || 0;
+        if (container.find(" > li").length >= limit) {
+            return Core.createMessage({
+                message: "Текущий анализатор поддерживат ограниченное количество образцов ("+ limit +")"
+            });
+        }
+		this.lock(tr.attr("data-id"));
+		var a = this.renderItem(tr);
+		container.append($("<li></li>", {
+			"data-id": tr.attr("data-id"),
+			"data-index": index,
+			"hover": function() {
+				var tr =$("#laboratory-direction-table")
+					.find("> tbody > tr[data-id='"+ $(this).attr("data-id") +"']");
+				$(".laboratory-tr-pointer").css({
+					"left": tr.position().left - 30,
+					"top": tr.position().top + 140
+				}).show();
+				tr.addClass("success");
+			},
+			"mouseleave": function() {
+				var tr =$("#laboratory-direction-table")
+					.find("> tbody > tr[data-id='"+ $(this).attr("data-id") +"']");
+				$(".laboratory-tr-pointer").hide();
+				tr.removeClass("success");
+			}
+		}).append(a));
+		container.parent().children("h3").remove();
+		container.sortable({
+			appendTo: container,
+			stop: function() {
+				me.calculateIndexes();
+			}
+		}).disableSelection();
+	},
+	createDraggable: function() {
+		var me = this, table = $("#laboratory-direction-table");
+		try {
+            table.find("tbody > tr").draggable("destroy");
+		} catch (ignored) {
+		}
+        table.find("tbody > tr").draggable({
+			helper: function() {
+				var item = $("<ul></ul>", {
+					class: "nav nav-pills nav-stacked analyzer-queue-helper"
+				}).append("<li></li>").append(me.renderItem($(this)));
+				item.find(".glyphicon").remove();
+				return item;
+			},
+			appendTo: "body"
+		});
+	},
+	lock: function(id, mode) {
+		mode = mode || STRONG_LOCK;
+		var tr = $("#laboratory-direction-table").find("> tbody > tr[data-id='"+ id +"']")
+			.loading("reset").loading({
+				image: mode === WEAK_LOCK ? false : url("images/locked59.png"),
+				width: 15,
+				height: 15,
+				depth: 1,
+				color: mode === WEAK_LOCK ? "white" : "white",
+				opacity: mode === WEAK_LOCK ? 0.10 : 0.5,
+				fade: false,
+				velocity: 0
+			}).loading("render");
+		if (mode == WEAK_LOCK || this.locked[id] == WEAK_LOCK) {
+			tr.addClass("danger");
+		}
+		this.locked[id] = mode;
+		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */
+	},
+	unlock: function(id) {
+		$("#laboratory-direction-table").find("> tbody > tr[data-id='"+ id +"']").loading("destroy")
+			.removeClass("danger");
+		delete this.locked[id];
+		/* localStorage.setItem("locked", JSON.stringify(this.locked)); */
+	},
+	send: function(id) {
+		var tr = $(".table:not(:first):visible[id='laboratory-direction-table'] > tbody > tr[data-id='"+ id +"']");
+		if (!tr.length) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") не направлялось в лабораторию"
+			});
+		} else if (tr.data("core-loading")) {
+			return Core.createMessage({
+				message: "Направление с номером ("+ id +") уже стоит в очереди на анализ"
+			});
+		}
+		this.drop(tr);
+	},
+	start: function() {
+		var me = this;
+		var container = $(".analyzer-queue-container:visible");
+		if (!container.children("li").length) {
+			return Core.createMessage({
+				message: "Не выбраны направления для анализа"
+			});
+		} else {
+            $(".analyzer-queue-stop-button").removeProp("disabled");
+        }
+		var panel = container.parents(".panel-body:eq(0)").loading("render").parents(".panel:eq(0)");
+        panel.find(".analyzer-queue-start-button, .analyzer-queue-clear-button").prop("disabled", "true");
+		var time = $(".analyzer-task-menu-item.active > a").attr("data-time");
+		panel.find(".panel-footer > .progress > .progress-bar").animate({
+			width: "100%"
+		}, time * 1000, "linear", function() {
+			Core.createMessage({
+				message: "Ожидаем получения данных с сервера ...",
+				sign: "ok",
+				type: "info"
+			});
+		});
+		me.await(container);
+	},
+    stop: function() {
+        var container = $(".analyzer-queue-container:visible"),
+            key = container.parents(".laboratory-tab-container").attr("id");
+        var panel = container.parents(".panel-body:eq(0)").loading("reset")
+            .parents(".panel:eq(0)");
+        panel.find(".panel-footer > .progress > .progress-bar").stop().css({
+            width: "0%"
+        });
+        container.removeAttr("data-locked");
+        this.clear();
+    },
+	await: function(container) {
+		var me = this, done = false;
+		container = container || $(".analyzer-queue-container:visible");
+		container.attr("data-locked", "true");
+		var t = function() {
+			var directions = [];
+			container.children("li:not(.active)").each(function(i, li) {
+				directions.push($(li).attr("data-id"));
+			});
+            if (directions.length == 0) {
                 return void 0;
             }
-            ConfirmDelete.item = $(e.target);
-            $("#confirm-delete-modal").modal();
-            e.stopImmediatePropagation();
-            return false;
-        });
-        $("#confirm-delete-button").click(function() {
-            ConfirmDelete.lock = true;
-            if (ConfirmDelete.item != null) {
-                ConfirmDelete.item.trigger("click");
-            }
-            setTimeout(function() {
-                ConfirmDelete.lock = false;
-            }, 250);
-        });
-    },
-    item: null,
-    lock: false
-};
-
-var Common = {
-	cleanup: function(component) {
-		$(component).find("input, textarea").val("");
-		$(component).find("select:not([multiple])").each(function(i, item) {
-			$(item).val($(item).find("option:eq(0)").val());
-		});
-		$(component).find("select[multiple]").val("");
-		$(component).find(".form-group").removeClass("has-error");
-	}
-};
-
-var Panel = {
-    construct: function() {
-        $(document).on("click", ".collapse-button", function() {
-            var me = $(this);
-            var body = $(me.parents(".panel")[0]).children(".panel-body");
-            if ($(this).hasClass("glyphicon-chevron-up")) {
-                body.slideUp("normal", function() {
-                    me.removeClass("glyphicon-chevron-up")
-                        .addClass("glyphicon-chevron-down");
-                });
-            } else {
-                body.slideDown("normal", function() {
-                    me.removeClass("glyphicon-collapse-down")
-                        .addClass("glyphicon-chevron-up");
-                });
-            }
-        });
-    }
-};
-
-var Table = {
-	fetch: function(me, parameters) {
-		var table = $(me).parents(".table[data-class]");
-		$.get(url("/laboratory/medcard/getWidget"), $.extend(parameters, {
-			class: table.data("class"),
-			condition: table.data("condition"),
-			params: table.data("parameters")
-		}), function(json) {
-			if (!Message.display(json)) {
-				return void 0;
-			}
-			$(me).parents(".table[data-class]").replaceWith(
-				$(json["component"])
-			);
-		}, "json");
-	},
-	order: function(row) {
-		var parameters = {};
-		if ($(this).find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = row + " desc";
-		} else {
-			parameters["orderBy"] = row;
-		}
-		Table.fetch(this, parameters);
-	},
-	page: function(page) {
-		var td = $(this).parents(".table[data-class]").find("tr:first-child td .glyphicon").parents("td");
-		var parameters = {
-			page: page
-		};
-		if (td.find(".glyphicon-chevron-up").length) {
-			parameters["orderBy"] = td.data("key") + " desc";
-		} else {
-			parameters["orderBy"] = td.data("key");
-		}
-		Table.fetch(this, parameters);
-	}
-};
-
-var DropDown = {
-    change: function(animate, update) {
-        const DELAY = 100;
-        if (animate === undefined) {
-            animate = true;
-        }
-        if (update === undefined) {
-            update = true;
-        }
-        var hide = function(group) {
-            if (!group.hasClass("hidden")) {
-                if (animate) {
-                    group.slideUp(DELAY, function() {
-                        $(this).addClass("hidden");
-                    });
-                } else {
-                    group.addClass("hidden");
-                }
-            }
-        };
-        var show = function(group) {
-            if (group.hasClass("hidden")) {
-                if (animate) {
-                    group.removeClass("hidden").hide().slideDown(DELAY);
-                } else {
-                    group.removeClass("hidden");
-                }
-            }
-        };
-        var toggle = function(group, it, wait) {
-            setTimeout(function() {
-                if (it.val() == "dropdown" || it.val() == "multiple") {
-                    show(group);
-                } else {
-                    hide(group);
-                }
-            }, wait)
-        };
-        var group = function(that, id) {
-            return $(that).parents("form").find("#" + id).parents(".form-group");
-        };
-        if ($(this).attr("id") == "type" && !$(this).attr("data-update")) {
-            var fields = [
-                "lis_guide_id",
-                "display_id"
-            ];
-            if ($(this).val() != "dropdown" && $(this).val() != "multiple") {
-                fields = fields.reverse();
-            }
-            var i;
-            for (i in fields) {
-                toggle(group(this, fields[i]), $(this), i * DELAY);
-            }
-            if (update && $(this).attr("data-update") && !this.disable) {
-                var me = this;
-                setTimeout(function () {
-                    DropDown.update($(me));
-                }, i * DELAY);
-            }
-        } else if (update && $(this).attr("data-update") && !this.disable) {
-            DropDown.update($(this));
-        }
-    },
-    update: function(select, after) {
-        var f;
-        var form = $(select.parents("form")[0]);
-        if (!form.data("lab")) {
-            f = Laboratory.createForm(form[0], {
-                url: url("/laboratory/guide/getWidget")
-            });
-        } else {
-            f = form.data("lab");
-        }
-        f.update(after);
-    },
-    disable: false
-};
-
-var Message = {
-    display: function(json) {
-        if (!json["status"]) {
-			Laboratory.createMessage({
-				message: json["message"]
+            Core.sendPost("laboratory/direction/check", {
+				directions: directions, status: 3 /* STATUS_READY */
+			}, function(response) {
+				var ready = response["ready"] || [];
+				for (var i in ready) {
+					container.children("li[data-id='"+ ready[i] +"']").addClass("active");
+				}
+				if (ready.length > 0) {
+					$("#laboratory-direction-table").parents(".panel").panel("update");
+				}
+				$("#laboratory-ready-counts").text(ready["total"]);
+				if (!container.children("li[data-id]:not(.active)").length) {
+					Core.createMessage({
+						message: "Результаты анализов получены",
+						sign: "ok",
+						type: "success"
+					});
+					container.parents(".panel").loading("reset");
+					done = true;
+					me.clear();
+					$("#laboratory-ready-grid-wrapper").children(".panel").panel("update");
+					container.parents(".panel").find(".panel-footer > .progress > .progress-bar")
+						.stop().animate({ width: "0%" }, 250);
+					container.removeAttr("data-locked");
+				}
+				if (!done) {
+					setTimeout(t, 10000);
+				}
+			}).fail(function() {
+				if (!done) {
+					setTimeout(t, 10000);
+				}
 			});
-            return false
-        } else if (json["message"]) {
-            Laboratory.createMessage({
-                type: "success",
-                sign: "ok",
-                message: json["message"]
-            });
-        }
-        return true;
-    }
+		};
+		t();
+	},
+	panels: {},
+	locked: {}
 };
 
-var MedcardSearch = {
-	construct: function() {
-		$("[id='medcard-search-button']").click(function() {
-			MedcardSearch.search();
-		});
-		$("#medcard-edit-button").click(function() {
-			MedcardSearch.edit();
-		});
-		$("#medcard-search-table-wrapper").on("click", ".pagination li:not(:disabled)", function() {
-			MedcardSearch.reset();
-		});
-	},
-	edit: function(number) {
-		if (!(number = number || this.id)) {
-			return void 0;
+var Laboratory_Analyzer_TabMenu = {
+	activateTab: function(li) {
+		var menu = $("#analyzer-tab-menu"),
+			directions;
+		try {
+			directions = $.parseJSON(li.children("a").attr("data-directions"));
+		} catch (ignored) {
+			directions = [];
 		}
-		$.get(url("/reception/patient/getMedcardData"), {
-			cardId: number
-		}, function(data) {
-			if(data.success == true) {
-				data = data.data["formModel"];
-				var form = $('#patient-medcard-edit-form');
-				$('#patient-medcard-edit-modal').modal();
-				for(var i in data) {
-					$(form).find('#' + i).val(data[i]);
+		var locked = $.extend(true, {}, Laboratory_AnalyzerQueue_Widget.locked);
+		$("#laboratory-direction-table").find("tr[data-id]").each(function(i, tr) {
+			var id = $(tr).attr("data-id");
+			if ($.inArray(+id, directions) == -1) {
+				if (!$(tr).data("core-loading")) {
+					Laboratory_AnalyzerQueue_Widget.lock(id, WEAK_LOCK);
+				} else {
+					$(tr).addClass("danger");
 				}
 			} else {
-				$('#errorSearchPopup .modal-body .row p').remove();
-				$('#errorSearchPopup .modal-body .row').append('<p>' + data.data + '</p>')
-				$('#errorSearchPopup').modal();
+				Laboratory_AnalyzerQueue_Widget.unlock(id);
 			}
-		}, "json");
-	},
-	search: function() {
-		var table = $("#medcard-search-button").button("loading")
-			.parents(".modal").find("table[data-class]");
-		var data = $("#medcard-search-form").serialize() + "&" +
-			$("#medcard-range-form").serialize() + "&widget=" + table.data("class");
-		$.post(url("/laboratory/medcard/search"), data, function(json) {
-			if (!Message.display(json)) {
-				return void 0;
-			}
-			$("#medcard-table").replaceWith(
-				$(json["component"])
-			);
-			Laboratory.createMessage({
-				message: "Таблица обновлена",
-				sign: "ok",
-				type: "success",
-				delay: 2000
-			});
-		}, "json").always(function() {
-			$("#medcard-search-button").button("reset");
 		});
-	},
-	click: function(tr, id) {
-		this.active && this.active.removeClass("medcard-table-active");
-		this.active = $(tr).addClass("medcard-table-active");
-		if (this.active) {
-			$("#medcard-edit-button").removeClass("disabled");
+		for (var i in locked) {
+			if (locked[i] != WEAK_LOCK && $.inArray(+i, directions) != -1) {
+				Laboratory_AnalyzerQueue_Widget.lock(i);
+			} else if (locked[i] == STRONG_LOCK && Laboratory_AnalyzerQueue_Widget.locked[i] == WEAK_LOCK) {
+				Laboratory_AnalyzerQueue_Widget.lock(i);
+			}
 		}
-		this.id = id;
 	},
-	reset: function() {
-		this.active = this.id = null;
-		$("#medcard-edit-button").addClass("disabled");
+	ready: function() {
+		var me = this;
+		var menu = $("#analyzer-tab-menu");
+		menu.find(".analyzer-task-menu-item:not(.disabled)").click(function() {
+			menu.find(".analyzer-task-menu-item.active").removeClass("active");
+			$(this).addClass("active");
+			$(".laboratory-tab-container").hide();
+			$("#" + $(this).children().attr("data-tab")).show();
+			if ($(this).children("a").attr("data-id")) {
+				window.location.hash = $(this).children("a").attr("data-id");
+			} else {
+				window.location.hash = "";
+			}
+			me.activateTab($(this));
+		});
+		$(document).on("table.updated", "#laboratory-direction-table", function() {
+            me.afterUpdate($(this));
+		}).on("table.update", "#laboratory-direction-table", function(e, result) {
+            result.overlay = false;
+        });
+        me.activate();
 	},
-	active: null,
-	id: null
+    activate: function() {
+        var menu = $("#analyzer-tab-menu");
+        if (/^#\d+$/.test(window.location.hash || "")) {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li > a[data-id='"+ window.location.hash.substr(1) +"']").parents("li:eq(0)"));
+        } else {
+            Laboratory_Analyzer_TabMenu.activateTab(menu.find("li:first-child > a[data-id]").parents("li:eq(0)"));
+        }
+    },
+    afterUpdate: function(table) {
+        var menu = $("#analyzer-tab-menu"),
+            me = this;
+        /* We must lock table and panel update to fetch extra tab information */
+        $.ajax({
+            url: url("laboratory/laboratory/tabs"),
+            dataType: "json"
+        }).done(function(response) {
+            if (!response["status"]) {
+                return Core.createMessage({
+                    message: response["message"]
+                });
+            }
+            var dirs = response["result"];
+            for (var i in dirs) {
+                menu.find("a[data-id='"+ dirs[i]["id"] +"']").attr("data-directions", dirs[i]["directions"]);
+            }
+            me.activate();
+        }).always(function() {
+            table.table("after");
+        });
+    }
 };
 
-var LogoutButton = {
-	construct: function() {
-		var form = $("#logout-form");
-		$(".logout-button").click(function() {
-			$.get(form.attr("action"), form.serialize(), function(json) {
-				if (json.success) {
-					window.location.href = url("");
+var Laboratory_AnalysisResult_Widget = {
+	ready: function() {
+		$("#submit-analysis-result-button").click(function() {
+			var form = $(this).parents(".modal").find("form").loading("render"),
+				me = this;
+			form.form({
+				success: function() {
+					$("#laboratory-ready-grid-wrapper").find(".panel").panel("update");
+					$(me).parents(".modal").modal("hide");
 				}
-			}, "json");
+			}).form("send").always(function() {
+				form.loading("reset");
+			});
+		});
+	},
+	open: function(id, icon) {
+		var panel = icon.parents(".panel").panel("before");
+		Core.loadWidget("Laboratory_Widget_AnalysisResult", {
+			direction: id
+		}, function(component) {
+			$("#laboratory-modal-analysis-result").modal("show").find(".modal-body").empty().append(component);
+		}).always(function() {
+			panel.panel("after");
 		});
 	}
-};
-
-var MedcardSearchModal = {
-	ready: function(selector) {
-		var modal = $(selector);
-		modal.on("show.bs.modal", function() {
-			$(this).find("#load").prop("disabled", "disabled");
-		});
-		modal.on("click", "#medcard-table tr[data-id]", function() {
-			MedcardSearchModal.id = $(this).data("id");
-			$(modal.find("#load")[0]).text("Открыть (" + MedcardSearchModal.id + ")").removeProp("disabled");
-		});
-		modal.find("#load").click(function() {
-			if (!MedcardSearchModal.id) {
-				return void 0;
-			}
-			var text = $(this).text();
-			var btn = $(this).button("loading");
-			$.get(url("laboratory/medcard/load"), {
-				number: MedcardSearchModal.id
-			}, function(json) {
-				if (!Message.display(json)) {
-					return void 0;
-				}
-				MedcardEditableViewerModal.load(json["model"]);
-				modal.modal("hide");
-			}, "json")
-				.always(function() {
-					btn.button("reset").text(text);
-				}).fail(function() {
-					Laboratory.createMessage({
-						message: "Произошла ошибка при отправке запроса. Обратитесь к администратору"
-					});
-				})
-		});
-	},
-	construct: function() {
-		this.ready("#mis-medcard-search-modal");
-		this.ready("#lis-medcard-search-modal");
-	},
-	id: null
 };
 
 $(document).ready(function() {
 
-	ConfirmDelete.construct();
-	Panel.construct();
-	MedcardSearch.construct();
-	LogoutButton.construct();
-	MedcardSearchModal.construct();
+	Laboratory_AnalyzerQueue_Widget.ready();
+	Laboratory_Analyzer_TabMenu.ready();
+	Laboratory_AnalysisResult_Widget.ready();
 
-	// fix for modal window backdrop
-	$(document).on('show.bs.modal', '.modal', function(e) {
-		if (!$(e.target).hasClass("modal")) {
-			return void 0;
+	$(document).on("barcode.captured", function(e, p) {
+		var table = $("#laboratory-direction-table");
+		if (!table.data("core-loading")) {
+			table.table("before", 1);
 		}
-		var depth = 1140 + (10 * $('.modal:visible').length);
-		$(this).css('z-index', depth);
-		setTimeout(function() {
-			$('.modal-backdrop').not('.modal-stack').css('z-index', depth - 1).addClass('modal-stack');
-		}, 0);
+		$.get(url("laboratory/direction/test"), {
+			id: p.barcode, status: 2 /* Laboratory_Direction::STATUS_LABORATORY */
+		}, function(response) {
+			if (!response["status"]) {
+				Core.createMessage({
+					message: response["message"]
+				});
+				return void 0;
+			} else if (response["message"]) {
+				return Core.createMessage({
+					message: response["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			var l = Laboratory_AnalyzerQueue_Widget.locked[p.barcode];
+			if (l == STRONG_LOCK) {
+				return Core.createMessage({
+					message: "Направление уже отправлено на анализатор",
+					type: "warning",
+					delay: 7000
+				});
+			} else if (l == WEAK_LOCK) {
+				return Core.createMessage({
+					message: "Тип анализа направления не доступен для этого анализатора",
+					type: "warning",
+					delay: 7000
+				});
+			} else {
+				Laboratory_AnalyzerQueue_Widget.send(p.barcode);
+			}
+		}, "json").always(function() {
+			if (table.data("core-loading")) {
+				table.table("after");
+			}
+		});
 	});
 });

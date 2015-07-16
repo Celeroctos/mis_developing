@@ -49,6 +49,24 @@ var Core = Core || {};
 		}
 	};
 
+	/**
+	 * Get value of attribute by it's key or set it's value
+	 * @param {String} key - Value's key to set/get
+	 * @param {*} [value] - Value to set
+	 * @returns {*} - Value associated with that key
+	 */
+	Component.prototype.attr = function(key, value) {
+		if (!this._attributes) {
+			this._attributes = this.selector().attr("data-attributes") || "{}";
+			this._attributes = $.parseJSON(this._attributes);
+		}
+		if (arguments.length > 1) {
+			this._attributes[key] = value;
+			this.selector().attr("data-attributes", this._attributes);
+		}
+		return this._attributes[key];
+	};
+
     /**
      * Override that method to return jquery item
      */
@@ -113,7 +131,7 @@ var Core = Core || {};
      * it will simply remove selector
      */
     Component.prototype.destroy = function() {
-		$.removeData(this.selector(), this.getDataAttribute);
+		this.selector().data(this.getDataAttribute(), false);
     };
 
     /**
@@ -122,9 +140,10 @@ var Core = Core || {};
      */
     Component.prototype.update = function() {
         this.before();
-        this.selector().replaceWith(
-            this.selector(this.render())
-        );
+		var r = this.render();
+		if (r != void 0) {
+			this.selector().replaceWith(this.selector(r));
+		}
         this.after();
         this.activate();
     };
@@ -172,19 +191,73 @@ var Core = Core || {};
 			.removeClass("has-error")
 			.removeClass("has-warning")
 			.removeClass("has-success");
-		$(component).find("select:not([multiple][data-cleanup!='false'])").each(function(i, item) {
+		$(component).find("select:not([multiple])[data-cleanup!='false']").each(function(i, item) {
 			$(item).val($(item).find("option:eq(0)").val());
 		});
-		var list = [ "input", "textarea", "select[multiple]" ];
-		for (var i in list) {
-			list[i] += "[data-cleanup!='false']";
+		var filters = [ "input[type!='button'][type!='submit']", "textarea", "select[multiple]" ];
+		for (var i in filters) {
+			filters[i] += "[data-cleanup!='false']";
 		}
-		$(component).find(list.join(",")).val("");
+		$(component).find(filters.join(",")).val("");
+	};
+
+	Core.loadWidget = function(widget, attributes, success) {
+		return $.ajax({
+			url: window["globalVariables"]["widget"],
+			data: {
+				widget: widget,
+				config: attributes
+			},
+			cache: false
+		}).done(function(response) {
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.loadTable = function(widget, provider, config, success) {
+		return $.ajax({
+			url: window["globalVariables"]["table"],
+			data: {
+				widget: widget,
+				provider: provider,
+				config: config,
+				module: window["globalVariables"]["module"]
+			},
+			cache: false
+		}).done(function(response) {
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.loadPanel = function(widget, config, success) {
+		return $.ajax({
+			url: window["globalVariables"]["panel"],
+			data: {
+				widget: widget,
+				config: config
+			},
+			cache: true
+		}).done(function(response) {
+			success && success(response);
+		}).fail(function() {
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
 	};
 
 	Core.postFormErrors = function(where, json) {
 		var html = $("<ul>");
 		for (var i in json["errors"] || []) {
+			where.find("[name='" + i + "']").parents(".form-group").addClass("has-error");
 			where.find("[id='" + i + "']").parents(".form-group").addClass("has-error");
 			for (var j in json["errors"][i]) {
 				$("<li>", {
@@ -198,8 +271,43 @@ var Core = Core || {};
 		});
 	};
 
+	var sendAjax = function(method, href, data, success) {
+		return $[method](url(href), data, function(json) {
+			if (!json["status"]) {
+				return Core.createMessage({
+					message: json["message"]
+				});
+			} else if (json["message"]) {
+				Core.createMessage({
+					message: json["message"],
+					type: "success",
+					sign: "ok"
+				});
+			}
+			success && success(json);
+		}, "json").fail(function(e, status) {
+            if (status == "abort") {
+                return void 0;
+            }
+			return Core.createMessage({
+				message: "Произошла ошибка при обработке запроса. Обратитесь к администратору"
+			});
+		});
+	};
+
+	Core.sendQuery = function(href, data, success) {
+		return sendAjax("get", href, data, success);
+	};
+
+	Core.sendPost = function(href, data, success) {
+		return sendAjax("post", href, data, success);
+	};
+
 	Core.resetFormErrors = function(where) {
-		$(where).find(".form-group").removeClass("has-error");
+		$(where).find(".form-group")
+            .removeClass("has-success")
+            .removeClass("has-error")
+            .removeClass("has-warning");
 	};
 
 	Core.Component = Component;
@@ -274,9 +382,9 @@ var Core = Core || {};
 					return r;
 				}
 			} else {
-				if (me.data(attr) != void 0) {
+				/* if (!!me.data(attr)) {
 					return void 0;
-				}
+				} */
 				if (typeof me != "function") {
 					if (me.length) {
 						s = me[0];
@@ -338,7 +446,7 @@ var Core = Core || {};
 		if (url.charAt(0) != "/") {
 			url = "/" + url;
 		}
-        return window["globalVariables"]["baseUrl"] + url;
+		return window["globalVariables"]["baseUrl"] + url;
     };
 
 	window.serialize = function(obj, prefix) {
@@ -354,67 +462,68 @@ var Core = Core || {};
 		return str.join("&");
 	};
 
-	$.fn.update = function() {
-		return this.each(function() {
-			var widget, params, me = this;
-			if (!(widget = $(this).attr("data-widget")) || !(params = $(this).attr("data-attributes"))) {
-				return void 0;
-			} else if (!window["globalVariables"]["getWidget"]) {
-				throw new Error("Layout hasn't declared [globalVariables::getWidget] field via [Widget::createUrl] method");
-			}
-			$(this).loading();
-			params = $.parseJSON(params);
-			$.get(window["globalVariables"]["getWidget"], $.extend(params, {
-				class: widget
-			}), function(json) {
-				if (json["status"]) {
-					$(me).fadeOut("fast", function() {
-						$(this).empty().append(json["component"]).hide().fadeIn("fast");
-					});
-				} else {
-					$(json["message"]).message();
-				}
-			}, "json").always(function() {
-				$(me).loading("reset");
-			});
+	$.fn.cleanup = function(except) {
+		return this.each(function(i, e) {
+            if (except && $(e).is(except)) {
+                return void 0;
+            }
+            Core.Common.cleanup(e);
 		});
 	};
 
 	$.fn.rotate = function(angle, duration, easing, deg, complete) {
-		var args = $.speed(duration, easing, deg, complete);
+		var args = $.speed(duration || 350, easing || "swing", deg || 0, complete);
 		var step = args.step;
 		deg = deg || 0;
 		return this.each(function(i, e) {
 			args.complete = $.proxy(args.complete, e);
 			args.step = function(now) {
 				$.style(e, 'transform', 'rotate(' + now + 'deg)');
-				if (step) return step.apply(e, arguments);
+				if (step) {
+					return step.apply(e, arguments);
+				}
 			};
-			$({deg: deg}).animate({deg: angle}, args);
+			$({ deg: deg }).animate({ deg: angle }, args);
 		});
 	};
 
+	$.fn.rebind = function(event, dst, clear) {
+		var events = [];
+		this.each(function(){
+			var allEvents = jQuery._data(this, "events");
+			if (typeof allEvents === "object") {
+				var thoseEvents = allEvents[event];
+				if (typeof thoseEvents === "object") {
+					for (var i = 0; i<thoseEvents.length; i++) {
+						events.push(allEvents[event][i].handler);
+					}
+				}
+			}
+		});
+		if (typeof dst === "string") {
+			dst = $(dst);
+		} else if (typeof dst === "object") {
+			if (typeof dst.tagName === "string") {
+				dst = $(dst);
+			}
+		}
+		if (clear === true) dst.off(event);
+		dst.each(function(){
+			for(var i = 0; i<events.length; i++) {
+				dst.bind(event, events[i]);
+			}
+		});
+		return this;
+	};
+
+	$.fn.getAttributes = function() {
+		var attributes = {};
+		if(this.length) {
+			$.each(this[0].attributes, function(index, attr) {
+				attributes[attr.name] = attr.value;
+			});
+		}
+		return attributes;
+	};
+
 })(Core);
-
-/*
-$(document).ready(function() {
-$("input[data-regexp][type='text']").each(function(i, item) {
-	var regexp = new RegExp($(item).data("regexp"));
-	$(item).keydown(function(e) {
-		console.log($(item).val());
-		console.log(regexp.test($(item).val()));
-	});
-});
-});
-var isStrValid = function(str) {
-return ((str.match(/[^\d^.]/) === null)
-&& (str.replace(/\d+\.?\d?\d?/, "") === ""));
-};
-
-var node = dojo.byId("txt");
-dojo.connect(node, "onkeyup", function() {
-if (!isStrValid(node.value)) {
-node.value = node.value.substring(0, node.value.length-1);
-}
-});
-* */

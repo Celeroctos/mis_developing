@@ -31,6 +31,7 @@ $(document).ready(function() {
                 $(control).find('.twoColumnHidden').val($.toJSON(optionIds)).change();
 
                 $(control).trigger('refresh');
+                $(control).find("select[multiple][name]").trigger("change");
             }
 
             refreshValue(control);

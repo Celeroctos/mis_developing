@@ -1,10 +1,10 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
 
     globalVariables.isUnsavedUserData = false;  // Есть ли несохранённые данные у пользователя
     globalVariables.wasUserFocused = false; // Был ли фокус на каком-то элементе
     globalVariables.savingProcessing = false;
     //    флаги isUnsavedUserData и wasUserFocused работают в связке
-	showMsgs = true;
+    showMsgs = true;
     showLeaveNotice = false; // Show notice about leaving page
 
     // Modal window, when page prepares to reload
@@ -51,11 +51,19 @@
         return false;
     });
 
-
-    $(window).on('beforeunload', function (e) {
-        // Если есть несохранённые данные - спрашиваем, нужно ли их сохранить
-        return globalVariables.isUnsavedUserData ? 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.' : '';
-    });
+    /* $(window).on('beforeunload', function(e) {
+     var message = 'В приёме остались несохранённые данные. Если Вы хотите их сохранить - нажмите "остаться на странице" и сохраните данные.';
+     if (!globalVariables.isUnsavedUserData || true) {
+     return void 0;
+     }
+     if (typeof e == "undefined") {
+     e = window.event;
+     }
+     if (e) {
+     e.returnValue = message;
+     }
+     return message;
+     }); */
 
     globalVariables.numCalls = 0; // Одна или две формы вызвались. Делается для того, чтобы не запускать печать два раза
     // Редактирование медкарты
@@ -72,8 +80,7 @@
             // Поднимаем флаг, что есть ошибки
             globalVariables.isSavingErrors = true;
         }
-        console.log( globalVariables.numCalls);
-        if ($(".submitEditPatient").length == globalVariables.numCalls) {
+        if ($(".submitEditPatient").length == globalVariables.numCalls || true) {
             // Сбрасываем, что есть несохранённые данные
             globalVariables.isUnsavedUserData = false;
             globalVariables.savingProcessing = false;
@@ -105,6 +112,12 @@
                 }
             }
             globalVariables.isSavingErrors = false;
+
+            Core.createMessage({
+                message: "Приём автоматически сохранён",
+                type: "info",
+                sign: "ok"
+            });
         } else {
             ++globalVariables.numCalls;
         }
@@ -170,7 +183,7 @@
         );
     }
 
-	function onSaveComplete() {
+    function onSaveComplete() {
         if (printHandler == 'print-greeting-link') {
             $('.activeGreeting .' + printHandler).trigger('print');
         } else {
@@ -218,31 +231,37 @@
                             $('#accordionH .accordion-inner div:first').before(newDiv);
                         }
                     }
+
                 }
                 return;
             }
         });
     }
     $('#medcardContentSave, #sideMedcardContentSave').on('click', function (e) {
-        isThisPrint = false;
+        if (globalVariables.savingProcessing) {
+            return Core.createMessage({
+                message: "Подождите, идет автосохранение ..."
+            });
+        }
+        isThis = false;
         printHandler = 'accept-greeting-link';
         $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
         onStartSave();
-		e.stopPropagation();
+        e.stopPropagation();
     });
-	
-	
-	/* Автосохранение */
-	setTimeout(autoSave, 30000);
-	
-	function autoSave() {
-		if($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
-			return false;
-		}
-		isThisPrint = false;
-		showMsgs = false;
-		onStartSave(true);
-	}
+
+
+    /* Автосохранение */
+    setTimeout(autoSave, 30000);
+
+    function autoSave() {
+        if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
+            return false;
+        }
+        isThisPrint = false;
+        showMsgs = false;
+        onStartSave(true);
+    }
 
     $('.greetingStatusCell input').on('change',function(){
         idOfRadio = $(this).prop('id');
@@ -258,9 +277,9 @@
         //  Самое время отправить ajax-запрос
         $.ajax({
             'url' : '/doctors/shedule/changegreetingstatus?greetingId='
-                +idGreeting
-                +'&newValue='
-                +newValue,
+            +idGreeting
+            +'&newValue='
+            +newValue,
             'cache' : false,
             'dataType' : 'json',
             'type' : 'GET',
@@ -275,7 +294,9 @@
         if (globalVariables.savingProcessing) {
             return;
         }
-
+        $(".controltable").each(function(i, t) {
+            serializeTableControl($(t));
+        });
         globalVariables.savingProcessing = true;
 
         // Берём кнопки с классом
@@ -300,7 +321,7 @@
                     return $(this).parents('#patient-medcard-edit-form').length == 0
                         && $(this).parents('#add-greeting-value-form') == 0
                         && $(this).parents('#add-value-form') == 0;
-                        // Чтобы не попало окно с данными медкарты и добавления
+                    // Чтобы не попало окно с данными медкарты и добавления
                 }).has('label span.required');
 
                 for (j = 0; j < controlElements.length; j++) {
@@ -370,7 +391,7 @@
             $('#leaveYesSubmit').trigger('click');
         }
     });
-	
+
     $("#date-cont").trigger("refresh");
 
     $("#date-cont").on('changeMonth', function (e) {
@@ -419,9 +440,9 @@
         function(e) {
             if  (
                 ( (oldClientX- e.clientX>10 )||(oldClientY- e.clientY>10 ) )
-                    ||
+                ||
                 ( (oldClientX- e.clientX<-10 )||(oldClientY- e.clientY<-10 ) )
-                )
+            )
             {
                 ticksAfterCursor = 0;
             }
@@ -505,7 +526,7 @@
             }
         }
     });
-	
+
     $('#date-cont').trigger('refresh');
 
     $(document).on('click', '.accept-greeting-link', function (e) {
@@ -518,342 +539,341 @@
         startAcceptGreeting();
     });
 
-function startAcceptGreeting() {
-    // Ставим анимацию вместо кнопки "Закончить приём"
-    var gif = generateAjaxGif(16, 16);
-    // Делаем невидимым флажок
-    $(this).addClass('no-display');
-    $($(this).parents()[0]).append(gif);
+    function startAcceptGreeting() {
+        // Ставим анимацию вместо кнопки "Закончить приём"
+        var gif = generateAjaxGif(16, 16);
+        // Делаем невидимым флажок
+        $(this).addClass('no-display');
+        $($(this).parents()[0]).append(gif);
 
-    printHandler = 'accept-greeting-link';
-    isThisPrint = true;
-    acceptGreeting();
-}
-
-focusDiagnosisPlease = false;
-function acceptGreeting() {
-    if($('#primaryDiagnosisChooser').length > 0 && $.fn['primaryDiagnosisChooser'].getChoosed().length == 0) {
-        var needDiagMsq = '';
-        for (var i in globalVariables.reqDiagnosis) {
-            if (globalVariables.reqDiagnosis[i].isReq) {
-                needDiagMsq += globalVariables.reqDiagnosis[i].name + ', ';
-            }
-        }
-
-        if (needDiagMsq) {
-            needDiagMsq = 'Основной диагноз не установлен! Следующие шаблоны требуют установки основного диагноза: <strong>' + needDiagMsq.substr(0, needDiagMsq.length - 2) + '</strong>';
-            $('#errorPopup .modal-body .row').html("<p>" + needDiagMsq + "</p>");
-            $('#errorPopup').modal({});
-
-            // Перебрасываем фокус на диагноз
-            destinationAnchor = $('#accordionD')[0].offsetTop;
-            ;
-            $('body,html').animate({
-                scrollTop: destinationAnchor
-            }, 599);
-
-            focusDiagnosisPlease = true;
-            return false;
-        }
+        printHandler = 'accept-greeting-link';
+        isThisPrint = true;
+        acceptGreeting();
     }
 
-    var greetingId = $('.activeGreeting .accept-greeting-link').prop('id').substr(2);
-    $.ajax({
-        'url' : '/doctors/shedule/acceptcomplete/?id=' + greetingId,
-        'cache' : false,
-        'dataType' : 'json',
-        'type' : 'GET',
-        'success' : function(data, textStatus, jqXHR) {
-            if(data.success) {
-                printHandler = 'print-greeting-link';
-                onStartSave();
-            } else {
-                // Выводим сообщение о том, что нужно вывест
-                $('#errorPopup .modal-body .row').html("<p>" + data.text + "</p>");
-                $('#errorPopup').modal({
-                });
+    focusDiagnosisPlease = false;
+    function acceptGreeting() {
+        if($('#primaryDiagnosisChooser').length > 0 && $.fn['primaryDiagnosisChooser'].getChoosed().length == 0) {
+            var needDiagMsq = '';
+            for (var i in globalVariables.reqDiagnosis) {
+                if (globalVariables.reqDiagnosis[i].isReq) {
+                    needDiagMsq += globalVariables.reqDiagnosis[i].name + ', ';
+                }
             }
-            // Снимаем крутилку с флажка "Закрытия приёма" и блокируем все поля для ввода
-            onGreetingClosingEnd();
+
+            if (needDiagMsq) {
+                needDiagMsq = 'Основной диагноз не установлен! Следующие шаблоны требуют установки основного диагноза: <strong>' + needDiagMsq.substr(0, needDiagMsq.length - 2) + '</strong>';
+                $('#errorPopup .modal-body .row').html("<p>" + needDiagMsq + "</p>");
+                $('#errorPopup').modal({});
+
+                // Перебрасываем фокус на диагноз
+                destinationAnchor = $('#accordionD')[0].offsetTop;
+                ;
+                $('body,html').animate({
+                    scrollTop: destinationAnchor
+                }, 599);
+
+                focusDiagnosisPlease = true;
+                return false;
+            }
+        }
+
+        var greetingId = $('.activeGreeting .accept-greeting-link').prop('id').substr(2);
+        $.ajax({
+            'url' : '/doctors/shedule/acceptcomplete/?id=' + greetingId,
+            'cache' : false,
+            'dataType' : 'json',
+            'type' : 'GET',
+            'success' : function(data, textStatus, jqXHR) {
+                if(data.success) {
+                    printHandler = 'print-greeting-link';
+                    onStartSave();
+                } else {
+                    // Выводим сообщение о том, что нужно вывест
+                    $('#errorPopup .modal-body .row').html("<p>" + data.text + "</p>");
+                    $('#errorPopup').modal({
+                    });
+                }
+                // Снимаем крутилку с флажка "Закрытия приёма" и блокируем все поля для ввода
+                onGreetingClosingEnd();
+            }
+        });
+    }
+
+    $('#errorPopup').on('hidden.bs.modal', function (e){
+        if (focusDiagnosisPlease) {
+            $('#primaryDiagnosisChooser input[type=text]').focus();
+            focusDiagnosisPlease = false;
         }
     });
-}
 
-$('#errorPopup').on('hidden.bs.modal', function (e){
-    if (focusDiagnosisPlease) {
-        $('#primaryDiagnosisChooser input[type=text]').focus();
-        focusDiagnosisPlease = false;
+    function onCloseGreetingStart() {
+        acceptGreeting();
     }
-});
 
-function onCloseGreetingStart() {
-    acceptGreeting();
-}
-
-function onGreetingClosingEnd() {
-    $('.accept-greeting-link').remove();
-    $('.template-edit-form').find('input, button, select, textarea').prop('disabled', true);
-}
-
-$(document).on('click', '.medcard-history-showlink', function (e) {
-    $(this).parents('.accordion-inner:eq(0)').find('.active').removeClass('active').find('img').remove();
-    var gif = generateAjaxGif(16, 16);
-    $(this).parent().addClass('active').append(gif);
-
-    var historyPointCoordinate = $(this).attr('href').substr(1);
-    var coordinateStrings = historyPointCoordinate.split('_');
-
-    var medcard = coordinateStrings[0];
-    var greeting = coordinateStrings[1];
-    var template = coordinateStrings[2];
-    var date = $(this).text();
-    $('#historyPopup .medcardNumber').text('№ ' + medcard);
-    $('#historyPopup .historyDate').text(date);
-    $.ajax({
-        'url': '/doctors/patient/gethistorymedcard',
-        'data': {
-            medcardId: medcard,
-            greetingId: greeting,
-            templateId: template
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'error': function (data, textStatus, jqXHR) {
-            console.log(data);
-        },
-        'success': function (data, textStatus, jqXHR) {
-            console.log(data);
-            if (data.success == 'true') {
-                // Заполняем медкарту-историю значениями
-                var historyContent = data.data;
-                $(gif).remove();
-                $('#historyPopup .modal-body .row').html(historyContent);
-                $('#historyPopup').modal({
-            });
-        }
+    function onGreetingClosingEnd() {
+        $('.accept-greeting-link').remove();
+        $('.template-edit-form').find('input, button, select, textarea').prop('disabled', true);
     }
-});
-});
 
-$('#historyPopup').on('shown.bs.modal', function (e) {
-    var deps = filteredDeps;
-    for (var i = 0; i < deps.length; i++) {
-        mainDependenceElementsSet = $('#historyPopup select[id$="_' + deps[i].elementId + '"]');
-        // В истории могут быть несколько элементов с одним и тем  же id, поэтому
-        //   в переменной mainDependenceElementsSet могут храниться один или больше элемент
-        for (j=0;j<mainDependenceElementsSet.length;j++)    {
-            // Проверяем - если элемент мультиселектовый, то считаем, что его значение
-            //     - это все опшены, которые есть внутри его
-            var elementValue = '';
+    $(document).on('click', '.medcard-history-showlink', function (e) {
+        $(this).parents('.accordion-inner:eq(0)').find('.active').removeClass('active').find('img').remove();
+        var gif = generateAjaxGif(16, 16);
+        $(this).parent().addClass('active').append(gif);
 
-            if ($(mainDependenceElementsSet[j]).attr('multiple')) {
-                // Берём все опшены, запихиваем в json
-                optionsSelected = $(mainDependenceElementsSet[j]).find('option');
-                optionsSelectedArray = [];
-                for (j=0;j<optionsSelected.length;j++)  {
-                    optionsSelectedArray.push( $($(optionsSelected)[j]).attr('value')  );
-                }
-                elementValue = $.toJSON(optionsSelectedArray);
-            } else {
-                elementValue = $(mainDependenceElementsSet[j]).val();
-            }
-            parentAccordion = $(mainDependenceElementsSet[j]).parents('.accordion:eq(0)');
-            changeControlState(deps[i], elementValue, parentAccordion);
-        }
-    }
-});
+        var historyPointCoordinate = $(this).attr('href').substr(1);
+        var coordinateStrings = historyPointCoordinate.split('_');
 
-$('#historyPopup').on('hidden.bs.modal', function (e) {
-    $('#historyPopup .modal-body .row').css('text-align', 'left');
-});
-
-$('.print-greeting-link').on('click', function (e) {
-    printHandler = 'print-greeting-link';
-    // После закрытия окна начинать сохранение медкарты и печать листа приёма
-    isThisPrint = true;
-    $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
-    // Если нет кнопки "сохранить" - вызываем печать сразу
-    if ($('.submitEditPatient input').length <= 0) {
-        $('.activeGreeting .print-greeting-link').trigger('print');
-    } else {  // Иначе вызываем процедуру сохранения
-        onStartSave();
-    }
-});
-
-$('.print-greeting-link').on('print', function (e) {
-    printDataToPrintPopup();
-    $('#greetingPrintNeed input').attr('checked', '');
-    // Отмечаем пункт "Приём", а остальные - нет
-    $('.bodyOverlay').remove();
-    $('#whatPrinting').modal({});
-    return false;
-});
-
-$('.print-recomendation-link').on('click', function (e) {
-    printHandler = 'print-recomendation-link';
-    isThisPrint = true;
-    $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
-    onStartSave();
-});
-
-var isThisPrint = false;
-
-$('#successEditPopup').on('show.bs.modal', function (e) {
-    // Если это режим печати, то показывать окно успешности редактирования не надо
-    if (isThisPrint) {
-        //isThisPrint = false;
-        return false;
-    }
-});
-
-$('#printContentButton, #sidePrintContentButton').on('click', function (e) {
-    $('.print-greeting-link').click();
-    e.stopPropagation();
-});
-
-$('#printPopup .btn-success').on('click', function (e) {
-    $('.activeGreeting .' + printHandler).trigger('print');
-    isThisPrint = false;
-});
-
-function printDataToPrintPopup() {
-    // Делаем синхронный Ajax-запрос, разбираем данные, которые он вернул и выводим в поп-ап
-    $.ajax({
-        'url': '/doctors/print/getrecommendationtemplatesingreeting?greetingId='  + $('#greetingId').val(),
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'async': false,
-        'success': function (data, textStatus, jqXHR) {
-            // Если true - то удаление произошло
-            if (data.success == true || data.success == 'true') {
+        var medcard = coordinateStrings[0];
+        var greeting = coordinateStrings[1];
+        var template = coordinateStrings[2];
+        var date = $(this).text();
+        $('#historyPopup .medcardNumber').text('№ ' + medcard);
+        $('#historyPopup .historyDate').text(date);
+        $.ajax({
+            'url': '/doctors/patient/gethistorymedcard',
+            'data': {
+                medcardId: medcard,
+                greetingId: greeting,
+                templateId: template
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'error': function (data, textStatus, jqXHR) {
                 console.log(data);
-                // Перебираем строки шаблона и выводим по чекбоксу для каждого шаблона
-                templates = data.data;
-                // Очистим блок с шаблонами
-                $('#recommendationTemplatesPrintNeed p').empty();
-                for (i=0;i<templates.length;i++)
-                {
-                    newChecboxRow = $('<input type="checkbox" name="recTemplate'+ templates[i].template_id +'" value="'+
+            },
+            'success': function (data, textStatus, jqXHR) {
+                if (data.success == 'true') {
+                    // Заполняем медкарту-историю значениями
+                    var historyContent = data.data;
+                    $(gif).remove();
+                    var s = $('#historyPopup .modal-body .row').html(historyContent);
+                    $('#historyPopup').modal();
+                    s.find("select[multiple].selectpicker").selectpicker();
+                }
+            }
+        });
+    });
+
+    $('#historyPopup').on('shown.bs.modal', function (e) {
+        var deps = filteredDeps;
+        for (var i = 0; i < deps.length; i++) {
+            mainDependenceElementsSet = $('#historyPopup select[id$="_' + deps[i].elementId + '"]');
+            // В истории могут быть несколько элементов с одним и тем  же id, поэтому
+            //   в переменной mainDependenceElementsSet могут храниться один или больше элемент
+            for (j=0;j<mainDependenceElementsSet.length;j++)    {
+                // Проверяем - если элемент мультиселектовый, то считаем, что его значение
+                //     - это все опшены, которые есть внутри его
+                var elementValue = '';
+
+                if ($(mainDependenceElementsSet[j]).attr('multiple')) {
+                    // Берём все опшены, запихиваем в json
+                    optionsSelected = $(mainDependenceElementsSet[j]).find('option');
+                    optionsSelectedArray = [];
+                    for (j=0;j<optionsSelected.length;j++)  {
+                        optionsSelectedArray.push( $($(optionsSelected)[j]).attr('value')  );
+                    }
+                    elementValue = $.toJSON(optionsSelectedArray);
+                } else {
+                    elementValue = $(mainDependenceElementsSet[j]).val();
+                }
+                parentAccordion = $(mainDependenceElementsSet[j]).parents('.accordion:eq(0)');
+                changeControlState(deps[i], elementValue, parentAccordion);
+            }
+        }
+    });
+
+    $('#historyPopup').on('hidden.bs.modal', function (e) {
+        $('#historyPopup .modal-body .row').css('text-align', 'left');
+    });
+
+    $('.print-greeting-link').on('click', function (e) {
+        printHandler = 'print-greeting-link';
+        // После закрытия окна начинать сохранение медкарты и печать листа приёма
+        isThisPrint = true;
+        $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
+        // Если нет кнопки "сохранить" - вызываем печать сразу
+        if ($('.submitEditPatient input').length <= 0) {
+            $('.activeGreeting .print-greeting-link').trigger('print');
+        } else {  // Иначе вызываем процедуру сохранения
+            onStartSave();
+        }
+    });
+
+    $('.print-greeting-link').on('print', function (e) {
+        printDataToPrintPopup();
+        return false;
+    });
+
+    $('.print-recomendation-link').on('click', function (e) {
+        printHandler = 'print-recomendation-link';
+        isThisPrint = true;
+        $('body').prepend($('<div>').addClass('overlay bodyOverlay').css('position', 'fixed'));
+        onStartSave();
+    });
+
+    var isThisPrint = false;
+
+    $('#successEditPopup').on('show.bs.modal', function (e) {
+        // Если это режим печати, то показывать окно успешности редактирования не надо
+        if (isThisPrint) {
+            //isThisPrint = false;
+            return false;
+        }
+    });
+
+    $('#printContentButton, #sidePrintContentButton').on('click', function (e) {
+        $('.print-greeting-link').click();
+        e.stopPropagation();
+    });
+
+    $('#printPopup .btn-success').on('click', function (e) {
+        $('.activeGreeting .' + printHandler).trigger('print');
+        isThisPrint = false;
+    });
+
+    function printDataToPrintPopup(rec) {
+        // Делаем синхронный Ajax-запрос, разбираем данные, которые он вернул и выводим в поп-ап
+        $.ajax({
+            'url': '/doctors/print/getrecommendationtemplatesingreeting?greetingId='  + $('#greetingId').val(),
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'async': false,
+            'success': function (data, textStatus, jqXHR) {
+                // Если true - то удаление произошло
+                if (data.success == true || data.success == 'true') {
+                    console.log(data);
+                    // Перебираем строки шаблона и выводим по чекбоксу для каждого шаблона
+                    templates = data.data;
+                    // Очистим блок с шаблонами
+                    $('#recommendationTemplatesPrintNeed p').empty();
+                    for (i=0;i<templates.length;i++)
+                    {
+                        newChecboxRow = $('<input type="checkbox" name="recTemplate'+ templates[i].template_id +'" value="'+
                         templates[i].template_id
                         +'">');
 
-                    $('#recommendationTemplatesPrintNeed p').append(newChecboxRow);
-                    $('#recommendationTemplatesPrintNeed p').html(
-                        $('#recommendationTemplatesPrintNeed p').html() + templates[i].template_name+'<br>'
-                    );
+                        $('#recommendationTemplatesPrintNeed p').append(newChecboxRow);
+                        $('#recommendationTemplatesPrintNeed p').html(
+                            $('#recommendationTemplatesPrintNeed p').html() + templates[i].template_name+'<br>'
+                        );
+                    }
+                    if (!rec) {
+                        $('#greetingPrintNeed input').attr('checked', '');
+                    } else {
+                        $('#greetingPrintNeed input').removeAttr('checked');
+                        $('#recommendationTemplatesPrintNeed input').attr('checked', '');
+                    }
+                    // Отмечаем пункт "Приём", а остальные - нет
+                    $('.bodyOverlay').remove();
+                    $('#whatPrinting').modal({});
                 }
             }
-        }
-    });
+        });
 
 
-}
+    }
 
 
 // Печать листа приёма, само действие
-$('.print-recomendation-link').on('print', function (e) {
-    printDataToPrintPopup();
-    $('#greetingPrintNeed input').removeAttr('checked');
-    $('#recommendationTemplatesPrintNeed input').attr('checked', '');
-    $('.bodyOverlay').remove();
-    // Отмечаем все пункты, кроме "Приём"
-    $('#whatPrinting').modal({});
-    return false;
-});
+    $('.print-recomendation-link').on('print', function (e) {
+        printDataToPrintPopup(true);
+        return false;
+    });
 
 // Сохранение диагнозов
-$('#submitDiagnosis').on('click', function (e) {
-    var choosedPrimary = $.fn['primaryDiagnosisChooser'].getChoosed();
-    var choosedSecondary = $.fn['secondaryDiagnosisChooser'].getChoosed();
+    $('#submitDiagnosis').on('click', function (e) {
+        var choosedPrimary = $.fn['primaryDiagnosisChooser'].getChoosed();
+        var choosedSecondary = $.fn['secondaryDiagnosisChooser'].getChoosed();
 
-    var choosedClinPrimary = $.fn['primaryClinicalDiagnosisChooser'].getChoosed();
-    var choosedClinSecondary = $.fn['secondaryClinicalDiagnosisChooser'].getChoosed();
+        var choosedClinPrimary = $.fn['primaryClinicalDiagnosisChooser'].getChoosed();
+        var choosedClinSecondary = $.fn['secondaryClinicalDiagnosisChooser'].getChoosed();
 
-    var choosedComplicating = $.fn['complicationsDiagnosisChooser'].getChoosed();
+        var choosedComplicating = $.fn['complicationsDiagnosisChooser'].getChoosed();
 
-    var primaryIds = [];
-    var secondaryIds = [];
-    for (var i = 0; i < choosedPrimary.length; i++) {
-        primaryIds.push(choosedPrimary[i].id);
-    }
-    for (var i = 0; i < choosedSecondary.length; i++) {
-        secondaryIds.push(choosedSecondary[i].id);
-    }
+        var primaryIds = [];
+        var secondaryIds = [];
+        for (var i = 0; i < choosedPrimary.length; i++) {
+            primaryIds.push(choosedPrimary[i].id);
+        }
+        for (var i = 0; i < choosedSecondary.length; i++) {
+            secondaryIds.push(choosedSecondary[i].id);
+        }
 
 
-    var clinPrimaryIds = [];
-    var clinSecondaryIds = [];
-    for (var i = 0; i < choosedClinPrimary.length; i++) {
-        clinPrimaryIds.push(choosedClinPrimary[i].id);
-    }
-    for (var i = 0; i < choosedClinSecondary.length; i++) {
-        clinSecondaryIds.push(choosedClinSecondary[i].id);
-    }
+        var clinPrimaryIds = [];
+        var clinSecondaryIds = [];
+        for (var i = 0; i < choosedClinPrimary.length; i++) {
+            clinPrimaryIds.push(choosedClinPrimary[i].id);
+        }
+        for (var i = 0; i < choosedClinSecondary.length; i++) {
+            clinSecondaryIds.push(choosedClinSecondary[i].id);
+        }
 
-    var complicatingIds = [];
-    for (var i = 0; i < choosedComplicating.length; i++) {
-        complicatingIds.push(choosedComplicating[i].id);
-    }
+        var complicatingIds = [];
+        for (var i = 0; i < choosedComplicating.length; i++) {
+            complicatingIds.push(choosedComplicating[i].id);
+        }
 
-    $.ajax({
-        'url': '/doctors/patient/savediagnosis',
-        'data': {
-            'primary': $.toJSON(primaryIds),
-            'secondary': $.toJSON(secondaryIds),
-            'clinPrimary': $.toJSON(clinPrimaryIds),
-            'clinSecondary': $.toJSON(clinSecondaryIds),
-            'complicating': $.toJSON(complicatingIds),
-            'note': $('#diagnosisNote').val(),
-            'greeting_id': $('#greetingId').val()
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'complete': function (data, textStatus, jqXHR) {
-            var ajaxData = {
-                'success':false
-            };
-            try {
-                ajaxData = $.parseJSON(data.responseText);
-            } catch (e) {
+        $.ajax({
+            'url': '/doctors/patient/savediagnosis',
+            'data': {
+                'primary': $.toJSON(primaryIds),
+                'secondary': $.toJSON(secondaryIds),
+                'clinPrimary': $.toJSON(clinPrimaryIds),
+                'clinSecondary': $.toJSON(clinSecondaryIds),
+                'complicating': $.toJSON(complicatingIds),
+                'note': $('#diagnosisNote').val(),
+                'greeting_id': $('#greetingId').val()
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'complete': function (data, textStatus, jqXHR) {
+                var ajaxData = {
+                    'success':false
+                };
+                try {
+                    ajaxData = $.parseJSON(data.responseText);
+                } catch (e) {
 
+                }
+                onSectionSave(ajaxData);
             }
-            onSectionSave(ajaxData);
+        });
+    });
+
+    globalVariables.onlyLikes = 0;
+// Флаг любимых и общих диагнозов
+    $('#onlyLikeDiagnosis').click(function (e) {
+        if (!$(this).prop('checked')) {
+            globalVariables.onlyLikes = 0;
+        } else {
+            globalVariables.onlyLikes = 1;
         }
     });
-});
-
-globalVariables.onlyLikes = 0;
-// Флаг любимых и общих диагнозов
-$('#onlyLikeDiagnosis').click(function (e) {
-    if (!$(this).prop('checked')) {
-        globalVariables.onlyLikes = 0;
-    } else {
-        globalVariables.onlyLikes = 1;
-    }
-});
 
     $('#onlyLikeDiagnosis').click();
 
 
 // Это для того, чтобы занести в диагнозы всё то, что было при загрузке страницы: первичные
-(function (choosers) {
-    for (var j = 0; j < choosers.length; j++) {
-        var chooser = $('#' + choosers[j]);
-        if ($(chooser).length > 0) {
-            var preChoosed = $(chooser).find('.choosed span.item');
-            for (var i = 0; i < preChoosed.length; i++) {
-                var id = $(preChoosed[i]).prop('id').substr(1);
-                $.fn[choosers[j]].addChoosed($('<li>').prop('id', 'r' + id).text($(preChoosed[i]).find('span').html()), {
-                    'id': id,
-                    'description': $(preChoosed[i]).find('span').html()
-                }, 1);
+    (function (choosers) {
+        for (var j = 0; j < choosers.length; j++) {
+            var chooser = $('#' + choosers[j]);
+            if ($(chooser).length > 0) {
+                var preChoosed = $(chooser).find('.choosed span.item');
+                for (var i = 0; i < preChoosed.length; i++) {
+                    var id = $(preChoosed[i]).prop('id').substr(1);
+                    $.fn[choosers[j]].addChoosed($('<li>').prop('id', 'r' + id).text($(preChoosed[i]).find('span').html()), {
+                        'id': id,
+                        'description': $(preChoosed[i]).find('span').html()
+                    }, 1);
+                }
             }
         }
-    }
-})([
+    })([
         'primaryDiagnosisChooser',
         'secondaryDiagnosisChooser',
         'complicationsDiagnosisChooser',
@@ -862,580 +882,585 @@ $('#onlyLikeDiagnosis').click(function (e) {
 
 
 // Просмотр медкарты в попапе
-$(document).on('click', '.editMedcard', function (e) {
-    $.ajax({
-        'url': '/reception/patient/getmedcarddata',
-        'data': {
-            'cardid': $(this).prop('href').substr($(this).prop('href').lastIndexOf('#') + 1)
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'success': function (data, textStatus, jqXHR) {
-            if (data.success == true) {
-                var data = data.data.formModel;
-                var form = $('#patient-medcard-edit-form');
-                for (var i in data) {
-                    $(form).find('#' + i).val(data[i]);
+    $(document).on('click', '.editMedcard', function (e) {
+        $.ajax({
+            'url': '/reception/patient/getmedcarddata',
+            'data': {
+                'cardid': $(this).prop('href').substr($(this).prop('href').lastIndexOf('#') + 1)
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'success': function (data, textStatus, jqXHR) {
+                if (data.success == true) {
+                    var data = data.data.formModel;
+                    var form = $('#patient-medcard-edit-form');
+                    for (var i in data) {
+                        $(form).find('#' + i).val(data[i]);
+                    }
+
+                    $(form).find('#documentGivedate').trigger('change');
+                    $(form).find('#privilege').trigger('change');
+
+                    $('#editMedcardPopup').modal({});
+                } else {
+                    $('#errorSearchPopup .modal-body .row p').remove();
+                    $('#errorSearchPopup .modal-body .row').append('<p>' + data.data + '</p>')
+                    $('#errorSearchPopup').modal({
+
+                    });
                 }
-
-                $(form).find('#documentGivedate').trigger('change');
-                $(form).find('#privilege').trigger('change');
-
-                $('#editMedcardPopup').modal({});
-            } else {
-                $('#errorSearchPopup .modal-body .row p').remove();
-                $('#errorSearchPopup .modal-body .row').append('<p>' + data.data + '</p>')
-                $('#errorSearchPopup').modal({
-
-            });
-        }
-        return;
-    }
-});
-return false;
-});
+                return;
+            }
+        });
+        return false;
+    });
 
 // Запрет редактирования карты
-$('#patient-medcard-edit-form .modal-body').find('input, select, button').prop('disabled', true);
-$('#patient-medcard-edit-form .date-control .input-group-addon').remove();
+    $('#patient-medcard-edit-form .modal-body').find('input, select, button').prop('disabled', true);
+    $('#patient-medcard-edit-form .date-control .input-group-addon').remove();
 
 // Здесь будут храниться ID клонов элементов
-var clones = {
+    var clones = {
 
-};
+    };
 
-function collapseAccordion(boyjan /*Див с аккордионом :)*/) {
-    $(boyjan).find('.accordion-body').removeClass('in');
-    $(boyjan).find('.accordion-body').addClass('collapse');
-    $(boyjan).find('.accordion-body').css('height', '0px');
-    $(boyjan).trigger('hidden.bs.collapse');
-}
+    function collapseAccordion(boyjan /*Див с аккордионом :)*/) {
+        $(boyjan).find('.accordion-body').removeClass('in');
+        $(boyjan).find('.accordion-body').addClass('collapse');
+        $(boyjan).find('.accordion-body').css('height', '0px');
+        $(boyjan).trigger('hidden.bs.collapse');
+    }
 
-function unCollapseAccordion(boyjan /*Див с аккордионом :)*/) {
-    $(boyjan).find('.accordion-body').removeClass('collapse');
-    $(boyjan).find('.accordion-body').addClass('in');
-    $(boyjan).find('.accordion-body').css('height', 'auto');
-    $(boyjan).trigger('shown.bs.collapse');
-}
+    function unCollapseAccordion(boyjan /*Див с аккордионом :)*/) {
+        $(boyjan).find('.accordion-body').removeClass('collapse');
+        $(boyjan).find('.accordion-body').addClass('in');
+        $(boyjan).find('.accordion-body').css('height', 'auto');
+        $(boyjan).trigger('shown.bs.collapse');
+    }
 
 // Клонирование элементов
-/* Клоны считаются, как clone_xx_yy, где xx - ID аккордеона, yy - порядковый номер клона */
-$(document).on('click', '.accordion-clone-btn', function (e) {
-    var prKey = $(this).find('span.pr-key').text();
-    var accParent = $(this).parents('.accordion')[0];
-    var accClone = $(accParent).clone();
+    /* Клоны считаются, как clone_xx_yy, где xx - ID аккордеона, yy - порядковый номер клона */
+    $(document).on('click', '.accordion-clone-btn', function (e) {
+        var prKey = $(this).find('span.pr-key').text();
+        var accParent = $(this).parents('.accordion')[0];
+        var accClone = $(accParent).clone();
+        var form = $(this).parents("form:eq(0)");
 
-    // Теперь нужно отклонировать элемент. Для этого мы подадим запрос, результатом которого станет категория (кусок дерева)
-    $.ajax({
-        'url': '/doctors/patient/cloneelement',
-        'data': {
-            'pr_key': prKey
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'success': function (data, textStatus, jqXHR) {
-            if (data.success == true) {
-                var toggle = $(accParent).find('.accordion-toggle');
-                var body = $(accParent).find('.accordion-body');
+        // Теперь нужно отклонировать элемент. Для этого мы подадим запрос, результатом которого станет категория (кусок дерева)
+        $.ajax({
+            'url': '/doctors/patient/cloneelement',
+            'data': {
+                'pr_key': prKey,
+                'templateId': form.find("#templateId").val(),
+                'greetingId': form.find("#greetingId").val(),
+                'medcardId': form.find("#medcardId").val()
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'success': function (data, textStatus, jqXHR) {
+                if (data.success == true) {
+                    var toggle = $(accParent).find('.accordion-toggle');
+                    var body = $(accParent).find('.accordion-body');
 
-                if (!clones.hasOwnProperty($(accParent).prop('id'))) {
-                    clones[$(accParent).prop('id')] = 1;
-                } else {
-                    clones[$(accParent).prop('id')]++;
-                }
+                    if (!clones.hasOwnProperty($(accParent).prop('id'))) {
+                        clones[$(accParent).prop('id')] = 1;
+                    } else {
+                        clones[$(accParent).prop('id')]++;
+                    }
 
-                var accId = $(accParent).prop('id');
-                var accNumberId = accId.substr(accId.lastIndexOf('_') + 1);
-                var idCloneCount = clones[$(accParent).prop('id')];
+                    var accId = $(accParent).prop('id');
+                    var accNumberId = accId.substr(accId.lastIndexOf('_') + 1);
+                    var idCloneCount = clones[$(accParent).prop('id')];
 
-                var toggleDataParent = $(toggle).data()['parent'];
-                var toggleDataHref = $(toggle).prop('href');
-                $(accClone).find('.accordion-clone-btn:eq(0)')
+                    var toggleDataParent = $(toggle).data()['parent'];
+                    var toggleDataHref = $(toggle).prop('href');
+                    var c = $(accClone).find('.accordion-clone-btn:eq(0)')
                         .removeClass('accordion-clone-btn')
                         .addClass('accordion-unclone-btn')
                         .find('span.glyphicon-plus')
                         .removeClass('glyphicon-plus')
                         .addClass('glyphicon-minus');
+                    c.parent("button").attr("title", "Удалить категорию");
 
-                $(accClone).find('.accordion-heading button:not(:eq(0))').remove();
+                    $(accClone).find('.accordion-heading button:not(:eq(0))').remove();
 
-                $(accClone).prop('id', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
-                $(accClone).find('.accordion-body:eq(0)').prop('id', 'collapse_clone_' + accNumberId + '_' + idCloneCount);
-                $(accClone).find('.accordion-heading:eq(0)').attr('data-parent', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
-                $(accClone).find('.accordion-heading:eq(0) a').attr('href', '#collapse_clone_' + accNumberId + '_' + idCloneCount);
+                    $(accClone).prop('id', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
+                    $(accClone).find('.accordion-body:eq(0)').prop('id', 'collapse_clone_' + accNumberId + '_' + idCloneCount);
+                    $(accClone).find('.accordion-heading:eq(0)').attr('data-parent', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
+                    $(accClone).find('.accordion-heading:eq(0) a').attr('href', '#collapse_clone_' + accNumberId + '_' + idCloneCount);
 
-                // Дальше пробегаемся по всем вложенным в дерево элементам. Ситуация повторяется: переименовываем
-                var inserts = $(accClone).find('.accordion');
-                for (var i = 0; i < inserts.length; i++) {
-                    if (!clones.hasOwnProperty($(inserts[i]).prop('id'))) {
-                        clones[$(inserts[i]).prop('id')] = 1;
-                    } else {
-                        clones[$(inserts[i]).prop('id')]++;
-                    }
-
-                    accId = $(inserts[i]).prop('id');
-                    accNumberId = accId.substr(accId.lastIndexOf('_') + 1);
-                    idCloneCount = clones[$(inserts[i]).prop('id')];
-
-                    $(inserts[i]).prop('id', $(inserts[i]).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
-                    $(inserts[i]).find('.accordion-body:eq(0)').prop('id', 'collapse_clone_' + accNumberId + '_' + idCloneCount);
-                    $(inserts[i]).find('.accordion-heading:eq(0)').attr('data-parent', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
-                    $(inserts[i]).find('.accordion-heading:eq(0) a').attr('href', '#collapse_clone_' + accNumberId + '_' + idCloneCount);
-                }
-
-                // Ставим кнопке пришедший первичный ключ
-                $(accClone).find('span.pr-key').text(data.data.pk_key);
-
-                var children = $('[id^=' + accId + ']');
-
-                //$(accClone).insertAfter($(accParent));
-                unCollapseAccordion(accClone);
-                $(accClone).insertAfter($(children[children.length-1]));
-                // Теперь переименуем все элементы, согласно изменённым путям
-                var repath = data.data.repath;
-                for (var i in repath) {
-                    var undottedPathBefore = i.split('.').join('|');
-                    var undottedPathAfter = repath[i].split('.').join('|');
-                    // Здесь большое TODO
-                    var control = $(accClone).find('[id*="_' + undottedPathBefore + '_"]');
-                    if (control.length > 0) {
-                        var controlId = $(control).prop('id');
-                        var substrFirst = controlId.substr(controlId.lastIndexOf('_'));
-                        var tempSubstr = controlId.substr(0, controlId.lastIndexOf('_'));
-                        var substrSecond = tempSubstr.substr(0, tempSubstr.lastIndexOf('_') + 1);
-                        $(control).prop('id', substrSecond + undottedPathAfter + substrFirst);
-
-                        // Перепишем имя у элемента
-                        var arrayMultiselectSign = '';
-                        // Если у клонированного элемента стоит multiselect - надо дописать в имени []
-                        if ($(control).prop('multiple')==true)
-                        {
-                            arrayMultiselectSign = '[]';
+                    // Дальше пробегаемся по всем вложенным в дерево элементам. Ситуация повторяется: переименовываем
+                    var inserts = $(accClone).find('.accordion');
+                    for (var i = 0; i < inserts.length; i++) {
+                        if (!clones.hasOwnProperty($(inserts[i]).prop('id'))) {
+                            clones[$(inserts[i]).prop('id')] = 1;
+                        } else {
+                            clones[$(inserts[i]).prop('id')]++;
                         }
-                        $(control).prop('name',
-                        'FormTemplateDefault['
-                         +
-                        tempSubstr.substr(0, tempSubstr.lastIndexOf('_') - 1)
-                         +
-                        undottedPathAfter
-                         +
-                        substrFirst +
-                        ']'+arrayMultiselectSign);
+
+                        accId = $(inserts[i]).prop('id');
+                        accNumberId = accId.substr(accId.lastIndexOf('_') + 1);
+                        idCloneCount = clones[$(inserts[i]).prop('id')];
+
+                        $(inserts[i]).prop('id', $(inserts[i]).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
+                        $(inserts[i]).find('.accordion-body:eq(0)').prop('id', 'collapse_clone_' + accNumberId + '_' + idCloneCount);
+                        $(inserts[i]).find('.accordion-heading:eq(0)').attr('data-parent', $(accParent).prop('id') + '_clone_' + accNumberId + '_' + idCloneCount);
+                        $(inserts[i]).find('.accordion-heading:eq(0) a').attr('href', '#collapse_clone_' + accNumberId + '_' + idCloneCount);
                     }
-                }
 
-                // Надо сбросить все значения в склонированной категории,
-                //     чтобы новая категория была девственно чиста :)
-                $(accClone).find('input,textarea,select').val('');
+                    // Ставим кнопке пришедший первичный ключ
+                    $(accClone).find('span.pr-key').text(data.data.pk_key);
 
-                // Сбрасываем значения в редактируемых таблицах
-                $(accClone).find('.controltable td.controlTableContentCell').text('');
+                    var children = $('[id^=' + accId + ']');
 
-                // Теперь надо подцепить замыкания для контролов, у которых оно есть
-                // Выбираем все даты
-                dates = $(accClone).find('div.date');
-                controltables = $(accClone).find('table.controltable');
+                    //$(accClone).insertAfter($(accParent));
+                    unCollapseAccordion(accClone);
+                    $(accClone).insertAfter($(children[children.length-1]));
+                    // Теперь переименуем все элементы, согласно изменённым путям
+                    var repath = data.data.repath;
+                    for (var i in repath) {
+                        var undottedPathBefore = i.split('.').join('|');
+                        var undottedPathAfter = repath[i].split('.').join('|');
+                        // Здесь большое TODO
+                        var control = $(accClone).find('[id*="_' + undottedPathBefore + '_"]');
+                        if (control.length > 0) {
+                            var controlId = $(control).prop('id');
+                            var substrFirst = controlId.substr(controlId.lastIndexOf('_'));
+                            var tempSubstr = controlId.substr(0, controlId.lastIndexOf('_'));
+                            var substrSecond = tempSubstr.substr(0, tempSubstr.lastIndexOf('_') + 1);
+                            $(control).prop('id', substrSecond + undottedPathAfter + substrFirst);
 
-                // Для каждого элемента из dates вызываем функцию
-                for (i=0;i<dates.length;i++)
-                {
-                    InitOneDateControl($(dates[i]));
-                }
-
-                // Для каждого элемента из dates вызываем функцию
-                for (i=0;i<controltables.length;i++)
-                {
-                    $.fn['tableControl'].init($(controltables[i]));
-                }
-                // Для селект-контролов вызываем функцию инициализации клика
-                selectControls = $(accClone).find('select');
-                for(i=0;i<selectControls.length;i++)
-                {
-                    $.fn['categories'].initSelectOnClick(selectControls[i]);
-                }
-                // Надо скрыть все категории, кроме только что отклонированной
-                // Берём id родительской категории и ищем все аккордеоны, в поле ИД которых входит ИД-шник родительской
-                //   и посылаем сигнал "свернись!"
-                // Переберём детей
-                for (i = 0; i < children.length; i++) {
-                    collapseAccordion(children[i]);
-                }
-                // Теперь надо разобрать зависимость
-                var deps = data.data.dependences;
-
-                for (var i = 0; i < deps.length; i++) {
-                    // По этому пути вынимаем контрол
-                    var undottedPath = deps[i].path.split('.').join('|');
-                    if (deps[i].dependences.list.length > 0) {
-                        filteredDeps.push(deps[i]);
-                        (function (select, dep) {
-                            $(select).on('change', function (e) {
-                                var elementValue = $(select).val();
-                                changeControlState(dep, elementValue, $(select).parents('.accordion:eq(0)'));
-                            });
-                            $(select).trigger('change');
-                        })(getElementForDependences(undottedPath), deps[i]);
+                            // Перепишем имя у элемента
+                            var arrayMultiselectSign = '';
+                            // Если у клонированного элемента стоит multiselect - надо дописать в имени []
+                            if ($(control).prop('multiple')==true)
+                            {
+                                arrayMultiselectSign = '[]';
+                            }
+                            $(control).prop('name',
+                                'FormTemplateDefault['
+                                +
+                                tempSubstr.substr(0, tempSubstr.lastIndexOf('_') - 1)
+                                +
+                                undottedPathAfter
+                                +
+                                substrFirst +
+                                ']'+arrayMultiselectSign);
+                        }
                     }
+
+                    // Надо сбросить все значения в склонированной категории,
+                    //     чтобы новая категория была девственно чиста :)
+                    $(accClone).find('input,textarea,select').val('');
+
+                    // Сбрасываем значения в редактируемых таблицах
+                    $(accClone).find('.controltable td.controlTableContentCell').text('');
+
+                    // Теперь надо подцепить замыкания для контролов, у которых оно есть
+                    // Выбираем все даты
+                    dates = $(accClone).find('div.date');
+                    controltables = $(accClone).find('table.controltable');
+
+                    // Для каждого элемента из dates вызываем функцию
+                    for (i=0;i<dates.length;i++)
+                    {
+                        InitOneDateControl($(dates[i]));
+                    }
+
+                    // Для каждого элемента из dates вызываем функцию
+                    for (i=0;i<controltables.length;i++)
+                    {
+                        $.fn['tableControl'].init($(controltables[i]));
+                    }
+                    // Для селект-контролов вызываем функцию инициализации клика
+                    selectControls = $(accClone).find('select');
+                    for(i=0;i<selectControls.length;i++)
+                    {
+                        $.fn['categories'].initSelectOnClick(selectControls[i]);
+                    }
+                    // Надо скрыть все категории, кроме только что отклонированной
+                    // Берём id родительской категории и ищем все аккордеоны, в поле ИД которых входит ИД-шник родительской
+                    //   и посылаем сигнал "свернись!"
+                    // Переберём детей
+                    for (i = 0; i < children.length; i++) {
+                        collapseAccordion(children[i]);
+                    }
+                    // Теперь надо разобрать зависимость
+                    var deps = data.data.dependences;
+
+                    for (var i = 0; i < deps.length; i++) {
+                        // По этому пути вынимаем контрол
+                        var undottedPath = deps[i].path.split('.').join('|');
+                        if (deps[i].dependences.list.length > 0) {
+                            filteredDeps.push(deps[i]);
+                            (function (select, dep) {
+                                $(select).on('change', function (e) {
+                                    var elementValue = $(select).val();
+                                    changeControlState(dep, elementValue, $(select).parents('.accordion:eq(0)'));
+                                });
+                                $(select).trigger('change');
+                            })(getElementForDependences(undottedPath), deps[i]);
+                        }
+                    }
+                } else {
+                    return;
                 }
-            } else {
-                return;
             }
-        }
+        });
     });
-});
 
     function getElementForDependences(undottedPath)  {
         return $('[id*="_' + undottedPath + '_"]');
     }
 
 // UnКлонирование элементов
-$(document).on('click', '.accordion-unclone-btn', function (e) {
-    var accParent = $(this).parents('.accordion')[0];
-    var prKey = $(this).find('span.pr-key').text();
-    $.ajax({
-        'url': '/doctors/patient/uncloneelement',
-        'data': {
-            'pr_key': prKey
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'success': function (data, textStatus, jqXHR) {
-            if (data.success == true) {
-                $(accParent).remove();
+    $(document).on('click', '.accordion-unclone-btn', function (e) {
+        var accParent = $(this).parents('.accordion')[0];
+        var prKey = $(this).find('span.pr-key').text();
+        $.ajax({
+            'url': '/doctors/patient/uncloneelement',
+            'data': {
+                'pr_key': prKey
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'success': function (data, textStatus, jqXHR) {
+                if (data.success == true) {
+                    $(accParent).remove();
+                }
             }
-        }
+        });
     });
-});
-var filteredDeps = [];
+    var filteredDeps = [];
 // Зависимости: дефолтные значения
-function checkElementsDependences() {
-    if (globalVariables.hasOwnProperty('elementsDependences')) {
-        var deps = globalVariables.elementsDependences;
-        for (var i = 0; i < deps.length; i++) {
-            // По этому пути вынимаем контрол
-            var undottedPath = deps[i].path.split('.').join('|');
-            if (deps[i].dependences.list.length > 0) {
-                filteredDeps.push(deps[i]);
-                (function (select, dep) {
-                    $(select).on('change', function (e) {
-                        var elementValue = $(select).val();
-                        changeControlState(dep, elementValue, $(select).parents('.accordion:eq(0)'));
-                    });
-                    $(select).trigger('change');
-                })(getElementForDependences(undottedPath), deps[i]);
+    function checkElementsDependences() {
+        if (globalVariables.hasOwnProperty('elementsDependences')) {
+            var deps = globalVariables.elementsDependences;
+            for (var i = 0; i < deps.length; i++) {
+                // По этому пути вынимаем контрол
+                var undottedPath = deps[i].path.split('.').join('|');
+                if (deps[i].dependences.list.length > 0) {
+                    filteredDeps.push(deps[i]);
+                    (function (select, dep) {
+                        $(select).on('change', function (e) {
+                            var elementValue = $(select).val();
+                            changeControlState(dep, elementValue, $(select).parents('.accordion:eq(0)'));
+                        });
+                        $(select).trigger('change');
+                    })(getElementForDependences(undottedPath), deps[i]);
+                }
             }
         }
     }
-}
 
-checkElementsDependences();
+    checkElementsDependences();
 
-function hideControl(container, elementId) {
-    var elementWithWrapper = getDependenceElementWithWrapper(container,elementId);
+    function hideControl(container, elementId) {
+        var elementWithWrapper = getDependenceElementWithWrapper(container,elementId);
 
-    if(!$(elementWithWrapper).hasClass('multiple-value')) {
-        var next = $(elementWithWrapper).next();
-        var prev = $(elementWithWrapper).prev();
-    } else {
-        var next = $(elementWithWrapper).parents('.multiple').next();
-        var prev = $(elementWithWrapper).parents('.multiple').prev();
-    }
-
-    if (typeof container == 'undefined') {
-        if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
-            $(next).hide();
-            var next = $(next).next();
-            if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
-                $(next).hide();
-            }
-        }
-        if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
-            $(prev).hide();
-        }
-        $('[id$="_' + elementId + '"]').val('');
-        $(elementWithWrapper).hide();
-    }
-    else {
-        if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
-            $(next).hide();
-            var next = $(next).next();
-            if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
-                $(next).hide();
-            }
-        }
-        if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
-            $(prev).hide();
-        }
-        $(container).find('[id$="_' + elementId + '"]').val('');
-        $(elementWithWrapper).hide();
-
-    }
-}
-
-function showControl(container, elementId) {
-    var elementWithWrapper = getDependenceElementWithWrapper(container,elementId);
-    if(!$(elementWithWrapper).hasClass('multiple-value')) {
-        var next = $(elementWithWrapper).next();
-        var prev = $(elementWithWrapper).prev();
-    } else {
-        var next = $(elementWithWrapper).parents('.multiple').next();
-        var prev = $(elementWithWrapper).parents('.multiple').prev();
-    }
-    if (typeof container == 'undefined') {
-        if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
-            $(next).show();
-            // + у комбо
-            var next = $(next).next();
-            if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
-                $(next).show();
-            }
-        }
-        if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
-            $(prev).show();
-        }
-        $(elementWithWrapper).show();
-    }
-    else {
-        if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
-            $(next).show();
-            var next = $(next).next();
-            if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
-                $(next).show();
-            }
-            $(next).show();
-        }
-        if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
-            $(prev).show();
-        }
-      //  $(container).find('[id$="_' + elementId + '"]').val('');
-        $(elementWithWrapper).show();
-    }
-}
-
-function getDependenceElementWithWrapper(container, selectorString) {
-    var result = undefined;
-    // Смотрим - какой элемент. Если элемент скрытый (type=hidden),
-    //    то нужно определить верхний контейнер-обёртку для этого элемента
-    var targetElement = undefined;
-    if (container==undefined) {
-        targetElement = $('[id$="_' + selectorString + '"]:not(.btn-sm)');
-    } else {
-        targetElement = $(container).find('[id$="_' + selectorString + '"]:not(.btn-sm)');
-    } if (targetElement!=undefined){
-        if ($(targetElement).prop('type')=='hidden') {
-            // Выбираем родителя div c классом twoColumnList
-            result = $(targetElement).parents('div.twoColumnList');
-            // Если результат - пустой - ищем контейнер с датой
-            if ($(result).length==0) {
-                result = $(targetElement).parents('div.date-control');
-            }
+        if(!$(elementWithWrapper).hasClass('multiple-value')) {
+            var next = $(elementWithWrapper).next();
+            var prev = $(elementWithWrapper).prev();
         } else {
-            result = $(targetElement);
+            var next = $(elementWithWrapper).parents('.multiple').next();
+            var prev = $(elementWithWrapper).parents('.multiple').prev();
+        }
+
+        if (typeof container == 'undefined') {
+            if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
+                $(next).hide();
+                var next = $(next).next();
+                if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
+                    $(next).hide();
+                }
+            }
+            if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
+                $(prev).hide();
+            }
+            $('[id$="_' + elementId + '"]').val('');
+            $(elementWithWrapper).hide();
+        }
+        else {
+            if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
+                $(next).hide();
+                var next = $(next).next();
+                if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
+                    $(next).hide();
+                }
+            }
+            if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
+                $(prev).hide();
+            }
+            $(container).find('[id$="_' + elementId + '"]').val('');
+            $(elementWithWrapper).hide();
+
         }
     }
-    return result;
-}
+
+    function showControl(container, elementId) {
+        var elementWithWrapper = getDependenceElementWithWrapper(container,elementId);
+        if(!$(elementWithWrapper).hasClass('multiple-value')) {
+            var next = $(elementWithWrapper).next();
+            var prev = $(elementWithWrapper).prev();
+        } else {
+            var next = $(elementWithWrapper).parents('.multiple').next();
+            var prev = $(elementWithWrapper).parents('.multiple').prev();
+        }
+        if (typeof container == 'undefined') {
+            if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
+                $(next).show();
+                // + у комбо
+                var next = $(next).next();
+                if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
+                    $(next).show();
+                }
+            }
+            if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
+                $(prev).show();
+            }
+            $(elementWithWrapper).show();
+        }
+        else {
+            if (typeof next != 'undefined' && ($(next).hasClass('label-after') || $(next).hasClass('btn-sm'))) {
+                $(next).show();
+                var next = $(next).next();
+                if (typeof next != 'undefined' && $(next).hasClass('btn-sm')) {
+                    $(next).show();
+                }
+                $(next).show();
+            }
+            if (typeof prev != 'undefined' && $(prev).hasClass('label-before')) {
+                $(prev).show();
+            }
+            //  $(container).find('[id$="_' + elementId + '"]').val('');
+            $(elementWithWrapper).show();
+        }
+    }
+
+    function getDependenceElementWithWrapper(container, selectorString) {
+        var result = undefined;
+        // Смотрим - какой элемент. Если элемент скрытый (type=hidden),
+        //    то нужно определить верхний контейнер-обёртку для этого элемента
+        var targetElement = undefined;
+        if (container==undefined) {
+            targetElement = $('[id$="_' + selectorString + '"]:not(.btn-sm)');
+        } else {
+            targetElement = $(container).find('[id$="_' + selectorString + '"]:not(.btn-sm)');
+        } if (targetElement!=undefined){
+            if ($(targetElement).prop('type')=='hidden') {
+                // Выбираем родителя div c классом twoColumnList
+                result = $(targetElement).parents('div.twoColumnList');
+                // Если результат - пустой - ищем контейнер с датой
+                if ($(result).length==0) {
+                    result = $(targetElement).parents('div.date-control');
+                }
+            } else {
+                result = $(targetElement);
+            }
+        }
+        return result;
+    }
 
 // Вызывается при совпадении свойства главного контрола
-function onEqualValue(container, dependence) {
-    if (dependence.action == 1) { // Это "скрыть"
-        hideControl(container, dependence.elementId);
-    } else if (dependence.action == 2) { // Это "показать"
-        showControl(container, dependence.elementId);
+    function onEqualValue(container, dependence) {
+        if (dependence.action == 1) { // Это "скрыть"
+            hideControl(container, dependence.elementId);
+        } else if (dependence.action == 2) { // Это "показать"
+            showControl(container, dependence.elementId);
+        }
     }
-}
 
 // Вызывается при НЕсовпадении свойства главного контрола
-function onNotEqualValue(container, dependence) {
-    if (dependence.action == 1) { // Это "скрыть"
-        showControl(container, dependence.elementId);
-    } else if (dependence.action == 2) { // Это "показать"
-        hideControl(container, dependence.elementId);
-    }
-}
-
-
-function changeControlState(dep, elementValue, container) {
-    // Проверяем - если тип контрола двухколоночный список - то надо раскодировать JSON-значение контрола в массив
-    if ( $('[id$="_' + dep.elementId + '"]').parents('div.twoColumnList').length>0    ) {
-        try {
-            var parsedObject  = $.parseJSON(elementValue);
-            elementValue = parsedObject;
-        } catch (e) { }
-    }
-
-    // Значение элемента является массивом в том случае, если у нас
-    //    список с множественным выбором и двухколоночный список
-    if ($.isArray(elementValue)) {
-        for (var j = 0; j < dep.dependences.list.length; j++) {
-            // Ищем значение зависимости в выбранных значениях элемента
-            wasFound = false;
-            // Сканируем значения списка
-            for (k = 0; k < elementValue.length; k++) {
-                if (dep.dependences.list[j].value == elementValue[k]) {
-                    wasFound = true;
-                    break;
-                }
-            } if (wasFound) {
-                // Если нашли совпадение - выполняем действие, которое указано в зависимости
-                onEqualValue(container, dep.dependences.list[j]);
-            } else  {
-                // Иначе - противоположное по значению
-                onNotEqualValue(container, dep.dependences.list[j]);
-            }
+    function onNotEqualValue(container, dependence) {
+        if (dependence.action == 1) { // Это "скрыть"
+            showControl(container, dependence.elementId);
+        } else if (dependence.action == 2) { // Это "показать"
+            hideControl(container, dependence.elementId);
         }
-    } else {
-        // Массив с [Номер элемента] = 1
-        // Сделан для того, чтобы если зависимость сработала, чтобы потом не
-        //      скрывать этот элемент при переборе остальных значений главного контрола
-        var switchedOnElements = [];
+    }
 
-        for (var j = 0; j < dep.dependences.list.length; j++) {
-            if (dep.dependences.list[j].value == elementValue) {
-                onEqualValue(container, dep.dependences.list[j]);
-                switchedOnElements[dep.dependences.list[j].elementId] = 1;
-            }
-            else {
-                // Противоположное действие экшену по дефолту
-                if (switchedOnElements[dep.dependences.list[j].elementId]==undefined)
-                {
+
+    function changeControlState(dep, elementValue, container) {
+        // Проверяем - если тип контрола двухколоночный список - то надо раскодировать JSON-значение контрола в массив
+        if ( $('[id$="_' + dep.elementId + '"]').parents('div.twoColumnList').length>0    ) {
+            try {
+                var parsedObject  = $.parseJSON(elementValue);
+                elementValue = parsedObject;
+            } catch (e) { }
+        }
+
+        // Значение элемента является массивом в том случае, если у нас
+        //    список с множественным выбором и двухколоночный список
+        if ($.isArray(elementValue)) {
+            for (var j = 0; j < dep.dependences.list.length; j++) {
+                // Ищем значение зависимости в выбранных значениях элемента
+                wasFound = false;
+                // Сканируем значения списка
+                for (k = 0; k < elementValue.length; k++) {
+                    if (dep.dependences.list[j].value == elementValue[k]) {
+                        wasFound = true;
+                        break;
+                    }
+                } if (wasFound) {
+                    // Если нашли совпадение - выполняем действие, которое указано в зависимости
+                    onEqualValue(container, dep.dependences.list[j]);
+                } else  {
+                    // Иначе - противоположное по значению
                     onNotEqualValue(container, dep.dependences.list[j]);
                 }
             }
-        }
-    }
+        } else {
+            // Массив с [Номер элемента] = 1
+            // Сделан для того, чтобы если зависимость сработала, чтобы потом не
+            //      скрывать этот элемент при переборе остальных значений главного контрола
+            var switchedOnElements = [];
 
-}
-
-$('#templates-choose-form input[type="submit"]').on('click', function (e) {
-    var checkboxes = $(this).parents('form').find('input[type="checkbox"]:checked');
-    if(checkboxes.length == 0) {
-        $('#errorPopup .row').html($('<p>').text('Вы не выбрали ни одного шаблона для приёма!'));
-        $('#errorPopup').modal({});
-        return false;
-    }
-    $(this).attr('disabled', true);
-	$(this).parents('form').find('.overlayCont').css({
-		'position' : 'static'
-	}).prepend($('<div>').addClass('overlay'));
-    for (var i = 0; i < checkboxes.length; i++) {
-        if ($(checkboxes[i]).prop('checked')) {
-            $(this).attr('value', 'Подождите, приём начинается...');
-            $('#templates-choose-form').submit();
-			/*$(checkboxes).each(function(index, element) {
-				$(element).prop('disabled', true);
-			});*/
-            return;
-        }
-    }
-
-    $(this).attr('disabled', false);
-    return false;
-});
-
-$('#addClinicalDiagnosisSubmit').on('click', function (e) {
-    var diagnosisName = $('#diagnosisName').val();
-    if ($.trim(diagnosisName) == '') {
-        alert('Введите название диагноза!');
-        return false;
-    }
-
-    $.ajax({
-        'url': '/admin/diagnosis/addclinic',
-        'data': {
-            'FormClinicalDiagnosisAdd[description]': diagnosisName
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'POST',
-        'success': function (data, textStatus, jqXHR) {
-            $.fn[$('#chooserId').val()].addChoosed($('<li>').prop('id', 'r' + data.data.id).text(data.data.description), data.data);
-            $('#diagnosisName').val('');
-            $('#addClinicalDiagnosisPopup').modal('hide');
-        }
-    });
-});
-
-function generateAjaxGif(width, height) {
-    return $('<img>').prop({
-        'src': '/images/ajax-loader.gif',
-        'width': width,
-        'height': height,
-        'alt': 'Загрузка...'
-    });
-}
-
-function getHistoryPoint(activeLink) {
-    // Доим активную ссылку - получаем с неё данные для запроса истории
-     var href = ($(activeLink).find('a').attr('href')).substr(1);
-     hostoryCoordinates = href.split('_');
-
-     var medcard = hostoryCoordinates[0];
-     var greeting = hostoryCoordinates[1];
-     var template = hostoryCoordinates[2];
-     $('#historyPopup .modal-title .medcardNumber').html('№ ' + medcard);
-     $('#historyPopup .modal-title .historyDate').html($(activeLink).find('a').text());
-    $.ajax({
-        'url': '/doctors/patient/gethistorymedcard',
-        'data': {
-            medcardId: medcard,
-            greetingId: greeting,
-            templateId: template
-        },
-        'cache': false,
-        'dataType': 'json',
-        'type': 'GET',
-        'error': function (data, textStatus, jqXHR) {
-            console.log(data);
-        },
-        'success': function (data, textStatus, jqXHR) {
-            if (data.success == 'true') {
-                // Заполняем медкарту-историю значениями
-                var data = data.data;
-                $('#historyPopup .modal-body .row').html(data);
-
-                // Триггерим событие открытия поп-апа с историей
-                $('#historyPopup').trigger('shown.bs.modal');
-
-                $('#historyPopup .modal-body .row').css('text-align', 'left');
-                $('#nextHistoryPoint, #prevHistoryPoint').attr('disabled', false);
+            for (var j = 0; j < dep.dependences.list.length; j++) {
+                if (dep.dependences.list[j].value == elementValue) {
+                    onEqualValue(container, dep.dependences.list[j]);
+                    switchedOnElements[dep.dependences.list[j].elementId] = 1;
+                }
+                else {
+                    // Противоположное действие экшену по дефолту
+                    if (switchedOnElements[dep.dependences.list[j].elementId]==undefined)
+                    {
+                        onNotEqualValue(container, dep.dependences.list[j]);
+                    }
+                }
             }
         }
+
+    }
+
+    $('#templates-choose-form input[type="submit"]').on('click', function (e) {
+        var checkboxes = $(this).parents('form').find('input[type="checkbox"]:checked');
+        if(checkboxes.length == 0) {
+            $('#errorPopup .row').html($('<p>').text('Вы не выбрали ни одного шаблона для приёма!'));
+            $('#errorPopup').modal({});
+            return false;
+        }
+        $(this).attr('disabled', true);
+        $(this).parents('form').find('.overlayCont').css({
+            'position' : 'static'
+        }).prepend($('<div>').addClass('overlay'));
+        for (var i = 0; i < checkboxes.length; i++) {
+            if ($(checkboxes[i]).prop('checked')) {
+                $(this).attr('value', 'Подождите, приём начинается...');
+                $('#templates-choose-form').submit();
+                /*$(checkboxes).each(function(index, element) {
+                 $(element).prop('disabled', true);
+                 });*/
+                return;
+            }
+        }
+
+        $(this).attr('disabled', false);
+        return false;
     });
-}
 
-$('#prevHistoryPoint').on('click', function () {
-    $(this).attr('disabled', true);
-    $('#nextHistoryPoint').attr('disabled', true);
-    var gif = generateAjaxGif(48, 48);
-    $('#historyPopup .modal-body .row').html(gif).css('text-align', 'center');
+    $('#addClinicalDiagnosisSubmit').on('click', function (e) {
+        var diagnosisName = $('#diagnosisName').val();
+        if ($.trim(diagnosisName) == '') {
+            alert('Введите название диагноза!');
+            return false;
+        }
 
-    var activeDiv = $('#accordionH .accordion-inner .active').removeClass('active');
-    if ($(activeDiv).prev().length > 0) {
-        activeDiv = $(activeDiv).prev().addClass('active');
-    } else {
-        activeDiv = $('#accordionH .accordion-inner div:last').addClass('active');
+        $.ajax({
+            'url': '/admin/diagnosis/addclinic',
+            'data': {
+                'FormClinicalDiagnosisAdd[description]': diagnosisName
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'POST',
+            'success': function (data, textStatus, jqXHR) {
+                $.fn[$('#chooserId').val()].addChoosed($('<li>').prop('id', 'r' + data.data.id).text(data.data.description), data.data);
+                $('#diagnosisName').val('');
+                $('#addClinicalDiagnosisPopup').modal('hide');
+            }
+        });
+    });
+
+    function generateAjaxGif(width, height) {
+        return $('<img>').prop({
+            'src': '/images/ajax-loader.gif',
+            'width': width,
+            'height': height,
+            'alt': 'Загрузка...'
+        });
     }
-    getHistoryPoint(activeDiv);
-});
 
-$('#nextHistoryPoint').on('click', function () {
-    $(this).attr('disabled', true);
-    $('#prevHistoryPoint').attr('disabled', true);
-    var gif = generateAjaxGif(48, 48);
-    $('#historyPopup .modal-body .row').html(gif).css('text-align', 'center');
+    function getHistoryPoint(activeLink) {
+        // Доим активную ссылку - получаем с неё данные для запроса истории
+        var href = ($(activeLink).find('a').attr('href')).substr(1);
+        hostoryCoordinates = href.split('_');
 
-    var activeDiv = $('#accordionH .accordion-inner .active').removeClass('active');
-    if ($(activeDiv).next().length > 0) {
-        activeDiv = $(activeDiv).next().addClass('active');
-    } else {
-        activeDiv = $('#accordionH .accordion-inner div:first').addClass('active');
+        var medcard = hostoryCoordinates[0];
+        var greeting = hostoryCoordinates[1];
+        var template = hostoryCoordinates[2];
+        $('#historyPopup .modal-title .medcardNumber').html('№ ' + medcard);
+        $('#historyPopup .modal-title .historyDate').html($(activeLink).find('a').text());
+        $.ajax({
+            'url': '/doctors/patient/gethistorymedcard',
+            'data': {
+                medcardId: medcard,
+                greetingId: greeting,
+                templateId: template
+            },
+            'cache': false,
+            'dataType': 'json',
+            'type': 'GET',
+            'error': function (data, textStatus, jqXHR) {
+                console.log(data);
+            },
+            'success': function (data, textStatus, jqXHR) {
+                if (data.success == 'true') {
+                    // Заполняем медкарту-историю значениями
+                    var data = data.data;
+                    $('#historyPopup .modal-body .row').html(data);
+
+                    // Триггерим событие открытия поп-апа с историей
+                    $('#historyPopup').trigger('shown.bs.modal');
+
+                    $('#historyPopup .modal-body .row').css('text-align', 'left');
+                    $('#nextHistoryPoint, #prevHistoryPoint').attr('disabled', false);
+                }
+            }
+        });
     }
-    getHistoryPoint(activeDiv);
-});
+
+    $('#prevHistoryPoint').on('click', function () {
+        $(this).attr('disabled', true);
+        $('#nextHistoryPoint').attr('disabled', true);
+        var gif = generateAjaxGif(48, 48);
+        $('#historyPopup .modal-body .row').html(gif).css('text-align', 'center');
+
+        var activeDiv = $('#accordionH .accordion-inner .active').removeClass('active');
+        if ($(activeDiv).prev().length > 0) {
+            activeDiv = $(activeDiv).prev().addClass('active');
+        } else {
+            activeDiv = $('#accordionH .accordion-inner div:last').addClass('active');
+        }
+        getHistoryPoint(activeDiv);
+    });
+
+    $('#nextHistoryPoint').on('click', function () {
+        $(this).attr('disabled', true);
+        $('#prevHistoryPoint').attr('disabled', true);
+        var gif = generateAjaxGif(48, 48);
+        $('#historyPopup .modal-body .row').html(gif).css('text-align', 'center');
+
+        var activeDiv = $('#accordionH .accordion-inner .active').removeClass('active');
+        if ($(activeDiv).next().length > 0) {
+            activeDiv = $(activeDiv).next().addClass('active');
+        } else {
+            activeDiv = $('#accordionH .accordion-inner div:first').addClass('active');
+        }
+        getHistoryPoint(activeDiv);
+    });
 
     var isExpandedList = false;
     $('#expandPatientList').on('click', function(e) {
@@ -1453,8 +1478,8 @@ $('#nextHistoryPoint').on('click', function () {
         }
     });
 
-	// Смена врача
-	$('#change-doctor-form select').on('change', function(e) {
+    // Смена врача
+    $('#change-doctor-form select').on('change', function(e) {
         if($('.greetingContentCont').length > 0) {
             $('#noticeLeavePopup').modal({});
         } else {
@@ -1471,16 +1496,16 @@ $('#nextHistoryPoint').on('click', function () {
             $('.changeDate-cont').prepend($('<div>').prop('class', 'overlay'));
             $('#refreshPatientList').trigger('click');
         };
-		if($('.greetingContentCont').length <= 0) {
-			callback();
-		}
+        if($('.greetingContentCont').length <= 0) {
+            callback();
+        }
         return false;
-	});
-	
-	// Показ комментария (скрытого)
-	$(document).on('mouseover', '#doctorPatientList tr:not(:first), #doctorWaitingList tr:not(:first)', function(e) {
-		$('#doctorPatientList tr, #doctorWaitingList tr').popover('destroy');
-		$(this).popover({
+    });
+
+    // Показ комментария (скрытого)
+    $(document).on('mouseover', '#doctorPatientList tr:not(:first), #doctorWaitingList tr:not(:first)', function(e) {
+        $('#doctorPatientList tr, #doctorWaitingList tr').popover('destroy');
+        $(this).popover({
             animation: true,
             html: true,
             placement: 'left',
@@ -1491,17 +1516,17 @@ $('#nextHistoryPoint').on('click', function () {
             },
             container: $(this).find('td:first'),
             content: function() {
-				return $('<div>').append($(this).find('.hiddenComment').html());
-			}
-		});
-	   $(this).popover('show');
-	   return false;
-	});
-	
-	$(document).on('mouseout', '#doctorPatientList tr:not(:first), #doctorWaitingList tr:not(:first)', function(e) {
-		$('#doctorPatientList tr, #doctorWaitingList tr').popover('destroy');
-	});
-	
+                return $('<div>').append($(this).find('.hiddenComment').html());
+            }
+        });
+        $(this).popover('show');
+        return false;
+    });
+
+    $(document).on('mouseout', '#doctorPatientList tr:not(:first), #doctorWaitingList tr:not(:first)', function(e) {
+        $('#doctorPatientList tr, #doctorWaitingList tr').popover('destroy');
+    });
+
     function updatePatientList(onlyWaitingList) {
         var url = '/doctors/shedule/updatepatientlist';
         var data = {
@@ -1510,7 +1535,7 @@ $('#nextHistoryPoint').on('click', function () {
             },
             currentPatient : $('#currentPatientId').val(),
             currentGreeting : $('#greetingId').val(),
-			currentDoctor : $('#change-doctor-form').length > 0 ? $('#change-doctor-form select').val() : -1
+            currentDoctor : $('#change-doctor-form').length > 0 ? $('#change-doctor-form select').val() : -1
         };
         if(typeof onlyWaitingList != 'undefined') {
             data.onlywaitinglist = 1;
@@ -1541,25 +1566,25 @@ $('#nextHistoryPoint').on('click', function () {
                         $('#doctorWaitingList').remove();
                         $(parentContainer).append(data.data);
                     }
-					if($('#change-doctor-form').length > 0) {
-						$('#change-doctor-form select').prop('disabled', false); 
-					}
-					$('.overlayCont .overlay').remove();
-					// А это - приём. Его для начала надо сохранить
-					if((($('.template-edit-form').length > 0 && !$('.greetingContentCont').hasClass('no-display')) || $('#accordionT').length > 0) && globalVariables.doctorId && globalVariables.doctorId != $('#change-doctor-form select').val()) { // Внутри есть данные по пациенту, а врач сменён
+                    if($('#change-doctor-form').length > 0) {
+                        $('#change-doctor-form select').prop('disabled', false);
+                    }
+                    $('.overlayCont .overlay').remove();
+                    // А это - приём. Его для начала надо сохранить
+                    if((($('.template-edit-form').length > 0 && !$('.greetingContentCont').hasClass('no-display')) || $('#accordionT').length > 0) && globalVariables.doctorId && globalVariables.doctorId != $('#change-doctor-form select').val()) { // Внутри есть данные по пациенту, а врач сменён
                         if($('.infoCont div').length > 0) { // Внутри есть данные по пациенту, а врач сменён
                             $('.infoCont div').remove();
                         }
                         globalVariables.doctorId = $('#change-doctor-form select').val();
                         $('.greetingContentCont').addClass('no-display'); // Скрываем, потому что скриптам необходимо цеплять из блока данные
-						$('#sideMedcardContentSave').trigger('click');
-					}
+                        $('#sideMedcardContentSave').trigger('click');
+                    }
                 }
             }
         });
-		
-		// Два независимых процесса
-		$.ajax({
+
+        // Два независимых процесса
+        $.ajax({
             'url' : '/doctors/shedule/refreshdayswithpatients',
             'cache': false,
             'dataType': 'json',
@@ -1568,12 +1593,12 @@ $('#nextHistoryPoint').on('click', function () {
             },
             'success': function (data, textStatus, jqXHR) {
                 if (data.success) {
-					globalVariables.patientsInCalendar = $.evalJSON(data.data);
-					$('.changeDate-cont').find('.overlay').remove();
-					$("#date-cont").trigger('changeMonth');
-				}
-			}
-		});
+                    globalVariables.patientsInCalendar = $.evalJSON(data.data);
+                    $('.changeDate-cont').find('.overlay').remove();
+                    $("#date-cont").trigger('changeMonth');
+                }
+            }
+        });
     }
 
     function updateExpanded() {
@@ -1603,7 +1628,7 @@ $('#nextHistoryPoint').on('click', function () {
     }
 
     $('#refreshPatientList').on('click', function(e) {
-		updatePatientList();
+        updatePatientList();
     });
 
     $('.patientListNav li').on('click', function() {
@@ -1646,3 +1671,89 @@ $('html').on('focus','form[id=patient-edit-form] input[type=text],input[type=num
 function getOnlyLikes() {
     return globalVariables.onlyLikes;
 }
+
+var whenTemplateLoaded = function(values) {
+    /* jQuery doesn't like | separator */
+    for (var i in values) {
+        var s = $(document.getElementById(i));
+        if (s.is("select[multiple]")) {
+            try {
+                s.selectpicker("val", $.parseJSON(values[i]));
+            } catch (ignored) {
+            }
+        } else {
+            s.val(values[i]);
+        }
+        if (s.is("select") && s.val() != "-3") {
+            s.trigger("change");
+        }
+    }
+};
+
+$(document).ready(function() {
+    $(".medcard-element select[onchage!='']").trigger("change");
+});
+
+/* var initMedcardMenu = function(menu) {
+ var identifiers = [], stack = [];
+ try {
+ identifiers = $.parseJSON($(menu).attr("data-templates"));
+ } catch (e) {
+ }
+ var prepare = function() {
+ if (identifiers.length > 0) {
+ setTimeout(function() {
+ load(identifiers.shift());
+ }, 0);
+ } else {
+ var ul = $("<ul>");
+ for (var i in stack) {
+ ul.append($("<li></li>").append($("<span></span>", {
+ text: stack[i]
+ })));
+ }
+ Core.createMessage({
+ message: "Шаблоны загружены: <br>" + ul.html(),
+ type: "success",
+ sign: "ok"
+ });
+ }
+ };
+ var renderLoader = function() {
+ return $("<div>", {
+ class: "col-xs-12 text-center greeting-loader"
+ }).append($("<img>", {
+ src: url("images/ajax-loader.gif")
+ }));
+ };
+ for (var i in identifiers) {
+ menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ identifiers[i] +"']").attr("data-tab"))
+ .children().hide().before(renderLoader());
+ }
+ var load = function(id) {
+ var tab = menu.find(" > #" + menu.find(" > ul > li > a[data-id='"+ id +"']").attr("data-tab")),
+ greeting = tab.find("#greetingId").val();
+ $.getJSON(url("medcard/template/describe"), { id: id, greeting: greeting }, function(response) {
+ if (response.hasOwnProperty("values")) {
+ whenTemplateLoaded(response["values"]);
+ }
+ }).done(function(response) {
+ stack.push(response["name"]);
+ prepare();
+ }).fail(function() {
+ Core.createMessage({
+ message: "Произошла ошибка при загрузке значений шаблонов, попробуйте перезагрузить страницу"
+ });
+ }).always(function() {
+ tab.children(".greeting-loader").remove();
+ tab.children().show();
+ });
+ };
+ prepare();
+ };
+
+ $(document).ready(function() {
+ $(".medcard-menu").each(function(i, m) {
+ initMedcardMenu($(m));
+ });
+ }); */

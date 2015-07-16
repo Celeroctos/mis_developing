@@ -1,4 +1,4 @@
-﻿@import "elements.less";
+﻿﻿@import "elements.less";
 
 /* ------------------- Keyboard Layout ------------- */
 .keyboardLayout { position: absolute; margin: 1px 0 0 -25px; *margin-top: 2px; width: 24px; height: 20px; color: #999; text-align: center; }
@@ -14,7 +14,7 @@
 .colorpicker-saturation {
   width: 100px;
   height: 100px;
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/saturation.png);
+  background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/saturation.png");
   cursor: crosshair;
   float: left;
 }
@@ -61,9 +61,9 @@
   width: 100%;
   margin-top: -1px;
 }
-.colorpicker-hue { background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/hue.png) }
+.colorpicker-hue { background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/hue.png") }
 .colorpicker-alpha {
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/alpha.png);
+  background-image: url("/libs/colorpicker/img/bootstrap-colorpicker/alpha.png");
   display: none;
 }
 .colorpicker {
@@ -111,8 +111,7 @@
   height: 10px;
   margin-top: 5px;
   clear: both;
-  background-image: url(/libs/colorpicker/img/bootstrap-colorpicker/alpha.png);
-  background-position: 0 100%;
+  background: url("/libs/colorpicker/img/bootstrap-colorpicker/alpha.png") 0 100%;
 }
 .colorpicker-color div { height: 10px }
 .colorpicker-component .add-on i,
@@ -272,7 +271,7 @@ select {
   display: inline;
   padding-left: 25px;
   margin-right: @default-margin;
-  height: 50;
+  height: 50px;
 }
 .borderedBox {
   border-radius: @default-border-radius;
@@ -956,7 +955,7 @@ position:absolute;
         font-weight: bold;
       }
       td {
-        font-weight: 13px;
+        font-size: 13px;
         padding: 3px 5px;
         border: 1px solid #A4A4A4;
         border-collapse: collapse;
@@ -1136,6 +1135,9 @@ select#restDays {
       margin-left: 10px;
     }
   }
+  .modal-body > .row {
+    padding: 15px;
+  }
 }
 #accordionH {
   .accordion-inner
@@ -1169,7 +1171,7 @@ select#restDays {
 }
 /* Контрол таблиц */
 .controltable {
-  margin-left: 10px;
+//  margin-left: 10px;
   td {
     border: 1px solid #CCCCCC;
     padding: 2px 4px;
@@ -1191,6 +1193,7 @@ select#restDays {
       }
     }
   }
+  margin-bottom: 0;
 }
 
 /* Редактирование таблиц (элементов) */
@@ -1247,12 +1250,12 @@ div.tab-list
 		padding: 3px 15px;
 	}
 }
-#importGreetings, #importMedcards {
+#importGreetings {
 	background: #80cb56;
 	font-weight: bold;
 	color: #ffffff;
 }
-#clearGreetings, #clearMedcards {
+#clearGreetings {
 	background: #e34b34;
 	color: #ffffff;
 	font-weight: bold;
@@ -1904,24 +1907,15 @@ a.accordion-toggle:hover {
 	overflow-x: scroll;
 }
 #showHistoryGreetingPopup {
-    .modal-body {
-      overflow: hidden;
-    }
 	.modal-dialog {
-		width: 1000px;
-	    .row {
-          padding-left: 20px;
-        }
-    }
+		width: 1060px;
+	}
 }
 #greeting-addfake-submit  {
 	margin-left: 112px;
 }
 #tasuimport-filter-btn {
-	margin-left: 26%;
-}
-#tasumedcardsimport-filter-btn {
-  margin-left: 27%;
+	margin-left: 27%;
 }
 #preGreetings-controls {
 	margin-top: 5px;
@@ -2040,6 +2034,7 @@ form[id=template-edit-form] .btnAddValue
 .showDynamicWrap {
 	position: relative;
 	.showDynamicIcon {
+        z-index: 2;
 		position: absolute;
 		left: 12px;
 		top: -7px;
@@ -2726,36 +2721,95 @@ textarea,
   .modal-lg {
     width: 900px;
   }
+  .modal-lg-2 {
+    width: 1200px;
+  }
 }
 .modal-90 {
   width: 90%;
 }
 
-/* -------------------- */
-#addMedcardsPopup {
-  .modal-dialog {
-    width: 1200px;
-    .borderedBox {
-      width: 98%;
-      max-width: 98%;
-      max-height: 300px;
-      overflow-y: scroll;
+#confirm-delete-modal .modal-body {
+  padding-bottom: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.vertical-align > * {
+  display: table-cell;
+  float: none !important;
+  vertical-align: middle;
+}
+
+#doctor-direction-nav .nav > li {
+  padding: 5px;
+}
+
+.medcard-element {
+  > tbody > tr {
+    > td:first-child > label {
+      margin-right: 5px;
+    }
+    > td:last-child > label {
+      margin-left: 5px;
+    }
+    > td > label {
+      margin-bottom: 0;
+      font-size: 12px;
     }
   }
+  margin-right: 10px;
+  float: left;
+  height: auto;
+  margin-bottom: 5px;
 }
-#showHistoryMedcardsPopup {
-  .modal-dialog {
-    width: 1090px;
-    .modal-body {
-      overflow: hidden;
-    }
-    .row {
-      padding-left: 20px;
-    }
+
+.medcard-hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.medcard-element-wrapper {
+  display: inline-block;
+}
+
+.medcard-category {
+  > .accordion-group > .accordion-body > .accordion-inner {
+    padding-left: 35px;
+    padding-right: 35px;
   }
+  width: 100%;
+  display: block !important;
 }
-#printMedcards, #printHistoryMedcards {
-  background: #31a9e3;
-  color: #ffffff;
-  font-weight: bold;
+
+.medcard-wrapper {
+  word-wrap: break-word !important;
+}
+
+.selectpicker-variants {
+  border: 1px solid #E6E6E6;
+  width: 100%;
+  margin-top: 5px;
+  border-radius: 3px;
+  padding : 3px 5px;
+  display : none;
+}
+
+.medcard-menu > div[id^='tab-'][style*='display: none;'] > .loading {
+  display: none;
+}
+
+.twoColumnListFrom,
+.twoColumnListTo {
+  min-height: 150px !important;
+}
+
+.twoColumnListTo  {
+  margin-left: 2px;
 }
