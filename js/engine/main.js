@@ -31,6 +31,12 @@ misEngine = (function() {
                      'modules' : [{
                          'name' : 'bedsstock',
                          'script' : null
+                     }, {
+                         'name' : 'armn',
+                         'script' : null
+                     }, {
+                         'name' : 'armd',
+                         'script' : null
                      }]
                  }]
             }, {
@@ -46,6 +52,22 @@ misEngine = (function() {
                     'name' : 'wards',
                     'script' : null
                 }]
+            },{
+                'name' : 'webspeech',
+                'script' : null
+            },{
+                'name' : 'window',
+                'script' : null
+            },{
+                'name' : 'utils',
+                'script' : null,
+                'modules' : [{
+                    'name' : 'id_generator',
+                    'script' : null
+                }]
+            }, {
+                'name' : 'livesearch',
+                'script' : null
             }]
         }],
 		getConfig : function(key) {

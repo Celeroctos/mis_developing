@@ -1,3 +1,4 @@
+
 var GuideGridView = {
 	ready: function() {
 		var grid = $(".grid-view");
@@ -8,8 +9,8 @@ var GuideGridView = {
 			delete: grid.data("delete-action")
 		};
 		$("#register-guide-modal").on("show.bs.modal", function() {
-			Laboratory.resetFormErrors($(this));
-			Laboratory.Common.cleanup($(this));
+			Core.resetFormErrors($(this));
+			$(this).cleanup();
 		});
 		var me = this;
 		$("#register-guide-modal #register-button").click(function() {
@@ -47,11 +48,11 @@ var GuideGridView = {
 			var me = this;
 			$.post(url, str.replace(/&$/, ""), function(json) {
 				if (!json["status"]) {
-					Laboratory.createMessage({
+					Core.createMessage({
 						message: json["message"]
 					});
 				} else if (json["message"]) {
-					Laboratory.createMessage({
+					Core.createMessage({
 						message: json["message"],
 						sign: "ok",
 						type: "success"
@@ -66,6 +67,7 @@ var GuideGridView = {
 			});
 		}).on("show.bs.modal", function() {
 			$(this).find("select[multiple]").each(function(i, s) {
+				console.log($(s).data("clef-keys"));
 				$(s).multiple("clear").multiple("choose", $(s).data("clef-keys"));
 			});
 		});
@@ -75,9 +77,9 @@ var GuideGridView = {
 		console.log(this.actions);
 		$.post(this.actions.create, model, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(form, json)
+				return Core.postFormErrors(form, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -92,9 +94,9 @@ var GuideGridView = {
 		var form = $("#update-guide-modal form");
 		$.post(this.actions.update, model, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(form, json)
+				return Core.postFormErrors(form, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -106,12 +108,12 @@ var GuideGridView = {
 		}, "json");
 	},
 	load: function(id) {
-		var m = $("#update-guide-modal");
+		var m = $("#update-guide-modal").cleanup();
 		$.get(this.actions.load, { id: id }, function(json) {
 			if (!json["status"]) {
-				return Laboratory.postFormErrors(m, json)
+				return Core.postFormErrors(m, json)
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"
@@ -127,11 +129,11 @@ var GuideGridView = {
 	drop: function(id) {
 		$.post(this.actions.delete, { id: id }, function(json) {
 			if (!json["status"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"]
 				});
 			} else if (json["message"]) {
-				Laboratory.createMessage({
+				Core.createMessage({
 					message: json["message"],
 					sign: "ok",
 					type: "success"

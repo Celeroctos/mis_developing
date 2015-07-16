@@ -496,7 +496,7 @@
                 'data' :  $('#dateTo').val()
             });
         }
-		if($.trim($('#medcard').val()) != '') {
+        if($.trim($('#medcard').val()) != '') {
             result.rules.push({
                 'field' : 'card_number',
                 'op' : 'eq',

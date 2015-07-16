@@ -1,3 +1,7 @@
+var ElementsApi = {
+	currentRow: null
+};
+
 function writeDefValuesFromConfig(defValues) {
 	// Вычисляем макиммальный индекс по строке и столбцу в таблице значений по умолчанию
 	var tableOfDefaults = $('div.defaultValuesTable table.controltable tbody');
@@ -184,16 +188,16 @@ function readConfigFromInterface(sender) {
 
 	var container = $(sender).parents('.modal-body');
 
-	var hiddenConfig = $(container).find('#config');
-	var configTable = $(container).find('.table-config-headers');
-	var rowsHeaders = $(configTable).find('tbody tr').find('td:eq(0) input');
-	var colsHeaders = $(configTable).find('tbody tr').find('td:eq(1) input');
+	var hiddenConfig = container.find('#config');
+	var configTable = container.find('.table-config-headers');
+	var rowsHeaders = configTable.find('tbody tr').find('td:eq(0) input');
+	var colsHeaders = configTable.find('tbody tr').find('td:eq(1) input');
 	var tempConfig = {
 		cols: [],
 		rows: [],
 		values: {},
-		numCols: $(container).find('#numCols').val(),
-		numRows: $(container).find('#numRows').val()
+		numCols: container.find('#numCols').val(),
+		numRows: container.find('#numRows').val()
 	};
 
 	for (var i = 0; i < rowsHeaders.length; i++) {
@@ -207,7 +211,6 @@ function readConfigFromInterface(sender) {
 		}
 	}
 
-
 	// Берём таблицу из соответствующего контейнера
 	var defaultInputs = $(container).find('div.defaultValuesTable table.controltable tbody input');
 	var defaultValues = [];
@@ -219,8 +222,7 @@ function readConfigFromInterface(sender) {
 			tempConfig.values[rawId] = $($(defaultInputs[i])[0]).val();
 		}
 	}
-
-	$(hiddenConfig).val($.toJSON(tempConfig));
+	hiddenConfig.val(JSON.stringify(tempConfig));
 }
 
 // Функция пробегает по строкам грида с зависимостями и проверяет,
@@ -368,188 +370,189 @@ function onDefaultValuesTableChanged(e) {
 }
 
 $(document).ready(function () {
-    $("#elements").jqGrid({
-        url: globalVariables.baseUrl + '/admin/elements/get',
-        datatype: "json",
-        colNames: ['Код', 'Тип', 'Справочник', 'Категория', 'Метка до', 'Метка после', 'Метка для администратора', 'Размер', 'Перенос строки', 'Позиция', 'Полный путь', 'Мониторинг', '', '', '', '', '', ''],
-        colModel: [{
-                name: 'id',
-                index: 'id',
-                width: 50
-            }, {
-                name: 'type',
-                index: 'type',
-                width: 150
-            }, {
-                name: 'guide',
-                index: 'guide',
-                width: 150
-            }, {
-                name: 'categorie',
-                index: 'categorie',
-                width: 120
-            }, {
-                name: 'label',
-                index: 'label',
-                width: 150
-            }, {
-                name: 'label_after',
-                index: 'label_after',
-                width: 150
-            }, {
-                name: 'label_display',
-                index: 'label_display',
-                width: 150
-            }, {
-                name: 'size',
-                index: 'size',
-                width: 80
-            }, {
-                name: 'is_wrapped_name',
-                index: 'is_wrapped_name',
-                width: 130
-            }, {
-                name: 'position',
-                index: 'position',
-                width: 80
-            }, {
-                name: 'path',
-                index: 'path',
-                width: 150
-            }, {
-				name: 'show_dynamic_desc',
-				index: 'show_dynamic_desc',
-				width: 150
-			}, {
-                name: 'categorie_id',
-                index: 'categorie_id',
-                hidden: true
-            }, {
-                name: 'guide_id',
-                index: 'guide_id',
-                hidden: true
-            }, {
-                name: 'type_id',
-                index: 'type_id',
-                hidden: true
-            }, {
-                name: 'allow_add',
-                index: 'allow_add',
-                hidden: true
-            }, {
-                name: 'is_wrapped',
-                index: 'is_wrapped',
-                hidden: true
-            }, {
-				name: 'show_dynamic',
-				index: 'show_dynamic',
-				hidden: true
+
+	$("#elements").jqGrid({
+		url: globalVariables.baseUrl + '/admin/elements/get',
+		datatype: "json",
+		colNames: ['Код', 'Тип', 'Справочник', 'Категория', 'Метка до', 'Метка после', 'Метка для администратора', 'Размер', 'Перенос строки', 'Позиция', 'Полный путь', 'Мониторинг', '', '', '', '', '', ''],
+		colModel: [{
+			name: 'id',
+			index: 'id',
+			width: 50
+		}, {
+			name: 'type',
+			index: 'type',
+			width: 150
+		}, {
+			name: 'guide',
+			index: 'guide',
+			width: 150
+		}, {
+			name: 'categorie',
+			index: 'categorie',
+			width: 120
+		}, {
+			name: 'label',
+			index: 'label',
+			width: 150
+		}, {
+			name: 'label_after',
+			index: 'label_after',
+			width: 150
+		}, {
+			name: 'label_display',
+			index: 'label_display',
+			width: 150
+		}, {
+			name: 'size',
+			index: 'size',
+			width: 80
+		}, {
+			name: 'is_wrapped_name',
+			index: 'is_wrapped_name',
+			width: 130
+		}, {
+			name: 'position',
+			index: 'position',
+			width: 80
+		}, {
+			name: 'path',
+			index: 'path',
+			width: 150
+		}, {
+			name: 'show_dynamic_desc',
+			index: 'show_dynamic_desc',
+			width: 150
+		}, {
+			name: 'categorie_id',
+			index: 'categorie_id',
+			hidden: true
+		}, {
+			name: 'guide_id',
+			index: 'guide_id',
+			hidden: true
+		}, {
+			name: 'type_id',
+			index: 'type_id',
+			hidden: true
+		}, {
+			name: 'allow_add',
+			index: 'allow_add',
+			hidden: true
+		}, {
+			name: 'is_wrapped',
+			index: 'is_wrapped',
+			hidden: true
+		}, {
+			name: 'show_dynamic',
+			index: 'show_dynamic',
+			hidden: true
+		}
+		],
+		rowNum: 25,
+		rowList: [10, 25],
+		pager: '#elementsPager',
+		sortname: 'id',
+		viewrecords: true,
+		sortorder: "desc",
+		caption: "Врачебные справочники",
+		height: 600,
+		ondblClickRow: editElement,
+		onSelectRow: function (rowId, status, e) {
+			var row = $("#elements").jqGrid('getRowData', rowId);
+			if (row.type_id == 2 || row.type_id == 3 || row.type_id == 7) {
+				$('#editElementDependences').removeClass('disabled');
+			} else {
+				$('#editElementDependences').addClass('disabled');
 			}
-        ],
-        rowNum: 25,
-        rowList: [10, 25],
-        pager: '#elementsPager',
-        sortname: 'id',
-        viewrecords: true,
-        sortorder: "desc",
-        caption: "Врачебные справочники",
-        height: 600,
-        ondblClickRow: editElement,
-        onSelectRow: function (rowId, status, e) {
-            var row = $("#elements").jqGrid('getRowData', rowId);
-            if (row.type_id == 2 || row.type_id == 3 || row.type_id == 7) {
-                $('#editElementDependences').removeClass('disabled');
-            } else {
-                $('#editElementDependences').addClass('disabled');
-            }
 
-            if (row.type_id == 4) {
-                $('.table-config-container').removeClass('no-display');
-                // Также покажем таблицу значений по умолчанию
-                $('.defaultValuesTable').removeClass('no-display');
+			if (row.type_id == 4) {
+				$('.table-config-container').removeClass('no-display');
+				// Также покажем таблицу значений по умолчанию
+				$('.defaultValuesTable').removeClass('no-display');
 
-            } else {
-                $('.table-config-container').addClass('no-display');
+			} else {
+				$('.table-config-container').addClass('no-display');
 
-                // Скроем таблицу значений по умолчанию
-                $('.defaultValuesTable').addClass('no-display');
+				// Скроем таблицу значений по умолчанию
+				$('.defaultValuesTable').addClass('no-display');
 
-            }
-        }
-    });
+			}
+		}
+	});
 
-    $("#elements").jqGrid('navGrid', '#elementsPager', {
-        edit: false,
-        add: false,
-        del: false
-    }, {}, {}, {}, {
+	$("#elements").jqGrid('navGrid', '#elementsPager', {
+		edit: false,
+		add: false,
+		del: false
+	}, {}, {}, {}, {
 		closeOnEscape: true,
 		multipleSearch: true,
 		closeAfterSearch: true
 	});
 
-    var url = globalVariables.baseUrl + '/admin/elements/getdependenceslist';
+	var url = globalVariables.baseUrl + '/admin/elements/getdependenceslist';
 
-    $("#dependences").jqGrid({
-        url: url,
-        datatype: "local",
-        colNames: ['Код', 'Элемент ("метка до")', 'Значение', 'Зависимый элемент', 'Действие','',''],
-        colModel: [{
-                name: 'id',
-                index: 'id',
-                width: 50
-            }, {
-                name: 'element',
-                index: 'element',
-                width: 150
-            }, {
-                name: 'value',
-                index: 'value',
-                width: 150
-            }, {
-                name: 'dep_element',
-                index: 'dep_element',
-                width: 150
-            }, {
-                name: 'action',
-                index: 'action',
-                width: 120
-            }, {
-                name: 'dep_element_id',
-                index: 'dep_element_id',
-                hidden: true
-            }, {
-                name: 'actionId',
-                index: 'actionId',
-                hidden: true
-            }
-        ],
-        rowNum: 0,
-        rowList: [10, 20, 30],
-        pager: '#dependencesPager',
-        sortname: 'id',
-        loadComplete: testDirection,
-        viewrecords: true,
-        sortorder: "desc",
-        caption: "Список добавленных зависимостей",
-        height: 300
-    });
+	$("#dependences").jqGrid({
+		url: url,
+		datatype: "json",
+		colNames: ['Код', 'Элемент ("метка до")', 'Значение', 'Зависимый элемент', 'Действие','',''],
+		colModel: [{
+			name: 'id',
+			index: 'id',
+			width: 50
+		}, {
+			name: 'element',
+			index: 'element',
+			width: 150
+		}, {
+			name: 'value',
+			index: 'value',
+			width: 150
+		}, {
+			name: 'dep_element',
+			index: 'dep_element',
+			width: 150
+		}, {
+			name: 'action',
+			index: 'action',
+			width: 120
+		}, {
+			name: 'dep_element_id',
+			index: 'dep_element_id',
+			hidden: true
+		}, {
+			name: 'actionId',
+			index: 'actionId',
+			hidden: true
+		}
+		],
+		rowNum: 0,
+		rowList: [10, 20, 30],
+		pager: '#dependencesPager',
+		sortname: 'id',
+		loadComplete: testDirection,
+		viewrecords: true,
+		sortorder: "desc",
+		caption: "Список добавленных зависимостей",
+		height: 300
+	});
 
-    $("#dependences").jqGrid('navGrid', '#dependencesPager', {
-        edit: false,
-        add: false,
-        del: false
-    }, {}, {}, {}, {
+	$("#dependences").jqGrid('navGrid', '#dependencesPager', {
+		edit: false,
+		add: false,
+		del: false
+	}, {}, {}, {}, {
 		closeOnEscape: true,
 		multipleSearch: true,
 		closeAfterSearch: true
 	});
 
 
-    $("#addElement").click(function () {
-        printDefaultValuesTable(0, 0);
-        $('#addElementPopup').modal();
-        $('#element-add-form select#type').trigger('change');
+	$("#addElement").click(function () {
+		printDefaultValuesTable(0, 0);
+		$('#addElementPopup').modal();
+		$('#element-add-form select#type').trigger('change');
 	});
 
 	$("#element-add-form").on('success', function (eventObj, ajaxData, status, jqXHR) {
@@ -600,17 +603,17 @@ $(document).ready(function () {
 	});
 
 
-function editElement() {
-    var currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
-    if (currentRow != null) {
-        // Надо вынуть данные для редактирования
-        $.ajax({
-            'url': globalVariables.baseUrl + '/admin/elements/getone?id=' + currentRow,
-            'cache': false,
-            'dataType': 'json',
-            'type': 'GET',
-            'success': function (data, textStatus, jqXHR) {
-                if (data.success == true) {
+	function editElement() {
+		var currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+		if (currentRow != null) {
+			// Надо вынуть данные для редактирования
+			$.ajax({
+				'url': globalVariables.baseUrl + '/admin/elements/getone?id=' + currentRow,
+				'cache': false,
+				'dataType': 'json',
+				'type': 'GET',
+				'success': function (data, textStatus, jqXHR) {
+					if (data.success == true) {
 						// Заполняем форму значениями
 						var form = $('#editElementPopup form')
 						// Соответствия формы и модели
@@ -684,241 +687,236 @@ function editElement() {
 								formField: 'hideLabelBefore'
 							}
 						];
-						
-					if(data.data['type'] == 4) {
-						// Блокировать поле отслеживания динамики
-					   $('#editElementPopup #showDynamic').prop('disabled', true);
-					} else {
-					   $('#editElementPopup #showDynamic').prop('disabled', false);
-					}
 
-					for (var i = 0; i < fields.length; i++) {
-						// Подгрузка значений справочника для дефолтного значения
-						if (fields[i].formField == 'defaultValue' && (data.data['type'] == 2 || data.data['type'] == 3)) {
-							// Это значение ставится асинхронно
-							$('select#guideId').trigger('change', [data.data[fields[i].modelField]]);
-							continue;
+						if(data.data['type'] == 4) {
+							// Блокировать поле отслеживания динамики
+							$('#editElementPopup #showDynamic').prop('disabled', true);
+						} else {
+							$('#editElementPopup #showDynamic').prop('disabled', false);
 						}
-						form.find('#' + fields[i].formField).val(data.data[fields[i].modelField]);
-						// Таблица
-						if (fields[i].formField == 'config') {
-							if(typeof data.data['config'] != 'object') {
-								var config = $.parseJSON(data.data['config']);
-							} else {
-								var config = data.data['config'];
+						for (var i = 0; i < fields.length; i++) {
+							// Подгрузка значений справочника для дефолтного значения
+							if (fields[i].formField == 'defaultValue' && (data.data['type'] == 2 || data.data['type'] == 3)) {
+								// Это значение ставится асинхронно
+								$('select#guideId').trigger('change', [data.data[fields[i].modelField]]);
+								continue;
 							}
-							if (data.data['type'] == 4) {
-								printHeadersTable(
-									config,
-									$('#editElementPopup .table-config-headers tbody'),
-									$('#editElementPopup .colsHeaders'),
-									$('#editElementPopup .rowsHeaders'),
-									$('#editElementPopup #numRows'),
-									$('#editElementPopup #numCols')
-								);
-								printDefaultValuesTable(config.numCols, config.numRows);
-								if (config.values != undefined && config.values != null) {
-									writeDefValuesFromConfig(config.values);
-								}
-							}
-							if (data.data['type'] == 5) {
-								$('#editElementPopup').find('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').parents('.form-group').removeClass('no-display');
-								$('#editElementPopup #numberFieldMaxValue').val(config.maxValue);
-								$('#editElementPopup #numberFieldMinValue').val(config.minValue);
-								$('#editElementPopup #numberStep').val(config.step);
-							}
-							if (data.data['type'] == 6) {
-								$('#editElementPopup').find('#dateFieldMaxValue, #dateFieldMinValue').parents('.form-group').removeClass('no-display');
-								if (config != null && config != '') {
-									$('#editElementPopup #dateFieldMaxValue').val(config.maxValue);
-									$('#editElementPopup #dateFieldMinValue').val(config.minValue);
+							form.find('#' + fields[i].formField).val(data.data[fields[i].modelField]);
+							// Таблица
+							if (fields[i].formField == 'config') {
+								if(typeof data.data['config'] != 'object') {
+									var config = $.parseJSON(data.data['config']);
 								} else {
-									// Если конфига нет - надо просто поставить пустое значение
-									$('#editElementPopup #dateFieldMaxValue').val('');
-									$('#editElementPopup #dateFieldMinValue').val('');
+									var config = data.data['config'];
 								}
+								if (data.data['type'] == 4) {
+									printHeadersTable(
+										config,
+										$('#editElementPopup .table-config-headers tbody'),
+										$('#editElementPopup .colsHeaders'),
+										$('#editElementPopup .rowsHeaders'),
+										$('#editElementPopup #numRows'),
+										$('#editElementPopup #numCols')
+									);
+									printDefaultValuesTable(config.numCols, config.numRows);
+									if (config.values != undefined && config.values != null) {
+										writeDefValuesFromConfig(config.values);
+									}
+								}
+								if (data.data['type'] == 5) {
+									$('#editElementPopup').find('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').parents('.form-group').removeClass('no-display');
+									$('#editElementPopup #numberFieldMaxValue').val(config.maxValue);
+									$('#editElementPopup #numberFieldMinValue').val(config.minValue);
+									$('#editElementPopup #numberStep').val(config.step);
+								}
+								if (data.data['type'] == 6) {
+									$('#editElementPopup').find('#dateFieldMaxValue, #dateFieldMinValue').parents('.form-group').removeClass('no-display');
+									if (config != null && config != '') {
+										$('#editElementPopup #dateFieldMaxValue').val(config.maxValue);
+										$('#editElementPopup #dateFieldMinValue').val(config.minValue);
+									} else {
+										// Если конфига нет - надо просто поставить пустое значение
+										$('#editElementPopup #dateFieldMaxValue').val('');
+										$('#editElementPopup #dateFieldMinValue').val('');
+									}
 
-								// Затриггерим контрол, чтобы данные подкачались в видимые поля контрола
-								$('#editElementPopup #dateFieldMaxValue').trigger('change');
-								$('#editElementPopup #dateFieldMinValue').trigger('change');
+									// Затриггерим контрол, чтобы данные подкачались в видимые поля контрола
+									$('#editElementPopup #dateFieldMaxValue').trigger('change');
+									$('#editElementPopup #dateFieldMinValue').trigger('change');
+								}
 							}
-                            $('#editElementPopup #config').val($.toJSON(config));
 						}
+						// Теперь нужно проверить - если взведён флаг "есть зависимость" - нужно выключить некоторые опции в
+						//    в изменении типа
+						if (data.data.is_dependencies == 1) {
+							$('#element-edit-form select#type option:not([value=2]):not([value=3])').addClass('no-display');
+						} else {
+							$('#element-edit-form select#type option').removeClass('no-display');
+						}
+						$.proxy(form.find("select#type").trigger('change'), form.find("select#type")); // $.proxy - вызов контекста
+						$("#editElementPopup").modal();
 					}
-					// Теперь нужно проверить - если взведён флаг "есть зависимость" - нужно выключить некоторые опции в
-					//    в изменении типа
-					if (data.data.is_dependencies == 1) {
-						$('#element-edit-form select#type option:not([value=2]):not([value=3])').addClass('no-display');
-					} else {
-						$('#element-edit-form select#type option').removeClass('no-display');
-					}
-					$.proxy(form.find("select#type").trigger('change'), form.find("select#type")); // $.proxy - вызов контекста
-					$("#editElementPopup").modal();
 				}
-			}
-		});
+			});
+		}
 	}
-}
 
-$("#editElement").click(editElement);
+	$("#editElement").click(editElement);
 
-$("#deleteElement").click(function () {
-    var currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
-    if (currentRow != null) {
-        // Надо вынуть данные для редактирования
-        $.ajax({
-            'url': globalVariables.baseUrl + '/admin/elements/delete?id=' + currentRow,
-            'cache': false,
-            'dataType': 'json',
-            'type': 'GET',
-            'success': function (data, textStatus, jqXHR) {
-                if (data.success == 'true') {
-                    $("#elements").trigger("reloadGrid");
-                } else {
-                    // Удаляем предыдущие ошибки
-                    $('#errorAddElementPopup .modal-body .row p').remove();
-                    $('#errorAddElementPopup .modal-body .row').append("<p>" + data.error + "</p>")
+	$("#deleteElement").click(function () {
+		var currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+		if (currentRow != null) {
+			// Надо вынуть данные для редактирования
+			$.ajax({
+				'url': globalVariables.baseUrl + '/admin/elements/delete?id=' + currentRow,
+				'cache': false,
+				'dataType': 'json',
+				'type': 'GET',
+				'success': function (data, textStatus, jqXHR) {
+					if (data.success == 'true') {
+						$("#elements").trigger("reloadGrid");
+					} else {
+						// Удаляем предыдущие ошибки
+						$('#errorAddElementPopup .modal-body .row p').remove();
+						$('#errorAddElementPopup .modal-body .row').append("<p>" + data.error + "</p>")
 
-                    $('#errorAddElementPopup').modal();
-                }
-            }
-        })
-    }
-});
+						$('#errorAddElementPopup').modal();
+					}
+				}
+			})
+		}
+	});
 
 // Открытие списка справочников
-$("select#type").on('change', function (e) {
-    var form = $(this).parents('form');
-	// Таблица. Для неё нельзя отслеживать динамику (пока)
-	console.log($(this).val());
-	if($(this).val() == 4) {
-		form.find("#showDynamic").prop('disabled', true);
-	} else {
-		form.find("#showDynamic").prop('disabled', false);
-	}
-    // Если это список с выбором
-    if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 7) {
-        form.find("select#guideId").prop('disabled', false);
-        form.find("select#allowAdd").prop('disabled', false);
-        if ($(this).val() == 7) {
-            form.find("select#defaultValue").parents('div.form-group').addClass('no-display');
-        } else {
-            form.find("select#defaultValue").parents('div.form-group').removeClass('no-display');
-        }
-        form.find("#defaultValueText").parents('div.form-group').addClass('no-display');
-    } else {
-        if ($(this).val() == 0 || $(this).val() == 1) {
-            form.find("#defaultValueText").parents('div.form-group').removeClass('no-display');
-            form.find("#defaultValue").parents('div.form-group').addClass('no-display');
-        } else {
-            form.find("#defaultValueText").parents('div.form-group').addClass('no-display');
-            form.find("#defaultValue").parents('div.form-group').removeClass('no-display');
-        }
-        // Поставить на дефолт
-        form.find("select#guideId")
-                .val(-1)
-                .prop('disabled', true);
-        form.find("select#allowAdd")
-                .val(0)
-                .prop('disabled', true);
-        form.find("select#defaultValue option:not([value=-1])").remove();
-        form.find("select#defaultValue")
-                .val(-1)
-                .prop('disabled', true);
-        form.find("select#defaultValueText")
-                .val('')
-    }
-    if ($(this).val() == 4) {
-        $('.table-config-container').removeClass('no-display');
-        $('#numRows').parents('.form-group').removeClass('no-display');
-        $('#numCols').parents('.form-group').removeClass('no-display');
-        $(this).parents().find('.defaultValuesTable').removeClass('no-display');
-    } else {
-        $('.table-config-container').addClass('no-display');
-        $('#numRows').parents('.form-group').addClass('no-display');
-        $('#numCols').parents('.form-group').addClass('no-display');
-        $(this).parents().find('.defaultValuesTable').addClass('no-display');
-    }
-    if ($(this).val() == 5) {
-        $('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').parents('.form-group').removeClass('no-display');
-    } else {
-        $('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').val('').parents('.form-group').addClass('no-display');
-    }
-    if ($(this).val() == 6) {
-        $('#dateFieldMaxValue, #dateFieldMinValue').parents('.form-group').removeClass('no-display');
-    } else {
-        $('#dateFieldMaxValue, #dateFieldMinValue').val('').parents('.form-group').addClass('no-display');
-    }
-});
+	$("select#type").on('change', function (e) {
+		var form = $(this).parents('form');
+		// Таблица. Для неё нельзя отслеживать динамику (пока)
+		if($(this).val() == 4 || $(this).val() == 7) {
+			form.find("#showDynamic").prop('disabled', true);
+		} else {
+			form.find("#showDynamic").prop('disabled', false);
+		}
+		// Если это список с выбором
+		if ($(this).val() == 2 || $(this).val() == 3 || $(this).val() == 7) {
+			form.find("select#guideId").prop('disabled', false);
+			form.find("select#allowAdd").prop('disabled', false);
+			if ($(this).val() == 7) {
+				form.find("select#defaultValue").parents('div.form-group').addClass('no-display');
+			} else {
+				form.find("select#defaultValue").parents('div.form-group').removeClass('no-display');
+			}
+			form.find("#defaultValueText").parents('div.form-group').addClass('no-display');
+		} else {
+			if ($(this).val() == 0 || $(this).val() == 1) {
+				form.find("#defaultValueText").parents('div.form-group').removeClass('no-display');
+				form.find("#defaultValue").parents('div.form-group').addClass('no-display');
+			} else {
+				form.find("#defaultValueText").parents('div.form-group').addClass('no-display');
+				form.find("#defaultValue").parents('div.form-group').removeClass('no-display');
+			}
+			// Поставить на дефолт
+			form.find("select#guideId")
+				.val(-1)
+				.prop('disabled', true);
+			form.find("select#allowAdd")
+				.val(0)
+				.prop('disabled', true);
+			form.find("select#defaultValue option:not([value=-1])").remove();
+			form.find("select#defaultValue")
+				.val(-1)
+				.prop('disabled', true);
+			form.find("select#defaultValueText")
+				.val('')
+		}
+		if ($(this).val() == 4) {
+			$('.table-config-container').removeClass('no-display');
+			$('#numRows').parents('.form-group').removeClass('no-display');
+			$('#numCols').parents('.form-group').removeClass('no-display');
+			$(this).parents().find('.defaultValuesTable').removeClass('no-display');
+		} else {
+			$('.table-config-container').addClass('no-display');
+			$('#numRows').parents('.form-group').addClass('no-display');
+			$('#numCols').parents('.form-group').addClass('no-display');
+			$(this).parents().find('.defaultValuesTable').addClass('no-display');
+		}
+		if ($(this).val() == 5) {
+			$('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').parents('.form-group').removeClass('no-display');
+		} else {
+			$('#numberFieldMaxValue, #numberFieldMinValue, #numberStep').val('').parents('.form-group').addClass('no-display');
+		}
+		if ($(this).val() == 6) {
+			$('#dateFieldMaxValue, #dateFieldMinValue').parents('.form-group').removeClass('no-display');
+		} else {
+			$('#dateFieldMaxValue, #dateFieldMinValue').val('').parents('.form-group').addClass('no-display');
+		}
+	});
 
-var currentRow = null;
+	var currentRow = null;
 // Редактирование зависимостей элементов от значений
-$('#editElementDependences').on('click', function () {
-    if ($(this).hasClass('disabled')) {
-        return false;
-    }
-    currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+	$('#editElementDependences').on('click', function () {
+		if ($(this).hasClass('disabled')) {
+			return false;
+		}
+		currentRow = $('#elements').jqGrid('getGridParam', 'selrow');
+		ElementsApi.currentRow = currentRow;
 
-    $("#dependences").jqGrid('setGridParam', {
-        url: url + '?id=' + currentRow,
-        datatype: 'json'
-    });
-    $("#dependences").trigger('reloadGrid');
+		$("#dependences").jqGrid('setGridParam', {
+			url: url + '?id=' + currentRow,
+			datatype: 'json'
+		});
+		$("#dependences").trigger('reloadGrid');
 
-    if (currentRow != null) {
-        // Надо вынуть данные для редактирования зависимостей
-        $.ajax({
-            'url': globalVariables.baseUrl + '/admin/elements/getdependences?id=' + currentRow,
-            'cache': false,
-            'dataType': 'json',
-            'type': 'GET',
-            'success': function (data, textStatus, jqXHR) {
-                if (data.success == true) {
-                    var data = data.data;
-                    $('#controlValues option').remove();
-                    for (var i = 0; i < data.comboValues.length; i++) {
-                        var option = $('<option>').prop({
-                            'value': data.comboValues[i].id
-                        }).text('[ID ' + data.comboValues[i].id + '] ' + data.comboValues[i].value);
-                        $('#controlValues').append(option);
-                    }
-                    // Ставим список всех контролов. Он обновляется всякий раз.
-                    $('#controlDependencesList option').remove();
-                    for (var i = 0; i < data.controls.length; i++) {
-                        var option = $('<option>').prop({
-                            'value': data.controls[i].id
-                        }).text(data.controls[i].label);
-                        $('#controlDependencesList').append(option);
-                    }
+		if (currentRow != null) {
+			// Надо вынуть данные для редактирования зависимостей
+			$.ajax({
+				'url': globalVariables.baseUrl + '/admin/elements/getdependences?id=' + currentRow,
+				'cache': false,
+				'dataType': 'json',
+				'type': 'GET',
+				'success': function (data, textStatus, jqXHR) {
+					if (data.success == true) {
+						var data = data.data;
+						$('#controlValues option').remove();
+						for (var i = 0; i < data.comboValues.length; i++) {
+							var option = $('<option>').prop({
+								'value': data.comboValues[i].id
+							}).text('[ID ' + data.comboValues[i].id + '] ' + data.comboValues[i].value);
+							$('#controlValues').append(option);
+						}
+						// Ставим список всех контролов. Он обновляется всякий раз.
+						$('#controlDependencesList option').remove();
+						for (var i = 0; i < data.controls.length; i++) {
+							var option = $('<option>').prop({
+								'value': data.controls[i].id
+							}).text(data.controls[i].label);
+							$('#controlDependencesList').append(option);
+						}
+						$('#controlValues').trigger('change');
+						// Ставим список действий
+						if ($('#controlActions option').length == 0) {
+							$('#controlActions option').remove();
+							for (var i = 0; i < data.actions.length; i++) {
+								var option = $('<option>').prop({
+									'value': i
+								}).text(data.actions[i]);
+								if (i == 0) {
+									$(option).prop('selected', true);
+								}
+								$('#controlActions').append(option);
+							}
+						}
+						// По событию shown - вызов функции, которая спрячет запрещённые для данного элемента направления
+						$('#editDependencesPopup').on('shown.bs.modal', function (e) {
+							testDirection();
+						});
 
-                    $('#controlValues').trigger('change');
-                    // Ставим список действий
-                    if ($('#controlActions option').length == 0) {
-                        $('#controlActions option').remove();
-                        for (var i = 0; i < data.actions.length; i++) {
-                            var option = $('<option>').prop({
-                                'value': i
-                            }).text(data.actions[i]);
-                            if (i == 0) {
-                                $(option).prop('selected', true);
-                            }
-                            $('#controlActions').append(option);
-                        }
-                    }
-
-
-                    // По событию shown - вызов функции, которая спрячет запрещённые для данного элемента направления
-                    $('#editDependencesPopup').on('shown.bs.modal', function (e) {
-                        testDirection();
-                    });
-
-                    $('#valuesNotToPrint').val( data.notPrintedValues );
-                    $('#editDependencesPopup').modal({});
-                }
-            }
-        })
-    }
-});
+						$('#valuesNotToPrint').val( data.notPrintedValues );
+						$('#editDependencesPopup').modal({});
+					}
+				}
+			})
+		}
+	});
 
 	$('#controlValues').on('change', function (e) {
 		if ($(this).val() != null && $(this).val().length > 0) {
@@ -926,7 +924,6 @@ $('#editElementDependences').on('click', function () {
 		} else {
 			$('#controlDependencesPanel').addClass('no-display');
 		}
-
 		// Для выбора непечатаемого значения проверяем отдельно
 		if ($(this).val() != null && $(this).val().length == 1) {
 			$('.notPrintIfThisValueContainer').removeClass('no-display');
@@ -935,94 +932,114 @@ $('#editElementDependences').on('click', function () {
 		} else {
 			$('.notPrintIfThisValueContainer').addClass('no-display');
 		}
-
 		$('#controlDependencesPanel').find('h5:eq(1), .row:eq(1)').addClass('no-display');
 		$('#saveDependencesBtn').addClass('no-display');
-		$('#controlDependencesList').removeAttr('value');
-		$('#controlActions').removeAttr('value');
+		$('#controlDependencesList').val([]);
+		$('#controlActions').val([]);
 	});
 
-    $('#notPrintIfThisValue').on('change',function(e){
-       //console.log('Non-print checkbox changed');
-        // Нужно отправить ajax-запрос "не печатать элемент при таком-то значении"
-        //console.log( $(this).prop('checked') );
-        selectedValue = $('#controlValues').find(':selected');
-        // Если выбрано больше одного опшена - то выходим (хотя при нормальной работе системы такого не должно быть)
-        if (selectedValue.length != 1) {
-            return;
-        }
-        elementId = currentRow;
-        selectedFlag = $(this).prop('checked');
-        dataForAjax = {
-            element: elementId,
-            valueId: $($(selectedValue)[0]).prop('value'),
-            action: selectedFlag
-        };
-        $.ajax({
-            'url': globalVariables.baseUrl + '/admin/elements/savenonprintablevalues',
-            'cache': false,
-            'dataType': 'json',
-            'type': 'GET',
-            'data':dataForAjax,
-            'success': function (data, textStatus, jqXHR) {
-                // Тут надо взять новое значение массива непечатаемых элементов из ответа и вставить в спрятанное поле
-                if (data.success==true || data.success=='true')
-                {
-                    $('#valuesNotToPrint').val(data.data.notPrintValues);
-                }
-            }
-        });
+	$('#notPrintIfThisValue').on('change',function(e){
+		//console.log('Non-print checkbox changed');
+		// Нужно отправить ajax-запрос "не печатать элемент при таком-то значении"
+		//console.log( $(this).prop('checked') );
+		selectedValue = $('#controlValues').find(':selected');
+		// Если выбрано больше одного опшена - то выходим (хотя при нормальной работе системы такого не должно быть)
+		if (selectedValue.length != 1) {
+			return;
+		}
+		elementId = currentRow;
+		selectedFlag = $(this).prop('checked');
+		dataForAjax = {
+			element: elementId,
+			valueId: $($(selectedValue)[0]).prop('value'),
+			action: selectedFlag
+		};
+		$.ajax({
+			'url': globalVariables.baseUrl + '/admin/elements/savenonprintablevalues',
+			'cache': false,
+			'dataType': 'json',
+			'type': 'GET',
+			'data':dataForAjax,
+			'success': function (data, textStatus, jqXHR) {
+				// Тут надо взять новое значение массива непечатаемых элементов из ответа и вставить в спрятанное поле
+				if (data.success==true || data.success=='true')
+				{
+					$('#valuesNotToPrint').val(data.data.notPrintValues);
+				}
+			}
+		});
 
-    });
+	});
 
-	$('#element-edit-form #numCols, #element-edit-form #numRows, #element-add-form #numCols, #element-add-form #numRows').on('change', function (e) {
+	var calculateTableConfig = function(table) {
 		// Проверим - являются ли значения цифрами
-		if ((is_int($($(e.currentTarget).parents('.modal-body')[0]).find('#numCols').val()))  &&
-			(is_int($($(e.currentTarget).parents('.modal-body')[0]).find('#numRows').val()))
+		if ((is_int($($(table).parents('.modal-body')[0]).find('#numCols').val()))  &&
+			(is_int($($(table).parents('.modal-body')[0]).find('#numRows').val()))
 		) {
-			printDefaultValuesTable($(e.currentTarget).parents('.modal-body').find('#numCols').val(), $(e.currentTarget).parents('.modal-body').find('#numRows').val());
-			configStr = $($(e.currentTarget).parents('.modal-body').find('#config')[0]).val();
+			printDefaultValuesTable($(table).parents('.modal-body').find('#numCols').val(), $(table).parents('.modal-body').find('#numRows').val());
+			var configStr = $($(table).parents('.modal-body').find('#config')[0]).val();
 			if (configStr == "") {
 				// Прочитаем конфигурацию
-				readConfigFromInterface(this);
+				readConfigFromInterface(table);
 				// Читаем снова строку конфигурации
-				configStr = $($(e.currentTarget).parents('.modal-body').find('#config')[0]).val();
+				configStr = $($(table).parents('.modal-body').find('#config')[0]).val();
 			}
-			config = $.parseJSON(configStr);
+			var config = $.parseJSON(configStr);
 			if (config.values != undefined && config.values != null) {
 				writeDefValuesFromConfig(config.values);
 			}
 			// Нужно поменять значения в конфиге
-			config.numCols = $(e.currentTarget).parents('.modal-body').find('#numCols').val();
-			config.numRows = $(e.currentTarget).parents('.modal-body').find('#numRows').val();
-			$($(e.currentTarget).parents('.modal-body').find('#config')[0]).val($.toJSON(config));
+			config.numCols = $(table).parents('.modal-body').find('#numCols').val();
+			config.numRows = $(table).parents('.modal-body').find('#numRows').val();
+			$($(table).parents('.modal-body').find('#config')[0]).val(JSON.stringify(config));
 			// Теперь нужно проверить - если включены заголовки строк (и столбцов) Если включены - надо удалить (или добавить)
 			//   в таблицу заголовков столько строк, чтобы они соотносились с количеством строк и столбцов в самой таблице
-			currentForm = $(e.currentTarget).parents('form');
 			// Вывести заново из конфигов заголовки строк и столбцов
 			printHeadersTable(config,
-				$(e.currentTarget).parents('.modal-body').find('.table-config-headers tbody'),
-				$(e.currentTarget).parents('.modal-body').find('.colsHeaders'),
-				$(e.currentTarget).parents('.modal-body').find('.rowsHeaders'),
-				$(e.currentTarget).parents('.modal-body').find('#numRows'),
-				$(e.currentTarget).parents('.modal-body').find('#numCols')
+				$(table).parents('.modal-body').find('.table-config-headers tbody'),
+				$(table).parents('.modal-body').find('.colsHeaders'),
+				$(table).parents('.modal-body').find('.rowsHeaders'),
+				$(table).parents('.modal-body').find('#numRows'),
+				$(table).parents('.modal-body').find('#numCols')
 			);
 		} else {
 			printDefaultValuesTable(0, 0);
 		}
+	};
+
+	$("#editElementPopup, #addElementPopup").on("show.bs.modal", function() {
+		if ($(this).find("#type").val() == 4) {
+			calculateTableConfig($(this).find("#numCols"));
+		}
+	});
+
+	$('#numCols, #numRows').keyup(function() {
+		calculateTableConfig(this);
+		onColsHeadersClick($(".colsHeaders")[0]);
+		onRowsHeadersClick($(".rowsHeaders")[0]);
+	});
+	$('#numCols, #numRows').on('change', function() {
+		calculateTableConfig(this);
+		onColsHeadersClick($(".colsHeaders")[0]);
+		onRowsHeadersClick($(".rowsHeaders")[0]);
+	});
+
+	$("#addElementPopup .btn-primary").click(function() {
+		readConfigFromInterface($("#element-add-form #config"));
+		readConfigFromInterface($("#element-edit-form #config"));
 	});
 
 	$('#controlDependencesList').on('change', function (e) {
-		if ($(this).val().length > 0) {
+		if ($(this).val() && $(this).val().length > 0) {
 			$('#controlDependencesPanel').find('h5:eq(1), .row:eq(1)').removeClass('no-display');
 			$('#controlActions').val([]);
 			// Вот тут надо проверить - есть ли этот элемент, к которому создаётся зависимость в списке зависимостей. Если есть -
 			//     надо проверить, какое у него действие (Спрятать или показать)
 			//     в зависимости от того, какое действие на него поставлено, нужно прятать действие, противоположное по смыслу
-			selectedValue = $(this).find(':selected');
+			var selectedValue = $(this).find(':selected');
 			//console.log('Выбранный номер элемента в списке возможных зависимых равен: '+selectedValue);
 			// Перебираем выборку
-			for(i = 0;i<selectedValue.length;i++) {
+			for(var i = 0;i<selectedValue.length;i++) {
 				oneOptionValue = selectedValue[i].value;
 				// Снимаем выбор у элементов списка
 				$('#controlActions').val('');
@@ -1030,8 +1047,8 @@ $('#editElementDependences').on('click', function () {
 				$('#controlActions option').removeClass('no-display');
 				// Теперь перебираем строки грида
 				var rows = jQuery("#dependences").getDataIDs();
-				for(j=0; j < rows.length; j++) {
-					row = jQuery("#dependences").getRowData(rows[j]);
+				for(var j=0; j < rows.length; j++) {
+					var row = jQuery("#dependences").getRowData(rows[j]);
 					// Если oneOptionValue равно dep_element_id
 					if (oneOptionValue==row.dep_element_id) {
 						// Если у элемента экшн "1" - прячем у controlAction действие с номером 2
@@ -1055,9 +1072,9 @@ $('#editElementDependences').on('click', function () {
 		$('#saveDependencesBtn').removeClass('no-display');
 	})
 
-    /*$('#controlDependencesList').on('change',function(e){
-        console.log('Значение в списке возможных зависимых элементов поменялось');
-     });*/
+	/*$('#controlDependencesList').on('change',function(e){
+	 console.log('Значение в списке возможных зависимых элементов поменялось');
+	 });*/
 
 	$('#saveDependencesBtn').on('click', function (e) {
 		var controlValues = $('#controlValues').val();
@@ -1066,10 +1083,10 @@ $('#editElementDependences').on('click', function () {
 		$.ajax({
 			'url': globalVariables.baseUrl + '/admin/elements/savedependences',
 			'data': {
-				'values': $.toJSON(controlValues),
-				'dependenced': $.toJSON(controlDependencesList),
+				'values': JSON.stringify(controlValues),
+				'dependenced': JSON.stringify(controlDependencesList),
 				'action': controlAction,
-				'controlId': currentRow
+				'controlId': ElementsApi.currentRow
 			},
 			'cache': false,
 			'dataType': 'json',
@@ -1079,7 +1096,6 @@ $('#editElementDependences').on('click', function () {
 					$("#dependences").trigger('reloadGrid');
 					$('#controlValues').trigger('change');
 				} else {
-
 				}
 			}
 		});
@@ -1090,7 +1106,7 @@ $('#editElementDependences').on('click', function () {
 	});
 
 	$('.colsHeaders').on('click', function () {
-	   onColsHeadersClick(this);
+		onColsHeadersClick(this);
 	});
 
 	$('.table-config-headers').on('change', 'input', function (e) {

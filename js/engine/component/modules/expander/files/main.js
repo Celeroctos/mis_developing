@@ -24,11 +24,10 @@ misEngine.class('component.expander', function() {
                 }
 
                 var previos = $('.expander');
-
                 $(this).after(
                     $('<tr>').append(
                         $('<td>').prop({
-                            'colspan' : $('#' + config.grid.id + ' tr:first').find('td').length
+                            'colspan' : $('#' + config.grid.getId() + ' tbody tr:first').find('td').length
                         }).html(
                             $(config.renderConfig.template).html()
                         ).append(
