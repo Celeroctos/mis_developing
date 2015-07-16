@@ -242,8 +242,13 @@ class MedcardElementWidget extends Widget {
         } else {
             return '';
         }
+        if ($this->element['type'] == MedcardElementEx::TYPE_EXCHANGE) {
+            $condition = '$(this).children("option[value=\''. $value .'\']").length > 0';
+        } else {
+            $condition = '$(this).val() == ' . $value;
+        }
         $id = MedcardHtml::createHash([ 'id' => $dependency['dep_element_id'], 'path' => $dependency['dep_path'], ], $this->prefix, 'f');
-        return 'if ($(this).val() == '. $value .') $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $if .'(); else $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $else .'(); ';
+        return 'if ('. $condition .') $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $if .'(); else $(document.getElementById("'. $id .'")).parents(".medcard-element-wrapper:eq(0)").'. $else .'(); ';
     }
 
 	protected function prepareTable() {

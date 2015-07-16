@@ -733,12 +733,7 @@
         isThisPrint = false;
     });
 
-    function printDataToPrintPopup() {
-        if (globalVariables.savingProcessing) {
-            return Core.createMessage({
-                message: "Подождите, идет автосохранение ..."
-            });
-        }
+    function printDataToPrintPopup(rec) {
         // Делаем синхронный Ajax-запрос, разбираем данные, которые он вернул и выводим в поп-ап
         $.ajax({
             'url': '/doctors/print/getrecommendationtemplatesingreeting?greetingId='  + $('#greetingId').val(),
@@ -765,7 +760,12 @@
                             $('#recommendationTemplatesPrintNeed p').html() + templates[i].template_name+'<br>'
                         );
                     }
-                    $('#greetingPrintNeed input').attr('checked', '');
+                    if (!rec) {
+                        $('#greetingPrintNeed input').attr('checked', '');
+                    } else {
+                        $('#greetingPrintNeed input').removeAttr('checked');
+                        $('#recommendationTemplatesPrintNeed input').attr('checked', '');
+                    }
                     // Отмечаем пункт "Приём", а остальные - нет
                     $('.bodyOverlay').remove();
                     $('#whatPrinting').modal({});
@@ -779,12 +779,7 @@
 
 // Печать листа приёма, само действие
     $('.print-recomendation-link').on('print', function (e) {
-        printDataToPrintPopup();
-        $('#greetingPrintNeed input').removeAttr('checked');
-        $('#recommendationTemplatesPrintNeed input').attr('checked', '');
-        $('.bodyOverlay').remove();
-        // Отмечаем все пункты, кроме "Приём"
-        $('#whatPrinting').modal({});
+        printDataToPrintPopup(true);
         return false;
     });
 

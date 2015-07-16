@@ -338,6 +338,12 @@ class MedcardHtml extends Html {
 				$right[$key] = $value;
 			}
 		}
+        if (isset($options['onchange'])) {
+            $onchange = $options['onchange'];
+        } else {
+            $onchange = null;
+        }
+        unset($options['onchange']);
 		print parent::openTag('table', [
 			'class' => 'exchange twoColumnList',
 			'width' => '100%',
@@ -346,12 +352,11 @@ class MedcardHtml extends Html {
 		print parent::tag('td', [
 			'width' => 'calc(50% - 20px)',
             'valign' => 'top',
-		], parent::dropDownList(null, null, $left, $options + [
-				'multiple' => 'multiple',
-				'class' => 'form-control twoColumnListFrom col-xs-5 no-padding',
-				'data-ignore' => 'multiple',
-			])
-		);
+		], parent::dropDownList(null, null, $left, [
+            'multiple' => 'multiple',
+			'class' => 'form-control twoColumnListFrom col-xs-5 no-padding',
+			'data-ignore' => 'multiple',
+        ]));
 		print parent::openTag('td', [
 			'width' => '40px',
             'valign' => 'top',
@@ -376,12 +381,15 @@ class MedcardHtml extends Html {
 		print parent::tag('td', [
             'width' => '50%',
             'valign' => 'top',
-		], parent::dropDownList($name, null, $right, $options + [
-				'multiple' => 'multiple',
-				'class' => 'form-control twoColumnListTo col-xs-5 no-padding',
-				'data-ignore' => 'multiple',
-			])
-		);
+		], parent::dropDownList(null, null, $right, [
+            'multiple' => 'multiple',
+			'class' => 'form-control twoColumnListTo col-xs-5 no-padding',
+			'data-ignore' => 'multiple',
+            'onchange' => $onchange,
+        ]));
+        print parent::hiddenField($name, json_encode($select), $options + [
+            'class' => 'twoColumnHidden'
+        ]);
 		print parent::closeTag('tr');
 		print parent::closeTag('table');
 		return null;
