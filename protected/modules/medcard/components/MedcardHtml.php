@@ -43,10 +43,11 @@ class MedcardHtml extends Html {
 			];
 			$indexes = static::$defaultIndexes;
 		}
+		if (!isset($parameters['name'])) {
+			$parameters['name'] = $name;
+		}
 		foreach ($indexes as $i) {
-			if (isset($parameters[$i])) {
-				$fix[] = $parameters[$i];
-			}
+			$fix[] = $parameters[$i];
 		}
 		return static::renderInternal($strategy, $name, $fix, $capture);
 	}
