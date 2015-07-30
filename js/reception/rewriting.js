@@ -226,7 +226,7 @@ $(document).ready(function() {
             }
 
             content +=
-                '<td>' +
+                '<td class="fio">' +
                     ((greetings[i].medcard_id != null) ?
                         greetings[i].p_last_name + ' ' + greetings[i].p_first_name + ' ' + greetings[i].p_middle_name
                         :
@@ -265,7 +265,7 @@ $(document).ready(function() {
             timeString += (greetings[i].patient_day.split('-').reverse().join('.'));
 
             content += ('<td><nobr>' + timeString + '</nobr></td>');
-            content += '<td>' +
+            content += '<td class="cardNumber">' +
                 ((greetings[i].medcard_id != null) ?  greetings[i].medcard_id : '-') +
                 '</td>';
 

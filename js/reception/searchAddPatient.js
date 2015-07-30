@@ -795,7 +795,7 @@
     $(document).on('click', '.viewHistory', function() {
         $('#panelOfhistoryMedcard').parent().addClass('no-display');
         var omsId = $(this).attr('href').substr(1);
-        $('#viewHistoryMotionPopup .modal-title').text('История движения карты пациента ' + $(this).parents('tr').find('.viewHistory:eq(0)').text() + ' (карта № ' + $(this).parents('tr').find('.cardNumber:eq(0)').text() + ')');
+        $('#viewHistoryMotionPopup .modal-title').text('История движения карты пациента ' + $(this).parents('tr').find('.fio:eq(0)').text() + ' (карта № ' + $(this).parents('tr').find('.cardNumber:eq(0)').text() + ')');
         $('#omsSearchWithCardResult tr').removeClass('active');
         $(this).parents('tr').addClass('active');
         $("#motion-history").jqGrid('setGridParam',{
