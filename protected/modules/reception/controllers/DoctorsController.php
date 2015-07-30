@@ -37,6 +37,8 @@ class DoctorsController extends Controller {
                 }
                 $this->greetingDate = date('Y-n-j', $patientTimestamp);
             }
+        } else {
+            $this->greetingDate =  date('Y-n-j');
         }
 
         if(isset($_GET['beginDate'])) {

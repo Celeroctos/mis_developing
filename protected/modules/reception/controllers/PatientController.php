@@ -522,7 +522,7 @@ class PatientController extends Controller {
     // Просмотр страницы добавления карты к пациенту
     // Просмотр страницы добавления карты к пациенту
     public function actionViewAdd() {
-        Yii::app()->user->setState('savedCardNumber', -1); // Сбросить предыдущий номер по F5
+        //Yii::app()->user->setState('savedCardNumber', -1); // Сбросить предыдущий номер по F5
         $privilegesList = $this->getPrivileges();
         $cardnumberGenerator = new CardnumberGenerator(true, true);
 
