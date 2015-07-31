@@ -520,9 +520,8 @@ class PatientController extends Controller {
     }
 
     // Просмотр страницы добавления карты к пациенту
-    // Просмотр страницы добавления карты к пациенту
     public function actionViewAdd() {
-        //Yii::app()->user->setState('savedCardNumber', -1); // Сбросить предыдущий номер по F5
+        Yii::app()->user->setState('savedCardNumber', -1); // Сбросить предыдущий номер по F5
         $privilegesList = $this->getPrivileges();
         $cardnumberGenerator = new CardnumberGenerator(true, true);
 
@@ -1370,7 +1369,7 @@ class PatientController extends Controller {
         }
         // Добавление карты: нет id
 		if($medcard->card_number == null) { // Совсем новая карта
-			Yii::app()->user->setState('savedCardNumber', -1); // Fuck this shit on github.
+			//Yii::app()->user->setState('savedCardNumber', -1); // Fuck this shit on github.
 			$cardnumberGenerator = new CardnumberGenerator(false, true);
             $medcard->card_number = $cardnumberGenerator->generateNumber(Yii::app()->user->medcardGenRuleId);
             // Записываем текущую дату и ID пользователя, который создал медкарту
