@@ -175,8 +175,8 @@
             top = 0;
         }
         var id  = $('#greetingId').val();
-        var printWin = window.open('/doctors/print/printgreeting/?templateId='+ templateNumber +'&printRecom=1&greetingid=' + id, '', 'width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no,left=' + left + ',top=' + top );
-        $(printWin).on('load',
+        var prWin = window.open('/doctors/print/printgreeting/?templateId='+ templateNumber +'&printRecom=1&greetingid=' + id, '', 'width=800,height=600,menubar=no,location=no,resizable=no,scrollbars=yes,status=no,left=' + left + ',top=' + top);
+        $(prWin).on('load',
             function () {
                 this.focus();
             }
@@ -255,7 +255,7 @@
     setTimeout(autoSave, 30000);
 
     function autoSave() {
-        if ($('.greetingContentCont').hasClass('no-display')) { // Если ничего не отображается, то и сохранять не надо
+        if ($('.greetingContentCont').hasClass('no-display') || $('.greetingContentCont').length == 0) { // Если ничего не отображается, то и сохранять не надо
             return false;
         }
         isThisPrint = false;
