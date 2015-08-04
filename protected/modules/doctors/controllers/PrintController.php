@@ -148,7 +148,7 @@ class PrintController extends Controller {
 
     // Печать результа приёма
     public function actionPrintGreeting($greetingIn = false, $printRecom=false, $returnResult = false, $templateId=false) {
-	
+        error_reporting(E_ERROR | E_PARSE | E_NOTICE);
 		if($greetingIn === false && !isset($_GET['greetingid'])) {
             exit('Ошибка: не выбран приём.');
         } else {

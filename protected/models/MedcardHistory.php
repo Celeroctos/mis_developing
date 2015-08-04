@@ -22,6 +22,7 @@ class MedcardHistory extends MisActiveRecord {
 			->where('rule_id = :rule_id 
 					AND SUBSTRING(CAST(m.reg_date as TEXT), 0, 5) = :year
 					', array(':rule_id' => $ruleId, ':year' => $year))
+            ->andWhere("CAST(SUBSTRING(m.to, 0, LENGTH(m.to) - 2) as TEXT) != ''")
 			->order('partNumber desc');
 
 		return $medcard->queryRow();
