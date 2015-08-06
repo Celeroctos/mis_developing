@@ -20,6 +20,17 @@
     ?>
     <div class="col-xs-5">
         <div class="form-group">
+            <label for="enterpriseId" class="col-xs-4 control-label">Учреждение</label>
+            <div class="col-xs-8">
+                <?php
+                echo $form->dropDownList($modelSearch, 'enterpriseId', $enterprisesList, array(
+                    'id' => 'enterpriseId',
+                    'class' => 'form-control',
+                    'options' => array('-1' => array('selected' => true))
+                )); ?>
+            </div>
+        </div>
+        <div class="form-group">
             <label for="omsNumber" class="col-xs-4 control-label">Номер полиса</label>
             <div class="col-xs-8">
                 <input type="text" class="form-control" autofocus id="omsNumber" placeholder="Номер полиса" data-toggle="tooltip" data-placement="right" title="Номер полиса может состоять из цифр и пробелов">

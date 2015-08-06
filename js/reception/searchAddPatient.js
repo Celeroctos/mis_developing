@@ -102,6 +102,14 @@
             ]
         };
 
+        if($('#enterpriseId').length > 0 && $('#enterpriseId').val() != -1) {
+            Result.rules.push({
+                'field' : 'enterprise_id',
+                'op' : 'eq',
+                'data' : $('#enterpriseId').val()
+            });
+        }
+
         return Result;
     }
 

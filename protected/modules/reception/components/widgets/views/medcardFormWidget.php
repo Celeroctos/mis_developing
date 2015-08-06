@@ -5,6 +5,17 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/libs/jquery-json.js"></script>
 <p class="bold text-danger no-display noTasuConnection">ВНИМАНИЕ! ТАСУ недоступна: внимательно проверьте реквизиты полиса перед сохранением данных.</p>
 <div class="form-group">
+    <label for="enterpriseId" class="col-xs-3 control-label">Учреждение</label>
+    <div class="col-xs-5">
+        <?php
+        echo $form->dropDownList($model, 'enterpriseId', $enterprisesList, array(
+            'id' => 'enterpriseId',
+            'class' => 'form-control',
+            'options' => array('-1' => array('selected' => true))
+        )); ?>
+    </div>
+</div>
+<div class="form-group">
     <?php echo $form->labelEx($model,'doctype', array(
         'class' => 'col-xs-3 control-label'
     )); ?>

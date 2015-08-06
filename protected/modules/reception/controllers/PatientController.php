@@ -10,22 +10,18 @@ class PatientController extends Controller {
     // Просмотр страницы поиска пациента
     public function actionViewSearch()
 	{
-		/*$modelOms=new Oms('reception.search'); //сценарий поиска
-		
-		if(isset($_GET['Oms']))
-		{
-			$modelOms->attributes=Yii::app()->request->getQuery('Oms'); //присв. безопасные атрибуты
-			$modelOms->validate();
-		}
-		
-		$this->render('ViewSearch', [
-			'modelOms'=>$modelOms,
-		]); */
-		
+        $enterprisesList = Enterprise::model()->findAll();
+        $forTemplate = ['-1' => 'Любое'];
+        foreach($enterprisesList as $enterprise) {
+            $forTemplate[$enterprise['id']] = $enterprise['shortname'];
+        }
+
         $this->render('searchPatient', array(
             'privilegesList' => $this->getPrivileges(),
             'modelMedcard' => new FormPatientWithCardAdd(),
-            'modelOms' => new FormOmsEdit()
+            'modelOms' => new FormOmsEdit(),
+            'modelSearch' => new FormSearchPatient(),
+            'enterprisesList' => $forTemplate
         ));
     }
 	
@@ -1403,6 +1399,7 @@ class PatientController extends Controller {
 			}
         }
 
+        $medcard->enterprise_id = $model->enterprise_id;
         $medcard->snils = $model->snils;
         $medcard->address = $model->addressHidden;
 		$medcard->address_str = $model->address;
@@ -1682,7 +1679,7 @@ class PatientController extends Controller {
         $filters = CJSON::decode(isset($_GET['filters']) ? $_GET['filters'] : $filters);
         $allEmpty = true;
 
-        foreach($filters['rules'] as &$filter) {
+        foreach($filters['rules'] as $key => &$filter) {
             if(isset($filter['data'])) {
 				if(!is_array($filter['data']) && trim($filter['data']) != '') {
 					$allEmpty = false;
@@ -1718,9 +1715,13 @@ class PatientController extends Controller {
                     'data' => mb_substr($filter['data'], 0, 6).' '.mb_substr($filter['data'], 6)
                 );
             }
+
+            if($filter['field'] == 'enterprise_id' && (empty($filter['data']) || $filter['data'] == -1)) {
+                unset($filters['rules'][$key]);
+            }
         }
 
-        if($allEmpty) {
+        if($allEmpty || (count($filter['rules']) == 1 && array_key_exists('enterprise_id',$filter['rules']) )) {
             echo CJSON::encode(array(
 					'success' => false,
                     'data' => 'Задан пустой поисковой запрос.'

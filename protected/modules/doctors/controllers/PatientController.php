@@ -7,15 +7,6 @@ class PatientController extends Controller {
             exit('Error!');
         }
 
-        /* @var $categorieWidget CategorieViewWidget */
-//        $categorieWidget = $this->createWidget('application.modules.doctors.components.widgets.CategorieViewWidget');
-//        $categorieWidget->createFormModel();
-//		$historyArr = $categorieWidget->getFieldsHistoryByDate(
-//            $_GET['medcardId'],
-//            $_GET['greetingId'],
-//            $_GET['templateId']
-//        );
-
         $content = $this->widget('MedcardTemplateWidget', [
             'template' => $_GET['templateId'],
             'greetingNumber' => $_GET['greetingId'],
@@ -397,7 +388,16 @@ class PatientController extends Controller {
     }
 
     public function actionViewSearch() {
-        $this->render('searchPatient', array());
+        $enterprisesList = Enterprise::model()->findAll();
+        $forTemplate = ['-1' => 'Любое'];
+        foreach($enterprisesList as $enterprise) {
+            $forTemplate[$enterprise['id']] = $enterprise['short_name'];
+        }
+
+        $this->render('searchPatient', array(
+            'enterprisesList' => $forTemplate,
+            'modelSearch' => new FormSearchPatient(),
+        ));
     }
 
     public function actionGetIndicators()
