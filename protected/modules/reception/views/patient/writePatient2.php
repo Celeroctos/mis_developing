@@ -64,6 +64,16 @@
     <form class="form-horizontal col-xs-12" role="form" id="doctors-search-form">
         <div class = "col-xs-5">
             <div class="form-group">
+                <label for="ward" class="col-xs-4 control-label">Учреждение</label>
+                <div class="col-xs-8">
+                    <select class="form-control" id="enterpriseId">
+                        <?php foreach($enterprisesList as $id => $name) { ?>
+                        <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>        
+            <div class="form-group">
                 <label for="ward" class="col-xs-4 control-label">Отделение</label>
                 <div class="col-xs-8">
                     <select class="form-control" id="ward">

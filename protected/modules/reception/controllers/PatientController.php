@@ -2113,6 +2113,7 @@ class PatientController extends Controller {
 				} else {
 					$answer['tasuStatus'] = false;
 				}
+				$answer['enterprisesList']=$this->getEnterprisesList();
                 $this->render('writePatient2', $answer);
                 exit();
             }
@@ -2406,6 +2407,40 @@ class PatientController extends Controller {
         $this->render('publicShedule', array(
 
         ));
+    }
+    
+    public function actionAjaxWards(){
+    	$enterpriseId=$_GET['enterprise_id'];
+        // Список отделений
+        $ward = new Ward();
+        if ($enterpriseId==-1){
+        	$filters=false;
+        }else{
+			$filters=array(
+	        	'groupOp' => 'AND',
+	        	'rules' => array(
+	        		array(
+	        			'field'=>'enterprise_id',
+	        			'op'=>'eq',
+	        			'data'=>$enterpriseId
+	        		)
+	        	)
+	        );    	
+        }
+
+        $wards = array(
+       		array('id'=>'-1', 'name' => 'Нет')
+        );
+        $wardsResult = $ward->getRows($filters, 'name', 'asc');
+        $wards=array_merge($wards,$wardsResult);
+        /*
+        var_dump($wardsResult);
+        foreach($wardsResult as $key => $value) {
+            $wardsList[$value['id']] = $value['name'];
+        }
+        */
+    	
+        echo CJSON::encode(array('success' => true, 'data'=>$wards));
     }
 
 }

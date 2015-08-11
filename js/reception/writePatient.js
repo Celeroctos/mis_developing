@@ -933,4 +933,29 @@ $(document).ready(function() {
             return false;
         }
     });
+	
+	$('#enterpriseId').on('change',function(e){
+		console.debug('enterprise change');
+		$('#ward').hide();
+		$.ajax({
+			url: '/reception/patient/ajaxwards?enterprise_id='+$(e.currentTarget).val(),
+			'cache' : false,
+            'dataType' : 'json',
+            'type' : 'GET',
+            'success' : function(data, textStatus, jqXHR) {
+                if (data.success == true) {
+					var data = data.data;
+					console.debug(data);
+					var options='';
+					for (var i=0;i<data.length;i++){
+						var item=data[i];
+						options+='<option value="'+item.value+'">'+item.name+'</option>';
+					}
+					console.debug(options);
+					$('#ward').html(options);
+					$('#ward').show();
+				}
+            }
+		});
+	});
 });

@@ -391,12 +391,12 @@ class PatientController extends Controller {
         $enterprisesList = Enterprise::model()->findAll();
         $forTemplate = ['-1' => 'Любое'];
         foreach($enterprisesList as $enterprise) {
-            $forTemplate[$enterprise['id']] = $enterprise['short_name'];
+            $forTemplate[$enterprise['id']] = $enterprise['shortname'];
         }
 
         $this->render('searchPatient', array(
             'enterprisesList' => $forTemplate,
-            'modelSearch' => new FormSearchPatient(),
+            //'modelSearch' => new FormSearchPatient(),
         ));
     }
 
