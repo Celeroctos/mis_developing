@@ -17,6 +17,21 @@
 </h4>
 <div class="row">
     <form class="form-horizontal col-xs-12" role="form" id="doctors-search-greetings">
+    
+        <div class="form-group">
+            <label for="enterpriseId" class="col-xs-2 control-label">Учреждение</label>
+            <div class="col-xs-4">
+                <select class="form-control" id="enterpriseId">
+                	<?php 
+                		foreach($enterprisesList as $id=>$name){
+                			echo sprintf('<option value="%s">%s</option>',$id,$name);	
+                		}
+                	?>
+                </select>
+            </div>
+        </div>    
+    
+    
         <div class="form-group">
             <label for="doctorFio" class="col-xs-2 control-label">ФИО врача</label>
             <div class="col-xs-4">

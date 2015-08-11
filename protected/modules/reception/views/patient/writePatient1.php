@@ -37,6 +37,21 @@
     ));
     ?>
     <div class="col-xs-5">
+    
+		<div class="form-group">
+		    <label for="enterpriseId" class="col-xs-4 control-label">Учреждение</label>
+		    <div class="col-xs-8">
+		        <?php
+		        echo $form->dropDownList($modelMedcard, 'enterpriseId', $enterprisesList, array(
+		            'id' => 'enterpriseId',
+		            'class' => 'form-control',
+		            'options' => array('-1' => array('selected' => true))
+		        )); ?>
+		    </div>
+		</div>    
+    
+    
+    
         <?php
         if (!$callcenter)
         { ?>

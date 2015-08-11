@@ -37,6 +37,11 @@ $(document).ready(function() {
         var result = {
             'groupOp' : 'AND',
             'rules' : [
+			    {
+					'field' : 'enterprise_id',
+					'op' : 'eq',
+					'data' : $('#enterpriseId').val()
+				},
                 {
                     'field' : 'p_middle_name',
                     'op' : 'cn',
@@ -87,6 +92,7 @@ $(document).ready(function() {
                 'data' : $('#phoneFilter').val()
             });
         }
+		console.debug('filter',result);
 
         return result;
     }

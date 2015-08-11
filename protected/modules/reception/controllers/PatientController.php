@@ -10,20 +10,23 @@ class PatientController extends Controller {
     // Просмотр страницы поиска пациента
     public function actionViewSearch()
 	{
-        $enterprisesList = Enterprise::model()->findAll();
-        $forTemplate = ['-1' => 'Любое'];
-        foreach($enterprisesList as $enterprise) {
-            $forTemplate[$enterprise['id']] = $enterprise['shortname'];
-        }
-
         $this->render('searchPatient', array(
             'privilegesList' => $this->getPrivileges(),
             'modelMedcard' => new FormPatientWithCardAdd(),
             'modelOms' => new FormOmsEdit(),
             'modelSearch' => new FormSearchPatient(),
-            'enterprisesList' => $forTemplate
+            'enterprisesList' => $this->getEnterprisesList()
         ));
     }
+    // Список учреждений
+    private function getEnterprisesList(){
+        $enterprisesList = Enterprise::model()->findAll();
+        $list = ['-1' => 'Любое'];
+        foreach($enterprisesList as $enterprise) {
+            $list[$enterprise['id']] = $enterprise['shortname'];
+        }   
+        return $list; 	
+    }    
 	
 	
     // Привязать карту к другому полису
@@ -514,6 +517,8 @@ class PatientController extends Controller {
         }
         return $privilegesList;
     }
+    
+
 
     // Просмотр страницы добавления карты к пациенту
     public function actionViewAdd() {
@@ -1530,6 +1535,7 @@ class PatientController extends Controller {
 
         // Проверим наличие фильтров
         $filters = $this->checkFilters();
+        //var_dump($filters);
 
         $rows = $_GET['rows'];
         $page = $_GET['page'];
@@ -1594,6 +1600,8 @@ class PatientController extends Controller {
 
             $totalPages = ceil($num['num'] / $rows);
             $start = $page * $rows - $rows;
+            //var_dump($filters);
+            
             $items = $model->getRows($filters, $sidx, $sord, $start, $rows, $WithOnly, $WithoutOnly, $onlyInGreetings, $cancelledGreetings, $onlyClosedGreetings, $greetingDate);
 			//var_dump($num);
             //exit();
@@ -1941,6 +1949,7 @@ class PatientController extends Controller {
         }
         $this->render('writePatient1', array(
             'privilegesList' => $this->getPrivileges(),
+            'enterprisesList' => $this->getEnterprisesList(),
             'modelMedcard' => new FormPatientWithCardAdd(),
             'modelOms' => new FormOmsEdit(),
             'callcenter' => $callcenter,
@@ -2121,7 +2130,8 @@ class PatientController extends Controller {
             $callcenter = 0;
         }
         $this->render('changeRecord', array(
-            'callcenter' => $callcenter
+            'callcenter' => $callcenter,
+            'enterprisesList'=>$this->getEnterprisesList()
         ));
     }
 

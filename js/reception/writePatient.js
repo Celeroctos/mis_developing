@@ -1,4 +1,4 @@
-﻿$(document).ready(function() {
+$(document).ready(function() {
     
     $('#greetingDate').val((new Date).getFullYear() + '-' + ((new Date).getMonth() + 1) + '-' + (new Date).getDate());
     $('#greetingDate').trigger('change');
@@ -41,6 +41,11 @@
         var Result = {
             'groupOp' : 'AND',
             'rules' : [
+				{
+					'field' : 'enterprise_id',
+					'op' : 'eq',
+					'data' : $('#enterpriseId').val() 
+				},			
                 {
                     'field' : 'oms_number',
                     'op' : 'eq',
@@ -98,7 +103,7 @@
                 }
             ]
         };
-        
+        console.debug('filter',Result);
         return Result;
     }
     

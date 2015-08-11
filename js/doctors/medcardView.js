@@ -35,6 +35,11 @@ $(document).ready(function() {
         {
             'groupOp' : 'AND',
             'rules' : [
+				/*{
+					'field' : 'enterprise_id',
+					'op' : 'eq',
+					'data' : $('#enterpriseId').val() 
+				},*/
                 {
                     'field' : 'oms_number',
                     'op' : 'eq',
@@ -117,6 +122,7 @@ $(document).ready(function() {
 				'data' : 1
 			});
 		}
+		console.debug(Result);
         return Result;
     }
 
