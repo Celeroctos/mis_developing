@@ -11,7 +11,7 @@ class MedcardFormWidget extends CWidget {
         if($this->template != null) {
 
             $enterprisesListDb = Enterprise::model()->findAll();
-            $enterprisesList = ['-1' => 'Любое'];
+            //$enterprisesList = ['-1' => 'Любое'];
             foreach($enterprisesListDb as $enterprise) {
                 $enterprisesList[$enterprise['id']] = $enterprise['shortname'];
             }

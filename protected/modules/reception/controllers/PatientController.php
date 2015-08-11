@@ -1040,6 +1040,7 @@ class PatientController extends Controller {
         $formModel->cardNumber = $medcard->card_number;
         $formModel->profession = $medcard->profession;
 		$formModel->cardNumber = $medcard->card_number;
+		$formModel->enterpriseId = $medcard->enterprise_id;
     }
 
     public function getAddressStr($address, $showEmpty = false) {
@@ -1399,7 +1400,7 @@ class PatientController extends Controller {
 			}
         }
 
-        $medcard->enterprise_id = $model->enterprise_id;
+        $medcard->enterprise_id = $model->enterpriseId;
         $medcard->snils = $model->snils;
         $medcard->address = $model->addressHidden;
 		$medcard->address_str = $model->address;
@@ -1417,7 +1418,9 @@ class PatientController extends Controller {
         $medcard->post = $model->post;
         $medcard->contact = $model->contact;
         $medcard->profession = $model->profession;
-        $medcard->enterprise_id = 1; // TODO: сделать выборку из учреждений, сейчас ставим мониаг жёстко
+        //$medcard->enterprise_id = 1; // TODO: сделать выборку из учреждений, сейчас ставим мониаг жёстко
+        
+        //var_dump($model);
 
         if($oms) {
 			if(is_array($oms)) {
