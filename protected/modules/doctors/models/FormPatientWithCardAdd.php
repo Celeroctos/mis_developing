@@ -24,7 +24,7 @@ class FormPatientWithCardAdd extends FormMisDefault
     public $privDocGivedate;
     public $profession;
     public $mediateId; // Опосредованный пациент может быть
-
+	public $enterpriseId;
     public function rules()
     {
         Yii::import('ext.validators.SNILSValidator');
@@ -43,6 +43,9 @@ class FormPatientWithCardAdd extends FormMisDefault
             ),
             array(
                 'serie, docnumber', 'SerialNumberValidator'
+            ),
+            array(
+                'enterpriseId', 'safe'
             )
         );
     }
