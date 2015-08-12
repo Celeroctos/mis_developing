@@ -393,6 +393,10 @@ class SystemController extends Controller {
 
 		echo "</pre>";
 	}
+	public function actionVtm(){
+		header('location: http://ecc.atlant-inform.ru:88/Consultation/List');
+		die();
+	}
 	
 	/*public function actionGetSetDoubleSpacesDul() {
 		$conn = Yii::app()->db2;
