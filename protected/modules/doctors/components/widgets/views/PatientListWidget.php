@@ -24,6 +24,12 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
         <td>
             ФИО
         </td>
+        <td>
+            Номер карты
+        </td>
+        <td>
+            Учреждение
+        </td>
         <?php if(!$isWaitingLine) { ?>
         <td>
             Время приёма
@@ -63,7 +69,7 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
                 <td>
                     <?php echo $patient['timeBegin']; ?>
                 </td>
-                <td colspan="3">
+                <td colspan="5">
                 </td>
             </tr>
             <?php
@@ -99,6 +105,19 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
 				<?php echo $patient['comment']; ?>
 			</div>
         </td>
+        
+        <td>
+	        <?php 
+	        	if($patient['medcard_id'] != null) {
+	        		echo CHtml::link('<span class="glyphicon glyphicon-edit">'.$patient['medcard_id'].'</span>', array('#' . $patient['medcard_id']), array('title' => 'Посмотреть медкарту', 'class' => 'editMedcard'));
+	        	}
+	        ?>
+        </td>
+        <td>
+        	<?php 
+        		echo isset($patient['enterprise'])?$patient['enterprise']->shortname:'';
+        	?>
+        </td>
         <?php if(!$isWaitingLine) { ?>
         <td>
             <?php echo $patient['patient_time']; ?>
@@ -109,12 +128,15 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
             <div id="status-container<?php echo $patient['id'];?>">
             <input type="radio" id="greetingStatus<?php echo $patient['id'];?>"
                    <?php echo $disabledAttr; ?> name="status<?php echo $patient['id'];?>" <?php if($patient['greetingStatus']==0) echo "checked"; ?> value="0">Да
+            <br>
             <input type="radio" id="greetingStatus<?php echo $patient['id'];?>"
                    <?php echo $disabledAttr; ?> name="status<?php echo $patient['id'];?>" <?php if($patient['greetingStatus']==1) echo "checked"; ?> value="1">Нет
             <div>
             <?php // echo $patient['greetingStatus']; ?>
         </td>
 		<?php } ?>
+		
+		<!-- 
         <td>
             <?php 
 				if($patient['medcard_id'] != null) {
@@ -122,6 +144,8 @@ if (($monthOfGreeting ==$currentMonth)&&($yearOfGreeting ==$currentYear))
 				}				
 			?>
         </td>
+         -->
+        
         <!--<td>
                                 <?php echo ($patient['is_beginned'] == 1 || $patient['is_accepted'] == 1) ? '' : CHtml::link('<span class="glyphicon glyphicon-flash"></span>', array('/doctors/shedule/acceptbegin/?id='.$patient['id']), array('title' => 'Начать приём')); ?>
                             </td>-->

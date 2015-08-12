@@ -1574,8 +1574,12 @@ class SheduleController extends Controller {
                             $patient['greetingStatus'] = $patient['greeting_status'];
                         }
                     }
+                    
+                    $medcard=Medcard::model()->findByPk($patient['card_number']);
+                    $enterprise=Enterprise::model()->findByPk($medcard->enterprise_id);
 
                     $result[] = array(
+                    	'enterprise'=>$enterprise,
                         'timeBegin' => date('G:i', $i),
                         'timeEnd' => date('G:i', $i + $increment),
                         'fio' => $patient['fio'],
