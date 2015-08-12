@@ -72,10 +72,16 @@ class UserIdentity extends CUserIdentity {
         } else {
             $ward = null;
         }
+        $post=Post::model()->findByPk($employee->post_id);
+        $enterprise=$ward?Enterprise::model()->findByPk($ward->enterprise_id):null;
+        	
+        
         // Данные юзера
         Yii::app()->user->setState('username', $record->username);
         Yii::app()->user->setState('doctorId', $employee->id);
         Yii::app()->user->setState('medworkerId', $employee->post_id);
+        Yii::app()->user->setState('enterprise', $enterprise);
+        Yii::app()->user->setState('post', $post);
         Yii::app()->user->setState('enterpriseId', $ward != null ? $ward->enterprise_id : null);
         Yii::app()->user->setState('fio', $employee->last_name . ' ' . $employee->first_name . ' ' . $employee->middle_name);
         Yii::app()->user->setState('medcardGenRuleId', $ward != null ? $ward->rule_id : null);

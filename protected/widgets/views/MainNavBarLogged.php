@@ -31,7 +31,22 @@
             </ul>
             <ul class="nav navbar-nav navbar-right" id="loggedUserNavbar">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong><?php echo isset(Yii::app()->user->fio) ? Yii::app()->user->fio : ''; ?></strong> <b class="caret"></b></a>
+                <?php 
+                //var_dump(Yii::app()->user->post);
+                ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top:5px;padding-bottom:5px;">
+                    <strong>
+                    <?php echo isset(Yii::app()->user->fio) ? Yii::app()->user->fio : ''; ?>
+                    </strong> 
+                    <?php
+                     	if (isset(Yii::app()->user->post)&&(Yii::app()->user->post)){
+                    		echo '<br>'.(Yii::app()->user->post->name);
+                    	} 
+                    	if (isset(Yii::app()->user->enterprise)&&(Yii::app()->user->enterprise)){
+                    		echo ' ('.(Yii::app()->user->enterprise->shortname).')';
+                    	}
+                    ?>
+                    <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <?php echo CHtml::link('Редактирование профиля', array('/settings/profile/view')); ?>
