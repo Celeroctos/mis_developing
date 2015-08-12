@@ -161,6 +161,13 @@ $(document).ready(function() {
                 'data' : choosedDiagnosis
             }
         ];
+		if ($('#enterpriseId').val()!=-1){
+			rules.push(					{
+				'field': 'enterprise_id',
+				'op': 'eq',
+				'data': $('#enterpriseId').val()
+			});			
+		}
 
         if($('#canPregnant').val() == 1) {
             rules.push({
@@ -949,7 +956,7 @@ $(document).ready(function() {
 					var options='';
 					for (var i=0;i<data.length;i++){
 						var item=data[i];
-						options+='<option value="'+item.value+'">'+item.name+'</option>';
+						options+='<option value="'+item.id+'">'+item.name+'</option>';
 					}
 					console.debug(options);
 					$('#ward').html(options);

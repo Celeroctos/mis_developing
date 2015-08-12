@@ -83,7 +83,8 @@ class Doctor extends MisActiveRecord  {
               $this->getSearchConditions($doctor, $filters, array(
               ), array(
                   'd' => array('id', 'first_name', 'last_name', 'middle_name', 'post_id', 'ward_code', 'greeting_type'),
-                  'm' => array('is_for_pregnants')
+                  'm' => array('is_for_pregnants'),
+                  'w' => array('enterprise_id')
               ), array(
 
               ));

@@ -37,11 +37,6 @@ $(document).ready(function() {
         var result = {
             'groupOp' : 'AND',
             'rules' : [
-			    {
-					'field' : 'enterprise_id',
-					'op' : 'eq',
-					'data' : $('#enterpriseId').val()
-				},
                 {
                     'field' : 'p_middle_name',
                     'op' : 'cn',
@@ -84,6 +79,13 @@ $(document).ready(function() {
 				}
             ]
         };
+		if ($('#enterpriseId').val()!=-1){
+			result.rules.push({
+				'field' : 'enterprise_id',
+				'op' : 'eq',
+				'data' : $('#enterpriseId').val()
+			});
+		}
 
         if($.trim($('#phoneFilter').val()) != '+7') {
             result.rules.push({
