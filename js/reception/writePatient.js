@@ -40,12 +40,7 @@ $(document).ready(function() {
 		
         var Result = {
             'groupOp' : 'AND',
-            'rules' : [
-				{
-					'field' : 'enterprise_id',
-					'op' : 'eq',
-					'data' : $('#enterpriseId').val() 
-				},			
+            'rules' : [			
                 {
                     'field' : 'oms_number',
                     'op' : 'eq',
@@ -103,6 +98,13 @@ $(document).ready(function() {
                 }
             ]
         };
+		if ($('#enterpriseId').val()!=-1){
+			Result.rules.push({
+				'field' : 'enterprise_id',
+				'op' : 'eq',
+				'data' : $('#enterpriseId').val() 
+			});
+		}
         console.debug('filter',Result);
         return Result;
     }
@@ -348,6 +350,7 @@ $(document).ready(function() {
         var table = $('#searchWithCardResult tbody');
         table.find('tr').remove();
         for(var i = 0; i < data.length; i++) {
+			data[i].middle_name=data[i].middle_name?data[i].middle_name:'-';
             // В цикле - сначала генерируем контент для строки, дописываем значения столбцов, в зависимости от того, есть
             //    ли соответствующие столбцы
             //   а потом дописываем строку в таблицу
@@ -366,13 +369,14 @@ $(document).ready(function() {
 							'</a>' +
 						'</td>';
 				}
+				var fio=data[i].last_name + ' ' + data[i].first_name + ' ' + data[i].middle_name;
                 content += '<td>' +
                         '<a title="Посмотреть информацию по пациенту" href="#' + data[i].id + '" class="viewHistory">' +
-                            data[i].last_name + ' ' + data[i].first_name + ' ' + data[i].middle_name +
+                            fio +
                         '</a>' +
                     '</td>' +
                     '<td>'+
-                        data[i].birthday +
+                        (data[i].birthday?data[i].birthday:'') +
                     '</td>' +
                     '<td>' +
                         '<a title="Посмотреть информацию по карте" href="#' + data[i].card_number + '" class="editMedcard">' +
@@ -385,7 +389,7 @@ $(document).ready(function() {
                 content +=
                     '<td>' +
                         '<a title="Посмотреть информацию по ОМС" href= "#' + data[i].id + '" class="editOms">' +
-                        data[i].oms_number +
+                        (data[i].oms_number?data[i].oms_number:'') +
                         '</a>' +
                     '</td>'
 
