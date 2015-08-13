@@ -163,7 +163,33 @@
 									'class' => 'form-control'
 								)); ?>
 							</div>
-						</div>						
+						</div>
+						
+						<div class="form-group col-xs-12">
+							<?= $form->labelEx($model, 'dateDest', [
+								'class'=>'col-xs-5 control-label'
+							]); ?>
+							<div class="col-xs-7">
+								<?= $form->TextField($model, 'dateDest', [
+												'class'=>'form-control',
+											]); ?>
+							</div>
+						</div>
+						
+						<script>
+						$('#FormDirectionForPatientAdd_dateDest').datepicker({
+							language: "ru-RU",
+							autoclose: true,
+							format:'dd.mm.yyyy',
+							orientation: "top",
+							todayBtn: "linked"
+						});
+						</script>	
+						
+						
+											
+						
+												
 						<hr>
 						<div class="form-group btns">
 							<button type="button" id="directionAddSubmit" class="btn btn-primary">Сохранить</button>

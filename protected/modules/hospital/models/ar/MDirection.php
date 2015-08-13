@@ -14,6 +14,7 @@ class MDirection extends MisActiveRecord {
     public $direction_id;
     public $doctor_dest_id;
     public $write_type;
+    public $date_dest;
 
     public static function model($className=__CLASS__) {
         return parent::model($className);
@@ -70,6 +71,7 @@ class MDirection extends MisActiveRecord {
         $mDirection->card_number = $formModel->cardNumber;
         $mDirection->doctor_dest_id=$formModel->doctorDestId;
         $mDirection->write_type=$formModel->writeType;
+        $mDirection->date_dest=$formModel->dateDest;
 
         if(!$mDirection->save()) {
             throw new Exception('Невозможно сохранить направление для пациента '.$patient->id);

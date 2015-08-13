@@ -12,6 +12,7 @@ class FormDirectionForPatientAdd extends FormMisDefault
     public $doctorDestId;
     public $enterpriseId;
     public $writeType;
+    public $dateDest;
 
     public function rules()
     {
@@ -38,6 +39,9 @@ class FormDirectionForPatientAdd extends FormMisDefault
             ),
             array(
             	'writeType','numerical'
+            ),
+            array(
+            	'dateDest','safe'
             )
         );
     }
@@ -51,7 +55,8 @@ class FormDirectionForPatientAdd extends FormMisDefault
         	'enterpriseId'=>'Учреждение',
         	'wardId' => 'Отделение',
         	'doctorId'=>'Врач',
-        	'doctorDestId'=>'Врач'
+        	'doctorDestId'=>'Врач',
+        	'dateDest'=>'Дата'
         );
     }
 }

@@ -32,20 +32,23 @@ $(document).ready(function(e){
 					overlay.remove();
 					$('.directionsList .cont a').remove();
 					for (var i = 0; i < data.directions.length; i++) {
-						var item=data.directions[i]
+						var item=data.directions[i];
+						console.debug(item);
+						
 						var writeType=item.write_type;
 						switch(writeType){
 							case 1:
 								var destFIO=[(item.last_name?item.last_name:'-'),(item.first_name?item.first_name:'-'),(item.middle_name?item.middle_name:'-')].join(' ');
 								
-								var text='На консультацию в ' + data.directions[i].shortname + ' к '+item.post_name+' '+destFIO+ ' от ' + data.directions[i].create_date;
+								var text='На консультацию в ' + data.directions[i].shortname + ' к '+item.post_name+' '+destFIO+ ' от ' + data.directions[i].create_date 
+								+ (item.date_dest?' на '+item.date_dest:'');
 							break;
 							default:
 								var text='На госпитализацию в ' + data.directions[i].shortname + ' от ' + data.directions[i].create_date;
 							break;
 						}
-						$('.directionsList .cont').prepend($('<li>').append($('<a>').prop({
-							'href': 'dir' + data.directions[i].id
+						$('.directionsList .cont').prepend($('<li>').append($('<span>').prop({
+							//'href': 'dir' + data.directions[i].id
 						}).text(text)));
 					}
 				}
