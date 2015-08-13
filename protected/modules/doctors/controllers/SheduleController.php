@@ -279,7 +279,7 @@ class SheduleController extends Controller {
         } else {
             $currentDoctorId = Yii::app()->user->getState('currentGreetingsDoctor');
         }
-
+		
         $this->render('index', array(
             'patients' => $patients,
             'patientsInCalendar' => $patientsInCalendar,

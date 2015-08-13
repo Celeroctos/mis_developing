@@ -12,6 +12,8 @@ class MDirection extends MisActiveRecord {
     public $pregnant_term;
     public $hospitalization_date;
     public $direction_id;
+    public $doctor_dest_id;
+    public $write_type;
 
     public static function model($className=__CLASS__) {
         return parent::model($className);
@@ -56,6 +58,7 @@ class MDirection extends MisActiveRecord {
     }
 
     public function create($patient, $formModel) {
+    	//var_dump($formModel);
         $mDirection = new MDirection();
         $mDirection->doctor_id = $formModel->doctorId;
         $mDirection->patient_id = $patient->id;
@@ -65,6 +68,8 @@ class MDirection extends MisActiveRecord {
         $mDirection->create_date = date('Y-m-d');
         $mDirection->pregnant_term = $formModel->pregnantTerm;
         $mDirection->card_number = $formModel->cardNumber;
+        $mDirection->doctor_dest_id=$formModel->doctorDestId;
+        $mDirection->write_type=$formModel->writeType;
 
         if(!$mDirection->save()) {
             throw new Exception('Невозможно сохранить направление для пациента '.$patient->id);
@@ -77,12 +82,15 @@ class MDirection extends MisActiveRecord {
         try {
             $connection = $this->getConnection();
             $directions = $connection->createCommand()
-                    ->select('md.*, p.*, w.*, ep.*')
+                    ->select('md.*, p.*, w.*, ep.*, d.*,pt.name post_name')
                     ->from($this->tableName().' md')
                     ->join(Patient::model()->tableName().' p', 'md.patient_id = p.id')
                     ->join(Ward::model()->tableName().' w', 'w.id = md.ward_id')
                     ->leftJoin(Enterprise::model()->tableName().' ep', 'ep.id = w.enterprise_id')
-                    ->where('p.id = :patient_id', array(':patient_id' => $patientId));
+                    ->leftJoin(Doctor::model()->tableName().' d', 'd.id = md.doctor_dest_id')
+                    ->leftJoin(Post::model()->tableName().' pt', 'pt.id = d.post_id')
+                    ->where('p.id = :patient_id', array(':patient_id' => $patientId))
+                    ->order('md.id','desc');
             return $directions->queryAll();
         } catch(Exception $e) {
             throw new Exception($e);

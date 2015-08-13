@@ -10,6 +10,7 @@ class MDirectionsController extends Controller {
         }
 
         $model = new FormDirectionForPatientAdd();
+        //var_dump($_POST['FormDirectionForPatientAdd']);
         $model->attributes = $_POST['FormDirectionForPatientAdd'];
         if(!$model->validate()) {
             exit(CJSON::encode(

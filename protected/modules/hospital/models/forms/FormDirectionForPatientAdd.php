@@ -9,18 +9,35 @@ class FormDirectionForPatientAdd extends FormMisDefault
     public $doctorId;
     public $pregnantTerm;
     public $cardNumber;
+    public $doctorDestId;
+    public $enterpriseId;
+    public $writeType;
 
     public function rules()
     {
         return array(
+        /*
             array(
                 'type, isPregnant, wardId, omsId, doctorId, pregnantTerm, cardNumber', 'required'
             ),
+        */
             array(
                 'id', 'safe'
             ),
             array(
-                'id, omsId, doctorId, pregnantTerm', 'numerical'
+                'id, omsId, doctorId, pregnantTerm','numerical'
+            ),
+            array(
+            	'type, isPregnant, wardId, omsId, doctorId, pregnantTerm, cardNumber','safe'
+            ),
+            array(
+            	'enterpriseId','numerical'
+            ),
+            array(
+            	'doctorDestId','numerical'
+            ),
+            array(
+            	'writeType','numerical'
             )
         );
     }
@@ -30,8 +47,11 @@ class FormDirectionForPatientAdd extends FormMisDefault
         return array(
             'type' => 'Тип госпитализации',
             'isPregnant' => 'Беременная',
-			'wardId' => 'Отделение',
-            'pregnantTerm' => 'Срок беременности (недель)'
+            'pregnantTerm' => 'Срок беременности (недель)',
+        	'enterpriseId'=>'Учреждение',
+        	'wardId' => 'Отделение',
+        	'doctorId'=>'Врач',
+        	'doctorDestId'=>'Врач'
         );
     }
 }

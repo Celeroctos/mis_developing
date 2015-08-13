@@ -14,6 +14,7 @@ class DoctorScheduleAsset extends AssetBundle {
 	];
 
 	public $css = [
+		"css/hospital/medical_directions_form.less"
 	];
 
 	public $dependencies = [

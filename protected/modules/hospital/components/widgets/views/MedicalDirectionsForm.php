@@ -7,6 +7,7 @@
  * @var int $currentDoctorId
  * @var array $wardsList
  */
+//HospitalAsset::register();
 ?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/engine/component/modules/module/modules/hospital/widgets/medical_directions_form.js"></script>
 <div id="accordionD" class="accordion col-xs-12" >
@@ -108,9 +109,71 @@
 						<br>
 						<?php $this->endWidget(); ?>
 					</div>
+					
+					
 					<div class="tab-pane fade" id="doctor-schedule-on-consultation">
-						<h4 class="text-center">Не реализовано</h4>
+						<br>
+						<?php $form = $this->beginWidget('CActiveForm', array(
+							'id' => 'add-direction-to-consultation-form',
+							'enableAjaxValidation' => true,
+							'enableClientValidation' => true,
+							'action' => CHtml::normalizeUrl(Yii::app()->request->baseUrl.'/hospital/mdirections/add'),
+							'htmlOptions' => array(
+								'class' => 'form-horizontal col-xs-12',
+								'role' => 'form'
+							)
+						));
+						echo $form->hiddenField($model, 'omsId', array(
+							'id' => 'directionOmsId',
+							'value' => $currentOmsId
+						)); echo $form->hiddenField($model, 'doctorId', array(
+							'value' => $currentDoctorId
+						)); echo $form->hiddenField($model, 'cardNumber', array(
+							'value' => $currentMedcard
+						)); echo $form->hiddenField($model, 'writeType', array(
+							'value' => 1
+						)); ?>
+						
+						<div class="form-group col-xs-12">
+							<?= $form->labelEx($model,'enterpriseId', array(
+								'class' => 'col-xs-5 control-label'
+							)); ?>
+							<div class="col-xs-7">
+								<?= $form->dropDownList($model, 'enterpriseId', $enterprisesList, array(
+									'class' => 'form-control'
+								)); ?>
+							</div>
+						</div>						
+						<div class="form-group col-xs-12">
+							<?= $form->labelEx($model,'wardId', array(
+								'class' => 'col-xs-5 control-label'
+							)); ?>
+							<div class="col-xs-7">
+								<?= $form->dropDownList($model, 'wardId', array(), array(
+									'class' => 'form-control'
+								)); ?>
+							</div>
+						</div>
+						<div class="form-group col-xs-12">
+							<?= $form->labelEx($model,'doctorId', array(
+								'class' => 'col-xs-5 control-label'
+							)); ?>
+							<div class="col-xs-7">
+								<?= $form->dropDownList($model, 'doctorDestId', array(), array(
+									'class' => 'form-control'
+								)); ?>
+							</div>
+						</div>						
+						<hr>
+						<div class="form-group btns">
+							<button type="button" id="directionAddSubmit" class="btn btn-primary">Сохранить</button>
+							<button type="button" id="directionAddClose" class="btn btn-default">Закрыть</button>
+						</div>
+						<br>
+						<?php $this->endWidget(); ?>
 					</div>
+					
+					
 					<div class="tab-pane fade" id="doctor-schedule-on-direction">
 						<br>
 						<?php try {
