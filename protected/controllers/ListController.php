@@ -30,7 +30,7 @@ class ListController extends Controller {
 	public function actionDoctors(){
 		$wardId=$_GET['ward_id'];
 		$doctor = new Doctor();
-		if ($wardId==-1){
+		if ($wardId==-1||$wardId=='null'){
 			$filters=false;
 		}else{
 			$filters=array(
