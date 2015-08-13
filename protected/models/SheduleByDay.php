@@ -311,6 +311,7 @@ class SheduleByDay extends MisActiveRecord {
                 ->leftJoin('mis.medcards m', 'dsbd.medcard_id = m.card_number')
                 ->leftJoin('mis.oms o', 'm.policy_id = o.id')
                 ->join('mis.doctors d', 'd.id = dsbd.doctor_id')
+                ->join('mis.wards w', 'w.id = d.ward_code')
                 ->join('mis.medpersonal mp', 'd.post_id = mp.id')
                 ->leftJoin('mis.mediate_patients mdp', 'mdp.id = dsbd.mediate_id');
 
@@ -338,7 +339,8 @@ class SheduleByDay extends MisActiveRecord {
                     'mp' => array('is_for_pregnants'),
                     'o' => array('p_first_name', 'p_middle_name', 'p_last_name', 'patient_fio', 'patients_ids'),
                     'd' => array('d_first_name', 'd_middle_name', 'd_last_name', 'doctor_fio', 'doctors_ids'),
-                    'm' => array('contact','enterprise_id'),
+                    'm' => array('contact'),
+                	'w' => array('enterprise_id'),
                     'mdp' => array('m_first_name', 'm_middle_name', 'm_last_name', 'patient_fio', 'm_phone'),
                     'dsbd' => array('patient_day', 'medcard_id', 'mediates_ids')
                 ), array(
