@@ -9,7 +9,7 @@
         <span class="glyphicon glyphicon-collapse-down"></span>
     </div>-->
 </div>
-<div class="navbar navbar-blue navbar-fixed-top">
+<div id="topbar" class="navbar navbar-blue navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

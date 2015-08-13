@@ -326,7 +326,8 @@ class SideMenu extends CWidget {
 		'vtm' => [
 			'label' => 'АС Интеграция-ВТМ',
 			'image' => 'vtm.png',
-			'href'=>'/settings/system/vtm'	
+			'href'=>'/settings/system/vtm',
+			'privilege' => 'menuRegister'
 		]
 	];
 

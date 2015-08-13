@@ -18,6 +18,7 @@ class DefaultAsset extends AssetBundle {
 		'js/libs/datepicker/bootstrap-datepicker.js',
 		'js/libs/datepicker/bootstrap-datepicker.ru.min.js',
         'js/libs/bootstrap-select-1.7.2/dist/js/bootstrap-select.js',
+    	'js/common.js',
     ];
 
     public $css = [
