@@ -88,12 +88,6 @@ class DirectionController extends ControllerEx {
 	 * @see Panel
 	 */
 	public function actionRegister() {
-		$this->leave([
-			'message' => 'Направление успешно зарегистрировано',
-			'direction' => 1,
-            'type' => 'success',
-		]);		
-		return;
 		// Open new transaction for direction registering
 		$transaction = Yii::app()->getDb()->beginTransaction();
 
