@@ -487,12 +487,14 @@ var Laboratory_Widget_AboutMedcard = {
             if (!loading.length) {
                 loading = f;
             }
+			
             loading.loading("render");
 			f.form("send", function(status) {
 				if (status) { $(this).panel("update"); }
 			}).always(function() {
                 loading.loading("destroy");
 			});
+			 loading.loading("destroy");
 		}).on("click", ".laboratory-about-medcard-panel-edit-button", function() {
             Laboratory_Widget_PatientEditor.load($(this).parents(".medcard-viewer:eq(0)")
                 .find("#laboratory-about-medcard-patient-id").val()
