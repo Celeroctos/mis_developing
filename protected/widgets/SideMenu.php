@@ -455,17 +455,7 @@ class SideMenu extends CWidget {
 	}
 
 	public function renderLabel($item) {
-	        $options = [];
-	        if(isset($item['href'])) {
-	    	    $options['href'] = $item['href'];
-	        } else {
-	            $options['href'] = '#';
-	        }
-	        
-	        if(isset($item['target'])) {
-	           $options['target'] = $item['target'];
-	        }	
-		print CHtml::link($item['label'], $options);
+	    print CHtml::link($item['label'], [isset($item['href']) ? $item['href'] : '#']);
 	}
 
 	/**
