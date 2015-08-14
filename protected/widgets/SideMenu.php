@@ -438,10 +438,15 @@ class SideMenu extends CWidget {
 	}
 
 	public function renderImage($item) {
-		print CHtml::link(CHtml::image($this->iconPath.$item['image'], '', [
-			'width' => 32,
-			'height' => 32
-		]) . $item['label'], [isset($item['href']) ? $item['href'] : '#']);
+		
+		print sprintf('<a href="%s">%s</a>',
+			isset($item['href']) ? $item['href'] : '#',//href
+			(CHtml::image($this->iconPath.$item['image'], '', [
+				'width' => 32,
+				'height' => 32
+			]) . $item['label'] 
+			)
+		);
 	}
 
 	public function renderIcon($item) {

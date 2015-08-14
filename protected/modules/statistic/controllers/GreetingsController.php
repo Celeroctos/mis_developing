@@ -54,7 +54,7 @@ class GreetingsController extends Controller {
 	private function checkFilters($filters = false) {
 	    if((!isset($_GET['filters']) || trim($_GET['filters']) == '') && (bool)$filters === false) {
             echo CJSON::encode(array('success' => false,
-                                     'data' => 'Задан пустой поисковой запрос.')
+                                     'data' => 'Задан пустой поисковый запрос.')
             );
             exit();
         }
@@ -90,7 +90,7 @@ class GreetingsController extends Controller {
         if($allEmpty) {
             echo CJSON::encode(array(
 					'success' => false,
-                    'data' => 'Задан пустой поисковой запрос.'
+                    'data' => 'Задан пустой поисковый запрос.'
 				)
             );
             exit();

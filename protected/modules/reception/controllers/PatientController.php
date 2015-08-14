@@ -1682,7 +1682,7 @@ class PatientController extends Controller {
     private function checkFilters($filters = false) {
 	    if((!isset($_GET['filters']) || trim($_GET['filters']) == '') && (bool)$filters === false) {
             echo CJSON::encode(array('success' => false,
-                                     'data' => 'Задан пустой поисковой запрос.')
+                                     'data' => 'Задан пустой поисковый запрос.')
             );
             exit();
         }
@@ -1735,7 +1735,7 @@ class PatientController extends Controller {
         if($allEmpty || (count($filter['rules']) == 1 && array_key_exists('enterprise_id',$filter['rules']) )) {
             echo CJSON::encode(array(
 					'success' => false,
-                    'data' => 'Задан пустой поисковой запрос.'
+                    'data' => 'Задан пустой поисковый запрос.'
 				)
             );
             exit();
@@ -1747,7 +1747,7 @@ class PatientController extends Controller {
     private function searchPatients($filters = false, $distinct = false) {
         if((!isset($_GET['filters']) || trim($_GET['filters']) == '') && (bool)$filters === false) {
             echo CJSON::encode(array('success' => false,
-                                     'data' => 'Задан пустой поисковой запрос.')
+                                     'data' => 'Задан пустой поисковый запрос.')
             );
             exit();
         }
@@ -1763,7 +1763,7 @@ class PatientController extends Controller {
 
         if($allEmpty) {
             echo CJSON::encode(array('success' => false,
-                                     'data' => 'Задан пустой поисковой запрос.')
+                                     'data' => 'Задан пустой поисковый запрос.')
             );
             exit();
         }
@@ -1880,7 +1880,7 @@ class PatientController extends Controller {
                         )
                     )
                 );
-                // Проверим, не задан ли пустой поисковой запрос
+                // Проверим, не задан ли пустой поисковый запрос
                 $isNotEmpty = false;
                 foreach($filters['rules'] as $filter) {
                     if(trim($filter['data']) != '' && $filter['field'] != 'gender') {

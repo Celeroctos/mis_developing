@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 	$('#mainSideMenu').find('a[href$="#"]').on('click', function() {
 		$(this).parents('li:eq(0)').find('ul:eq(0)').slideToggle();
