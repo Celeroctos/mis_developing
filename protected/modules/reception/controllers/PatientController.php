@@ -1603,7 +1603,8 @@ class PatientController extends Controller {
             //var_dump($filters);
             
             $items = $model->getRows($filters, $sidx, $sord, $start, $rows, $WithOnly, $WithoutOnly, $onlyInGreetings, $cancelledGreetings, $onlyClosedGreetings, $greetingDate);
-			//var_dump($num);
+			//var_dump($items);
+			//die();
             //exit();
 
             $now = time();

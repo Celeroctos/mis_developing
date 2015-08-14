@@ -179,13 +179,13 @@ class Oms extends MisActiveRecord
 			'snils'=>'СНИЛС',
 		];
 	}
-	
+	/*
     public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false, $onlyWithCards=false, $onlyWithoutCards=false, $onlyInGreetings = false,$cancelledGreetings=false, $onlyClosedGreetings = false, $greetingDate = false) {
 		//var_dump($filters);
         $result = array();
         $connection = Yii::app()->db;
         $oms = $connection->createCommand()
-            ->selectDistinct('o.id, o.oms_number')
+            ->selectDistinct('o.id, o.oms_number, m.card_number, m.enterprise_id')
             ->from('mis.oms o')
             ->leftJoin('mis.medcards m', 'o.id = m.policy_id');
 
@@ -243,7 +243,8 @@ class Oms extends MisActiveRecord
         }
 
         $omsPolices = $oms->queryAll();
-
+        
+		//var_dump($omsPolices);
         $policeIds = array();
         $policeOrders = array();
         $policeOrdersIndex = 0;
@@ -264,7 +265,10 @@ class Oms extends MisActiveRecord
                                     SELECT
                                     m.card_number
                                     FROM mis.medcards m
-                                    WHERE	(
+                                    WHERE 
+                                    
+                                    (
+                                      
                                             substring(m.card_number, (char_length(m.card_number)-2) , (char_length(m.card_number))  )
                                             =
                                             (
@@ -279,6 +283,9 @@ class Oms extends MisActiveRecord
                                             )
                                         )
                                         AND
+                                     
+                                        
+                                        
                                         (
                                             m.policy_id = o.id
 
@@ -309,6 +316,76 @@ class Oms extends MisActiveRecord
 
         return $result;
     }
+    */
+    public function getRows($filters, $sidx = false, $sord = false, $start = false, $limit = false, $onlyWithCards=false, $onlyWithoutCards=false, $onlyInGreetings = false,$cancelledGreetings=false, $onlyClosedGreetings = false, $greetingDate = false) {
+		//var_dump($filters);
+        $result = array();
+        $connection = Yii::app()->db;
+        $oms = $connection->createCommand()
+            ->select('o.*, m.card_number, m.enterprise_id,m.reg_date')
+            ->from('mis.oms o')
+            ->leftJoin('mis.medcards m', 'o.id = m.policy_id');
+
+        if($onlyInGreetings || $onlyClosedGreetings || $greetingDate) {
+            $oms->join(SheduleByDay::model()->tableName().' dsbd', 'm.card_number = dsbd.medcard_id');
+        }
+
+        if ($cancelledGreetings) {
+            $oms->join(CancelledGreeting::model()->tableName().' cg', 'm.card_number = cg.medcard_id');
+            $oms->andWhere('cg.deleted = 0 AND cg.patient_day<current_date'  );
+        }
+		
+		if($onlyClosedGreetings) { 
+			$oms->andWhere('dsbd.time_end IS NOT NULL');
+		}
+
+        if($filters !== false) {
+            $this->getSearchConditions($oms, $filters, array(
+                'fio' => array(
+                    'first_name',
+                    'last_name',
+                    'middle_name'
+                )
+            ), array(
+                'o' => array('oms_number', 'gender', 'first_name', 'middle_name', 'last_name', 'birthday', 'fio', 'normalized_oms_number', 'e_oms_number', 'k_oms_number', 'a_oms_number', 'b_oms_number', 'c_oms_number'),
+                'm' => array('card_number', 'address', 'address_reg', 'snils', 'docnumber', 'serie', 'address_reg_str', 'address_str', 'date_from', 'date_to', 'enterprise_id'),
+				'dsbd' => array('doctor_id', 'patient_day')
+            ), array(
+                'e_oms_number' => 'oms_number',
+                'k_oms_number' => 'oms_number',
+                'normalized_oms_number' => 'oms_series_number',
+                'date_from' => 'reg_date',
+                'date_to' => 'reg_date'
+            ), array(
+                'OR' => array(
+                    'e_oms_number',
+                    'k_oms_number',
+                    'oms_number',
+                    'normalized_oms_number'
+                )
+            ));
+        }
+
+        if ($onlyWithoutCards) {
+            $oms->andWhere("coalesce(m.card_number,'')=''");
+        }
+
+        if ($onlyWithCards) {
+            $oms->andWhere("coalesce(m.card_number,'')!=''");
+        }
+
+        if ($sidx && $sord && $limit) {
+            $oms->order($sidx.' '.$sord);
+            $oms->limit($limit, $start);
+        }
+
+        $omsPolices = $oms->queryAll();
+        foreach($omsPolices as $item){
+        	$result[]=$item;
+        }
+
+        return $result;
+    }	
 
     public static function findOmsByNumbers($number1,$number2,$number3,$numberNorm,$id = false, $fioData) {
         try  {
