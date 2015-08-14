@@ -327,7 +327,8 @@ class SideMenu extends CWidget {
 			'label' => 'АС Интеграция-ВТМ',
 			'image' => 'vtm.png',
 			'href'=>'/settings/system/vtm',
-			'privilege' => 'menuVTM'
+			'privilege' => 'menuVTM',
+			'target' => '_blank'
 		]
 	];
 
@@ -439,8 +440,9 @@ class SideMenu extends CWidget {
 
 	public function renderImage($item) {
 		
-		print sprintf('<a href="%s">%s</a>',
+		print sprintf('<a href="%s" target="%s">%s</a>',
 			isset($item['href']) ? $item['href'] : '#',//href
+			isset($item['target']) ? $item['target'] : '_self',
 			(CHtml::image($this->iconPath.$item['image'], '', [
 				'width' => 32,
 				'height' => 32
@@ -453,7 +455,17 @@ class SideMenu extends CWidget {
 	}
 
 	public function renderLabel($item) {
-		print CHtml::link($item['label'], [isset($item['href']) ? $item['href'] : '#']);
+	        $options = [];
+	        if(isset($item['href'])) {
+	    	    $options['href'] = $item['href'];
+	        } else {
+	            $options['href'] = '#';
+	        }
+	        
+	        if(isset($item['target'])) {
+	           $options['target'] = $item['target'];
+	        }	
+		print CHtml::link($item['label'], $options);
 	}
 
 	/**
