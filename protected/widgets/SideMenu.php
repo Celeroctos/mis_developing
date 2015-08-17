@@ -376,9 +376,15 @@ class SideMenu extends CWidget {
 	 * @param array $parent -
 	 */
 	public function markActive(array& $items, array& $parent = null) {
+
+		$request=$this->_request;
+		
+		if (strpos($request,'/guides/')===0&&($request!='/guides/laboratory/analysistype')){
+			$request='/guides/enterprises/view';
+		}
 		foreach ($items as &$item) {
 			$item['parent'] = &$parent;
-			if (isset($item['href']) && !strcasecmp($item['href'], $this->_request)) {
+			if (isset($item['href']) && !strcasecmp($item['href'], $request)) {
 				$this->_active = &$item;
 			}
 			if (isset($item['items']) && count($item['items']) > 0) {
