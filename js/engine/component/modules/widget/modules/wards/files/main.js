@@ -244,7 +244,8 @@ misEngine['class']('component.widget.wards', function(){
 					title: 'Добавить палату',
 					templateClass: 'popover-wardadd',
 					content: $('.settingsFormCont').html(),
-					container: $(e.target).parent(),
+					//container: $(e.target).parent(),
+					container: 'body',
 					crossLeft: '580px'
 				});
 				
@@ -297,7 +298,8 @@ misEngine['class']('component.widget.wards', function(){
 				title: 'Настройки',
 				templateClass: 'popover-wardedit',
 				content: $('.settingsFormCont').html(),
-				container: $(li).parent(),
+				//container: $(li).parent(),
+				container: 'body',
 				crossLeft: '580px'
 			});
 		},

@@ -143,12 +143,16 @@
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Гогун Оксана Анатольевна" width="48" height="48" />
                 <a href="#" class="reservedBed">Гогун Оксана Анатольевна</a>
+                <!-- 
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
+                 -->
             </li>            
 
             <li class="list-group-item">
                 <img src="/images/icons/48565.png" title="" width="48" height="48" />
+                <!-- 
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
+                 -->
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Трутнева Наталья Владимировна" width="48" height="48" />
