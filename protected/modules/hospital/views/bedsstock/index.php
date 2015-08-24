@@ -41,38 +41,28 @@
              -->
 	             <table id='patientsGrid' class="table table-hover table-striped table-bordered">
 	             	<thead>
-	             	<tr>
-	             		<th>ФИО</th>
-	             		<th>Карта</th>
-	             		<th>Отделение</th>
-	             		<th>Возраст</th>
-	             		<th>Дата госпитализации</th>
-	             	</tr>
+	             		<tr><th>ФИО</th><th>Карта</th><th>Отделение</th><th>Возраст</th><th>Дата госпитализации</th></tr>
 	             	</thead>
 	             	<tbody>
-	             		<tr>
-	             			<td>Абубакирова Рамзеля Митхатовна</td>
-	             			<td>1234/14</td>
-	             			<td>Хирургическое</td>
-	             			<td>29 лет</td>
-	             			<td>12.08.2015</td>
-	             		</tr>
-	             		<tr>
-	             			<td>Кочубей Элеонора Исааковна</td>
-	             			<td>1313/13</td>
-	             			<td>Хирургическое</td>
-	             			<td>34 года</td>
-	             			<td>13.08.2015</td>
-	             		</tr>
-	             		<tr>
-	             			<td>Захарченко Лидия Павловна</td>
-	             			<td>7679/12</td>
-	             			<td>Хирургическое</td>
-	             			<td>35 лет</td>
-	             			<td>14.08.2015</td>
-	             		</tr>             		             		
+						<tr><td>Адамчикова Наталья Сергеевна</td><td>19903/14</td><td>Гинекологической эндокринологии</td><td>33 года</td><td>01.09.2015</td></tr>
+						<tr><td>Воронкова Татьяна Вячеславовна</td><td>16944/14</td><td>Гинекологическое</td><td>37 лет</td><td>28.08.2015</td></tr>
+						<tr><td>Воропанова Елена Алексеевна</td><td>94/14</td><td>Гинекологической эндокринологии</td><td>32 года</td><td>28.08.2015</td></tr>
+						<tr><td>Гогун Оксана Анатольевна</td><td>10346/14</td><td>Гинекологической эндокринологии</td><td>35 лет</td><td>26.08.2015</td></tr>
+						<tr><td>Гусева Рита Федоровна</td><td>19315/14</td><td>Гинекологическое</td><td>40 лет</td><td>26.08.2015</td></tr>
+						<tr><td>Дорошенко Екатерина Владимировна</td><td>8924/14</td><td>Гинекологической эндокринологии</td><td>26 лет</td><td>19.08.2015</td></tr>
+						<tr><td>Егорова Марина Сергеевна</td><td>11139/14</td><td>Гинекологической эндокринологии</td><td>31 год</td><td>27.08.2015</td></tr>
+						<tr><td>Иншина Екатерина Геннадиевна</td><td>15037/1</td><td>Гинекологической эндокринологии</td><td>32 года</td><td>01.09.2015</td></tr>
+						<tr><td>Карпова Викторова Александровна</td><td>19318/14</td><td>Гинекологическое</td><td>38 лет</td><td>27.08.2015</td></tr>
+						<tr><td>Крохинская Татьяна Юрьевна</td><td>10026/14</td><td>Гинекологической эндокринологии</td><td>31 год</td><td>20.08.2015</td></tr>
+						<tr><td>Митина Зоя Николаевна</td><td>11485/14</td><td>Эндоскопической хирургии</td><td>36 лет</td><td>18.08.2015</td></tr>
+						<tr><td>Рябова Валентина Викторовна</td><td>4092/14</td><td>Гинекологическое</td><td>43 года</td><td>17.08.2015</td></tr>
+						<tr><td>Сикачева Полина Игоревна</td><td>8144/14</td><td>Эндоскопической хирургии</td><td>28 лет</td><td>17.08.2015</td></tr>
+						<tr><td>Терентьева Кристина Борисовна</td><td>6507/15</td><td>Эндоскопической хирургии</td><td>29 лет</td><td>19.08.2015</td></tr>
+						<tr><td>Федоркина Оксана Владимировна</td><td>14977/14</td><td>Гинекологической эндокринологии</td><td>31 год</td><td>02.09.2015</td></tr>
+						<tr><td>Харламова Ольга Сергеевна</td><td>16838/14</td><td>Гинекологической эндокринологии</td><td>31 год</td><td>27.08.2015</td></tr>
+						<tr><td>Черыкаева Надежда Александровна</td><td>15101/14</td><td>Гинекологическое</td><td>36 лет</td><td>31.08.2015</td></tr>
+						<tr><td>Шелудякова Ирина Николаевна</td><td>12031/14</td><td>Гинекологической эндокринологии</td><td>36 лет</td><td>25.08.2015</td></tr>
 	             	</tbody>
-	             	
 	             </table>
             </div>
             <div role="tabpanel" class="tab-pane" id="extracts">
@@ -100,10 +90,10 @@
         	<h3>Терапевтическое отделение. Палата №4 (обычная платная)</h3>
         	<div class="buttons" style="width:200px;margin:0 auto">
 	        	<div>
-	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="window.btn=this;$(this).html('Занята');$('button',$(this).parents('.buttons')).attr('disabled','disabled');return false;">Свободна</button>
+	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="$(this).html('Занята').attr('disabled','disabled');return false;">Свободна</button>
 	        	</div>        	
 	        	<div>
-	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="window.btn=this;$(this).html('Занята');$('button',$(this).parents('.buttons')).attr('disabled','disabled');return false;">Свободна</button>
+	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="return false;">Свободна</button>
 	        	</div>
 	        	<div>
 	        		<button disabled="disabled" type="button" style="width:200px;height:50px;margin:10px;">Занята</button>

@@ -29,8 +29,10 @@
                 <li>
                     <label class="checkbox-inline">
                         <input type="checkbox" id="paidBeds" />Платные<span class="tabmark" id="paidBedsTabmark">
-                            <span class="roundedLabel"></span>
-                            <span class="roundedLabelText"></span>
+                        	<div style="display:none">
+                            	<span class="roundedLabel"></span>
+                            	<span class="roundedLabelText"></span>
+                            </div>
                         </span>
                     </label>
                 </li>
