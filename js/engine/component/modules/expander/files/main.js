@@ -10,9 +10,9 @@ misEngine['class']('component.expander', function(){
 			}
 		},
 		removeExpander: function($el){
-			$el.fadeOut(300, function(){
+			//$el.fadeOut(300, function(){
 				$el.remove();
-			});
+			//});
 		},
 		bindHandlers: function(){
 			console.debug('expander bindHandlers', this.config);
@@ -34,11 +34,12 @@ misEngine['class']('component.expander', function(){
 				}
 				var $nextTr = $el.next();
 				if ($nextTr.hasClass('expander')) {
-					$nextTr.toggle(250);
+					self.removeExpander($nextTr);
 					return;
 				}
 				
 				var previos = $('.expander');
+				self.removeExpander(previos);
 				$(this).after($('<tr>').append($('<td>').prop({
 					'colspan': $('#' + config.grid.getId() + ' tbody tr:first').find('td').length
 				}).html($(config.renderConfig.template).html()).append($('<div>').prop({
@@ -48,9 +49,6 @@ misEngine['class']('component.expander', function(){
 				}))).prop({
 					'class': 'expander'
 				}));
-				
-				self.removeExpander(previos);
-				
 				
 			});
 		},

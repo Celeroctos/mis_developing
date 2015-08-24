@@ -14,6 +14,7 @@ misEngine['class']('component.module.hospital.armd', function(){
 			this.displayOperationsGrid();
 		},
 		displayOperationsGrid: function(){
+
 			$('#operationDatePicker').datepicker({
 				language: "ru-RU",
 				autoclose: false,

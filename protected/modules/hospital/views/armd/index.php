@@ -1,6 +1,10 @@
+
+
 <div id="helperIcon"></div>
 <div id="voiceIcon"></div>
 <div class="col-xs-12 row">
+
+
     <ul class="nav nav-tabs" id="bedsstockNavbar">
         <li role="navigation" class="active">
             <a href="#armd-my-patients" aria-controls="armd-my-patients" role="tab" data-toggle="tab" id="armdMyPatientsTab">Мои пациенты</a>
@@ -203,13 +207,50 @@
 
 
 <div class="operationsExpanderBody" style="display:none">
-        <div style="width:100%;padding:10px;height:35px;">
-        	<div style="float:left">Дата операции: 28.08.2015</div>
-        	<div style="float:right"><button type="button">Отменить операцию</button></div>
+
+
+
+		
+        <div style="width:100%;padding:10px;height:85px;">
+        
+			<div class="form-group">
+	            <label for="birthday2" class="col-xs-3 control-label required">Дата операции</label>
+	            <div id="birthday2-cont" class="col-xs-5 input-group date">
+	                <input type="hidden" name="birthday2" placeholder="Формат гггг-мм-дд" class="form-control col-xs-4" id="birthday2" value="2015-08-24">
+	                <span class="input-group-addon">
+	                    <span class="glyphicon-calendar glyphicon">
+	                    </span>
+	                </span>
+	                <div class="subcontrol">
+	                    <div class="date-ctrl-up-buttons">
+	                        <div class="btn-group">
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-up glyphicon up-day-button"></button>
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-up glyphicon month-button up-month-button"></button>
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-up glyphicon year-button up-year-button" ></button>
+	                        </div>
+	                    </div>
+	                    <div class="form-inline subfields">
+	                        <input type="text" name="day" placeholder="ДД" class="form-control day"/>
+	                        <input type="text" name="month" placeholder="ММ" class="form-control month"/>
+	                        <input type="text" name="year" placeholder="ГГГГ" class="form-control year"/>
+	                    </div>
+	                    <div class="date-ctrl-down-buttons">
+	                        <div class="btn-group">
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-down glyphicon down-day-button"></button>
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-down glyphicon month-button down-month-button"></button>
+	                            <button type="button" tabindex="-1" class="btn btn-default btn-xs glyphicon-arrow-down glyphicon year-button down-year-button" ></button>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="col-xs-4">
+	            	<button type="button" style="margin-top:22px">Отменить операцию</button>
+	            </div>
+	        </div>        
         </div>
-        <div style="clear:both"></div>
         
-        
+         
+       
         <div class="accordion">
 		    <div class="accordion-group">
 		        <div class="accordion-heading">
@@ -248,5 +289,7 @@
 		        <div class="accordion-body collapse" id="a6" style="height: auto;"><div class="accordion-inner"></div></div>
 		    </div>		    	    	    		    
 		</div>
+	
+	<script>InitDateControls();</script>
 </div>
 
