@@ -141,8 +141,8 @@
     <div class="bedsEditCont">
         <ul class="list-group bedsSettingsList">
             <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="Койка занята: Пациентов Хроник Батькович" width="48" height="48" />
-                <a href="#" class="reservedBed">Пациентов Хроник Батькович</a>
+                <img src="/images/icons/48610.png" title="Койка занята: Гогун Оксана Анатольевна" width="48" height="48" />
+                <a href="#" class="reservedBed">Гогун Оксана Анатольевна</a>
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
             </li>            
 
@@ -151,13 +151,13 @@
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
             </li>
             <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="Койка занята: Иванова Ивана Ивановна" width="48" height="48" />
-                <a href="#" class="reservedBed">Иванова Ивана Ивановна</a>
+                <img src="/images/icons/48610.png" title="Койка занята: Трутнева Наталья Владимировна" width="48" height="48" />
+                <a href="#" class="reservedBed">Трутнева Наталья Владимировна</a>
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
             </li>            
             <li class="list-group-item">
-                <img src="/images/icons/48610.png" title="Койка занята: Сидорова Сидора Сидоровна" width="48" height="48" />
-                <a href="#" class="reservedBed">Сидорова Сидора Сидоровна</a>
+                <img src="/images/icons/48610.png" title="Койка занята: Герасимова Юлия Анатольевна" width="48" height="48" />
+                <a href="#" class="reservedBed">Герасимова Юлия Анатольевна</a>
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b4"></span>
             </li>
             <li class="list-group-item">
