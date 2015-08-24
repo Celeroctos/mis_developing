@@ -216,7 +216,7 @@
 			<div class="form-group">
 	            <label for="birthday2" class="col-xs-3 control-label required">Дата операции</label>
 	            <div id="birthday2-cont" class="col-xs-5 input-group date">
-	                <input type="hidden" name="birthday2" placeholder="Формат гггг-мм-дд" class="form-control col-xs-4" id="birthday2" value="2015-08-24">
+	                <input type="hidden" name="birthday2" placeholder="Формат гггг-мм-дд" class="form-control col-xs-4" id="birthday2" value="2015-08-28">
 	                <span class="input-group-addon">
 	                    <span class="glyphicon-calendar glyphicon">
 	                    </span>
