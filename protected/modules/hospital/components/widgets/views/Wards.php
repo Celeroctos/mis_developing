@@ -81,7 +81,7 @@
                 <h4>Палата №4</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>2</strong></span>
+                <span class="numFree">Свободно: <strong><?php print $this->demo_free?></strong></span>
             </li>
             <li>
                 <h4>Палата №5</h4>
@@ -139,18 +139,20 @@
     <div class="bedsEditCont">
         <ul class="list-group bedsSettingsList">
             <li class="list-group-item">
+                <img src="/images/icons/48610.png" title="Койка занята: Пациентов Хроник Батькович" width="48" height="48" />
+                <a href="#" class="reservedBed">Пациентов Хроник Батькович</a>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
+            </li>            
+
+            <li class="list-group-item">
                 <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b1"></span>
+                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Иванова Ивана Ивановна" width="48" height="48" />
                 <a href="#" class="reservedBed">Иванова Ивана Ивановна</a>
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
-            </li>
-            <li class="list-group-item">
-                <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
-            </li>
+            </li>            
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Сидорова Сидора Сидоровна" width="48" height="48" />
                 <a href="#" class="reservedBed">Сидорова Сидора Сидоровна</a>

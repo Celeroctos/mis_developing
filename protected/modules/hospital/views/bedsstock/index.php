@@ -83,7 +83,8 @@
             </div>
             <div role="tabpanel" class="tab-pane wardsSettings" id="wards">
                 <?php $this->widget('application.modules.hospital.components.widgets.Wards', array(
-                    'showSettingsIcon' => true
+                    'showSettingsIcon' => true,
+                	'demo_free'=>1
                 )); ?>
             </div>
         </div>

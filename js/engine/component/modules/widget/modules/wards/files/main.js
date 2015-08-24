@@ -1,4 +1,4 @@
-misEngine.class('component.widget.wards', function(){
+misEngine['class']('component.widget.wards', function(){
 	return {
 		config: {
 			name: 'component.widget.wards',
@@ -316,10 +316,9 @@ misEngine.class('component.widget.wards', function(){
 				templateClass: 'popover-bedsedit',
 				content: $('.bedsEditCont').html(),
 				//container: li,
-				container:'body',
+				container: 'body',
 				crossLeft: '580px'
 			});
-			window.li=li;
 		},
 		
 		hideBedsPopover: function(){
@@ -332,14 +331,14 @@ misEngine.class('component.widget.wards', function(){
 		
 		initBedPopover: function(contSpan, bedId){
 			console.debug('initBedPopover');
-			var popover=this.initPopover({
+			var popover = this.initPopover({
 				prop: 'bedEditPopover',
 				selector: contSpan,
 				placement: 'bottom',
 				title: 'Настройка койки',
 				templateClass: 'popover-bededit',
 				content: $('.bedSettingsFormCont').html(),
-				container : $(contSpan).parent(),
+				container: $(contSpan).parent(),
 				crossLeft: '580px'
 			});
 			
@@ -381,7 +380,7 @@ misEngine.class('component.widget.wards', function(){
 		},
 		
 		initPopover: function(config){
-			console.debug('initPopover',config);
+			console.debug('initPopover', config);
 			this[config.prop] = $(config.selector).popover({
 				animation: true,
 				html: true,
@@ -399,7 +398,8 @@ misEngine.class('component.widget.wards', function(){
 				content: $.proxy(function(){
 					return config.content;
 				}, this)
-			});;
+			});
+			;
 			
 			$(config.selector).popover('show');
 			
@@ -422,7 +422,6 @@ misEngine.class('component.widget.wards', function(){
 			$(config.selector).data('bs.popover').$tip.append(span).on('click', function(){
 				return false;
 			});
-			return popover;
 		},
 		
 		initHelpSystem: function(){
