@@ -35,7 +35,67 @@
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
             </div>
             <div role="tabpanel" class="tab-pane" id="armd-operations">
-                <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
+            	<table style="margin-bottom:10px">
+            	<tbody>
+            		<tr>
+            			<td><div id="operationDatePicker"></div></td>
+            		</tr>
+            		<tr>
+            			<td>
+            				<button style="width:100%">Сегодня</button>
+            			</td>
+            		</tr>
+            		<tr>
+            			<td>
+            				<button style="width:100%">Показать всех пациентов</button>
+            			</td>
+            		</tr>
+            	</tbody>
+            	</table>
+            
+	            <table id="operationsGrid" class="table table-hover table-striped table-bordered">
+	            	<thead>
+	            		<tr>
+	            			<th>ФИО</th>
+	            			<th>№ палаты</th>
+	            			<th>№ карты</th>
+	            			<th>Дата</th>
+	            			<th>Статус операции</th>
+	            		</tr>
+	            	</thead>
+	            	<tbody>
+	            		<tr>
+	            			<td>Данилова Светлана Алексеевна</td>
+	            			<td>2</td>
+	            			<td>11346/14</td>
+	            			<td>28.08.2015</td>
+	            			<td>Не проведена</td>
+	            		</tr>
+	            		<tr>
+	            			<td>Мацнева Оксана Евгеньевна</td>
+	            			<td>5</td>
+	            			<td>11653/14</td>
+	            			<td>21.08.2015</td>
+	            			<td>Проведена</td>
+	            		</tr>		
+	            		<tr>
+	            			<td>Острягина Марианна Михайловна</td>
+	            			<td>5</td>
+	            			<td>15881/14</td>
+	            			<td>19.08.2015</td>
+	            			<td>Проведена</td>
+	            		</tr>
+	            		<tr>
+	            			<td>Шевлягина Ольга Николаевна</td>
+	            			<td>1</td>
+	            			<td>12253/14</td>
+	            			<td>01.09.2015</td>
+	            			<td>Не проведена</td>
+	            		</tr>              		            		
+	            	</tbody>
+	            </table>
+            	
+                
             </div>
         </div>
     </div>
@@ -140,3 +200,53 @@
         </div>
     </div>
 </div>
+
+
+<div class="operationsExpanderBody" style="display:none">
+        <div style="width:100%;padding:10px;height:35px;">
+        	<div style="float:left">Дата операции: 28.08.2015</div>
+        	<div style="float:right"><button type="button">Отменить операцию</button></div>
+        </div>
+        <div style="clear:both"></div>
+        
+        
+        <div class="accordion">
+		    <div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a1"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>План операции</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a1" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>
+		    <div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a2"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>Осмотр анестезиолога</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a2" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>
+			<div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a3"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>Состав бригады</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a3" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>
+			<div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a4"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>Протокол операции</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a4" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>		
+			<div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a5"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>Отчёт анестезиолога</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a5" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>		
+			<div class="accordion-group">
+		        <div class="accordion-heading">
+		            <a href="#a6"  data-toggle="collapse" class="accordion-toggle" data-placement="right" title=""><strong>Направление</strong></a>
+		        </div>
+		        <div class="accordion-body collapse" id="a6" style="height: auto;"><div class="accordion-inner"></div></div>
+		    </div>		    	    	    		    
+		</div>
+</div>
+
