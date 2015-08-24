@@ -36,7 +36,44 @@
     <div class="bedsstockTablesCont col-xs-11">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="patients">
+            <!-- 
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
+             -->
+	             <table id='patientsGrid' class="table table-hover table-striped table-bordered">
+	             	<thead>
+	             	<tr>
+	             		<th>ФИО</th>
+	             		<th>Карта</th>
+	             		<th>Отделение</th>
+	             		<th>Возраст</th>
+	             		<th>Дата госпитализации</th>
+	             	</tr>
+	             	</thead>
+	             	<tbody>
+	             		<tr>
+	             			<td>Абубакирова Рамзеля Митхатовна</td>
+	             			<td>1234/14</td>
+	             			<td>Хирургическое</td>
+	             			<td>29 лет</td>
+	             			<td>12.08.2015</td>
+	             		</tr>
+	             		<tr>
+	             			<td>Кочубей Элеонора Исааковна</td>
+	             			<td>1313/13</td>
+	             			<td>Хирургическое</td>
+	             			<td>34 года</td>
+	             			<td>13.08.2015</td>
+	             		</tr>
+	             		<tr>
+	             			<td>Захарченко Лидия Павловна</td>
+	             			<td>7679/12</td>
+	             			<td>Хирургическое</td>
+	             			<td>35 лет</td>
+	             			<td>14.08.2015</td>
+	             		</tr>             		             		
+	             	</tbody>
+	             	
+	             </table>
             </div>
             <div role="tabpanel" class="tab-pane" id="extracts">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
@@ -58,12 +95,44 @@
             <?php $this->widget('application.modules.hospital.components.widgets.Wards'); ?>
         </div>
         <div class="cont left">
+        	<span class="glyphicon glyphicon-chevron-left back" aria-hidden="true"><span>Назад</span></span>
+        	<h3>Терапевтическое отделение. Палата №4 (обычная платная)</h3>
+        	<div class="buttons" style="width:200px;margin:0 auto">
+	        	<div>
+	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="window.btn=this;$(this).html('Занята');$('button',$(this).parents('.buttons')).attr('disabled','disabled');return false;">Свободна</button>
+	        	</div>        	
+	        	<div>
+	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="window.btn=this;$(this).html('Занята');$('button',$(this).parents('.buttons')).attr('disabled','disabled');return false;">Свободна</button>
+	        	</div>
+	        	<div>
+	        		<button disabled="disabled" type="button" style="width:200px;height:50px;margin:10px;">Занята</button>
+	        	</div>
+	        	<div>
+	        		<button disabled="disabled" type="button" style="width:200px;height:50px;margin:10px;">Занята</button>
+	        	</div>        	
+        	<!-- 
+	        	<table align="center">
+	        		<tbody>
+	        		
+	        			<tr><td><div style="width:200px;height:50px;margin:10px;" onclick="console.debug(this);$(this).val('Занята');$('button',$(this).parent('table')).attr('disabled','disabled');return false;">Свободна</div></td></tr>
+ 			
+	        			<tr><td><button type="button" style="width:200px;height:50px;margin:10px;">Свободна</button></td></tr>
+	        			<tr><td><button disabled="disabled" type="button" style="width:200px;height:50px;margin:10px;">Занята</button></td></tr>
+	        			<tr><td><button disabled="disabled" type="button" style="width:200px;height:50px;margin:10px;">Занята</button></td></tr>
+	        		</tbody>
+	        	</table>
+	        	-->	        
+        	</div>
+        </div>
+        <!-- 
+        <div class="cont left">
             <span class="glyphicon glyphicon-chevron-left back" aria-hidden="true"><span>Назад</span></span>
-            <h3>Психиатрическое отделение, палата №6 (обычная палата)</h3>
+            <h3>Палата №4 (обычная платная палата)</h3>
             <ul class="list-group bedsList">
                 <li class="list-group-item">
                     <img src="/images/icons/48565.png" title="Занять койку" width="48" height="48" />
                     <a href="#" class="reserveBed">Занять койку</a>
+                   
                     <form class="form-inline reserveForm">
                         <div class="form-group">
                             <label for="doctorId">Врач</label>
@@ -77,9 +146,11 @@
                         </div>
                         <button class="btn btn-success acceptReserve" type="button">Подтвердить</button>
                     </form>
+                    
                 </li>
                 <li class="list-group-item">
                     <img src="/images/icons/48610.png" title="Койка занята" width="48" height="48" />
+                    <p>Занята</p>
                 </li>
                 <li class="list-group-item">
                     <img src="/images/icons/48565.png" title="Занять койку" width="48" height="48" />
@@ -120,6 +191,7 @@
                 </li>
             </ul>
         </div>
+         -->
     </div>
 </div>
 <div class="relocationExpanderBody">

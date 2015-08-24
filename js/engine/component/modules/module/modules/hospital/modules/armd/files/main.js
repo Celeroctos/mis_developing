@@ -9,11 +9,13 @@ misEngine.class('component.module.hospital.armd', function() {
         designationsGrid : null,
 
         displayGrids : function() {
+			console.debug('displayGrids');
             this.displayPatientsGrid();
             this.displayMyPatientsGrid();
         },
 
         displayPatientsGrid : function() {
+			console.debug('displayPatientsGrid');
             this.patientsGrid = misEngine.create('component.grid');
             var patientsGridRequestData = {
                 returnAsJson : true,
@@ -86,6 +88,7 @@ misEngine.class('component.module.hospital.armd', function() {
         },
 
         displayMyPatientsGrid : function() {
+			console.debug('displayMyPatientsGrid')
             this.myPatientsGrid = misEngine.create('component.grid');
             var myPatientsGridRequestData = {
                 returnAsJson : true,
@@ -123,6 +126,8 @@ misEngine.class('component.module.hospital.armd', function() {
         },
 
         displayTabmarks : function() {
+			
+			console.debug('displayTabmarks')
             this.tabmarks = [
                 misEngine.create('component.tabmark', {
                     selector : '#armdMyPatientsTabmark',
@@ -569,6 +574,7 @@ misEngine.class('component.module.hospital.armd', function() {
         },
 
         run : function() {
+			console.debug('run');
             this.displayGrids();
             this.bindHandlers();
             this.initWidgets();

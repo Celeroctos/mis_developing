@@ -44,11 +44,13 @@
                 </li>
             </ul>
         </li>
+        <!-- 
         <li>Тип палаты
             <select class="form-control col-xs-3" id="wardType">
                 <option value="-1">%any type%</option>
             </select>
         </li>
+         -->
         <li>
             <button class="btn btn-success resetFilter">Сбросить фильтр</button>
         </li>
@@ -60,69 +62,75 @@
                 <h4>Палата №1</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
-                <span class="numFree"><strong class="text-danger">Карантин</strong></span>
-            </li>
-            <li>
-                <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
                 <span class="numFree"><strong class="text-danger">Занята</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
+                <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+                <h4>Палата №2</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
+                <h4>Палата №3</h4>
+                <span class="wardType">Обычная</span>
+                <span class="paidType">Платная</span>
+                <span class="numFree">Свободно: <strong>4</strong></span>
+            </li>
+            <li>
+                <h4>Палата №4</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
+                <h4>Палата №5</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
+                <span class="numFree">Свободно: <strong>2</strong></span>
+            </li>
+            <li>
+                <h4>Палата №6</h4>
+                <span class="wardType">Обычная</span>
+                <span class="paidType">Платная</span>
+                <span class="numFree">Свободно: <strong>2</strong></span>
+            </li>
+            <li>
+                <h4>Палата №7</h4>
+                <span class="wardType">Послеоперационная</span>
+                <span class="paidType">Бесплатная</span>
+                <span class="numFree"><strong class="text-danger">Карантин</strong></span>
+            </li>
+            <li>
+                <h4>Палата №8</h4>
+                <span class="wardType">Послеоперационная</span>
+                <span class="paidType">Бесплатная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
+                <h4>Палата №9</h4>
+                <span class="wardType">Реанимация</span>
+                <span class="paidType">Бесплатная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
+                <h4>Палата №10</h4>
+                <span class="wardType">Детская реанимация</span>
+                <span class="paidType">Бесплатная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
+                <h4>Палата №11</h4>
+                <span class="wardType">Предродовая</span>
+                <span class="paidType">Бесплатная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
             </li>
             <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
+                <h4>Палата №12</h4>
+                <span class="wardType">Послеродовая</span>
+                <span class="paidType">Бесплатная</span>
                 <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
-            <li>
-                <h4>Палата №1</h4>
-                <span class="wardType">Обычная</span>
-                <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
-            </li>
+            </li>            
             <li class="new">
                 <button class="btn btn-success" title="Добавить новую палату" id="addNewWard">+</button>
             </li>

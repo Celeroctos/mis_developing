@@ -11,6 +11,8 @@ misEngine.class('component.expander', function() {
         },
 
         bindHandlers : function() {
+			console.debug('expander bindHandlers',this.config);
+			console.debug('click', '#' + this.config.grid.getId() + ' tbody tr');
             if(!this.config.grid) {
                 misEngine.t('Not exists grid for module Expander');
                 return false;
@@ -19,6 +21,7 @@ misEngine.class('component.expander', function() {
             var config = this.config;
 
             $(document).on('click', '#' + config.grid.getId() + ' tbody tr', function(e) {
+				console.debug('expander on click');
                 if($(this).hasClass('expander')) {
                     return false;
                 }
