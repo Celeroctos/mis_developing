@@ -81,7 +81,7 @@
                 <h4>Палата №4</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
-                <span class="numFree">Свободно: <strong>3</strong></span>
+                <span class="numFree">Свободно: <strong>2</strong></span>
             </li>
             <li>
                 <h4>Палата №5</h4>
