@@ -60,14 +60,18 @@
     <div class="row">
         <ul class="wardsList">
             <li>
+            <!-- 
                 <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+             -->
                 <h4>Палата №1</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
                 <span class="numFree"><strong class="text-danger">Занята</strong></span>
             </li>
             <li>
+            <!-- 
                 <?php if($show_settings_icon) { print '<span class="glyphicon glyphicon-cog settings" title="Настройки"></span>'; } ?>
+            -->
                 <h4>Палата №2</h4>
                 <span class="wardType">Обычная</span>
                 <span class="paidType">Платная</span>
@@ -143,16 +147,12 @@
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Гогун Оксана Анатольевна" width="48" height="48" />
                 <a href="#" class="reservedBed">Гогун Оксана Анатольевна</a>
-                <!-- 
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b2"></span>
-                 -->
             </li>            
 
             <li class="list-group-item">
                 <img src="/images/icons/48565.png" title="" width="48" height="48" />
-                <!-- 
                 <span class="glyphicon glyphicon-cog bed-settings" title="Настройки" id="b3"></span>
-                 -->
             </li>
             <li class="list-group-item">
                 <img src="/images/icons/48610.png" title="Койка занята: Трутнева Наталья Владимировна" width="48" height="48" />
