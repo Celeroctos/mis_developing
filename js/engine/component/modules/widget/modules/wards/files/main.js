@@ -319,7 +319,8 @@ misEngine['class']('component.widget.wards', function(){
 				content: $('.bedsEditCont').html(),
 				//container: li,
 				container: 'body',
-				crossLeft: '580px'
+				crossLeft: '380px'
+				
 			});
 		},
 		
