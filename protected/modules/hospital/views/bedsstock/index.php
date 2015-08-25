@@ -87,7 +87,7 @@
         </div>
         <div class="cont left">
         	<span class="glyphicon glyphicon-chevron-left back" aria-hidden="true"><span>Назад</span></span>
-        	<h3>Терапевтическое отделение. Палата №4 (обычная платная)</h3>
+        	<h3>Гинекологическая эндокринология. Палата №4 (обычная платная)</h3>
         	<div class="buttons" style="width:200px;margin:0 auto">
 	        	<div>
 	        		<button type="button" style="width:200px;height:50px;margin:10px;" onclick="$(this).html('Занята').attr('disabled','disabled');return false;">Свободна</button>
