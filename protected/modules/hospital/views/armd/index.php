@@ -745,6 +745,9 @@
             <table align="center">
             	<tbody>
             		<tr>
+            			<td colspan="3" align="center"><b>Новое направление:</b></td>
+            		</tr>            	
+            		<tr>
             			<td><button class="btn btn-success">На анализы</button></td>
             			<td><button class="btn btn-success">На обследование</button></td>
             			<td><button class="btn btn-success">На операцию</button></td>
