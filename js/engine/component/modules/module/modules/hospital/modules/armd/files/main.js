@@ -40,6 +40,7 @@ misEngine['class']('component.module.hospital.armd', function(){
 		},
 		displayPatientsGrid: function(){
 			console.debug('displayPatientsGrid');
+			return;
 			this.patientsGrid = misEngine.create('component.grid');
 			var patientsGridRequestData = {
 				returnAsJson: true,
@@ -105,7 +106,8 @@ misEngine['class']('component.module.hospital.armd', function(){
 		},
 		
 		displayMyPatientsGrid: function(){
-			console.debug('displayMyPatientsGrid')
+			console.debug('displayMyPatientsGrid');
+			return;
 			this.myPatientsGrid = misEngine.create('component.grid');
 			var myPatientsGridRequestData = {
 				returnAsJson: true,
@@ -229,11 +231,17 @@ misEngine['class']('component.module.hospital.armd', function(){
 			this.changeTabHandler();
 			
 			$(document).on('click', '#patientGrids td, #myPatientsGrid td', $.proxy(function(e){
+				console.debug(Math.floor(document.body.clientWidth*3/4)+'px');
+				$('#myModal').modal();
+				return;
 				var window = misEngine.create('component.window', {
 					selector: $(e.target),
 					title: 'Окно пациента',
-					container: $(e.target),
-					width: '1024px',
+					//container: $(e.target),
+					container: 'body',
+					//width: '1024px',
+					width:'100%',
+					width:Math.floor(document.body.clientWidth*3/4)+'px',
 					content: $('.contentForPatientGrid').html()
 				}).show();
 				this.displayDiagnosisFields();

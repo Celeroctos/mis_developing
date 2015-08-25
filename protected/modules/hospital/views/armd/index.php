@@ -33,7 +33,40 @@
     <div class="armdTablesCont col-xs-11">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="armd-my-patients">
+            
+            
+            <table id="myPatientsGrid" class="table table-hover table-striped table-bordered">
+            	<thead>
+            		<tr><th>ФИО</th><th>Карта</th><th>Палата</th><th>Диагноз</th><th></th></tr>
+            	</thead>
+            	<tbody>
+            	<?php 
+            	$checkbox='<input disabled="disabled" type="checkbox"/>';
+            	$checkbox2='<input disabled="disabled" checked="checked" type="checkbox"/>';
+            	?>
+            		<tr><td>Данилова Светлана Алексеевна</td><td>11346/14</td><td>2</td><td>Диабетическая нефропатия</td>
+            		<td><?php echo $checkbox ?></td></tr>
+            		<tr><td>Киселева Ульяна Алексеевна</td><td>10307/14</td><td>4</td><td>Гестационный сахарный диабет</td>
+            		<td><?php echo $checkbox ?></td></tr>
+            		<tr><td>Лихачева Нелли Романовна</td><td>21583/14</td><td>4</td><td>Аутоимунный тиреодит</td>
+            		<td><?php echo $checkbox ?></td></tr>
+            		<tr><td>Мацнева Оксана Евгеньевна</td><td>11653/14</td><td>5</td><td>Аутоимунный тиреодит</td>
+            		<td><?php echo $checkbox ?></td></tr>
+            		<tr><td>Острягина Марианна Михайловна</td><td>15881/14</td><td>5</td><td>Гестационный сахарный диабет</td>
+            		<td><?php echo $checkbox ?></td></tr>
+            		<tr><td>Потрясова Кристина Александровна</td><td>11608/14</td><td>6</td><td>Гестационный сахарный диабет</td>
+            		<td><?php echo $checkbox2 ?></td></tr>
+            		<tr><td>Работягова Светлана Анатольевна</td><td>16777/14</td><td>1</td><td>Гестационный сахарный диабет</td>
+            		<td><?php echo $checkbox2 ?></td></tr>
+            		<tr><td>Шевлягина Ольга Николаевна</td><td>12253/14</td><td>1</td><td>Диабетическая нефропатия</td>
+            		<td><?php echo $checkbox2 ?></td></tr>
+            	</tbody>
+            </table>
+            
+            
+            <!-- 
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
+             -->
             </div>
             <div role="tabpanel" class="tab-pane" id="armd-patients">
                 <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/ajax-loader2.gif" width="256" height="30" alt="Загружается..." class="ajaxLoader" />
@@ -104,7 +137,20 @@
         </div>
     </div>
 </div>
-<div class="contentForPatientGrid no-display">
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="max-width:1100px;width:99%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Киселева Ульяна Алексеевна</h4>
+      </div>
+      <div class="modal-body">
+
+
+
+<div class="contentForPatientGrid">
     <ul class="nav nav-tabs balooned" id="patientGridNavbar">
         <li role="navigation" class="active baloon">
             <a href="#armd-show-patient" aria-controls="armd-show-patient" role="tab" data-toggle="tab" id="armdShowPatientTab">Осмотр</a>
@@ -135,7 +181,7 @@
             </span>
         </li>
         <li role="navigation" class="baloon">
-            <a href="#armd-patient-tests" aria-controls="armd-patient-tests" role="tab" data-toggle="tab" id="armdPatientTestsTab">Результаты исследования</a>
+            <a href="#armd-patient-tests" aria-controls="armd-patient-tests" role="tab" data-toggle="tab" id="armdPatientTestsTab">Результаты обследования</a>
             <span class="tabmark" id="armdPatientTestsTabmark">
                 <span class="roundedLabel"></span>
                 <span class="roundedLabelText"></span>
@@ -173,37 +219,127 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-diagnosis"></div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-purpose">
-            <div class="wrap">
-                <div class="panel1"></div>
-                <div class="panel2">
-                    <div class="gridContainer"></div>
-                    <h6>Назначение новых</h6>
-                    <div class="row btnPanel">
-                        <input type="button" value="Медикамента" class="btn btn-success" id="addDrug"/>
-                        <input type="button" value="Процедуры" class="btn btn-success" id="addProcedure" />
-                    </div>
-                </div>
-                <div class="panel3">
-                    <h5>Новое назначение</h5>
-                    <div class="left"></div>
-                    <div class="right"></div>
-                </div>
+	
+			<div id="patientPurposeList">
+				<table  class="table table-hover table-striped table-bordered" style="margin-top:1px;">
+	            		<tbody>
+	            			<tr><td style="width:100px">31.07.2015</td><td>Тироксин</td></tr>
+	            			<tr onclick="$('#patientPurposeList').hide();$('#patientPurposeExpander').show();"><td style="width:100px">31.07.2015</td><td>Левемир</td></tr>
+	            	</tbody>
+	            </table>  
+				<table align="center">
+					<thead>
+						<tr><td colspan="2" align="center"><b>Назначение новых</b></td></tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td><input type="button" value="Медикаментов" class="btn btn-success" id="addDrug"/></td>
+						<td><input type="button" value="Процедур" class="btn btn-success" id="addProcedure" /></td>
+					</tr>
+					</tbody>
+				</table>
             </div>
+            
+            <div id="patientPurposeExpander" class="no-display" >
+            	<h3>Левемир</h3>
+            	<table style="width:100%">
+            		<tr><td style="width:60%">
+            		
+            			<table>
+            				<tr><th style="width:150px">Медикамент:</th><td>Левемир</td></tr>
+            				<tr><th>Способ применения:</th><td>2 раза в день</td></tr>
+            				<tr><th>Дозировка:</th><td>10 ЕД на ночь, 6 ЕД утром</td></tr>
+            				<tr><th>Выполнять до:</th><td>11.05.2015</td></tr>
+            			</table>
+            	
+						</td>
+						<td style="width:40%">
+							<b>Комментарий:</b>
+							<textarea style="width:100%;height:100px">
+							
+							</textarea>						
+						</td>
+					</tr>
+				</table>
+				<table align="center" style="margin-top:10px">
+					<tr>
+						<td><button class="btn btn-danger">Отменить рецепт</button></td>
+						<td><button class="btn btn-success">Изменить рецепт</button></td>
+						<td><button class="btn btn-default" onclick="$('#patientPurposeExpander').hide();$('#patientPurposeList').show();">Закрыть</button></td>
+					</tr>
+				</table>
+
+				
+				
+				            	
+            	
+            	
+            	
+            	
+            
+            </div>  
+
+
+                
+			
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-directions">
-            4
+            <table class="table table-hover table-striped table-bordered" style="margin-top:1px;">
+            	<tbody>
+            		<tr><td style="width:100px">29.07.2015</td><td>Биохимический анализ крови</td></tr>
+            		<tr><td style="width:100px">29.07.2015</td><td>Общий анализ мочи</td></tr>
+            		<tr><td style="width:100px">30.07.2015</td><td>Глюкоза плазмы натощак</td></tr>
+            		<tr><td style="width:100px">30.07.2015</td><td>Глюкоза плазмы через 1 час после еды</td></tr>
+            	</tbody>
+            </table>            
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-tests">
-            5
+            <table class="table table-hover table-striped table-bordered" style="margin-top:1px;">
+            	<tbody>
+            		<tr><td style="width:100px">29.07.2015</td><td>Биохимический анализ крови</td></tr>
+            		<tr><td style="width:100px">29.07.2015</td><td>Общий анализ мочи</td></tr>
+            	</tbody>
+            </table>
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-relocation">
-            6
+            <div style="margin-top:20px">
+            	<table style="width:100%">
+            		<tr>
+            			<td style="width:50%" align="center"><button style="width:100%;max-width:220px" class="btn btn-success">Выписка</button></td>
+            			<td style="width:50%" align="center"><button style="width:100%;max-width:220px" class="btn btn-success">Перевод</button></td>
+            		</tr>
+            	</table>
+            </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="armd-patient-childbirth">
-            7
+			<div style="margin-top:20px">
+            	<table style="width:100%">
+            		<tr>
+            			<td style="width:50%" align="center"><button style="width:100%;max-width:220px" class="btn btn-success">Естественные роды</button></td>
+            			<td style="width:50%" align="center"><button style="width:100%;max-width:220px" class="btn btn-success">Оперативное вмешательство</button></td>
+            		</tr>
+            	</table>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+
+      </div>
+<!--       
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+ -->      
+    </div>
+  </div>
+</div>
+
+
 
 
 <div class="operationsExpanderBody" style="display:none">
