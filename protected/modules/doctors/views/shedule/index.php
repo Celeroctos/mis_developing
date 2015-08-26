@@ -1,4 +1,4 @@
-﻿<?php /* @var $this SheduleController */ ?>
+<?php /* @var $this SheduleController */ ?>
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/chooser.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/patient.js"></script>-->
 <!--<script type="text/javascript" src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/js/doctors/comments.js"></script>-->
@@ -15,6 +15,9 @@
     globalVariables.month = <?php echo $month; ?>;
     globalVariables.day = <?php echo $day; ?>;
     globalVariables.doctorId = <?php echo $currentDoctorId; ?>;
+    $(document).ready(function(){
+    	window.skipDirectionRegister=true;
+    });
 </script>
 
 <?php if (Yii::app()->user->checkAccess('canViewPatientList')) { ?>

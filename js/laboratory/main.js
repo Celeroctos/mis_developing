@@ -482,6 +482,7 @@ var Laboratory_Widget_AboutMedcard = {
 			$(this).parents(".direction-history-wrapper").find(".nav > li:first > a").tab("show");
 			$(this).parents("form:eq(0)").cleanup();
 		}).on("click", ".direction-creator-register", function() {
+			if (window.skipDirectionRegister) return;
 			var f = $(this).parents(".direction-creator-wrapper").children("form");
             var loading = $(this).parents(".panel:eq(0)");
             if (!loading.length) {
