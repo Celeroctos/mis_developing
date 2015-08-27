@@ -6,13 +6,14 @@ class PatientController extends Controller {
         if(!Yii::app()->request->isAjaxRequest) {
             exit('Error!');
         }
-
+		
         $content = $this->widget('MedcardTemplateWidget', [
             'template' => $_GET['templateId'],
             'greetingNumber' => $_GET['greetingId'],
             'cardNumber' => $_GET['medcardId'],
             'mode' => MedcardElementWidget::MODE_HISTORY,
         ], true);
+        
 
          // Получаем поля для всех полей относительно хистори
 		ob_end_clean();

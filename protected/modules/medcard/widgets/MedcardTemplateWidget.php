@@ -95,9 +95,18 @@ class MedcardTemplateWidget extends Widget {
                 'mode' => $this->mode,
             ]);
         }
+        
+        if ($this->mode==MedcardElementWidget::MODE_HISTORY){
+        	$this->widget('MedcardHistoryDiagnosisWidget', [
+        		'greetingId'=>$this->greetingNumber
+        	]);
+        }
+        
+        
         print Html::tag('div', [ 'class' => 'submitEditPatient' ], Html::ajaxSubmitButton('', Yii::app()->createUrl($this->saveUrl), [], [
             'class' => 'templateContentSave'
         ]));
+
         print Html::closeTag('form');
     }
 
