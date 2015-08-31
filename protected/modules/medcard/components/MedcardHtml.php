@@ -222,6 +222,10 @@ class MedcardHtml extends Html {
 		} else {
 			$labels = [];
 		}
+		//в конфиге должно быть количество столбцов = numCols. Удаляем первые лишние
+		while(count($config['cols'])>$cols){
+			array_shift($config['cols']);
+		}
 		print parent::openTag('table', [ 'width' => '100%',
 				'class' => 'table table-bordered table-striped table-condensed controltable'
 			]);
