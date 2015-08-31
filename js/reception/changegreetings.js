@@ -37,20 +37,11 @@ $(document).ready(function() {
         var result = {
             'groupOp' : 'AND',
             'rules' : [
-                {
-                    'field' : 'p_middle_name',
+				
+				{
+                    'field' : 'patient_fio',
                     'op' : 'cn',
-                    'data' : patientFioFields.length > 2 ?  patientFioFields[2] : '' //$('#middleName').val()
-                },
-                {
-                    'field' : 'p_last_name',
-                    'op' : 'cn',
-                    'data' :  patientFioFields.length > 0 ?  patientFioFields[0] : '' //$('#lastName').val()
-                },
-                {
-                    'field' : 'p_first_name',
-                    'op' : 'cn',
-                    'data' : patientFioFields.length > 1 ?  patientFioFields[1] : '' //$('#firstName').val()
+                    'data' : patientFio
                 },
                 {
                     'field' : 'd_middle_name',
@@ -86,8 +77,10 @@ $(document).ready(function() {
 				'data' : $('#enterpriseId').val()
 			});
 		}
-
-        if($.trim($('#phoneFilter').val()) != '+7') {
+		
+		
+		var emptyPhone=$.trim($('#phoneFilter').val()) == '+7'||$.trim($('#phoneFilter').val()) == '';
+        if(!emptyPhone) {
             result.rules.push({
                 'field' : 'phone',
                 'op' : 'cn',

@@ -305,6 +305,14 @@ class SheduleByDay extends MisActiveRecord {
                                   mdp.first_name as m_first_name,
                                   mdp.middle_name as m_middle_name,
                                   mdp.last_name as m_last_name,
+                                  (
+	                                  case when dsbd.mediate_id IS NOT NULL 
+	                                  THEN 
+	                                  concat(mdp.last_name,\' \', mdp.first_name,\' \', mdp.middle_name)
+	                                  ELSE
+	                                  concat(o.last_name,\' \', o.first_name,\' \', o.middle_name)
+	                                  END
+                                  ) as patient_fio,
                                   o.id as oms_id,
                                   mp.name as post')
                 ->from('mis.doctor_shedule_by_day dsbd')
@@ -315,33 +323,64 @@ class SheduleByDay extends MisActiveRecord {
                 ->join('mis.medpersonal mp', 'd.post_id = mp.id')
                 ->leftJoin('mis.mediate_patients mdp', 'mdp.id = dsbd.mediate_id');
 
+                
 
             if($filters !== false) {
+            	//var_dump($filters);
+            	
+				foreach($filters['rules'] as $k=>$filter){
+					
+	            	if ($filter['field']=='patient_fio'){
+	            		$fio=$filter['data'];
+	            		if (!empty($fio)){ 
+	            			$greetings->andWhere(array('like', 
+		            			'LOWER(
+									case when dsbd.mediate_id IS NOT NULL 
+									THEN 
+										concat(mdp.last_name,\' \', mdp.first_name,\' \', mdp.middle_name)
+									ELSE
+										concat(o.last_name,\' \', o.first_name,\' \', o.middle_name)
+									END
+								)', 
+	            			mb_strtolower($fio).'%'));  
+	            		}
+	            		unset($filters['rules'][$k]);
+	            	}
+	            	
+					
+					if ($filter['field']=='phone'){
+						$phone=$filter['data'];
+						if (!empty($phone)){
+	            			$greetings->andWhere(array('like', 
+		            			'LOWER(
+									case when dsbd.mediate_id IS NOT NULL 
+									THEN 
+										mdp.phone
+									ELSE
+										m.contact
+									END
+								)', 
+	            			'%'.mb_strtolower($phone).'%'));  		
+						}				
+						unset($filters['rules'][$k]);
+					}
+	            } 
+	            
+         	
+            	
                 $this->getSearchConditions($greetings, $filters, array(
                     'doctor_fio' => array(
                         'd_first_name',
                         'd_last_name',
                         'd_middle_name'
                     ),
-                    'patient_fio' => array(
-                        'p_first_name',
-                        'p_last_name',
-                        'p_middle_name',
-                        'm_last_name',
-                        'm_first_name',
-                        'm_middle_name'
-                    ),
-                    'phone' => array(
-                        'contact',
-                        'm_phone'
-                    )
                 ), array(
                     'mp' => array('is_for_pregnants'),
-                    'o' => array('p_first_name', 'p_middle_name', 'p_last_name', 'patient_fio', 'patients_ids'),
+                    'o' => array('p_first_name', 'p_middle_name', 'p_last_name', 'patients_ids'),
                     'd' => array('d_first_name', 'd_middle_name', 'd_last_name', 'doctor_fio', 'doctors_ids'),
                     'm' => array('contact'),
                 	'w' => array('enterprise_id'),
-                    'mdp' => array('m_first_name', 'm_middle_name', 'm_last_name', 'patient_fio', 'm_phone'),
+                    'mdp' => array('m_first_name', 'm_middle_name', 'm_last_name', 'm_phone'),
                     'dsbd' => array('patient_day', 'medcard_id', 'mediates_ids')
                 ), array(
                     'phone' => 'contact',
@@ -368,6 +407,7 @@ class SheduleByDay extends MisActiveRecord {
             if($mediateOnly) {
                 $greetings->andWhere('dsbd.mediate_id IS NOT NULL');
             }
+            
 
             if ($notBeginned)
             {
@@ -376,7 +416,7 @@ class SheduleByDay extends MisActiveRecord {
             }
 
             $greetings->order('dsbd.patient_time');
-            $greetings->group('dsbd.id, o.first_name, o.last_name, o.middle_name, d.first_name, d.last_name, d.middle_name, m.motion, o.id, mp.name, m.card_number, mdp.phone, mdp.last_name, mdp.middle_name, mdp.first_name');
+            $greetings->group('dsbd.id, o.first_name, o.last_name, o.middle_name, d.first_name, d.last_name, d.middle_name, m.motion, o.id, mp.name, m.card_number, mdp.phone, mdp.last_name, mdp.middle_name, mdp.first_name, patient_fio');
 
             if($limit !== false && $start !== false) {
                 $greetings->limit($limit, $start);
